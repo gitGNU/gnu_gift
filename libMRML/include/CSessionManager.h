@@ -300,6 +300,10 @@ public:
   /** making a new session and returning its ID */
   string newSession(const string& inUser,
 		    const string& inSessionName);
+  /** making a new session and for a given ID, returnig the ID */
+  string newSession(const string& inID,
+		    const string& inUser,
+		    const string& inSessionName);
   /**  Set the name of the current session. 
        Presently not implemented or tested*/
   void setSessionName(const string& inOldSessionName,

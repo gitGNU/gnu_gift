@@ -749,8 +749,26 @@ string CSessionManager::newSession(const string& inUser,
   
   string lID=getNewID();
 
-  string lSessionName("Session"+string(now));
+  lID=this->newSession(lID,
+		       inUser,
+		       inSessionName);
+  
+  mMutexSessionManager.unlock();
+  return lID;
+};
+string CSessionManager::newSession(const string& inID,
+				   const string& inUser,
+				   const string& inSessionName){
+  mMutexSessionManager.lock();
 
+  char now[20];
+  
+  sprintf(now,"%ld",time(0));
+  
+  string lID=inID;
+  
+  string lSessionName("Session"+string(now));
+  
   if(inSessionName.size()){
     lSessionName=inSessionName;
   }
@@ -764,14 +782,14 @@ string CSessionManager::newSession(const string& inUser,
   //a pointer to the same session
   mIDToSession[lID]=&(mUserToSessions[inUser].back());
   mIDToSession[lID]->open();
-
+  
   mIDToSession[lID]->setActiveAlgorithm(mAccessorAdminCollection,
        					*this,
 					makeDefaultAlgorithm(),
        					*mBaseTypeFactory);
   
   mMutexSessionManager.unlock();
-  return lID;
+  return inID;
 };
 ///
 CXMLElement* CSessionManager::openSession(string inUserName,
@@ -939,7 +957,15 @@ bool CSessionManager::setAlgorithm(const string& inSessionID,
 
   CSession* lSession=mIDToSession[inSessionID];
 
-  assert(lSession);
+  
+  //  assert(lSession);
+  if(!lSession){
+    //create a session with the required sessionID
+    this->newSession(inSessionID,
+		     "I-dunno",
+		     "I-know-even-less");
+		     
+  }
 
   bool lResult=lSession->setActiveAlgorithm(mAccessorAdminCollection,
  					    *this,
@@ -964,13 +990,13 @@ CXMLElement* CSessionManager::query(const string& inSessionID,
  	 << endl
  	 << flush;
 #else
-    my_throw(VEUnknownSession(inSessionID.c_str()));
+    //my_throw(VEUnknownSession(inSessionID.c_str()));
     CXMLElement* lError(new CXMLElement(mrml_const::error,0));
     lError->addAttribute(mrml_const::message,"Could not process query: unknown session (ID:"+inSessionID+").");
 #endif
   }
   CXMLElement* lReturnValue(lFound->second->query(*this,
-			       inRelevanceLevelList));
+						  inRelevanceLevelList));
   //mMutexSessionManager.unlock();//debugging
   return lReturnValue;
 };

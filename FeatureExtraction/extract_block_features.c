@@ -70,8 +70,8 @@ void init_feature_variables(int colmap_size) {
 
 	/* colour features */
 	r = image_size/smallest_colour_block;
-	num_colour_scales = (int)(log((double)r)/log(2.0));
-	num_total_colour_blocks = (int)((double)square(r)*4.0*(1 - 1/pow(4.0, (double)num_colour_scales))/3.0);
+	num_colour_scales = rint(log((double)r)/log(2.0));
+	num_total_colour_blocks = rint((double)square(r)*4.0*(1 - 1/pow(4.0, (double)num_colour_scales))/3.0);
 	block_mode = (byte *)malloc(num_total_colour_blocks*sizeof(byte));
 	col_counts = (int **)malloc(num_total_colour_blocks*sizeof(int *));
 	col_histogram = (int *)malloc(colmap_size*sizeof(int));

@@ -81,7 +81,8 @@ void CAccessorAdmin::closeAccessor(string inName){
        << "]"
        << (mContent[inName].mOpenCloseCounter) << endl;
   
-  if(1==1)
+  //this is a hack. See the changelog for thisx
+#ifdef __GIFT_FREE_UNUSED_ACCESSORS
   if((lFound!=mContent.end())
      &&
      !(--(mContent[inName].mOpenCloseCounter))){
@@ -90,6 +91,7 @@ void CAccessorAdmin::closeAccessor(string inName){
 
     mFactoryContainer.closeAccessor(inName);
   }
+#endif
   if(gMutex){
     gMutex->unlock();
   }

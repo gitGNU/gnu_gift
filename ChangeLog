@@ -1,3 +1,28 @@
+2001-05-08  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libMRML/include/CSessionManager.h (CSessionManager): 
+	* libMRML/cc/CSessionManager.cc (CSessionManager): 
+	adding a newSession function, that creates a session with a           given ID in case of a user requesting a non-exsistent 
+	session.
+
+2001-05-07  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CSessionManager.cc: Removed my_throw
+	in case of unknown session for query
+
+2001-04-21  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* FeatureExtraction/extract_block_features.c(init_feature_variables): 
+	Applied David Squire's bug fix for wrong features
+	(int) becomes rint()
+
+	* configure.in: new flag __GIFT_FREE_UNUSED_ACCESSORS
+	default is not to free unused accessors, in order to
+	increase speed. Real solution to this would be some
+	cacheing method.
+
+	(AM_INIT_AUTOMAKE): Changed package version to 0.1.6pre2
+
 2001-05-31  Wolfgang Mueller  <Wolfgang.Mueller@cui.unige.ch>
 
 	* GIFTServer/generateInvertedFile.cc: have to initialise
