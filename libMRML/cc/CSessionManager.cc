@@ -384,30 +384,37 @@ bool CSession::setActiveAlgorithm(CAccessorAdminCollection& inCaller,
 //--------------------------------------------------
 CXMLElement* CSession::query(CSessionManager&     inCaller,
 			     const CXMLElement& inQuery){
-  mMutexSession.lock();
-  // i.e. if a user opens a session twice, he it is impossible to
-  // do two querie in parallel on this server
-  pair<bool,string> lAlgorithmID=inQuery.stringReadAttribute(mrml_const::algorithm_id);
-  
-  if(lAlgorithmID.first){
-    cout << "THE ID "
-	 << lAlgorithmID.first
-	 << ";"
-	 << lAlgorithmID.second
-	 << endl;
+  try{
+    mMutexSession.lock();
+    // i.e. if a user opens a session twice, he it is impossible to
+    // do two queries in parallel on this server
+    pair<bool,string> lAlgorithmID=inQuery.stringReadAttribute(mrml_const::algorithm_id);
+    
+    if(lAlgorithmID.first){
+      cout << "THE ID "
+	   << lAlgorithmID.first
+	   << ";"
+	   << lAlgorithmID.second
+	   << endl;
+      
+      mQueryTree.first->checkNPrint();
+      
+      CQueryTreeNode* lQuery(mQueryTree.first->getQueryByID(lAlgorithmID.second));
 
-    mQueryTree.first->checkNPrint();
-
-    CQueryTreeNode* lQuery(mQueryTree.first->getQueryByID(lAlgorithmID.second));
-
-    CXMLElement* lReturnValue(lQuery->query(inQuery));
-    mMutexSession.unlock();
-    return lReturnValue;
-  }else{
-    CQueryTreeNode* lQuery(mQueryTree.first->getQueryByID("adefault"));
-    CXMLElement* lReturnValue(lQuery->query(inQuery));
-    mMutexSession.unlock();
-    return lReturnValue;
+      CXMLElement* lReturnValue(lQuery->query(inQuery));
+      mMutexSession.unlock();
+      return lReturnValue;
+    }else{
+      CQueryTreeNode* lQuery(mQueryTree.first->getQueryByID("adefault"));
+      CXMLElement* lReturnValue(lQuery->query(inQuery));
+      mMutexSession.unlock();
+      return lReturnValue;
+    }
+  }catch(...){
+    cout << "something caught" << endl;
+    cerr << "something caught" << endl;
+    
+    exit(10);
   }
 };
 
@@ -990,12 +997,13 @@ CXMLElement* CSessionManager::query(const string& inSessionID,
  	 << endl
  	 << flush;
 #else
-    my_throw(VEUnknownSession(inSessionID.c_str()));
-    cerr << "this line should not be reached" 
-	 << endl;
-    assert(0);
+    //     my_throw(VEUnknownSession(inSessionID.c_str()));
+    //     cerr << "this line should not be reached" 
+    // 	 << endl;
+    //     assert(0);
     CXMLElement* lError(new CXMLElement(mrml_const::error,0));
     lError->addAttribute(mrml_const::message,"Could not process query: unknown session (ID:"+inSessionID+").");
+    return lError;
 #endif
   }
   CXMLElement* lReturnValue(lFound->second->query(*this,

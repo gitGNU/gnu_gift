@@ -222,8 +222,8 @@ public:
 		  string inConfiguration);
   //----------------------------------------
   /**
-     *this CSessionManager has all the information
-     to make a query structure.
+   *this CSessionManager has all the information
+   to make a query structure.
   */
   CQuery* makeQuery(const string& inBaseType,
 		    CAlgorithm& inAlgorithm);
@@ -238,8 +238,8 @@ public:
       Not yet implemented.
   */
   CXMLElement* openSession(string inUserName,
-		   string inSessionID,
-		   string inSessionName);
+			   string inSessionID,
+			   string inSessionName);
   //----------------------------------------
   /** to be used by the Interface. 
       Not yet implemented.
@@ -254,7 +254,7 @@ public:
        blob
    */
   CXMLElement* closeSession(string inSessionID);
-  /**  VIF
+  /**  VeryImportantFunction:
 
    This function looks for a CSession with CSession::mSessionID==inSessionID
    and hands through the rest of the parameter list to CSession::query.
