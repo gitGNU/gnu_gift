@@ -1,3 +1,25 @@
+2001-04-12  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CXMLElement.cc(clone): changeing
+	copy() instruction to use of CAttributeList
+	copy constructor.
+
+	* libMRML/cc/CXMLElementBuilder.cc: adding empty
+	default constructor
+
+2001-04-11  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/Makefile.am (libMRML_la_SOURCES): 
+	adding CXMLElementBuilder to this list
+
+2001-04-09  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* configure.in(CXXFLAGS): set flags for efence
+	
+
+	* libMRML/cc/CAttributeList.cc: took out a couple
+	of checknprints as well as a call to check()
+
 2001-04-05  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* configure.in: allow full multithreading

@@ -28,20 +28,29 @@
 CMutex::CMutex()
 {
 #ifdef __GIFT_USES_THREADS__
+#warning using threads
   pthread_mutexattr_init(&mMutexAttribute);
   assert(!(pthread_mutexattr_settype(&mMutexAttribute,
 				     PTHREAD_MUTEX_RECURSIVE_NP)));
   assert(!pthread_mutex_init(&mMutex,
 			     &mMutexAttribute));
+#else
+#warning NOT USING THREADS
 #endif
 }
 void CMutex::lock()const{
 #ifdef __GIFT_USES_THREADS__
+#warning using threads
   pthread_mutex_lock(&mMutex);
+#else
+#warning NOT USING THREADS
 #endif
 };
 void CMutex::unlock()const{
 #ifdef __GIFT_USES_THREADS__
+#warning using threads
   pthread_mutex_unlock(&mMutex);
+#else
+#warning NOT USING THREADS
 #endif
 }

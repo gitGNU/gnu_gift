@@ -102,3 +102,4 @@ CXMLElement* CXMLElementBuilder::stringToElement(const string& inString){
 }
 
 
+CXMLElementBuilder::CXMLElementBuilder(){};

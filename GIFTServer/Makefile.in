@@ -128,7 +128,7 @@ SUBDIRS = gift-config gift-mrml-messages
 
 # data_DATA= gift-config gift-mrml-messages
 
-bin_PROGRAMS = gift gift-endianize gift-generate-inverted-file gift-modify-distance-matrix gift-one-minus
+bin_PROGRAMS = gift gift-endianize gift-generate-inverted-file gift-modify-distance-matrix gift-one-minus gift-debug-test
 
 # generateDistanceMatrix
 # should be generated, too, but
@@ -151,6 +151,7 @@ INCLUDES = -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile
 #
 #
 gift_LDADD = ../expat/xmlparse/*.o ../expat/xmltok/*.o  \
+	-lefence \
 	@PRE_INSTALL_LIBDIRS@ @PRE_INSTALL_LIBDIRS@\
 	@UNPUBLISHED_DIR@ @UNPUBLISHED@ @BAYESIAN@ \
         -lGIFTQuPerl -lGIFTAcPerl -lMRML\
@@ -204,13 +205,24 @@ gift_modify_distance_matrix_SOURCES = modifyDistanceMatrix.cc
 # (1-x) for each float x read
 # YESSIR, this is a HACK. 
 gift_one_minus_SOURCES = oneMinus.cc
+
+gift_debug_test_SOURCES = gift-debug-test.cc
+
+gift_debug_test_LDADD = ../expat/xmlparse/*.o ../expat/xmltok/*.o  \
+	-lefence \
+	@PRE_INSTALL_LIBDIRS@ @PRE_INSTALL_LIBDIRS@\
+	@UNPUBLISHED_DIR@ @UNPUBLISHED@ @BAYESIAN@ \
+        -lGIFTQuPerl -lGIFTAcPerl -lMRML\
+	@PERL_LD_ADD@ 
+
 subdir = GIFTServer
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../gift-config.h
 CONFIG_CLEAN_FILES = 
 bin_PROGRAMS =  gift$(EXEEXT) gift-endianize$(EXEEXT) \
 gift-generate-inverted-file$(EXEEXT) \
-gift-modify-distance-matrix$(EXEEXT) gift-one-minus$(EXEEXT)
+gift-modify-distance-matrix$(EXEEXT) gift-one-minus$(EXEEXT) \
+gift-debug-test$(EXEEXT)
 PROGRAMS =  $(bin_PROGRAMS)
 
 
@@ -222,6 +234,11 @@ am_gift_OBJECTS =  Server.$(OBJEXT)
 gift_OBJECTS =  $(am_gift_OBJECTS)
 gift_DEPENDENCIES =  ../expat/xmlparse/*.o ../expat/xmltok/*.o
 gift_LDFLAGS = 
+am_gift_debug_test_OBJECTS =  gift-debug-test.$(OBJEXT)
+gift_debug_test_OBJECTS =  $(am_gift_debug_test_OBJECTS)
+gift_debug_test_DEPENDENCIES =  ../expat/xmlparse/*.o \
+../expat/xmltok/*.o
+gift_debug_test_LDFLAGS = 
 am_gift_endianize_OBJECTS =  endianize.$(OBJEXT)
 gift_endianize_OBJECTS =  $(am_gift_endianize_OBJECTS)
 gift_endianize_LDADD = $(LDADD)
@@ -247,13 +264,13 @@ LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAG
 CXXFLAGS = @CXXFLAGS@
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES =  $(gift_SOURCES) $(gift_endianize_SOURCES) \
-$(gift_generate_inverted_file_SOURCES) \
+DIST_SOURCES =  $(gift_SOURCES) $(gift_debug_test_SOURCES) \
+$(gift_endianize_SOURCES) $(gift_generate_inverted_file_SOURCES) \
 $(gift_modify_distance_matrix_SOURCES) $(gift_one_minus_SOURCES)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 DEP_FILES =  @AMDEP@ $(DEPDIR)/Server.Po $(DEPDIR)/endianize.Po \
-$(DEPDIR)/generateInvertedFile.Po $(DEPDIR)/modifyDistanceMatrix.Po \
-$(DEPDIR)/oneMinus.Po
+$(DEPDIR)/generateInvertedFile.Po $(DEPDIR)/gift-debug-test.Po \
+$(DEPDIR)/modifyDistanceMatrix.Po $(DEPDIR)/oneMinus.Po
 DIST_COMMON =  Makefile.am Makefile.in
 
 
@@ -261,8 +278,8 @@ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 GZIP_ENV = --best
 DIST_SUBDIRS =  $(SUBDIRS)
-SOURCES = $(gift_SOURCES) $(gift_endianize_SOURCES) $(gift_generate_inverted_file_SOURCES) $(gift_modify_distance_matrix_SOURCES) $(gift_one_minus_SOURCES)
-OBJECTS = $(am_gift_OBJECTS) $(am_gift_endianize_OBJECTS) $(am_gift_generate_inverted_file_OBJECTS) $(am_gift_modify_distance_matrix_OBJECTS) $(am_gift_one_minus_OBJECTS)
+SOURCES = $(gift_SOURCES) $(gift_debug_test_SOURCES) $(gift_endianize_SOURCES) $(gift_generate_inverted_file_SOURCES) $(gift_modify_distance_matrix_SOURCES) $(gift_one_minus_SOURCES)
+OBJECTS = $(am_gift_OBJECTS) $(am_gift_debug_test_OBJECTS) $(am_gift_endianize_OBJECTS) $(am_gift_generate_inverted_file_OBJECTS) $(am_gift_modify_distance_matrix_OBJECTS) $(am_gift_one_minus_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -327,6 +344,10 @@ maintainer-clean-libtool:
 gift$(EXEEXT): $(gift_OBJECTS) $(gift_DEPENDENCIES)
 	@rm -f gift$(EXEEXT)
 	$(CXXLINK) $(gift_LDFLAGS) $(gift_OBJECTS) $(gift_LDADD) $(LIBS)
+
+gift-debug-test$(EXEEXT): $(gift_debug_test_OBJECTS) $(gift_debug_test_DEPENDENCIES)
+	@rm -f gift-debug-test$(EXEEXT)
+	$(CXXLINK) $(gift_debug_test_LDFLAGS) $(gift_debug_test_OBJECTS) $(gift_debug_test_LDADD) $(LIBS)
 
 gift-endianize$(EXEEXT): $(gift_endianize_OBJECTS) $(gift_endianize_DEPENDENCIES)
 	@rm -f gift-endianize$(EXEEXT)
@@ -448,6 +469,7 @@ maintainer-clean-tags:
 @AMDEP@include $(DEPDIR)/Server.Po
 @AMDEP@include $(DEPDIR)/endianize.Po
 @AMDEP@include $(DEPDIR)/generateInvertedFile.Po
+@AMDEP@include $(DEPDIR)/gift-debug-test.Po
 @AMDEP@include $(DEPDIR)/modifyDistanceMatrix.Po
 @AMDEP@include $(DEPDIR)/oneMinus.Po
 

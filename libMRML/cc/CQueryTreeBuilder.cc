@@ -15,6 +15,11 @@ pair<CQueryContainer*,CQueryTreeNode*> CQueryTreeBuilder::buildQueryTree(CAlgori
 									 CAccessorAdminCollection& inBaseConfiguration,
 									 CStaticQueryFactory& inBaseTypeFactory,
 									 CQueryContainer* inoutContainer)const{
+
+//   cout << __FILE__ << ":" << __LINE__ << ":WARNING returning 0,0 as query tree" << endl;
+//   cerr << __FILE__ << ":" << __LINE__ << ":WARNING returning 0,0 as query tree" << endl;
+//   return pair<CQueryContainer*,CQueryTreeNode*>(0,0);
+
   //
   // 1. generate a CQuery structure with the right type
   //
@@ -60,13 +65,13 @@ pair<CQueryContainer*,CQueryTreeNode*> CQueryTreeBuilder::buildQueryTree(CAlgori
     // check, that this XML element is really an algorithm
     if(iAlgorithm->getName()==mrml_const::algorithm){
 	cout << "really doing it" << endl;
-      pair<CQueryContainer*,CQueryTreeNode*> lNewNode=buildQueryTree(*iAlgorithm,
-								     inBaseConfiguration,
-								     inBaseTypeFactory,
-								     inoutContainer);
-
-      lRoot->addChild(lNewNode.second,
-		      iAlgorithm->getWeight());
+	pair<CQueryContainer*,CQueryTreeNode*> lNewNode=buildQueryTree(*iAlgorithm,
+								       inBaseConfiguration,
+								       inBaseTypeFactory,
+								       inoutContainer);
+	
+	lRoot->addChild(lNewNode.second,
+			iAlgorithm->getWeight());
     }
   }
   //

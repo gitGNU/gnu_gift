@@ -84,7 +84,7 @@ CAttributeList::CAttributeList(const char * const * const inAttributeList){
   }
 }
 CAttributeList::~CAttributeList(){
-  checkNPrint();
+  //checkNPrint();
   for(iterator i=begin();
       i!=end();
       i++){
@@ -163,7 +163,7 @@ CAttributeList::CAttributeList(const CAttributeList& inAttributes){
   gMutex->unlock();
 }
 CAttributeList::const_iterator CAttributeList::find(string inString)const{
-  check();
+  //check();
 
 #ifdef _PRINTOUTS_AL
   cout << endl

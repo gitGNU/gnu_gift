@@ -109,7 +109,11 @@ bool CDocumentFrequencyList::readBinary(istream& inStream){
     push_back(CDocumentFrequencyElement(inStream));
   }
 #else
-  inStream.read(begin(),size()*sizeof(CDocumentFrequencyElement));
+  if(inStream){
+    cout << "¦" << flush;
+    inStream.read(begin(),size()*sizeof(CDocumentFrequencyElement));
+    cout << "-" << flush;
+  }
 #endif
 
   return bool(inStream);

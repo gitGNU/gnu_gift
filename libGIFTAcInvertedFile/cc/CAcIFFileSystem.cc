@@ -1493,15 +1493,16 @@ CDocumentFrequencyList* CAcIFFileSystem::getFeatureFile(string inFileName)const{
     {
       /* a file with the given file name */
       ifstream lFile(inFileName.c_str());
-      unsigned int lNumberOfFeatures=0;
+      unsigned int lNumberOfFeatures(0);
+      if(lFile){
+	lFile.read(&lNumberOfFeatures,
+		   sizeof(lNumberOfFeatures));
       
-      lFile.read(&lNumberOfFeatures,
-		 sizeof(lNumberOfFeatures));
-      
-      if(lFile && (lRetVal=new CDocumentFrequencyList(lNumberOfFeatures))){
+	if(lFile && (lRetVal=new CDocumentFrequencyList(lNumberOfFeatures))){
 	
-	lRetVal->readBinary(lFile);
-	
+	  lRetVal->readBinary(lFile);
+	  
+	}
       }
     } /* end of if the URL was proper */
   mMutex.unlock();

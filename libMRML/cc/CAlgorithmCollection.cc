@@ -276,6 +276,8 @@ CAlgorithm* CAlgorithmCollection::getDefaultAlgorithm()const{
 
   CContent::const_iterator lFound=mContent.find(string("adefault"));
 
+  cout << __FILE__ << ":" << __LINE__ << ":default algorithm found" << endl;
+
   my_assert(lFound!=mContent.end(),
 	    "There SHOULD be a 'adefault' algorithm in the config file!");
 
@@ -288,11 +290,14 @@ CAlgorithm* CAlgorithmCollection::makeDefaultAlgorithm()const{
   //it might be an xml tag in the future
 
   CAlgorithm* lDefaultAlgorithm(getDefaultAlgorithm());
-  lDefaultAlgorithm->check();
+  if(lDefaultAlgorithm){
+    cout << __FILE__ << ":" << __LINE__ << ":going to check default algorithm" << endl;
+    lDefaultAlgorithm->check();
+  }
 
-  cout << __FILE__ << ":" << __LINE__ << "checked, now copying " << endl;
+  cout << __FILE__ << ":" << __LINE__ << ":checked, now copying " << endl;
   CAlgorithm* lReturnValue(new CAlgorithm(*lDefaultAlgorithm));
-  cout << __FILE__ << ":" << __LINE__ << "copied, now checking " << endl;
+  cout << __FILE__ << ":" << __LINE__ << ":copied, now checking again " << endl;
   lReturnValue->check();
   return lReturnValue;
 };

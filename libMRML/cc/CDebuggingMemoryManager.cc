@@ -56,7 +56,7 @@ CDebuggingMemoryManager::CDebuggingMemoryManager(const CDebuggingMemoryManagerSi
 
 void* CDebuggingMemoryManager::getMem( CDebuggingMemoryManagerSize inSize){
   mMutex.lock();
-  inSize+=8;
+  //inSize+=8;
 
   //Look for first free element of the right size;
   lTChunk* lCurrent= mFreeList;

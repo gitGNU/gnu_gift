@@ -17,7 +17,7 @@
 #include "mrml_const.h" //mrml string constants newStart/EndMRMLElement
 #include "../include/CTimeStampGenerator.h" // for time stamps
 string gGIFTHome;//dirty but necessary
-CMutex* gMutex;   //we need a global one
+CMutex* gMutex(0);   //we need a global one
 
 /***********************************************************************
  itoa								

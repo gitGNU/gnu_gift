@@ -91,17 +91,19 @@ pair<bool,string> CXMLElement::stringReadAttribute(const string& inAttribute)con
 
 /** clone this element with all its content */
 CXMLElement* CXMLElement::clone(bool inDeep)const{
-    CXMLElement* lReturnValue=new CXMLElement(mName);
+    CXMLElement* lReturnValue=new CXMLElement(mName,mAttributes);
 
     if(!lReturnValue){
 	my_throw("shit");
     }
 
 
-    copy(mAttributes.begin(),
-	 mAttributes.end(),
-	 inserter(lReturnValue->mAttributes,
-		  lReturnValue->mAttributes.begin()));
+//     copy(mAttributes.begin(),
+// 	 mAttributes.end(),
+// 	 inserter(lReturnValue->mAttributes,
+// 		  lReturnValue->mAttributes.begin()));
+
+    
 
     if(inDeep){
 	for(lCChildren::const_iterator i=mChildren.begin();

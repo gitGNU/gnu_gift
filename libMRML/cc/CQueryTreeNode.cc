@@ -25,14 +25,15 @@ CQueryTreeNode::~CQueryTreeNode(){
 void CQueryTreeNode::configure(list<pair<string,string> > inAttributes,
 			       CAccessorAdminCollection& inAccessors,
 			       CStaticQueryFactory& inFactory){
+
   mAlgorithm=new CAlgorithm(mrml_const::algorithm,
 			    inAttributes);
   cout << "Deleting mContent";
   mContent=0;
   cout << "done";
   mContent=inFactory.makeQuery(mAlgorithm->getBaseType(),
-			      inAccessors,
-			      *mAlgorithm);
+			       inAccessors,
+			       *mAlgorithm);
   cout << "MAKING " << this << "." << static_cast<CQuery*>(mContent) << endl;
   mContent->checkNPrint();
   // Build a local query tree

@@ -171,7 +171,6 @@ INCLUDES = -DHAS_BOOL \
 # libMRML_a_SOURCES= 
 
 libMRML_la_SOURCES = \
-	CXMLElementBuilder.cc\
 	CAccessorElement.cc\
 	\
 	CAccessor.cc\
@@ -219,6 +218,7 @@ libMRML_la_SOURCES = \
 	mrml_const.cc\
 	\
 	CXMLElementVisitor.cc\
+	CXMLElementBuilder.cc\
 	CXEVCommunication.cc\
 	\
 	CMutex.cc\
@@ -241,8 +241,8 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libMRML_la_LIBADD = 
-am_libMRML_la_OBJECTS =  CXMLElementBuilder.lo CAccessorElement.lo \
-CAccessor.lo CAccessorImplementation.lo CAccessorFactoryContainer.lo \
+am_libMRML_la_OBJECTS =  CAccessorElement.lo CAccessor.lo \
+CAccessorImplementation.lo CAccessorFactoryContainer.lo \
 CAccessorFactory.lo CAFPlugin.lo CRelevanceLevel.lo \
 CRelevanceLevelList.lo CIDRelevanceLevelPair.lo \
 CIDRelevanceLevelPairList.lo CAccessorAdmin.lo \
@@ -252,8 +252,9 @@ CStaticQueryFactory.lo GIFTExceptions.lo CAttributeList.lo \
 CXMLHelper.lo CXMLElement.lo CAlgorithm.lo CQueryTreeNode.lo \
 CQueryTreeBuilder.lo CQuery.lo CQMultiple.lo CMagic.lo \
 CQueryParadigmMatcher.lo mrml_const.lo CXMLElementVisitor.lo \
-CXEVCommunication.lo CMutex.lo CCommunicationHandler.lo \
-CTimeStampGenerator.lo CDebuggingMemoryManager.lo
+CXMLElementBuilder.lo CXEVCommunication.lo CMutex.lo \
+CCommunicationHandler.lo CTimeStampGenerator.lo \
+CDebuggingMemoryManager.lo
 libMRML_la_OBJECTS =  $(am_libMRML_la_OBJECTS)
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)

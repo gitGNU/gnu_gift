@@ -16,17 +16,66 @@
 
 
   defines: _NON_BLOCKING: if !=0 then the socket will be used as a non-blocking one
+           __GIFT_NEW_OPERATOR_NEW 
+	                  use my own memory management
 
   ---------------------------------------------------------------------------*/
 
 //use stuff by Wolfgang which has not yet been "released" to the group
 #define WOLFGANG_DEVELOPER
 
-// this is a self-made memory manager
+#ifdef __GIFT_NEW_OPERATOR_NEW
+//  this is a self-made memory manager
 #include "CDebuggingMemoryManager.h"
-// this is for replacing the new() operator
+//  this is for replacing the new() operator
 #include "myNew.h"
 CDebuggingMemoryManager gMemManager(MEMSIZE);
+#endif
+
+#include <stdlib.h>
+#include <assert.h>
+#include <iostream>
+
+// mutual excludes for
+// multithreading
+#include "CMutex.h"
+extern CMutex* gMutex;
+
+#ifdef __GIFT_NEW_IS_MALLOC
+void* operator new(size_t s){
+//   assert(s<10000000);
+//   if(s>10000000){
+//     cout << ">" << flush;
+//   }else{
+//     if(s>100000){
+//       cout << "!" << flush;
+//     }else{
+//       if(s>1000){
+// 	cout << "£" << flush;
+//       }else{
+// 	cout << "." << flush;
+//       }
+//     }
+//   }
+  if(gMutex){
+    gMutex->lock();
+  }
+  void *lResult(malloc(s));
+  if(gMutex){
+    gMutex->unlock();
+  }
+  return lResult;
+}
+void* operator new[](size_t s){
+  return operator new(s);
+}
+void operator delete(void * inToBeDeleted){
+  free(inToBeDeleted);
+}
+void operator delete[](void* inToBeDeleted){ 
+  delete(inToBeDeleted); 
+} 
+#endif
 
 // the gift exceptions
 #include "../gift-config.h"
@@ -42,10 +91,6 @@ CDebuggingMemoryManager gMemManager(MEMSIZE);
 #include <stdlib.h>
 #include <cmath>
 
-// mutual excludes for
-// multithreading
-#include "CMutex.h"
-extern CMutex* gMutex;
 //Sockets
 #include <time.h>
 #include <unistd.h>

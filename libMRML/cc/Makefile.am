@@ -48,7 +48,6 @@ libMRML_la_LDFLAGS=@PRE_INSTALL_LIBDIRS@
 # libMRML_a_SOURCES= 
 
 libMRML_la_SOURCES= \
-	CXMLElementBuilder.cc\
 	CAccessorElement.cc\
 	\
 	CAccessor.cc\
@@ -96,6 +95,7 @@ libMRML_la_SOURCES= \
 	mrml_const.cc\
 	\
 	CXMLElementVisitor.cc\
+	CXMLElementBuilder.cc\
 	CXEVCommunication.cc\
 	\
 	CMutex.cc\

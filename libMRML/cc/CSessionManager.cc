@@ -337,8 +337,8 @@ bool CSession::setActiveAlgorithm(CAccessorAdminCollection& inCaller,
 				  CAlgorithm* inActiveAlgorithm,
 				  CStaticQueryFactory& inBaseTypeFactory){
   mMutexSession.lock();
-  inActiveAlgorithm->check();
   assert(inActiveAlgorithm);
+  //  inActiveAlgorithm->check();
   
   {
     if(mQueryTree.first){
@@ -353,25 +353,28 @@ bool CSession::setActiveAlgorithm(CAccessorAdminCollection& inCaller,
   cout << "[set" << endl;
   mActiveAlgorithm=inActiveAlgorithm;
   
-  if(inActiveAlgorithm->stringReadAttribute(mrml_const::algorithm_type).first)
+  if(inActiveAlgorithm->stringReadAttribute(mrml_const::algorithm_type).first){
+
+
     cout << inActiveAlgorithm->stringReadAttribute(mrml_const::algorithm_type).second
 	 << endl;
-  
-  cout << "set]" << endl;
-  cout << "[build" 
+    
+    cout << "set]" << endl;
+    cout << "[build" 
+	 << endl;
+    mActiveAlgorithm->configure(inAlgorithmCollection);
+    string lString;
+    mActiveAlgorithm->toXML(lString);
+    cout << "-Algorithm CONFIGURED-: configuration"
+	 << endl 
+	 << lString;
+    cout << "-Algorithm CONFIGURED-" 
        << endl;
-  mActiveAlgorithm->configure(inAlgorithmCollection);
-  string lString;
-  mActiveAlgorithm->toXML(lString);
-  cout << "-Algorithm CONFIGURED-: configuration"
-       << endl 
-       << lString;
-  cout << "-Algorithm CONFIGURED-" 
-       << endl;
-  mQueryTree=mQueryTreeBuilder.buildQueryTree(*inActiveAlgorithm,
-					      inCaller,
-					      inBaseTypeFactory,
-					      0);
+    mQueryTree=mQueryTreeBuilder.buildQueryTree(*inActiveAlgorithm,
+						inCaller,
+						inBaseTypeFactory,
+						0);
+  }
   cout << "build]" << endl;
   mMutexSession.unlock();
   return true;
@@ -761,10 +764,12 @@ string CSessionManager::newSession(const string& inUser,
   //a pointer to the same session
   mIDToSession[lID]=&(mUserToSessions[inUser].back());
   mIDToSession[lID]->open();
+
   mIDToSession[lID]->setActiveAlgorithm(mAccessorAdminCollection,
-					*this,
+       					*this,
 					makeDefaultAlgorithm(),
-					*mBaseTypeFactory);
+       					*mBaseTypeFactory);
+  
   mMutexSessionManager.unlock();
   return lID;
 };
@@ -937,9 +942,9 @@ bool CSessionManager::setAlgorithm(const string& inSessionID,
   assert(lSession);
 
   bool lResult=lSession->setActiveAlgorithm(mAccessorAdminCollection,
-					    *this,
-					    inAlgorithm,
-					    *mBaseTypeFactory);
+ 					    *this,
+ 					    inAlgorithm,
+ 					    *mBaseTypeFactory);
   mMutexSessionManager.unlock();
   return lResult;
 };
