@@ -48,7 +48,7 @@ AC_ARG_ENABLE(interactive,
 	]
 )
 
-AM_INIT_AUTOMAKE(gift,0.1.5pre)
+AM_INIT_AUTOMAKE(gift,0.1.6pre3)
 AM_CONFIG_HEADER(gift-config.h)
 AC_ISC_POSIX
 dnl Checks for programs.
