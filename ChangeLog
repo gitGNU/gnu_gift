@@ -1,3 +1,14 @@
+2002-09-04  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* gift-install-prerequisites.pl:
+	Current packages.
+
+	* libMRML/cc/CAccessorAdmin.cc (CAccessorAdmin): added default
+	constructor for mContent.
+	Changed: build accessor before changing open/close counter
+	=> throwing an exception when building the accessor
+	will keep the open/close counter at the old value
+
 2002-09-03  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
 
 	* scripts/perl/gift-add-collection.pre-pl (removeCollection): 

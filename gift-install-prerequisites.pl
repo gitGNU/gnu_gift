@@ -80,7 +80,10 @@ sub getAndUntar( $$$ ){
     my $lDir=$lTar;
     $lDir=~s/\.tar$//;
     unlinkAndWrite($lDir);
-    system("cd /tmp;tar xvf $lTar");
+    unless(system("cd /tmp && tar xvf $lTar")==0){
+      print STDERR "FAILED: $inVersion\n";
+      return "";
+    }
     #
     # if the program is gnu compliant, the tar
     # results will be in the directory given by $lDir
@@ -215,13 +218,13 @@ if(1==1){
   # this is needed by XML::Parser
   
   my $lToBeInstalled={'EXPAT'=>["http://download.sourceforge.net/expat/",
-				'expat-1.95.1',
+				'expat-1.95.4',
 				".tar.gz"],
 		      'MAGICK'=>["http://imagemagick.sourceforge.net/http/",
-				 "ImageMagick-5.4.0",
+				 "ImageMagick-5.4.8",
 				 ".tar.gz"],
-		      'DBI'=>["http://prdownloads.sourceforge.net/libdbi/",
-			      "libdbi-0.6.2",
+		      'DBI'=>["http://belnet.dl.sourceforge.net/sourceforge/libdbi/",
+			      "libdbi-0.6.5",
 			      ".tar.gz"]
 		     };
   my $i;
@@ -240,4 +243,5 @@ if(1==1){
 installPerlModules($lPerlPrefixHash,
 		   'XML::Parser',
 		   'XML::Writer',
-		   'XML::Parser::EasyTree');
+		   'XML::Parser::EasyTree',
+		   'XML::XQL');
