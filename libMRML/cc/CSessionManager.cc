@@ -990,7 +990,10 @@ CXMLElement* CSessionManager::query(const string& inSessionID,
  	 << endl
  	 << flush;
 #else
-    //my_throw(VEUnknownSession(inSessionID.c_str()));
+    my_throw(VEUnknownSession(inSessionID.c_str()));
+    cerr << "this line should not be reached" 
+	 << endl;
+    assert(0);
     CXMLElement* lError(new CXMLElement(mrml_const::error,0));
     lError->addAttribute(mrml_const::message,"Could not process query: unknown session (ID:"+inSessionID+").");
 #endif

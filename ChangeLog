@@ -1,3 +1,10 @@
+2001-09-27  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CSessionManager.cc(query): 
+	* libMRML/cc/CAlgorithmCollection.cc (CAlgorithmCollection): 
+	Moving calls to my_throw in a way that they are USED =>
+	this makes compilers with good exception handling necessary.
+
 2001-05-31  Wolfgang Mueller  <Wolfgang.Mueller@cui.unige.ch>
 
 	* configure.in: changeing package version number

@@ -198,7 +198,10 @@ CAlgorithmCollection::CAlgorithmCollection(string inConfigFileName):
        
   }else{
     //here I get an internal compiler error with egcs
-    // my_throw(VENotFound(inConfigFileName.c_str()));
+    
+    my_throw(VENotFound(inConfigFileName.c_str()));
+    cerr << "gift: this line should not be reached" 
+	 << endl;
     cerr << "gift: I could not find config file: " 
 	 << inConfigFileName 
 	 << endl;
