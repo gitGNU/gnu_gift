@@ -71,7 +71,7 @@ main(int argc,
 			  "yes");
 
     CAcIFFileSystem lAccessor(lElement);
-    
+
     if(lAccessor){
       cout << "GENERATED inverted file" 
 	   << endl

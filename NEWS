@@ -1,3 +1,26 @@
+0.1.11  Unfortunately I have tested uploading to savannah using 
+	a faulty 0.1.10. As removing files from savannah is not
+	possible, overwriting neither (apparently), I bump the
+	version number to 0.1.11
+
+0.1.10	The current version should digest very large collections now.
+	It is tested with small collections only, but the relevant
+	parts of the code use streampos instead of int now. 
+	THIS MEANS YOU HAVE TO RUN gift-generate-inverted-file
+	in all directories that contain an InvertedFileOffset.db file,
+	i.e. for all collections currently maintained by your GIFT 
+	instance. 
+
+	The numbering system will become less weird now. We won't
+	do subsubsub versions (e.g. +x epsilon) any more, as this
+	is not compatible with e.g. Gentoo ebuilds.
+
+0.1.9+5epsilon
+	Fixed annoying bug with which you could hang GIFT by 
+	closing the connection too quickly.
+
+	Changes in gift-guide.sgml
+
 0.1.9+4epsilon
 	License bug. Updated gift-guide.sgml concerning perl and 
 	url2fts.xml

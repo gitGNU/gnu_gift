@@ -42,9 +42,10 @@ sub unlinkAndWrite( $ ){
 #
 # get a file from an URL, and untar/ungzip it
 #
-sub getAndUntar( $$$ ){
+sub getAndUntar( $$$$ ){
   my $inURL=shift;
   my $inVersion=shift;
+  my $inUnpackedVersion=shift;
   my $inExtension=shift;
   my $ua = LWP::UserAgent->new;
   
@@ -88,7 +89,7 @@ sub getAndUntar( $$$ ){
     # if the program is gnu compliant, the tar
     # results will be in the directory given by $lDir
     #
-    return $lDir;
+    return "/tmp/$inUnpackedVersion";
   }else{
     print STDERR "FAILED: $inVersion\n";
     return "";
@@ -99,16 +100,17 @@ sub getAndUntar( $$$ ){
 #
 # get a file from an URL and compile it
 #
-sub getAndCompile( $$$$ ){
+sub getAndCompile( $$$$$ ){
   my $inFlags=shift;
   my $inURL=shift;
   my $inVersion=shift;
+  my $inUnpackedVersion=shift;
   my $inExtension=shift;
   
   #
   # get the file
   #
-  my $lFile=getAndUntar($inURL,$inVersion,$inExtension);
+  my $lFile=getAndUntar($inURL,$inVersion,$inUnpackedVersion,$inExtension);
 
   if($lFile){
     my $lOptions="";
@@ -140,19 +142,23 @@ sub getGNUInstallationCompliantPackage( $@ ){
   my $inFlags=shift;
   my $inURLBase=shift;
   my $inVersion=shift;
+  my $inUnpackedVersion=shift;
   my $inExtension=shift;
   getAndCompile($inFlags,
                 "$inURLBase$inVersion$inExtension",
 		$inVersion,
+		$inUnpackedVersion,
 		$inExtension);
 }
 sub getCharmer( $$ ){
   
 
   my $inVersion=shift;
+  my $inUnpackedVersion=shift;
   my $inExtension=shift;
   my $lDirectory=getAndUntar("http://www.mrml.net/download/packages/",
 			     $inVersion,
+			     $inUnpackedVersion,	
 			     $inExtension);
   if($lDirectory){
 
@@ -218,19 +224,21 @@ if(1==1){
   # this is needed by XML::Parser
   
   my $lToBeInstalled={'EXPAT'=>["http://download.sourceforge.net/expat/",
-				'expat-1.95.4',
+				'expat-1.95.7',
+				'expat-1.95.7',
 				".tar.gz"],
-		      'MAGICK'=>["http://imagemagick.sourceforge.net/http/",
-				 "ImageMagick-5.4.8",
+		      'MAGICK'=>["http://belnet.dl.sourceforge.net/sourceforge/imagemagick/",
+				 "ImageMagick-6.0.2-1",
+				 "ImageMagick-6.0.2",
 				 ".tar.gz"],
-		      'DBI'=>["http://belnet.dl.sourceforge.net/sourceforge/libdbi/",
-			      "libdbi-0.6.5",
-			      ".tar.gz"]
+#		      'DBI'=>["http://belnet.dl.sourceforge.net/sourceforge/libdbi/",
+#			      "libdbi-0.6.5",
+#			      ".tar.gz"]
 		     };
   my $i;
   foreach $i (sort {$a cmp $b} keys(%{$lToBeInstalled})){
     unless($ENV{$i}){
-      #if package with associated to key $i is there,
+      #if package associated to key $i is there,
       #then the variable $ENV{$i} has been set by
       #./configure
       getGNUInstallationCompliantPackage($lPrefixHash,

@@ -3,7 +3,7 @@
   <article>
       <title>GIFT user's guide</title>
       <author>Wolfgang Müller</author>
-      <date>0.1.9+4epsilon, 2003-09-15</date>
+      <date>0.1.9+5epsilon, 2004-04-16</date>
       <abstract>The GIFT is a content based image retrieval system.
       </abstract>
       
@@ -99,18 +99,17 @@ GNU conformant.
 </p><p>
 Please tell us about any bugs in the installation procedure.
 </p>
-      <p>The distribution so far has been tested on a GNU/Linux
-distribution by SuSE, and on a SUN Ultra Sparc 10 running Solaris.
-Both machines had memory size 64MB and more than that. 
+      <p>The current distribution typically runs GNU/Linux 
+	machines of diverse flavours.
 </p>
-      <p>Get installed: you have received the package gift-0.1.5.tgz. Now:
+      <p>Get installed: you have received the package gift-0.1.x.tgz. Now:
 <itemize>
 	  <item><bf>New:</bf> we have added a Perl script which tries
 to fetch the perl prerequisites, as well as SnakeCharmer. It uses the
 CPAN (comprensive Perl archive network) module for installing. This
 module might ask you plenty of questions.</item>
 	  <item>For successful installing and running we need<itemize>
-	      <item> a recent g++ (we suggest 2.95. egcs 1.1 should work, too)  </item>
+	      <item> a recent g++ (we suggest 3.3, we need definitely younger than gcc 2.8)  </item>
 	      <item>Image Magick (the feature extraction uses it to
 convert image formats to PPM files.)</item>
 	      <item>Perl younger than 5.003 (you get that at 
@@ -131,6 +130,9 @@ www.cpan.org)</item>
 		  <item>libnet (if not already provided by your GNU/Linux distribution)</item>
 		  <item>libwww (if not already provided by your GNU/Linux distribution)</item>
 		</itemize>
+		<p><em>If this is too much for you to handle, please ask for the gift 
+		    prerequisites package and help us develop and test it. <url url="mailto:help-gift@gnu.org"> is a good place to discuss this
+		  </em></p>
 </item>
 	      <item>doxygen (optional, for system documentation)</item>
 	    </itemize>
@@ -317,7 +319,7 @@ result set.</item>
 	  Be aware, that an applet can only connect to the server it
 	  came from. So you have to see to it that your appletviewer
 	  fetches the SnakeCharmer applet from the remote server. 
-	  </p>
+	</p>
       </sect1>
       <sect1>
 	<heading>Instead of images, I see empty frames</heading>
@@ -328,11 +330,8 @@ result set.</item>
 files with the extension png, gif, jpg, jpeg, eps, and ppm.
 	  unfortunately JAVA is only able to digest GIF and JPEG. 
 	  </p>
-	  <p>
-We create for each image also a 128x128 thumbnail in jpeg
-format. Unfortunately, SnakeCharmer still displays the original
-image instead of the thumbnails. It's on our TODO list.
-</p>
+	  <p>Problems have been reported with recent JREs and SnakeCharmer.
+	    These were due to security problems (below).
 	</sect2>
 	<sect2>
 	  <heading>JAVA security gets in our way</heading>
@@ -342,9 +341,18 @@ remote IDs (at least I had once trouble with that), JAVA 1.2's
 appletviewer is extremely restrictive, as restrictive as a browser
 would be. As a consequence, you have to put your images and thumbnails
 into a web-published area, if you want to see anything.
-</p><p>
-See the "digging in the indexing files" section for more information
-</p></sect2>
+</p>
+	  <p>
+	    See the "digging in the indexing files" section for more information
+	  </p>
+	</sect2>
+	<sect2>
+	  <heading>JAVA 1.4-1.5 security</heading>
+	  <p>Problems have been reported on <url url="mailto:help-gift@gnu.org"> which were due 
+	    to bad installations of JAVA. Please make sure that the security policies of
+	    the JRE are accessible to the appletviewer. Ample documentation about 
+	    security policy files can be found at SUN's site.
+	</sect2>
       </sect1>
       <sect1>
 	<heading>Digging in the indexing files</heading>

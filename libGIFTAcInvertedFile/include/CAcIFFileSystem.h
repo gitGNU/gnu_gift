@@ -130,7 +130,7 @@ protected:
   string mFeatureDescriptionFileName;
 
   /** map from feature id to the offset for this feature */
-  typedef HASH_MAP<TID,unsigned int> CIDToOffset;//new hash
+  typedef HASH_MAP<TID,streampos> CIDToOffset;//new hash
   /** map from feature id to the offset for this feature */
   CIDToOffset mIDToOffset;
 
@@ -151,7 +151,7 @@ protected:
       (helper function for inverted file construction)
    */
   void writeOffsetFileElement(TID inFeatureID,
-			      int inPosition,
+			      streampos inPosition,
 			      ostream& inOpenOffsetFile);
   /** loads a *.fts file. and returns the feature list*/
   CDocumentFrequencyList* getFeatureFile(string inFileName)const;

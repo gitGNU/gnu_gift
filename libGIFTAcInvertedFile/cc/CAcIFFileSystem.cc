@@ -97,6 +97,13 @@ typedef struct{
   unsigned int mUInt2;
 } SUIntUInt;
 
+/** used for reading the offset file */
+typedef struct{
+  unsigned int mUInt1;
+  //unsigned int mUInt2;
+  streampos mStreampos;
+} SUIntStreampos;
+
 
 /***************************************
 *
@@ -113,6 +120,7 @@ typedef struct{
 bool CAcIFFileSystem::operator()()const{
   /**/gMutex->lock();
   bool lReturnValue(mURL2FTS
+		    && mInvertedFile
 		    && *mInvertedFile
 		    && mOffsetFile
 		    && mURL2FTS->operator bool());
@@ -286,7 +294,7 @@ bool CAcIFFileSystem::generateInvertedFile(){
       //writing the offset
       {
 	// this is the position of the next feature in the inverted file
-	unsigned int lPos=lNewInvertedFile.tellp();
+	streampos lPos(lNewInvertedFile.tellp());
 	
 	/* updating the offset file */
 
@@ -378,6 +386,7 @@ bool CAcIFFileSystem::generateInvertedFile(){
        << endl;
 
 
+
 #ifndef _NO_CHECK_CONSISTENCY
   cout << "BEFORE checking inverted file consistency" << flush;
   assert(checkConsistency());
@@ -394,13 +403,27 @@ bool CAcIFFileSystem::generateInvertedFile(){
     (helper function for inverted file construction)
 */
 void CAcIFFileSystem::writeOffsetFileElement(TID inFeatureID,
-					     int inPosition,
+					     streampos inPosition,
 					     ostream& inOpenOffsetFile){
-  /**/gMutex->lock();
-  inOpenOffsetFile.write((char*)&inFeatureID,
-			 sizeof(inFeatureID));
-  inOpenOffsetFile.write((char*)&inPosition,
-			 sizeof(inPosition));
+  /**/gMutex->lock();/** used for reading the offset file */
+
+  SUIntStreampos lWriter;
+
+  lWriter.mUInt1=inFeatureID;
+  lWriter.mStreampos=inPosition;
+#ifndef _NO_PRINT_OFFSET_CHECK
+  lWriter.mUInt2=int(inPosition);
+#endif
+
+//   inOpenOffsetFile.write((char*)&inFeatureID,
+// 			 sizeof(TID));
+//   inOpenOffsetFile.write((char*)&inPosition,
+// 			 sizeof(streampos));
+  inOpenOffsetFile.write((char*)&lWriter,
+ 			 sizeof(lWriter));
+  std::cout << "[inFeatureID:" << sizeof(TID) << "/" << inFeatureID
+	    << ";inPosition:" << sizeof(streampos) << "/" << inPosition << "==" << int(inPosition)
+	    << "]" << sizeof(lWriter) << endl;
   /**/gMutex->unlock();
   
 };
@@ -419,7 +442,7 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
   /**/gMutex->lock();
   // open the feature description file
   //
-  cout << "I want to use/generate the files:"
+  cout << "NEWGEN I want to use/generate the files:"
        << mInvertedFileName << endl
        << mOffsetFileName << endl
        << mURL2FTS->getURLToFeatureFileName() << endl
@@ -623,7 +646,7 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
 	/* this writes the actual data for the feature, 
 	   meaning the list of all the documents containg 
 	   this feature */
-	cout << endl
+	cout //<< endl
 	     << "Writing Chunk for Feature ID "
 	     << hex
 	     << lFeatureID
@@ -695,20 +718,20 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
   
   //as last thing give as output the Additional Document Information
   /* writes the additional document information */
-  cout << "WRITING ADI ****************************************"
+  cout << "NEW WRITING ADI ****************************************"
        << endl;
   assert(lADI.output());
-  cout << "ADI WRITTEN ****************************************"
+  cout << "NEW ADI WRITTEN ****************************************"
        << endl
        << endl;
   
   
-#ifndef _NO_CHECK_CONSISTENCY
   cout << "BEFORE checking inverted file consistency" << flush;
   assert(checkConsistency());
   cout << "AFTER checking inverted file consistency" << endl
        << "The check was successful"
        << endl;
+#ifndef _NO_CHECK_CONSISTENCY
 #endif
   
   // delete the helper files created by merge_sort_streams
@@ -961,71 +984,85 @@ bool CAcIFFileSystem::init(bool inMemory)
 
   mOffsetFile.seekg(0);
 
+
   /* while there is no end of file for the offsets */
   while(mOffsetFile){
-    SUIntUInt lVal;
+    SUIntStreampos lVal;
 
     /* read a value into the offset file */
     mOffsetFile.read((char*)&lVal,sizeof(lVal));
-
-
-    unsigned int lFeatureID=lVal.mUInt1;
-    unsigned int lOffset=lVal.mUInt2;
+    
 
     if(mOffsetFile){
+
+
+      // actually useful code here! ;-I
+      unsigned int lFeatureID=lVal.mUInt1;
+      streampos lOffset(lVal.mStreampos);//FIXME streampos
       mMaximumFeatureID=(mMaximumFeatureID < lFeatureID)?lFeatureID:mMaximumFeatureID;
-      
       mIDToOffset[lFeatureID]=lOffset;
-    }
 
 #ifndef _NO_PRINT_OFFSET_CHECK
-    cout << "[lVal" << flush
-	 << hex
-	 << lFeatureID
-	 << ","
-	 << hex
-	 << lOffset
-	 << dec
-	 << "]" << flush;
-#endif
-    //Reading the offsetfile
-    {
-      //move to the right position
-      mInvertedFile->seekg(streampos(lOffset));
-
-      //read the list start chunk 
-      //(by constructing an instance of the list start cunk)
-      CIFListStart lListStart(*mInvertedFile);
-
-      //checking it
-      if(lListStart.getFeatureID()!=lFeatureID){
-	cout << "[ERROR" << flush
-	     << hex
-	     << lFeatureID
-	     << ","
-	     << hex
-	     << lListStart.getFeatureID()
-	     << dec
-	     << "]" << flush;
-	assert(0);
+      // hexdump of the characters read
+      for(int i=0;i<sizeof(lVal);i++){
+	cout << hex << (unsigned int)(((unsigned char*)&lVal)[i]) << "/" << dec << flush;
       }
-#ifndef _NO_PRINT_OFFSET_CHECK
-      else{
-	cout << "-" << flush;
-      }
-#endif
-
-      //And setting up the translation table from feature 
-      //ID to collection frequency
-      mFeatureToCollectionFrequency[lListStart.getFeatureID()]=
-	lListStart.getCollectionFrequency();
       
-      /*      assert(mFeatureToCollectionFrequency[lListStart.getFeatureID()]);*/
 
-    }
+      // value different from check value?
+      if((unsigned int)(lVal.mStreampos) != lVal.mUInt2){
+	cout << "Size:" << sizeof(lVal) << ":"  << lVal.mUInt1 << ":" << lVal.mStreampos << "!=" << lVal.mUInt2 << "!!!" << long(mOffsetFile.tellg()) << endl;
+      }
+      assert((unsigned int)(lVal.mStreampos) == lVal.mUInt2);
+
+      // the actual values
+      cout << "[read:" << sizeof(lVal) << ":inFeatureID:" << flush
+	   << hex
+	   << lFeatureID << "==" << dec << lFeatureID
+	   << ";inPosition:"
+	   << dec
+	   << lOffset
+	   << "/"
+	   << lVal.mStreampos
+	   << "]" << long(mOffsetFile.tellg()) << endl;
+#endif
+      //Reading the offsetfile
+      { //move to the right position
+	mInvertedFile->seekg(lOffset);
+	
+	//read the list start chunk 
+	//(by constructing an instance of the list start cunk)
+	CIFListStart lListStart(*mInvertedFile);
+	
+	//checking it
+	if(lListStart.getFeatureID()!=lFeatureID){
+	  cout << "[ERROR" << flush
+	       << hex
+	       << lFeatureID
+	       << ","
+	       << hex
+	       << lListStart.getFeatureID()
+	       << dec
+	       << "]" << flush;
+	  assert(0);
+	}
+#ifndef _NO_PRINT_OFFSET_CHECK
+	else{
+	  cout << "-" << flush;
+	}
+#endif
+
+	//And setting up the translation table from feature 
+	//ID to collection frequency
+	mFeatureToCollectionFrequency[lListStart.getFeatureID()]=
+	  lListStart.getCollectionFrequency();
+	
+	/*      assert(mFeatureToCollectionFrequency[lListStart.getFeatureID()]);*/
+	
+      }
 #ifndef _NO_CHECK_OFFSET_FILE
 #endif
-    
+    } // if the file is valid --> ID is valid!
   }
 
   cout << "OffsetFile " 
@@ -1214,7 +1251,7 @@ FeatureToList(TFeatureID inFeatureID)const
 
       //Find the list of URL-IDs for the feature
       if(mIDToOffset.find(inFeatureID)!=mIDToOffset.end()){
-	mInvertedFile->seekg(streampos((*mIDToOffset.find(inFeatureID)).second));
+	mInvertedFile->seekg((*mIDToOffset.find(inFeatureID)).second);
       	assert(*mInvertedFile);
 	/* if the inverted file has been able to be opened */
 	if(*mInvertedFile){
@@ -1287,7 +1324,7 @@ bool CAcIFFileSystem::findWithinStream(TID inFeatureID,
 							  after the last one for a list */
     {
       /* seekg searches the file position to read (get) */
-      mInvertedFile->seekg(streampos((*mIDToOffset.find(inFeatureID)).second));
+      mInvertedFile->seekg((*mIDToOffset.find(inFeatureID)).second);
       
       /* if the file is correctly opened */
       if(*mInvertedFile){

@@ -1,16 +1,31 @@
-  GIFT 0.1.9 README
+  GIFT 0.1.11 README
   Wolfgang Mueller
-  07.09.2002 (7nd of september)
+  2004-06-11
+
+  IF YOU'RE ALLREADY RUNNING AN INSTALLATION OF A PREVIOUS
+  VERSION OF THE GIFT, PLEASE DO READ THE "NEWS" FILE.
 
   The GIFT is a content based image retrieval system.
   That is, it enables the user to retrieve images from a collection 
   without attaching text-based annotation to each image.
 
-  For a no-problem-few-questions interactive installation type
+  For a no-problem-few-questions interactive installation (the method
+  tested best) that does not use CPAN get gift-prerequisites-0.11.tar.gz 
+  and install that. Then type:
+
+  % ./configure  --enable-multithreading
+  % make
+  % make install
+
+
+  For a few-questions interactive installation that 
+  uses CPAN type (a bit more risky than the previous approach
+  not due to CPAN, but more difficult to test).
 
   % ./configure --enable-interactive --enable-multithreading
   % make
   % make install
+
 
   If you ask yourself questions, read :
 

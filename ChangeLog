@@ -1,3 +1,34 @@
+2004-06-11    <wolfgang.mueller2@uni-bayreuth.de>
+
+	* gift-install-prerequisites.pl: changed to accomodate
+	archive name different from unpack directory 
+	(i.e. ImageMagick).
+
+	* README: changed readme
+
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc(operator()): 
+	check if mInvertedFile is null. Fixes segmentation fault at
+	end of gift-generate-inverted-file.
+	(init): check if the file is valid before using the just-read
+	ID/offset tuple.
+
+2004-06-10    <muellerw@localhost>
+
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc (init): 
+	more debugging printouts
+
+2004-06-10    <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc (init): 
+	changed debugging output for offset file read
+
+2004-04-16  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* configure.in: changed version number.
+
+	* Doc/gift-guide.sgml: Added remarks about java rights problems,
+	the gift-prerequisites package etc.
+
 2004-03-24  Wolfgang Müller  <muellerw@btn1x5>
 
 	* scripts/perl/gift-add-collection.pre-pl: Changed to
