@@ -247,7 +247,9 @@ CQInvertedFile::CQInvertedFile(CAccessorAdminCollection& inAccessorAdminCollecti
 	 inAlgorithm){
   assert(&inAccessorAdminCollection);
   assert(&inAlgorithm);
-  
+  assert(&inAlgorithm==mAlgorithm);
+  mDeb=mAlgorithm;
+  mAlgorithm->activate();
   my_diagnose(&inAlgorithm);
 
   // mproxy has been filled in a reasonable way 
@@ -295,7 +297,24 @@ CQInvertedFile::CQInvertedFile(CAccessorAdminCollection& inAccessorAdminCollecti
   cout << "CQInvertedFile THIS:" << this << endl;
 };
 CQInvertedFile::~CQInvertedFile(){
-  cout << "KILLING INVERTED FILE QUERY" << endl;
+
+  cout << "begin KILLING INVERTED FILE QUERY" << endl;
+  assert(mDeb==mAlgorithm);
+  if(mAlgorithm){
+    mAlgorithm->check();
+    pair<bool,string> lSubType=mAlgorithm->stringReadAttribute("cui-sub-type");
+    if(lSubType.first){
+      if(lSubType.second=="mysql"){
+	mAccessorAdmin->closeAccessor("if_mysql");
+      }else{
+	mAccessorAdmin->closeAccessor("inverted_file");
+      }
+    }else{
+      mAccessorAdmin->closeAccessor("inverted_file");
+    }
+  }
+  mAlgorithm->deActivate();
+  cout << "end KILLING INVERTED FILE QUERY" << endl;
 }
 
 /***************************************

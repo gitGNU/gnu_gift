@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.4c from Makefile.am
+# Makefile.in generated automatically by automake 1.4e from Makefile.am.
 
-# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000
+# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
 # Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -10,6 +10,31 @@
 # but WITHOUT ANY WARRANTY, to the extent permitted by law; without
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
+
+@SET_MAKE@
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+#
+# we configure the add collection program to work even if gift is not in the path
+# this is also necessary for installing several versions of GIFT at the same time
+#
+
 
 SHELL = @SHELL@
 
@@ -47,7 +72,7 @@ INSTALL = @INSTALL@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
-INSTALL_STRIP_FLAG =
+INSTALL_HEADER = $(INSTALL_DATA)
 transform = @program_transform_name@
 
 NORMAL_INSTALL = :
@@ -57,10 +82,8 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 
-@SET_MAKE@
 host_alias = @host_alias@
 host_triplet = @host@
-AMDEP = @AMDEP@
 AMTAR = @AMTAR@
 AS = @AS@
 AWK = @AWK@
@@ -82,6 +105,8 @@ GIFT_BAYESIAN_FLAG = @GIFT_BAYESIAN_FLAG@
 GIFT_INTERNAL_FLAG = @GIFT_INTERNAL_FLAG@
 GIFT_INTERNAL_PERLS = @GIFT_INTERNAL_PERLS@
 GIFT_LIB_VERSION_INFO = @GIFT_LIB_VERSION_INFO@
+INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+INSTALL_STRIP_PROGRAM_ENV = @INSTALL_STRIP_PROGRAM_ENV@
 LEX = @LEX@
 LIBADD_DL = @LIBADD_DL@
 LIBOBJS = @LIBOBJS@
@@ -116,33 +141,12 @@ UNPUBLISHED = @UNPUBLISHED@
 VERSION = @VERSION@
 WEB_PUBLISHING_DIRECTORY = @WEB_PUBLISHING_DIRECTORY@
 WEB_PUBLISHING_LOCATION = @WEB_PUBLISHING_LOCATION@
+_am_include = @_am_include@
+_am_quote = @_am_quote@
 install_sh = @install_sh@
 lispdir = @lispdir@
 multi_basedir = @multi_basedir@
 pythondir = @pythondir@
-
-#     GIFT, a flexible content based image retrieval system.
-#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
-
-#     This program is free software; you can redistribute it and/or modify
-#     it under the terms of the GNU General Public License as published by
-#     the Free Software Foundation; either version 2 of the License, or
-#     (at your option) any later version.
-
-#     This program is distributed in the hope that it will be useful,
-#     but WITHOUT ANY WARRANTY; without even the implied warranty of
-#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#     GNU General Public License for more details.
-
-#     You should have received a copy of the GNU General Public License
-#     along with this program; if not, write to the Free Software
-#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-#
-# we configure the add collection program to work even if gift is not in the path
-# this is also necessary for installing several versions of GIFT at the same time
-#
-
 
 EXTRA_SCRIPTS = gift-url-to-fts.pl gift-browser-benchmark.pl gift-extract-text-features.pl gift-annotation-to-html.pl gift-ranking-comparison.pl CFCRankingComparison.pm CGraphCollection.pm CQueryParadigmMatcher.pm CXTVTripletList.pm CTripleTransfer.pl CGLDAudreyMTam.pl CGLStructuredAnnotation.pm CGIFTLink.pm CGIFTLinkDemo.pl CGLDistanceMatrix.pm CXMLTreeBuilder.pm CXMLTreeWriter.pm CXMLTreeVisitor.pm CXTVWriter.pm CXTVTripletList.pm CXTVTripletList.pm  gift-start.pl
 
@@ -151,27 +155,24 @@ PERLCONFIG = sed "s:__PERL_LOCATION__:@PERL@:g;s:__BINDIR__:@bindir@:g;s:__DATAD
 bin_SCRIPTS = @GIFT_INTERNAL_PERLS@ gift-url-to-fts.pl gift-diagnose-print-all-ADI.pl gift-mrml-client.pl CFeedbackClient.pm CFCMovingTarget.pm gift-perl-example-server.pl gift-add-collection.pl gift-dtd-to-tex.pl gift-dtd-to-keywords.pl CQueryParadigmMatcher.pm CTripleTransfer.pl CGLDAudreyMTam.pl CGLStructuredAnnotation.pm CGIFTLink.pm CGLDistanceMatrix.pm CGIFTLinkDemo.pl CXMLTreeBuilder.pm CXMLTreeWriter.pm CXMLTreeVisitor.pm CXTVTripletList.pm CXTVWriter.pm CGraphCollection.pm gift-old-to-new-url2fts.pl gift-start.pl
 subdir = scripts/perl
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
-CONFIG_HEADER = ../../gift-config.h
-CONFIG_CLEAN_FILES = 
-SCRIPTS =  $(bin_SCRIPTS)
+CONFIG_HEADER = $(top_builddir)/gift-config.h
+CONFIG_CLEAN_FILES =
+SCRIPTS = $(bin_SCRIPTS)
 
-DIST_SOURCES = 
-DIST_COMMON =  Makefile.am Makefile.in
+DIST_SOURCES =
+DIST_COMMON = Makefile.am Makefile.in
+all: all-am
 
-
-DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-
-GZIP_ENV = --best
-all: all-redirect
 .SUFFIXES:
-$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --gnu scripts/perl/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
-	cd $(top_builddir) \
-	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+	cd $(top_srcdir) && \
+	  $(AUTOMAKE) --gnu  scripts/perl/Makefile
 
-
+Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) && \
+	  CONFIG_HEADERS= CONFIG_LINKS= \
+	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
 install-binSCRIPTS: $(bin_SCRIPTS)
 	@$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
@@ -197,7 +198,10 @@ tags: TAGS
 TAGS:
 
 
-distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+
+top_distdir = ../..
+distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 
 distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
@@ -211,32 +215,26 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
-info-am:
-info: info-am
-dvi-am:
-dvi: dvi-am
 check-am: all-am
 check: check-am
-installcheck-am:
-installcheck: installcheck-am
-install-exec-am: install-binSCRIPTS
-install-exec: install-exec-am
+all-am: Makefile $(SCRIPTS)
 
-install-data-am:
+installdirs:
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+
+install: install-am
+install-exec: install-exec-am
 install-data: install-data-am
+uninstall: uninstall-am
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
-install: install-am
-uninstall-am: uninstall-binSCRIPTS
-uninstall: uninstall-am
-all-am: Makefile $(SCRIPTS)
-all-redirect: all-am
-install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
-installdirs:
-	$(mkinstalldirs)  $(DESTDIR)$(bindir)
 
+installcheck: installcheck-am
+
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
+	  INSTALL_PROGRAM_ENV='$(INSTALL_STRIP_PROGRAM_ENV)' install
 
 mostlyclean-generic:
 
@@ -247,32 +245,52 @@ distclean-generic:
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
+	@echo "This command is intended for maintainers to use"
+	@echo "it deletes files that may require special tools to rebuild."
 	-rm -f Makefile.in
-mostlyclean-am:  mostlyclean-generic
-
-mostlyclean: mostlyclean-am
-
-clean-am:  clean-generic mostlyclean-am
-
 clean: clean-am
 
-distclean-am:  distclean-generic clean-am
-	-rm -f libtool
+clean-am: clean-generic mostlyclean-am
 
 distclean: distclean-am
 
-maintainer-clean-am:  maintainer-clean-generic distclean-am
-	@echo "This command is intended for maintainers to use;"
-	@echo "it deletes files that may require special tools to rebuild."
+distclean-am: clean-am distclean-generic
+
+dvi:
+
+dvi-am:
+
+info:
+
+info-am:
+
+install-data-am:
+
+install-exec-am: install-binSCRIPTS
+
+install-info:
+
+install-man:
+
+installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 
-.PHONY: all all-am all-redirect check check-am clean clean-generic \
-distclean distclean-generic distdir dvi dvi-am info info-am install \
-install-am install-binSCRIPTS install-data install-data-am install-exec \
-install-exec-am install-strip installcheck installcheck-am installdirs \
-maintainer-clean maintainer-clean-generic mostlyclean \
-mostlyclean-generic tags uninstall uninstall-am uninstall-binSCRIPTS
+maintainer-clean-am: distclean-am maintainer-clean-generic
+
+mostlyclean: mostlyclean-am
+
+mostlyclean-am: mostlyclean-generic
+
+uninstall-am: uninstall-binSCRIPTS
+
+.PHONY: all all-am check check-am clean clean-generic distclean \
+	distclean-generic distdir dvi dvi-am info info-am install \
+	install-am install-binSCRIPTS install-data install-data-am \
+	install-exec install-exec-am install-info install-man \
+	install-strip installcheck installcheck-am installdirs \
+	maintainer-clean maintainer-clean-generic mostlyclean \
+	mostlyclean-generic uninstall uninstall-am uninstall-binSCRIPTS
 
 
 CTripleTransfer.pl: CTripleTransfer.pre-pl

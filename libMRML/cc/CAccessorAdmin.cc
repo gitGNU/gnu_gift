@@ -22,7 +22,9 @@
 #include "mrml_const.h" // for parsing
 #include "CXMLElement.h" // mCollectionElement 
 #include "CXMLHelper.h"
-
+#include "CMutex.h"
+extern CMutex* gMutex;
+#include <unistd.h> // printing process ID for debugging
 #include "CAccessorAdmin.h"
 
 ///
@@ -55,6 +57,7 @@ CAccessor* CAccessorAdmin::openAccessor(string inName){
 	   << inName << endl
 	   << " NEWLY GENERATED." << endl;
     }else{
+      mContent[inName].mOpenCloseCounter++;
       cerr << endl
 	   << "CAccessorAdmin::openAccessor:"
 	   << inName << endl
@@ -66,14 +69,29 @@ CAccessor* CAccessorAdmin::openAccessor(string inName){
 };
 ///
 void CAccessorAdmin::closeAccessor(string inName){
+  if(gMutex){
+    gMutex->lock();
+  }
   CContent::iterator lFound=mContent.find(inName);
+
+  cout << __FILE__ << ":" << __LINE__ 
+       << "PID:" << getpid()
+       << "OpenCloseCounter["
+       << inName
+       << "]"
+       << (mContent[inName].mOpenCloseCounter) << endl;
+  
+  if(1==1)
   if((lFound!=mContent.end())
      &&
      !(--(mContent[inName].mOpenCloseCounter))){
     delete lFound->second.mAccessor;
     mContent.erase(lFound);
-    
+
     mFactoryContainer.closeAccessor(inName);
+  }
+  if(gMutex){
+    gMutex->unlock();
   }
 };
 ///

@@ -94,6 +94,9 @@ class CQInvertedFile:public CQuery{
 
 protected:
 
+
+  CAlgorithm* mDeb;
+
   /** You can choose to use only every lModulo-th feature */
   int mModulo;
   /** Every lModulo-th feature, starting at lModuloClass  */

@@ -20,6 +20,8 @@ CQueryTreeNode::~CQueryTreeNode(){
     cout << "DELETING" 
 	 << endl;
   }
+  delete mContent;
+  delete mAlgorithm;
 };
 /** Configure this */
 void CQueryTreeNode::configure(list<pair<string,string> > inAttributes,

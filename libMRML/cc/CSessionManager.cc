@@ -953,8 +953,7 @@ CXMLElement* CSessionManager::query(const string& inSessionID,
 				    const CXMLElement& inRelevanceLevelList){
   // this is function not completely locked, because the functions called do not neccessarily 
   // need a lock. LOCKING THIS FUNCTION COMPLETELY WOULD MEAN LOSING CONCURRENCY.
-  //
-  mMutexSessionManager.lock();
+  //mMutexSessionManager.lock();//debugging
   CIDToSession::const_iterator lFound=mIDToSession.find(inSessionID);
   //mMutexSessionManager.unlock();
   //
@@ -972,7 +971,7 @@ CXMLElement* CSessionManager::query(const string& inSessionID,
   }
   CXMLElement* lReturnValue(lFound->second->query(*this,
 			       inRelevanceLevelList));
-  mMutexSessionManager.unlock();
+  //mMutexSessionManager.unlock();//debugging
   return lReturnValue;
 };
 //--------------------------------------------------

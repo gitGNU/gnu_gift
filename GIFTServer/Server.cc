@@ -141,8 +141,6 @@ void operator delete[](void* inToBeDeleted){
 //#undef  __GIFT_USES_THREADS__ // for debugging
 long PORT = 12789; /* port number: this line, for example, is by J. Raki ;-)*/
 
-
-
 /***********************************************************************
  itoa								
 									
@@ -524,7 +522,7 @@ void* processMessage(void* inProcessMessageParameters){
 
   ***********************************************************************/	       
 void main(int argc, char **argv){
-
+  gMutex=0;
   gMutex=new CMutex();
 
   gGIFTHome=string(getenv("GIFT_HOME")?getenv("GIFT_HOME"):getenv("HOME")?getenv("HOME"):".");

@@ -23,7 +23,8 @@
 #define   _GNU_SOURCE
 #include "CMutex.h"
 #include <assert.h>
-
+#include <iostream>
+#include <unistd.h>
 #include <pthread.h>
 CMutex::CMutex()
 {
@@ -42,6 +43,7 @@ void CMutex::lock()const{
 #ifdef __GIFT_USES_THREADS__
 #warning using threads
   pthread_mutex_lock(&mMutex);
+  //cout << "&{" << getpid() << "}"<< flush;
 #else
 #warning NOT USING THREADS
 #endif
@@ -50,6 +52,7 @@ void CMutex::unlock()const{
 #ifdef __GIFT_USES_THREADS__
 #warning using threads
   pthread_mutex_unlock(&mMutex);
+  //  cout << "u{" << getpid() << "}"<< flush;
 #else
 #warning NOT USING THREADS
 #endif

@@ -20,6 +20,10 @@
 
 */
 #include "CAccessor.h"
+#include <iostream>
 void CAccessor::dummy()const{
+};
+CAccessor::~CAccessor(){
+  cout << __FILE__ << "calling destructor" << endl;
 };
 

@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.4c from Makefile.am
+# Makefile.in generated automatically by automake 1.4e from Makefile.am.
 
-# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000
+# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
 # Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
@@ -10,6 +10,30 @@
 # but WITHOUT ANY WARRANTY, to the extent permitted by law; without
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
+
+@SET_MAKE@
+
+#     -*- mode: makefile -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+# libraries
+
 
 SHELL = @SHELL@
 
@@ -47,7 +71,7 @@ INSTALL = @INSTALL@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
-INSTALL_STRIP_FLAG =
+INSTALL_HEADER = $(INSTALL_DATA)
 transform = @program_transform_name@
 
 NORMAL_INSTALL = :
@@ -57,10 +81,8 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 
-@SET_MAKE@
 host_alias = @host_alias@
 host_triplet = @host@
-AMDEP = @AMDEP@
 AMTAR = @AMTAR@
 AS = @AS@
 AWK = @AWK@
@@ -82,6 +104,8 @@ GIFT_BAYESIAN_FLAG = @GIFT_BAYESIAN_FLAG@
 GIFT_INTERNAL_FLAG = @GIFT_INTERNAL_FLAG@
 GIFT_INTERNAL_PERLS = @GIFT_INTERNAL_PERLS@
 GIFT_LIB_VERSION_INFO = @GIFT_LIB_VERSION_INFO@
+INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+INSTALL_STRIP_PROGRAM_ENV = @INSTALL_STRIP_PROGRAM_ENV@
 LEX = @LEX@
 LIBADD_DL = @LIBADD_DL@
 LIBOBJS = @LIBOBJS@
@@ -116,32 +140,12 @@ UNPUBLISHED = @UNPUBLISHED@
 VERSION = @VERSION@
 WEB_PUBLISHING_DIRECTORY = @WEB_PUBLISHING_DIRECTORY@
 WEB_PUBLISHING_LOCATION = @WEB_PUBLISHING_LOCATION@
+_am_include = @_am_include@
+_am_quote = @_am_quote@
 install_sh = @install_sh@
 lispdir = @lispdir@
 multi_basedir = @multi_basedir@
 pythondir = @pythondir@
-
-#     -*- mode: makefile -*-
-
-#     GIFT, a flexible content based image retrieval system.
-#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
-
-#     This program is free software; you can redistribute it and/or modify
-#     it under the terms of the GNU General Public License as published by
-#     the Free Software Foundation; either version 2 of the License, or
-#     (at your option) any later version.
-
-#     This program is distributed in the hope that it will be useful,
-#     but WITHOUT ANY WARRANTY; without even the implied warranty of
-#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#     GNU General Public License for more details.
-
-#     You should have received a copy of the GNU General Public License
-#     along with this program; if not, write to the Free Software
-#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-# libraries
-
 
 david_sources = extract_block_features.c gabor.c rgb2hsv_utils.c quantize.c
 
@@ -158,108 +162,82 @@ gift_write_feature_descs_LDADD = -L../libSquirePPM -lSquirePPM -lm
 bin_PROGRAMS = gift-extract-features gift-write-feature-descs
 subdir = FeatureExtraction
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
-CONFIG_HEADER = ../gift-config.h
-CONFIG_CLEAN_FILES = 
-bin_PROGRAMS =  gift-extract-features$(EXEEXT) \
-gift-write-feature-descs$(EXEEXT)
-PROGRAMS =  $(bin_PROGRAMS)
+CONFIG_HEADER = $(top_builddir)/gift-config.h
+CONFIG_CLEAN_FILES =
+bin_PROGRAMS = gift-extract-features$(EXEEXT) \
+	gift-write-feature-descs$(EXEEXT)
+PROGRAMS = $(bin_PROGRAMS)
 
-
-DEFS = @DEFS@ -I. -I$(srcdir) -I..
-LDFLAGS = @LDFLAGS@
-LIBS = @LIBS@
-am_gift_extract_features_OBJECTS =  extract_block_features.$(OBJEXT) \
-gabor.$(OBJEXT) rgb2hsv_utils.$(OBJEXT) quantize.$(OBJEXT) \
-extract_features.$(OBJEXT)
-gift_extract_features_OBJECTS =  $(am_gift_extract_features_OBJECTS)
-gift_extract_features_DEPENDENCIES = 
-gift_extract_features_LDFLAGS = 
-am_gift_write_feature_descs_OBJECTS =  extract_block_features.$(OBJEXT) \
-gabor.$(OBJEXT) rgb2hsv_utils.$(OBJEXT) quantize.$(OBJEXT) \
-write_feature_descs.$(OBJEXT)
-gift_write_feature_descs_OBJECTS =  \
-$(am_gift_write_feature_descs_OBJECTS)
-gift_write_feature_descs_DEPENDENCIES = 
-gift_write_feature_descs_LDFLAGS = 
-COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+am_gift_extract_features_OBJECTS = extract_block_features.$(OBJEXT) \
+	gabor.$(OBJEXT) rgb2hsv_utils.$(OBJEXT) quantize.$(OBJEXT) \
+	extract_features.$(OBJEXT)
+gift_extract_features_OBJECTS = $(am_gift_extract_features_OBJECTS)
+gift_extract_features_DEPENDENCIES =
+gift_extract_features_LDFLAGS =
+am_gift_write_feature_descs_OBJECTS = extract_block_features.$(OBJEXT) \
+	gabor.$(OBJEXT) rgb2hsv_utils.$(OBJEXT) quantize.$(OBJEXT) \
+	write_feature_descs.$(OBJEXT)
+gift_write_feature_descs_OBJECTS = \
+	$(am_gift_write_feature_descs_OBJECTS)
+gift_write_feature_descs_DEPENDENCIES =
+gift_write_feature_descs_LDFLAGS =
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CFLAGS = @CFLAGS@
 CCLD = $(CC)
-LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES =  $(gift_extract_features_SOURCES) \
-$(gift_write_feature_descs_SOURCES)
+LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+
+DEFS = @DEFS@ -I. -I$(srcdir) -I$(top_builddir)
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+DIST_SOURCES = $(gift_extract_features_SOURCES) \
+	$(gift_write_feature_descs_SOURCES)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
-DEP_FILES =  @AMDEP@ $(DEPDIR)/extract_block_features.Po \
-$(DEPDIR)/extract_features.Po $(DEPDIR)/gabor.Po $(DEPDIR)/quantize.Po \
-$(DEPDIR)/rgb2hsv_utils.Po $(DEPDIR)/write_feature_descs.Po
-DIST_COMMON =  Makefile.am Makefile.in
-
-
-DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-
-GZIP_ENV = --best
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/extract_block_features.Po \
+@AMDEP_TRUE@	$(DEPDIR)/extract_features.Po $(DEPDIR)/gabor.Po \
+@AMDEP_TRUE@	$(DEPDIR)/quantize.Po $(DEPDIR)/rgb2hsv_utils.Po \
+@AMDEP_TRUE@	$(DEPDIR)/write_feature_descs.Po
+DIST_COMMON = Makefile.am Makefile.in
 SOURCES = $(gift_extract_features_SOURCES) $(gift_write_feature_descs_SOURCES)
 OBJECTS = $(am_gift_extract_features_OBJECTS) $(am_gift_write_feature_descs_OBJECTS)
 
-all: all-redirect
+all: all-am
+
 .SUFFIXES:
 .SUFFIXES: .c .lo .o .obj
-$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOMAKE) --gnu FeatureExtraction/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
-	cd $(top_builddir) \
-	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+	cd $(top_srcdir) && \
+	  $(AUTOMAKE) --gnu  FeatureExtraction/Makefile
 
-
-mostlyclean-binPROGRAMS:
-
-clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-
-distclean-binPROGRAMS:
-
-maintainer-clean-binPROGRAMS:
-
+Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) && \
+	  CONFIG_HEADERS= CONFIG_LINKS= \
+	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
 install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	@list='$(bin_PROGRAMS)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    f="`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
-	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(bindir)/$$f"; \
-	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(bindir)/$$f; \
+	    f=`echo $$p|sed 's/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
+	   echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/$$f"; \
+	   $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/$$f; \
 	  else :; fi; \
 	done
 
 uninstall-binPROGRAMS:
 	@$(NORMAL_UNINSTALL)
 	@list='$(bin_PROGRAMS)'; for p in $$list; do \
-	  f="`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
+	  f=`echo $$p|sed 's/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
 	  echo " rm -f $(DESTDIR)$(bindir)/$$f"; \
 	  rm -f $(DESTDIR)$(bindir)/$$f; \
 	done
 
-mostlyclean-compile:
-	-rm -f *.o core *.core
-	-rm -f *.$(OBJEXT)
-
-clean-compile:
-
-distclean-compile:
-	-rm -f *.tab.c
-
-maintainer-clean-compile:
-
-mostlyclean-libtool:
-	-rm -f *.lo
-
-clean-libtool:
-	-rm -rf .libs _libs
-
-distclean-libtool:
-
-maintainer-clean-libtool:
+clean-binPROGRAMS:
+	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
 
 gift-extract-features$(EXEEXT): $(gift_extract_features_OBJECTS) $(gift_extract_features_DEPENDENCIES)
 	@rm -f gift-extract-features$(EXEEXT)
@@ -268,6 +246,21 @@ gift-extract-features$(EXEEXT): $(gift_extract_features_OBJECTS) $(gift_extract_
 gift-write-feature-descs$(EXEEXT): $(gift_write_feature_descs_OBJECTS) $(gift_write_feature_descs_DEPENDENCIES)
 	@rm -f gift-write-feature-descs$(EXEEXT)
 	$(LINK) $(gift_write_feature_descs_LDFLAGS) $(gift_write_feature_descs_OBJECTS) $(gift_write_feature_descs_LDADD) $(LIBS)
+
+mostlyclean-compile:
+	-rm -f *.$(OBJEXT) core *.core
+
+distclean-compile:
+	-rm -f *.tab.c
+
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+	-rm -f libtool
 
 tags: TAGS
 
@@ -298,53 +291,44 @@ GTAGS:
 	  && cd $(top_srcdir) \
 	  && gtags -i $$here
 
-mostlyclean-tags:
-
-clean-tags:
-
 distclean-tags:
 	-rm -f TAGS ID
 
-maintainer-clean-tags:
-
-@AMDEP@include $(DEPDIR)/extract_block_features.Po
-@AMDEP@include $(DEPDIR)/extract_features.Po
-@AMDEP@include $(DEPDIR)/gabor.Po
-@AMDEP@include $(DEPDIR)/quantize.Po
-@AMDEP@include $(DEPDIR)/rgb2hsv_utils.Po
-@AMDEP@include $(DEPDIR)/write_feature_descs.Po
-
-mostlyclean-depend:
-
-clean-depend:
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/extract_block_features.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/extract_features.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/gabor.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/quantize.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/rgb2hsv_utils.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/write_feature_descs.Po@_am_quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)
 
-maintainer-clean-depend:
-
-@AMDEP@CCDEPMODE = @CCDEPMODE@
+CCDEPMODE = @CCDEPMODE@
 
 .c.o:
-@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(COMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
 
 .c.lo:
-@AMDEP@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
-@AMDEP@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
-@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
+	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(LTCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
 
 .c.obj:
-@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-@AMDEP@	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 	$(COMPILE) -c -o $@ `cygpath -w $<`
 
 
-distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+
+top_distdir = ..
+distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 
 distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
@@ -358,32 +342,26 @@ distdir: $(DISTFILES)
 	    || exit 1; \
 	  fi; \
 	done
-info-am:
-info: info-am
-dvi-am:
-dvi: dvi-am
 check-am: all-am
 check: check-am
-installcheck-am:
-installcheck: installcheck-am
-install-exec-am: install-binPROGRAMS
-install-exec: install-exec-am
+all-am: Makefile $(PROGRAMS)
 
-install-data-am:
+installdirs:
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+
+install: install-am
+install-exec: install-exec-am
 install-data: install-data-am
+uninstall: uninstall-am
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
-install: install-am
-uninstall-am: uninstall-binPROGRAMS
-uninstall: uninstall-am
-all-am: Makefile $(PROGRAMS)
-all-redirect: all-am
-install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
-installdirs:
-	$(mkinstalldirs)  $(DESTDIR)$(bindir)
 
+installcheck: installcheck-am
+
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
+	  INSTALL_PROGRAM_ENV='$(INSTALL_STRIP_PROGRAM_ENV)' install
 
 mostlyclean-generic:
 
@@ -394,47 +372,57 @@ distclean-generic:
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
+	@echo "This command is intended for maintainers to use"
+	@echo "it deletes files that may require special tools to rebuild."
 	-rm -f Makefile.in
-mostlyclean-am:  mostlyclean-binPROGRAMS mostlyclean-compile \
-		mostlyclean-libtool mostlyclean-tags mostlyclean-depend \
-		mostlyclean-generic
-
-mostlyclean: mostlyclean-am
-
-clean-am:  clean-binPROGRAMS clean-compile clean-libtool clean-tags \
-		clean-depend clean-generic mostlyclean-am
-
 clean: clean-am
 
-distclean-am:  distclean-binPROGRAMS distclean-compile distclean-libtool \
-		distclean-tags distclean-depend distclean-generic \
-		clean-am
-	-rm -f libtool
+clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
 
 distclean: distclean-am
 
-maintainer-clean-am:  maintainer-clean-binPROGRAMS \
-		maintainer-clean-compile maintainer-clean-libtool \
-		maintainer-clean-tags maintainer-clean-depend \
-		maintainer-clean-generic distclean-am
-	@echo "This command is intended for maintainers to use;"
-	@echo "it deletes files that may require special tools to rebuild."
+distclean-am: clean-am distclean-compile distclean-depend \
+	distclean-generic distclean-libtool distclean-tags
+
+dvi:
+
+dvi-am:
+
+info:
+
+info-am:
+
+install-data-am:
+
+install-exec-am: install-binPROGRAMS
+
+install-info:
+
+install-man:
+
+installcheck-am:
 
 maintainer-clean: maintainer-clean-am
 
-.PHONY: all all-am all-redirect check check-am clean clean-binPROGRAMS \
-clean-compile clean-depend clean-generic clean-libtool clean-tags \
-distclean distclean-binPROGRAMS distclean-compile distclean-depend \
-distclean-generic distclean-libtool distclean-tags distdir dvi dvi-am \
-info info-am install install-am install-binPROGRAMS install-data \
-install-data-am install-exec install-exec-am install-strip installcheck \
-installcheck-am installdirs maintainer-clean \
-maintainer-clean-binPROGRAMS maintainer-clean-compile \
-maintainer-clean-depend maintainer-clean-generic \
-maintainer-clean-libtool maintainer-clean-tags mostlyclean \
-mostlyclean-binPROGRAMS mostlyclean-compile mostlyclean-depend \
-mostlyclean-generic mostlyclean-libtool mostlyclean-tags tags uninstall \
-uninstall-am uninstall-binPROGRAMS
+maintainer-clean-am: distclean-am maintainer-clean-generic
+
+mostlyclean: mostlyclean-am
+
+mostlyclean-am: mostlyclean-compile mostlyclean-generic \
+	mostlyclean-libtool
+
+uninstall-am: uninstall-binPROGRAMS
+
+.PHONY: all all-am check check-am clean clean-binPROGRAMS clean-generic \
+	clean-libtool distclean distclean-compile distclean-depend \
+	distclean-generic distclean-libtool distclean-tags distdir dvi \
+	dvi-am info info-am install install-am install-binPROGRAMS \
+	install-data install-data-am install-exec install-exec-am \
+	install-info install-man install-strip installcheck \
+	installcheck-am installdirs maintainer-clean \
+	maintainer-clean-generic mostlyclean mostlyclean-compile \
+	mostlyclean-generic mostlyclean-libtool tags uninstall \
+	uninstall-am uninstall-binPROGRAMS
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

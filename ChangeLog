@@ -1,3 +1,53 @@
+2001-04-19  Wolfgang Müller  <Wolfgang.Mueller@cui.unige.ch>
+
+	* libMRML/cc/CAccessorAdmin.cc(closeAccessor): 
+	CMutex/gMutex include
+	New diagnostics including process ID
+	(openAccessor): openclosecounter was not incremented
+	when reusing accessor. fixed.
+
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc (URLToFeatureList): 
+	return emty feature list instead of null pointer
+
+	* libGIFTAcInvertedFile/cc/CDocumentFrequencyList.cc: 
+	removing mutex from readbinary [should be already mutexed]
+	(CDocumentFrequencyList) in default constructor, create array
+	of one element to avoid segfault? removed assertion that
+	makes the program fail in any case.
+
+	* libMRML/cc/CMutex.cc (CMutex): printing out
+	the lock pids
+
+	* libGIFTAcInvertedFile/cc/CDocumentFrequencyList.cc(readBinary)	: 
+	printing out the pid.
+
+	* libMRML/include/CQueryTreeNode.h: changed
+	CSelfDestructionPointer<CAlgorithm>
+	CSelfDestructionPointer<CQuery>
+	to CAlgorithm* CQuery* respectively
+
+	* libMRML/cc/CQueryTreeNode.cc(~CQueryTreeNode): 
+	Destroying mContent and mAlgorithm by hand
+	to control destruction sequence
+
+	* GIFTServer/Makefile.am: removed references
+	to gift-debug-test
+
+2001-04-17  Wolfgang Müller  <Wolfgang.Mueller@cui.unige.ch>
+
+	* libGIFTQuInvertedFile/cc/CQInvertedFile.cc: added decent 
+	destructor which closes the accessor on destruction
+
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc: changing
+	local to global mutex
+
+	* libMRML/cc/CCommunicationHandler.cc (endMultiRequest): 
+
+2001-02-02  Wolfgang Müller  <Wolfgang.Mueller@cui.unige.ch>
+
+	* configure.in: Changing quotes "" to [] in all calls
+	of AC_MSG
+
 2001-04-12  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* libMRML/cc/CXMLElement.cc(clone): changeing
@@ -20,6 +70,7 @@
 	* libMRML/cc/CAttributeList.cc: took out a couple
 	of checknprints as well as a call to check()
 
+>>>>>>> 1.15
 2001-04-05  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* configure.in: allow full multithreading
@@ -261,6 +312,7 @@
 	* scripts/perl/CXTVWriter.pre-pm: 
 	use CXMLTreeVisitor;
 
+>>>>>>> 1.14
 2001-01-31  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc (_NO_CONSISTENCYPRINT):

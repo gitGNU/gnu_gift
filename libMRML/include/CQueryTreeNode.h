@@ -31,11 +31,11 @@ class CQueryTreeNode:public CMagic{
      The content of this. It is constructed, when
      CQueryTreeNode::configure is called
   */
-  CSelfDestroyPointer<CQuery> mContent;
+  CQuery* mContent;
   /** 
       the current Algorithm of this query 
   */
-  CSelfDestroyPointer<CAlgorithm> mAlgorithm;
+  CAlgorithm* mAlgorithm;
 public:
   /** Construct this */
   CQueryTreeNode();

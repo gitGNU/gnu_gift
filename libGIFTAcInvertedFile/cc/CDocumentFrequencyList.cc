@@ -15,6 +15,10 @@
 *
 ****************************************/
 #include "CDocumentFrequencyList.h"
+#include <unistd.h> // debugging
+
+#include "CMutex.h"
+extern CMutex* gMutex;
 
 #ifdef __CDFL_MEM_DEBUG__
 int gSize=0;
@@ -62,12 +66,12 @@ CDocumentFrequencyList::CDocumentFrequencyList():
 #endif
 #endif 
 #ifdef  _CDocumentFrequencyListIsArray
-  mContent(0)
+  mContent(new CDocumentFrequencyElement[1])// will this work?
 #endif
 {
 #ifdef  _CDocumentFrequencyListIsArray
-  assert(!"!THIS SHOULD NEVER BE CALLED");
-  exit(33);
+  mSize=0;
+  mEnd=mContent;
 #endif
 #ifdef __CDFL_MEM_DEBUG__
   gSize+=size();
@@ -110,9 +114,10 @@ bool CDocumentFrequencyList::readBinary(istream& inStream){
   }
 #else
   if(inStream){
-    cout << "¦" << flush;
+    //gMutex->lock();
+    //    cout << "|[" << getpid() << flush;
     inStream.read(begin(),size()*sizeof(CDocumentFrequencyElement));
-    cout << "-" << flush;
+    //cout << "]" << flush; <gMutex->unlock();
   }
 #endif
 

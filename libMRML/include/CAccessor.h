@@ -117,7 +117,8 @@ public:
   /** The number of images in this accessor */
   virtual int size()const=0;
   //@}
-
+  /** virtual accessor for clean destruction */
+  virtual ~CAccessor();
 };
 
 #endif

@@ -34,6 +34,7 @@
 #include "CAttributeList.h"
 class CXMLElementVisitor;
 #include "CMutex.h"
+#include "CNoDelete.h" //debugging
 /**
    This class captures the structure of an XML element. 
    An Element has children and attributes.
@@ -45,7 +46,7 @@ class CXMLElementVisitor;
 
    @author Wolfgang Müller
  */
-class CXMLElement:public CMagic{
+class CXMLElement:public CMagic,public CNoDelete{
   /** a typedef for simple convenience */
   typedef list<CXMLElement*> lCChildren;
   /** the father of this*/

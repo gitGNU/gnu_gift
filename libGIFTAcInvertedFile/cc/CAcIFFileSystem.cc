@@ -82,6 +82,7 @@
 #define	_NO_PRINT_ID
 #define	_NO_PRINT_INIT
 
+extern class CMutex* gMutex;
 
 /** used for reading the offset file */
 typedef struct{
@@ -103,12 +104,12 @@ typedef struct{
 ****************************************/
 /* to test if the inverted file accessor is OK */
 bool CAcIFFileSystem::operator()()const{
-  mMutex.lock();
+  /**/gMutex->lock();
   bool lReturnValue(mURL2FTS
 		    && *mInvertedFile
 		    && mOffsetFile
 		    && mURL2FTS->operator bool());
-  mMutex.unlock();
+  /**/gMutex->unlock();
   return lReturnValue;
 };
 
@@ -125,7 +126,7 @@ bool CAcIFFileSystem::operator()()const{
 *
 ****************************************/
 bool CAcIFFileSystem::generateInvertedFile(){
-  mMutex.lock();
+  /**/gMutex->lock();
   // open the feature description file
   //
   cout << "I want to use/generate the files:"
@@ -147,7 +148,7 @@ bool CAcIFFileSystem::generateInvertedFile(){
        lNewOffsetFile)){
       cerr << "I could not open the necessary files for" 
 	   << "generating an inverted file";
-      mMutex.unlock();
+      /**/gMutex->unlock();
       return false;
   }
   cout << "files successfully opened" 
@@ -377,7 +378,7 @@ bool CAcIFFileSystem::generateInvertedFile(){
        << "The check was successful" << endl;
 #endif
   
-  mMutex.unlock();
+  /**/gMutex->unlock();
   return(!lError);
 }
 
@@ -388,12 +389,12 @@ bool CAcIFFileSystem::generateInvertedFile(){
 void CAcIFFileSystem::writeOffsetFileElement(TID inFeatureID,
 					     int inPosition,
 					     ostream& inOpenOffsetFile){
-  mMutex.lock();
+  /**/gMutex->lock();
   inOpenOffsetFile.write(&inFeatureID,
 			 sizeof(inFeatureID));
   inOpenOffsetFile.write(&inPosition,
 			 sizeof(inPosition));
-  mMutex.unlock();
+  /**/gMutex->unlock();
   
 };
 /***************************************
@@ -408,7 +409,7 @@ void CAcIFFileSystem::writeOffsetFileElement(TID inFeatureID,
 *
 ****************************************/
 bool CAcIFFileSystem::newGenerateInvertedFile(){
-  mMutex.lock();
+  /**/gMutex->lock();
   // open the feature description file
   //
   cout << "I want to use/generate the files:"
@@ -430,7 +431,7 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
        lNewOffsetFile)){
     cerr << "I could not open the necessary files for" 
 	 << "generating an inverted file";
-    mMutex.unlock();
+    /**/gMutex->unlock();
     return false;
   }
   cout << "files successfully opened" 
@@ -669,7 +670,7 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
 
   if(!lNewInvertedFile){
     cout << "ERROR in writing INVERTED FILE" << endl;
-    mMutex.unlock();
+    /**/gMutex->unlock();
     return false;
   }
   
@@ -702,7 +703,7 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
  
   unlink("gift-auxiliary-1");
   unlink("gift-auxiliary-2");
-  mMutex.unlock();
+  /**/gMutex->unlock();
   return(!lError);
 }
 
@@ -731,7 +732,7 @@ CAcIFFileSystem::CAcIFFileSystem(const CXMLElement& inCollectionElement):
   mInvertedFile(0),
   mInvertedFileBuffer(0),
   mMaximumFeatureID(0){
-  mMutex.lock();
+  /**/gMutex->lock();
 
   if(inCollectionElement.stringReadAttribute(mrml_const::cui_generate_inverted_file).first
      && inCollectionElement.boolReadAttribute(mrml_const::cui_generate_inverted_file).second){
@@ -793,7 +794,7 @@ CAcIFFileSystem::CAcIFFileSystem(const CXMLElement& inCollectionElement):
        << endl;
 #endif
 }
-  mMutex.unlock();
+  /**/gMutex->unlock();
 }
 
 
@@ -810,7 +811,7 @@ CAcIFFileSystem::CAcIFFileSystem(const CXMLElement& inCollectionElement):
 ****************************************/
 bool CAcIFFileSystem::init(bool inMemory)
 {
-  mMutex.lock();
+  /**/gMutex->lock();
 
   mMaximumFeatureID=0;
   cout << "Opening _"
@@ -1027,7 +1028,7 @@ bool CAcIFFileSystem::init(bool inMemory)
 #ifndef _NO_PRINT_INIT
   checkNPrint();
 #endif
-  mMutex.unlock();
+  /**/gMutex->unlock();
   return lRetVal;
 };
 
@@ -1046,7 +1047,7 @@ bool CAcIFFileSystem::init(bool inMemory)
 ****************************************/
 double CAcIFFileSystem::
 FeatureToCollectionFrequency(TFeatureID inFeatureID)const{
-  mMutex.lock();
+  /**/gMutex->lock();
 
   if((mFeatureToCollectionFrequency.find(inFeatureID))!=
      mFeatureToCollectionFrequency.end())
@@ -1054,12 +1055,12 @@ FeatureToCollectionFrequency(TFeatureID inFeatureID)const{
       assert(0<(*(mFeatureToCollectionFrequency.find(inFeatureID))).second);
       
       double lReturnValue((*(mFeatureToCollectionFrequency.find(inFeatureID))).second);
-      mMutex.unlock();
+      /**/gMutex->unlock();
       return lReturnValue;
     }
   else
     {
-      mMutex.unlock();
+      /**/gMutex->unlock();
       return 1;
     }
 }
@@ -1078,18 +1079,18 @@ FeatureToCollectionFrequency(TFeatureID inFeatureID)const{
 *
 ****************************************/
 double CAcIFFileSystem::DIDToMaxDocumentFrequency(TID inID)const{
-  mMutex.lock();
+  /**/gMutex->lock();
 
   if(mDocumentInformation.find(inID)!=mDocumentInformation.end())
     {
       double lReturnValue((*mDocumentInformation.find(inID)).second.getMaximumDF());
-      mMutex.unlock();
+      /**/gMutex->unlock();
       return lReturnValue;
     }
   else
     {
       assert(1==0);
-      mMutex.unlock();
+      /**/gMutex->unlock();
       return 1;
     }
 };
@@ -1109,15 +1110,15 @@ double CAcIFFileSystem::DIDToMaxDocumentFrequency(TID inID)const{
 ****************************************/
 /// returns the Document frequency squaresum for a given document ID 
 double CAcIFFileSystem::DIDToDFSquareSum(TID inID)const{
-  mMutex.lock();
+  /**/gMutex->lock();
   if(mDocumentInformation.find(inID)!=mDocumentInformation.end()){
     double lReturnValue(mDocumentInformation.find(inID)->second.getDFSquareSum());
       
-    mMutex.unlock();
+    /**/gMutex->unlock();
     return lReturnValue;
   }else{
     assert(1+1==0);
-    mMutex.unlock();
+    /**/gMutex->unlock();
     return 1;
   }
 }
@@ -1137,14 +1138,14 @@ double CAcIFFileSystem::DIDToDFSquareSum(TID inID)const{
 ****************************************/
 double CAcIFFileSystem::DIDToSquareDFLogICFSum(TID inID)const{
   if(mDocumentInformation.find(inID)!=mDocumentInformation.end()){
-    mMutex.lock();
+    /**/gMutex->lock();
     double lReturnValue((*mDocumentInformation.find(inID))
 			.second.getSquareDFLogICFSum());
-    mMutex.unlock();
+    /**/gMutex->unlock();
     return lReturnValue;
   }else{
     assert(1+1+1==0);
-    mMutex.unlock();
+    /**/gMutex->unlock();
     return 1;
   }
 };
@@ -1165,7 +1166,7 @@ double CAcIFFileSystem::DIDToSquareDFLogICFSum(TID inID)const{
 CDocumentFrequencyList* CAcIFFileSystem::
 FeatureToList(TFeatureID inFeatureID)const
 {
-  mMutex.lock();
+  /**/gMutex->lock();
     CDocumentFrequencyList* lRetVal=0;
 
     
@@ -1191,7 +1192,7 @@ FeatureToList(TFeatureID inFeatureID)const
 		 << hex
 		 << inFeatureID
 		 << " not found.";
-	    mMutex.unlock();
+	    /**/gMutex->unlock();
 	    return 0;
 	  }
 	  
@@ -1214,11 +1215,11 @@ FeatureToList(TFeatureID inFeatureID)const
 	     << " not found."
 	     << mIDToOffset.size()
 	     << endl;
-	mMutex.unlock();
+	/**/gMutex->unlock();
 	return 0;
       }
     }
-    mMutex.unlock();
+    /**/gMutex->unlock();
     return lRetVal;
 };
 
@@ -1240,7 +1241,7 @@ FeatureToList(TFeatureID inFeatureID)const
 bool CAcIFFileSystem::findWithinStream(TID inFeatureID,
 				       TID inDocumentID,
 				       double inDocumentFrequency)const{
-  mMutex.lock();
+  /**/gMutex->lock();
   bool lRetVal=false;
 
   //Find the list of URL-IDs for the feature
@@ -1278,7 +1279,7 @@ bool CAcIFFileSystem::findWithinStream(TID inFeatureID,
 	       << " not found."
 	       << flush;
 	  assert(0==1);
-	  mMutex.unlock();
+	  /**/gMutex->unlock();
 	  return 0;
 	}else{
 	  
@@ -1334,7 +1335,7 @@ bool CAcIFFileSystem::findWithinStream(TID inFeatureID,
        << dec
        << flush;
 
-  mMutex.unlock();
+  /**/gMutex->unlock();
   return lRetVal;
 };
 
@@ -1354,7 +1355,7 @@ bool CAcIFFileSystem::findWithinStream(TID inFeatureID,
 ****************************************/
 bool CAcIFFileSystem::checkConsistency()
 {
-  mMutex.lock();
+  /**/gMutex->lock();
 #ifndef _NO_CONSISTENCYPRINT
 
   cout << "I am now checking the consistency between" << endl
@@ -1398,10 +1399,10 @@ bool CAcIFFileSystem::checkConsistency()
 	  assert(lRetVal);
 	} /* end for each feature of the image */
     } /* end for each image */
-  mMutex.unlock();
+  /**/gMutex->unlock();
   return lRetVal;
 #else
-  mMutex.unlock();
+  /**/gMutex->unlock();
   return true;
 #endif
 }
@@ -1424,7 +1425,7 @@ bool CAcIFFileSystem::checkConsistency()
 CDocumentFrequencyList* 
 CAcIFFileSystem::URLToFeatureList(string inURL)const
 {
-  mMutex.lock();
+  /**/gMutex->lock();
 
 #ifdef PRINT_ADI
   cout <<inURL
@@ -1442,8 +1443,11 @@ CAcIFFileSystem::URLToFeatureList(string inURL)const
 
     system(string(string(__PERL_LOCATION__)+" "+string(__BINDIR__)+"/gift-url-to-fts.pl "+inURL+" "+lFeatureFileName).c_str());
     
-    CDocumentFrequencyList* lReturnValue(getFeatureFile(lFeatureFileName));
-    mMutex.unlock();
+    CDocumentFrequencyList* lReturnValue(this->getFeatureFile(lFeatureFileName));
+    if(!lReturnValue){
+      lReturnValue=new CDocumentFrequencyList();
+    }
+    /**/gMutex->unlock();
     return lReturnValue;
     // {
     //       cout << endl << "this= " << this << endl;
@@ -1479,14 +1483,14 @@ CAcIFFileSystem::URLToFeatureList(string inURL)const
   }
   my_assert(lID.first,inURL.c_str());   
 
-  mMutex.unlock();
+  /**/gMutex->unlock();
   return DIDToFeatureList(lID.second);
 };
 
 
 
 CDocumentFrequencyList* CAcIFFileSystem::getFeatureFile(string inFileName)const{
-  mMutex.lock();
+  /**/gMutex->lock();
   CDocumentFrequencyList* lRetVal(0);
   /* if the filename has a size bigger than one, meaning it is defined */
   if(inFileName.size())
@@ -1505,7 +1509,7 @@ CDocumentFrequencyList* CAcIFFileSystem::getFeatureFile(string inFileName)const{
 	}
       }
     } /* end of if the URL was proper */
-  mMutex.unlock();
+  /**/gMutex->unlock();
   return lRetVal;
 }
 
@@ -1522,7 +1526,7 @@ CDocumentFrequencyList* CAcIFFileSystem::getFeatureFile(string inFileName)const{
 ****************************************/
 CDocumentFrequencyList* 
 CAcIFFileSystem::DIDToFeatureList(TID inDID)const{
-  mMutex.lock();
+  /**/gMutex->lock();
 
 #ifdef PRINT_ADI
   cout <<inURL
@@ -1547,7 +1551,7 @@ CAcIFFileSystem::DIDToFeatureList(TID inDID)const{
   pair<bool,string> lFeatureFileName=mURL2FTS->IDToFFN(inDID);
   if(lFeatureFileName.first){
       
-    lRetVal=getFeatureFile(lFeatureFileName.second);
+    lRetVal=this->getFeatureFile(lFeatureFileName.second);
     
 
   } /* end of the if statement */
@@ -1555,7 +1559,7 @@ CAcIFFileSystem::DIDToFeatureList(TID inDID)const{
   if(!lRetVal){
     lRetVal=new CDocumentFrequencyList(0);
   }
-  mMutex.unlock();
+  /**/gMutex->unlock();
   return lRetVal;
 };
 
@@ -1575,19 +1579,19 @@ CAcIFFileSystem::DIDToFeatureList(TID inDID)const{
 ****************************************/
 string CAcIFFileSystem::IDToURL(TID inID)const
 {
-  mMutex.lock();
+  /**/gMutex->lock();
 
   pair<bool,CAccessorElement> lElement=mURL2FTS->IDToAccessorElement(inID);
   
   if(lElement.first){
-    mMutex.unlock();
+    /**/gMutex->unlock();
     return lElement.second.getURL();
   } else {
     cerr << "Error in Conversion from ID "
 	 << inID 
 	 << " to URL."
 	 << endl;
-    mMutex.unlock();
+    /**/gMutex->unlock();
     return mrml_const::error;
   }
 }
@@ -1605,18 +1609,18 @@ string CAcIFFileSystem::IDToURL(TID inID)const
 *
 ****************************************/
 unsigned int CAcIFFileSystem::getFeatureDescription(TID inID)const{
-  mMutex.lock();
+  /**/gMutex->lock();
     
   if(mFeatureDescription.find(inID)!=mFeatureDescription.end()){
     unsigned int lReturnValue((*mFeatureDescription.find(inID)).second);
-    mMutex.unlock();  
+    /**/gMutex->unlock();  
     return lReturnValue;
   }else{
     cout << "[UF: "
 	 << inID
 	 << "]"
 	 << flush;
-    mMutex.unlock();
+    /**/gMutex->unlock();
     return 0;
   }
 }
@@ -1635,11 +1639,11 @@ unsigned int CAcIFFileSystem::getFeatureDescription(TID inID)const{
 *
 ****************************************/
 CAcIFFileSystem::~CAcIFFileSystem(){
-  mMutex.lock();
   cout << "CAcIFFileSystem::~CAcIFFileSystem() called "
        << endl
        << flush;
-  mMutex.unlock();
+  /**/gMutex->lock();
+  /**/gMutex->unlock();
 };
 
 TID CAcIFFileSystem::getMaximumFeatureID()const{
@@ -1650,7 +1654,7 @@ TID CAcIFFileSystem::getMaximumFeatureID()const{
     Getting a list of all features contained in this
 */
 list<TID>* CAcIFFileSystem::getAllFeatureIDs()const{
-  mMutex.lock();
+  /**/gMutex->lock();
   list<TID>* lReturnValue=new list<TID>();
 
   if(lReturnValue){
@@ -1662,23 +1666,23 @@ list<TID>* CAcIFFileSystem::getAllFeatureIDs()const{
   }
   lReturnValue->sort();
 
-  mMutex.unlock();
+  /**/gMutex->unlock();
   return lReturnValue;
 }
 
 /** List of the IDs of all documents present in the inverted file */
 void CAcIFFileSystem::getAllIDs(list<TID>& outIDList)const{
-  mMutex.lock();
+  /**/gMutex->lock();
 
   mURL2FTS->getAllIDs(outIDList);
-  mMutex.unlock();
+  /**/gMutex->unlock();
 };
 /** List of triplets (ID,imageURL,thumbnailURL) of all
     the documents present in the inverted file */
 void CAcIFFileSystem::getAllAccessorElements(list<CAccessorElement>& outAccessorElementList)const{
-  mMutex.lock();
+  /**/gMutex->lock();
   mURL2FTS->getAllAccessorElements(outAccessorElementList);
-  mMutex.unlock();
+  /**/gMutex->unlock();
 };
 /** get a given number of random AccessorElement's 
     @param inoutResultList the list which will contain the result
@@ -1686,10 +1690,10 @@ void CAcIFFileSystem::getAllAccessorElements(list<CAccessorElement>& outAccessor
 */
 void CAcIFFileSystem::getRandomIDs(list<TID>& outRandomIDList,
 				   list<TID>::size_type inSize)const{
-  mMutex.lock();
+  /**/gMutex->lock();
    mURL2FTS->getRandomIDs(outRandomIDList,
 			  inSize);
-  mMutex.unlock();
+  /**/gMutex->unlock();
 };
 /** For drawing random sets. Why is this part of an CAccessorImplementation?
     The way the accessor is organised might influence the way
@@ -1701,10 +1705,10 @@ void CAcIFFileSystem::getRandomIDs(list<TID>& outRandomIDList,
 */
 void CAcIFFileSystem::getRandomAccessorElements(list<CAccessorElement>& outResult,
 						list<CAccessorElement>::size_type inSize)const{
-  mMutex.lock();
+  /**/gMutex->lock();
   mURL2FTS->getRandomAccessorElements(outResult,
 				      inSize);
-  mMutex.unlock();
+  /**/gMutex->unlock();
 };
 /**
  *
@@ -1712,29 +1716,29 @@ void CAcIFFileSystem::getRandomAccessorElements(list<CAccessorElement>& outResul
  *
  */
 pair<bool,CAccessorElement> CAcIFFileSystem::IDToAccessorElement(TID inID)const{
-  mMutex.lock();
+  /**/gMutex->lock();
   pair<bool,CAccessorElement> lReturnValue(mURL2FTS->IDToAccessorElement(inID));
-  mMutex.unlock();
+  /**/gMutex->unlock();
   return lReturnValue;
 };
 /** The number of images in this accessor */
 int CAcIFFileSystem::size()const{
-  mMutex.lock();
+  /**/gMutex->lock();
   int lReturnValue(mURL2FTS->size());
-  mMutex.unlock();
+  /**/gMutex->unlock();
   return lReturnValue;
 };
 /** The number of images in this accessor */
 pair<bool,TID> CAcIFFileSystem::URLToID(const string& inURL)const{
-  mMutex.lock();
+  /**/gMutex->lock();
   pair<bool,TID> lReturnValue(mURL2FTS->URLToID(inURL));
-  mMutex.unlock();
+  /**/gMutex->unlock();
   return lReturnValue;
 };
 
 CAcIFFileSystem::operator bool() const{
-  mMutex.lock();
+  /**/gMutex->lock();
   bool lReturnValue(this->operator()());
-  mMutex.unlock();
+  /**/gMutex->unlock();
   return lReturnValue;
 }

@@ -500,17 +500,19 @@ void CCommunicationHandler::getPropertySheet(const string& inSessionID,
 int CCommunicationHandler::sendHandshake(const string& inUser){
     
   //at present this is only a dummy
-
+  gMutex->lock();
   pair<string,string> 
     lSessionIDHandshakePair=mSessionManager.toXMLHandshake(inUser);
 
   string& lNewestSession(lSessionIDHandshakePair.first);
   string& lHandshake(lSessionIDHandshakePair.second);
 
-  return sendMessage(mSocket,
-		     frame(lNewestSession,
-			   lHandshake).c_str(),
-		     mLog);
+  int lReturnValue(sendMessage(mSocket,
+			       frame(lNewestSession,
+				     lHandshake).c_str(),
+			       mLog));
+  gMutex->unlock();
+  return lReturnValue;
 }
 
 //----------------------------------------
@@ -880,6 +882,7 @@ void CCommunicationHandler::endMultiRequest(){
     //    CTimeStampGenerator lGenerator;
     //    addToMultiResponse(lGenerator.generateTimeStamp());
 
+    gMutex->lock();
     mMultiResponse->toXML(lMessage);
 
     cout << "endMultiRequest: WRITING: "
@@ -889,12 +892,14 @@ void CCommunicationHandler::endMultiRequest(){
     sendMessage(mSocket,
 		preamble()+"\n"+lMessage+"\n",
 		mLog);
+    gMutex->unlock();
   }
 };
 /** 
     adds an XMLElement to the multi-response which is built
 */
 void CCommunicationHandler::addToMultiResponse(CXMLElement* inElement){
+  gMutex->lock();
 
   if(0){
     string lOutString;
@@ -907,6 +912,7 @@ void CCommunicationHandler::addToMultiResponse(CXMLElement* inElement){
   assert(mMultiResponse);
   mMultiResponse->addChild(inElement);
   mMultiResponse->moveUp();
+  gMutex->unlock();
 };
 
 

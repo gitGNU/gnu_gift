@@ -5,7 +5,9 @@ SUBDIRS = gift-config gift-mrml-messages
 
 # data_DATA= gift-config gift-mrml-messages
 
-bin_PROGRAMS = gift gift-endianize gift-generate-inverted-file gift-modify-distance-matrix gift-one-minus gift-debug-test
+bin_PROGRAMS = gift gift-endianize gift-generate-inverted-file gift-modify-distance-matrix gift-one-minus 
+
+#gift-debug-test
 
 # generateDistanceMatrix
 # should be generated, too, but
@@ -86,14 +88,14 @@ gift_modify_distance_matrix_SOURCES = modifyDistanceMatrix.cc
 gift_one_minus_SOURCES = oneMinus.cc
 
 
-gift_debug_test_SOURCES = gift-debug-test.cc
+#gift_debug_test_SOURCES = gift-debug-test.cc
 
-gift_debug_test_LDADD = ../expat/xmlparse/*.o ../expat/xmltok/*.o  \
-	-lefence \
-	@PRE_INSTALL_LIBDIRS@ @PRE_INSTALL_LIBDIRS@\
-	@UNPUBLISHED_DIR@ @UNPUBLISHED@ @BAYESIAN@ \
-        -lGIFTQuPerl -lGIFTAcPerl -lMRML\
-	@PERL_LD_ADD@ 
+#gift_debug_test_LDADD = ../expat/xmlparse/*.o ../expat/xmltok/*.o  \
+#	-lefence \
+#	@PRE_INSTALL_LIBDIRS@ @PRE_INSTALL_LIBDIRS@\
+#	@UNPUBLISHED_DIR@ @UNPUBLISHED@ @BAYESIAN@ \
+#        -lGIFTQuPerl -lGIFTAcPerl -lMRML\
+#	@PERL_LD_ADD@ 
 
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.

@@ -178,11 +178,11 @@ CAccessor* CAccessorFactoryContainer::openAccessor(string inName,
    be delete-d.
 */
 void CAccessorFactoryContainer::closeAccessor(string inName){
-  CContent::const_iterator lFound=mContent.find(inName);
+  CContent::iterator lFound=mContent.find(inName);
   if((lFound!=mContent.end())
      &&
-     !(--(mContent[inName].mOpenCloseCounter))){
-    mContent[inName].mFactory->closeAccessor();
+     !(--(lFound->second.mOpenCloseCounter))){
+    lFound->second.mFactory->closeAccessor();
   }
 };
   
