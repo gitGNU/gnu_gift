@@ -1,4 +1,12 @@
-2002-01-12  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+2002-01-20  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/Makefile.am (libMRML-config.cc): 
+	* libMRML/cc/libMRML-config.pre-cc (main): 
+	make it work. replacing @ by % in the sed operation
+	transforming pre-cc to cc and consequently in the 
+	pre-cc source 
+
+2002-01-12  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
 
 	* configure.in: $(CXX) instead of $(CC) in perl test
 	compile
