@@ -27,7 +27,7 @@ only calls gift-add-collection.pl --remove-collection.
 ";
   }
 }
-system("__BINDIR__/gift-add-collection.pre-pl","--remove-collection",@ARGV);
+system("__BINDIR__/gift-add-collection.pl","--remove-collection",@ARGV);
 
 
 
