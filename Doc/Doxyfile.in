@@ -2,8 +2,8 @@
 #---------------------------------------------------------------------------
 # General configuration options
 #---------------------------------------------------------------------------
-PROJECT_NAME          = GIFT
-PROJECT_NUMBER        = 0.1.5
+PROJECT_NAME          = @PACKAGE@
+PROJECT_NUMBER        = @VERSION@
 OUTPUT_DIRECTORY      = autoDoc
 OUTPUT_LANGUAGE       = English
 DISABLE_INDEX         = NO
