@@ -46,6 +46,9 @@ class GIFTException{
   /** The exception message*/
   const char* mMessage;
  public:
+  /** get the message contained in this */
+  const char* getMessage()const;
+
   /** Constructor */
   GIFTException(const char* inMessage);
   /** Output into a stream */
@@ -177,10 +180,20 @@ class VEUnknownSession:public GIFTException{
 			     const VEUnknownSession& inException);
 
 };
+/** error in configuration, e.g. URL2FTS file */
+class VEConfigurationError:public GIFTException{
+ public:
+  /** Constructor*/
+  VEConfigurationError(const char* inMessage);
+  /** Output into a stream */
+  friend ostream& operator<<(ostream& outStream,
+			     const VEConfigurationError& inException);
+
+};
 
 
 ostream& operator<<(ostream& outStream,
-		    const VEUnknownSession& inException);
+		    const VEConfigurationError& inException);
 
 
 

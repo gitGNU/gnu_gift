@@ -116,10 +116,10 @@ CQueryTreeNode* CQueryContainer::getQueryByID(const string& inID)const{
       lThrowString+=i->first + string(",\n");
     }
     lThrowString+=string("\n and we were searching for ")+inID;
-    if(size()){
-      cerr << lThrowString << flush << endl; 
-      return begin()->second;
-    }    
+//     if(size()){
+//       cerr << lThrowString << flush << endl; 
+//       return begin()->second;
+//     }    
     my_throw(VENotFound(lThrowString.c_str()));
     return 0;
   }else{

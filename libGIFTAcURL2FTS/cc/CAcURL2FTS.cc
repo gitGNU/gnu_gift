@@ -27,6 +27,8 @@
 
 #define _NO_PRINT_INIT
 #include <iostream>
+#include "libMRML/include/my_throw.h"
+#include "libMRML/include/GIFTExceptions.h"
 #include "libMRML/include/mrml_const.h"
 #include "libGIFTAcURL2FTS/include/CAcURL2FTS.h"
 #include "libMRML/include/CXMLElement.h" // constructor
@@ -181,12 +183,19 @@ CAcURL2FTS::CAcURL2FTS(const CXMLElement& inCollectionElement):
 		     ?lFileSize-i*10000:10000,
 		     lDone)
 	  ) {
-	cerr << "CAcURL2FTS:__LINE__: XML ERROR: "
+	cerr << "libGIFTAcURL2FTS/cc/CAcURL2FTS.cc:" << __LINE__ << ": XML ERROR: "
 	     << XML_ErrorString(XML_GetErrorCode(lParser))
 	     << " at line "
 	     << XML_GetCurrentLineNumber(lParser)
 	     << endl;
-	exit(1);
+	char lLine[10];
+	sprintf(lLine,"%d",__LINE__);
+
+	my_throw(new VEConfigurationError(string(string("libGIFTAcURL2FTS/cc/CAcURL2FTS.cc:") 
+						 + string(lLine)
+						 + string("Could not read file ") 
+						 + string(mURLToFeatureFileName))
+				      .c_str()));
       }
     }
     cout << "Successfully processed" << endl;

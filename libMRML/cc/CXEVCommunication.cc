@@ -2,6 +2,8 @@
 
 #include "libMRML/include/CCommunicationHandler.h"
 #include "libMRML/include/CXEVCommunication.h"
+#include "libMRML/include/GIFTExceptions.h"
+#include "libMRML/include/createErrorMessage.h"
 
 CXEVCommunication::CXEVCommunication(CCommunicationHandler* inHandler):
     mHandler(inHandler),
@@ -55,12 +57,19 @@ bool CXEVCommunication::startVisit(const CXMLElement& inElement){
 	     <<	    lFather->stringReadAttribute(mrml_const::session_id).second
 	     << endl;
 
-	lSessionManager.setAlgorithm(lFather->stringReadAttribute(mrml_const::session_id).second,
-				     ((CAlgorithm&)inElement).clone());	
+	try{
+	  lSessionManager.setAlgorithm(lFather->stringReadAttribute(mrml_const::session_id).second,
+				       ((CAlgorithm&)inElement).clone()); 
+	  mHandler->addToMultiResponse(lAcknowledgement);
+	}
+	catch(GIFTException& inCaught){
+	  mHandler->addToMultiResponse(createErrorMessage(inCaught)); 
+	}
+	catch(GIFTException* inCaught){
+	  mHandler->addToMultiResponse(createErrorMessage(inCaught)); 
+	}
 
-	mHandler->addToMultiResponse(lAcknowledgement);
-
-
+	  
 	//do not traverse deeper
 	return false;
     }

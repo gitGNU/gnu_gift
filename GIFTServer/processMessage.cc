@@ -22,7 +22,10 @@
 #include "CCommunicationHandler.h"
 #include "CProcessMessageParameters.h"
 #include <sys/socket.h>
+#include <errno.h>
 #include <unistd.h>
+#include <cstdio>
+#include <string.h>
 //waiting that everything has arrived
 extern void waitWriteStream(int inWritingSocket);
 extern void waitReadStream(int inReadingSocket);

@@ -31,7 +31,7 @@ INCLUDES= -DHAS_BOOL \
 	-DLINK_DYNAMICALLY\
 	-I$(top_srcdir)
 
-libMRML_la_LDFLAGS=@PRE_INSTALL_LIBDIRS@  -version-info 1:0:1
+libMRML_la_LDFLAGS=@PRE_INSTALL_LIBDIRS@  -version-info 2:0:2
 
 #CAccessorAdminCollection.cc: CAccessorAdminCollection.pre-cc
 #	$(CCCONFIG)
@@ -98,7 +98,8 @@ libMRML_la_SOURCES= \
 	CTimeStampGenerator.cc\
 	\
 	CDebuggingMemoryManager.cc\
-	CRPipe.cc CReaper.cc CReaperDistributor.cc safePopen.cc
+	CRPipe.cc CReaper.cc CReaperDistributor.cc safePopen.cc\
+	createErrorMessage.cc
 
 CLEANFILES=libMRML-config.cc
 

@@ -23,6 +23,9 @@
 
 GIFTException::GIFTException(const char* inMessage):
     mMessage(inMessage){}
+const char* GIFTException::getMessage()const{
+  return mMessage;
+}
 
 ostream& operator<<(ostream& outStream,const GIFTException& inException){
     outStream << "AnGIFTException occured: "
@@ -113,6 +116,16 @@ VEWrongBaseType::VEWrongBaseType(const char* inMessage):
 };
 ostream& operator<<(ostream& outStream,const VEWrongBaseType& inException){
     outStream << "AnVEWrongBaseType occured: "
+	      << flush
+	      << inException.mMessage
+	      << flush
+	      << endl;
+}
+VEConfigurationError::VEConfigurationError(const char* inMessage):
+    GIFTException(inMessage){
+};
+ostream& operator<<(ostream& outStream,const VEConfigurationError& inException){
+    outStream << "AnVEConfigurationError occured: "
 	      << flush
 	      << inException.mMessage
 	      << flush

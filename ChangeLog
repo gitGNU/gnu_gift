@@ -1,4 +1,55 @@
-2002-01-26  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+2002-02-18  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+
+	* libMRML/cc/CSessionManager.cc: catching non-default
+	exception in query
+
+	* libMRML/cc/CQueryTreeBuilder.cc (getQueryByID): 
+	throwing on error. commented out giving back
+	first algorithm on exception. this can fail miserably. 
+	better is to tell error.
+
+	* libMRML/cc/createErrorMessage.cc: 
+	* libMRML/include/createErrorMessage.h: 
+	convenience function for creating MRML error 
+	messages
+
+	* libMRML/cc/CXEVCommunication.cc: 
+	catch exception on algorithm construction
+	
+
+	* libGIFTAcURL2FTS/cc/CAcURL2FTS.cc (CAcURL2FTS): 
+	Throw exception if url2fts unreadable
+	
+	* libMRML/cc/GIFTExceptions.cc: adding an accessor to
+	the message contained in the exception.
+
+	* libGIFTAcURL2FTS/include/CAcURL2FTS.h: 
+	* libGIFTAcURL2FTS/cc/CAcURL2FTS.cc: adding exception
+	class VEConfigurationError. This is thrown if an
+	error occurs that is caused by some configuration mistake.
+
+2002-02-10  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
+
+	* GIFTServer/CDomainSocket.cc:
+	* GIFTServer/CTCPSocket.cc:
+	* GIFTServer/CMultiServer.cc:
+	multiple sockets used by one gift instance
+	
+	* GIFTServer/Makefile.am: 
+	* GIFTServer/CDomainSocket.h:
+	* GIFTServer/CTCPSocket.h:
+	* GIFTServer/CMultiServer.h:
+	* GIFTServer/processMessage.cc: 
+	* GIFTServer/processMessage.h: 
+	* GIFTServer/CProcessMessageParameters.h: 
+	* GIFTServer/CProcessMessageParameters.cc: 
+	* GIFTServer/Server.cc: 
+	* Makefile.am:
+	Moving classes and functions defined in Server.cc 
+	out of Server.cc in order to make them usable for 
+	other servers like e.g. multi-gift
+
+2002-01-26  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
 
 	* libMRML/cc/Makefile.am (libMRML_la_LDFLAGS): 
 	changed libtool version number
@@ -20,7 +71,7 @@
 	* libMRML/include/Makefile.am (libMRML_HEADERS): added
 	 CRPipe.h CReaper.h CReaperDistributor.h safePopen.h
 
-2002-01-23  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+2002-01-23  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
 
 	* libGIFTAcInvertedFile/include/Makefile.am (InvertedFile_HEADERS): 
 	* libGIFTAcDistanceMatrix/include/Makefile.am (DistanceMatrix_HEADERS): 
@@ -126,7 +177,7 @@
 	from gcc v3
 	
 
-2002-01-09  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+2002-01-09  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
 
 	* libMRML/cc/CAccessorElement.cc: cast TID to long
 
@@ -275,7 +326,7 @@
 	Changes to get at the peer name, and pass it to the 
 	communication handler
 
-2002-01-03  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+2002-01-03  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
 
 	* expat/Makefile.am: changing sequence of subdirs. xmlwf must be last,
 	gennmtab must be first.

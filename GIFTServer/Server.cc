@@ -818,6 +818,12 @@ int main(int argc, char **argv){
 	 << endl
 	 << flush;
   }
+  catch(GIFTException* inCaught){
+    cout << "Caught inServer Main:"
+	 << *inCaught
+	 << endl
+	 << flush;
+  }
   catch(...){
     cout << "there was an unknown exception" <<endl
 	 << flush;

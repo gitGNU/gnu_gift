@@ -39,6 +39,7 @@
 #include "libMRML/include/CAlgorithm.h" //getPropertySheet
 
 #include "libMRML/include/directory.h" // directorys as determined by ./configure
+#include "libMRML/include/createErrorMessage.h"
 
 //the "ID administration subsystem"
 TID gID;
@@ -410,7 +411,14 @@ CXMLElement* CSession::query(CSessionManager&     inCaller,
       mMutexSession.unlock();
       return lReturnValue;
     }
-  }catch(...){
+  }
+  catch(GIFTException* inException){
+    return createErrorMessage(inException->getMessage());
+  }
+  catch(GIFTException& inException){
+    return createErrorMessage(inException.getMessage());
+  }
+  catch(...){
     cout << "something caught" << endl;
     cerr << "something caught" << endl;
     
@@ -1006,10 +1014,18 @@ CXMLElement* CSessionManager::query(const string& inSessionID,
     return lError;
 #endif
   }
-  CXMLElement* lReturnValue(lFound->second->query(*this,
-						  inRelevanceLevelList));
-  //mMutexSessionManager.unlock();//debugging
-  return lReturnValue;
+  try{
+    CXMLElement* lReturnValue(lFound->second->query(*this,
+						    inRelevanceLevelList));
+    //mMutexSessionManager.unlock();//debugging
+    return lReturnValue;
+  }  
+  catch(GIFTException& inCaught){
+    return createErrorMessage(inCaught); 
+  }
+  catch(GIFTException* inCaught){
+    return createErrorMessage(inCaught); 
+  }
 };
 //--------------------------------------------------
 // retrieving random images as seeds

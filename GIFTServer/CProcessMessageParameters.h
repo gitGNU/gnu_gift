@@ -24,6 +24,7 @@
 
 */
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "libMRML/include/CSessionManager.h"
 using namespace std;
