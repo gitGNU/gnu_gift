@@ -41,7 +41,7 @@ class CAccessorAdminCollection{
   CXMLElement* mCollectionInConstruction;
   
 
-
+public:
   /** this is mainly a map from string to accessor proxy
       we would like to destroy this in a decent way */
   class CContent:public map<string,CAccessorAdmin*>{
@@ -54,8 +54,10 @@ class CAccessorAdminCollection{
   /**  */
   CAccessorAdmin* mCurrentProxy;
 
+public:
   /** for easier read access from the outside */
   typedef CContent::const_iterator const_iterator;
+protected:
   /** The accessor factory container: Turn a name 
       into an accessor */
   CSelfDestroyPointer<CAccessorFactoryContainer> mFactory;

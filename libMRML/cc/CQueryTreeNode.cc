@@ -24,12 +24,11 @@ CQueryTreeNode::~CQueryTreeNode(){
   delete mAlgorithm;
 };
 /** Configure this */
-void CQueryTreeNode::configure(list<pair<string,string> > inAttributes,
+void CQueryTreeNode::configure(CXMLElement& inAttributes,
 			       CAccessorAdminCollection& inAccessors,
 			       CStaticQueryFactory& inFactory){
 
-  mAlgorithm=new CAlgorithm(mrml_const::algorithm,
-			    inAttributes);
+  mAlgorithm=new CAlgorithm(inAttributes);
   cout << "Deleting mContent";
   mContent=0;
   cout << "done";

@@ -47,8 +47,10 @@ class CXMLElementVisitor;
    @author Wolfgang Müller
  */
 class CXMLElement:public CMagic,public CNoDelete{
+public:
   /** a typedef for simple convenience */
   typedef list<CXMLElement*> lCChildren;
+protected:
   /** the father of this*/
   CXMLElement* mFather;
   /** The child-grandchild-etc. which has just been inserted */

@@ -57,12 +57,14 @@ local $gGiftHome="";
   
   while(<DOT_FILE>){
     chomp;
-    print "[$_]\n";
     foreach $i (keys %$lOptionList){
       next if m/^\#/;#skip comments
       eval("if(m/^$i=\\\"(.*)\\\"/){\${\$lOptionList->{\$i}}=\$1;}");
-      print ${$lOptionList->{$i}} if ${$lOptionList->{$i}};
+      
     }
+  }
+  foreach $i (keys %$lOptionList){
+    print "$i => ${$lOptionList->{$i}}\n" if ${$lOptionList->{$i}};
   }
 }
 %lOptions=();
@@ -308,7 +310,7 @@ sub wanted{
 		 $lThumbnailURL){
       #escaping the URL
       $i=~s[//][/]g;
-      $i=~s[^http:/][^http://];
+      $i=~s[^http:/][http://];
       $i=~s[ ][%20]g;
     }
 

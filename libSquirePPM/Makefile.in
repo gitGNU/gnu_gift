@@ -1,7 +1,6 @@
-# Makefile.in generated automatically by automake 1.4e from Makefile.am.
+# Makefile.in generated automatically by automake 1.4 from Makefile.am
 
-# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
-# Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -10,8 +9,6 @@
 # but WITHOUT ANY WARRANTY, to the extent permitted by law; without
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
-
-@SET_MAKE@
 
 
 SHELL = @SHELL@
@@ -35,6 +32,8 @@ mandir = @mandir@
 includedir = @includedir@
 oldincludedir = /usr/include
 
+DESTDIR =
+
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -47,10 +46,9 @@ AUTOMAKE = @AUTOMAKE@
 AUTOHEADER = @AUTOHEADER@
 
 INSTALL = @INSTALL@
-INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
-INSTALL_HEADER = $(INSTALL_DATA)
 transform = @program_transform_name@
 
 NORMAL_INSTALL = :
@@ -59,7 +57,6 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-
 host_alias = @host_alias@
 host_triplet = @host@
 AMTAR = @AMTAR@
@@ -128,14 +125,7 @@ pythondir = @pythondir@
 
 noinst_LIBRARIES = libSquirePPM.a
 
-libSquirePPM_a_SOURCES = ppm_comment.c\
-		ppm_error.c\
-		ppm_io.c\
-		ppm_memory.c\
-		ppm_normalize.c\
-		ppm_plane.c\
-		ppm_subimage.c\
-		normaliseContrast.c
+libSquirePPM_a_SOURCES = ppm_comment.c 		ppm_error.c 		ppm_io.c 		ppm_memory.c 		ppm_normalize.c 		ppm_plane.c 		ppm_subimage.c 		normaliseContrast.c
 
 
 noinst_PROGRAMS = ppm-new-executable
@@ -143,86 +133,92 @@ noinst_PROGRAMS = ppm-new-executable
 ppm_new_executable_LDADD = -L. -lSquirePPM -lm
 
 ppm_new_executable_SOURCES = new_executable.c 
-subdir = libSquirePPM
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
-CONFIG_HEADER = $(top_builddir)/gift-config.h
-CONFIG_CLEAN_FILES =
-LIBRARIES = $(noinst_LIBRARIES)
+CONFIG_HEADER = ../gift-config.h
+CONFIG_CLEAN_FILES = 
+LIBRARIES =  $(noinst_LIBRARIES)
 
-libSquirePPM_a_AR = $(AR) cru
-libSquirePPM_a_LIBADD =
-am_libSquirePPM_a_OBJECTS = ppm_comment.$(OBJEXT) ppm_error.$(OBJEXT) \
-	ppm_io.$(OBJEXT) ppm_memory.$(OBJEXT) ppm_normalize.$(OBJEXT) \
-	ppm_plane.$(OBJEXT) ppm_subimage.$(OBJEXT) \
-	normaliseContrast.$(OBJEXT)
-libSquirePPM_a_OBJECTS = $(am_libSquirePPM_a_OBJECTS)
-AR = ar
-noinst_PROGRAMS = ppm-new-executable$(EXEEXT)
-PROGRAMS = $(noinst_PROGRAMS)
 
-am_ppm_new_executable_OBJECTS = new_executable.$(OBJEXT)
-ppm_new_executable_OBJECTS = $(am_ppm_new_executable_OBJECTS)
-ppm_new_executable_DEPENDENCIES =
-ppm_new_executable_LDFLAGS =
-COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_CFLAGS) $(CFLAGS)
-LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
-CFLAGS = @CFLAGS@
-CCLD = $(CC)
-LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
-
-DEFS = @DEFS@ -I. -I$(srcdir) -I$(top_builddir)
+DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-DIST_SOURCES = $(libSquirePPM_a_SOURCES) $(ppm_new_executable_SOURCES)
-depcomp = $(SHELL) $(top_srcdir)/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/new_executable.Po \
-@AMDEP_TRUE@	$(DEPDIR)/normaliseContrast.Po \
-@AMDEP_TRUE@	$(DEPDIR)/ppm_comment.Po $(DEPDIR)/ppm_error.Po \
-@AMDEP_TRUE@	$(DEPDIR)/ppm_io.Po $(DEPDIR)/ppm_memory.Po \
-@AMDEP_TRUE@	$(DEPDIR)/ppm_normalize.Po $(DEPDIR)/ppm_plane.Po \
-@AMDEP_TRUE@	$(DEPDIR)/ppm_subimage.Po
-DIST_COMMON = Makefile.am Makefile.in
+libSquirePPM_a_LIBADD = 
+libSquirePPM_a_OBJECTS =  ppm_comment.$(OBJEXT) ppm_error.$(OBJEXT) \
+ppm_io.$(OBJEXT) ppm_memory.$(OBJEXT) ppm_normalize.$(OBJEXT) \
+ppm_plane.$(OBJEXT) ppm_subimage.$(OBJEXT) normaliseContrast.$(OBJEXT)
+AR = ar
+noinst_PROGRAMS =  ppm-new-executable$(EXEEXT)
+PROGRAMS =  $(noinst_PROGRAMS)
+
+ppm_new_executable_OBJECTS =  new_executable.$(OBJEXT)
+ppm_new_executable_DEPENDENCIES = 
+ppm_new_executable_LDFLAGS = 
+CFLAGS = @CFLAGS@
+COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
+CCLD = $(CC)
+LINK = $(LIBTOOL) --mode=link $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
+DIST_COMMON =  Makefile.am Makefile.in
+
+
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+
+TAR = tar
+GZIP_ENV = --best
+DEP_FILES =  .deps/new_executable.P .deps/normaliseContrast.P \
+.deps/ppm_comment.P .deps/ppm_error.P .deps/ppm_io.P .deps/ppm_memory.P \
+.deps/ppm_normalize.P .deps/ppm_plane.P .deps/ppm_subimage.P
 SOURCES = $(libSquirePPM_a_SOURCES) $(ppm_new_executable_SOURCES)
-OBJECTS = $(am_libSquirePPM_a_OBJECTS) $(am_ppm_new_executable_OBJECTS)
+OBJECTS = $(libSquirePPM_a_OBJECTS) $(ppm_new_executable_OBJECTS)
 
-all: all-am
-
+all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .c .lo .o .obj
+.SUFFIXES: .S .c .lo .o .obj .s
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --gnu libSquirePPM/Makefile
 
-$(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
-	cd $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu  libSquirePPM/Makefile
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
-Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
-	cd $(top_builddir) && \
-	  CONFIG_HEADERS= CONFIG_LINKS= \
-	  CONFIG_FILES=$(subdir)/$@ $(SHELL) ./config.status
+
+mostlyclean-noinstLIBRARIES:
 
 clean-noinstLIBRARIES:
 	-test -z "$(noinst_LIBRARIES)" || rm -f $(noinst_LIBRARIES)
 
-libSquirePPM.a: $(libSquirePPM_a_OBJECTS) $(libSquirePPM_a_DEPENDENCIES)
-	-rm -f libSquirePPM.a
-	$(libSquirePPM_a_AR) libSquirePPM.a $(libSquirePPM_a_OBJECTS) $(libSquirePPM_a_LIBADD)
-	$(RANLIB) libSquirePPM.a
+distclean-noinstLIBRARIES:
 
-clean-noinstPROGRAMS:
-	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
+maintainer-clean-noinstLIBRARIES:
 
-ppm-new-executable$(EXEEXT): $(ppm_new_executable_OBJECTS) $(ppm_new_executable_DEPENDENCIES)
-	@rm -f ppm-new-executable$(EXEEXT)
-	$(LINK) $(ppm_new_executable_LDFLAGS) $(ppm_new_executable_OBJECTS) $(ppm_new_executable_LDADD) $(LIBS)
+# FIXME: We should only use cygpath when building on Windows,
+# and only if it is available.
+.c.obj:
+	$(COMPILE) -c `cygpath -w $<`
+
+.s.o:
+	$(COMPILE) -c $<
+
+.S.o:
+	$(COMPILE) -c $<
 
 mostlyclean-compile:
-	-rm -f *.$(OBJEXT) core *.core
+	-rm -f *.o core *.core
+	-rm -f *.$(OBJEXT)
+
+clean-compile:
 
 distclean-compile:
 	-rm -f *.tab.c
+
+maintainer-clean-compile:
+
+.s.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.S.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -231,110 +227,133 @@ clean-libtool:
 	-rm -rf .libs _libs
 
 distclean-libtool:
-	-rm -f libtool
+
+maintainer-clean-libtool:
+
+libSquirePPM.a: $(libSquirePPM_a_OBJECTS) $(libSquirePPM_a_DEPENDENCIES)
+	-rm -f libSquirePPM.a
+	$(AR) cru libSquirePPM.a $(libSquirePPM_a_OBJECTS) $(libSquirePPM_a_LIBADD)
+	$(RANLIB) libSquirePPM.a
+
+mostlyclean-noinstPROGRAMS:
+
+clean-noinstPROGRAMS:
+	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
+
+distclean-noinstPROGRAMS:
+
+maintainer-clean-noinstPROGRAMS:
+
+ppm-new-executable$(EXEEXT): $(ppm_new_executable_OBJECTS) $(ppm_new_executable_DEPENDENCIES)
+	@rm -f ppm-new-executable$(EXEEXT)
+	$(LINK) $(ppm_new_executable_LDFLAGS) $(ppm_new_executable_OBJECTS) $(ppm_new_executable_LDADD) $(LIBS)
 
 tags: TAGS
 
-ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
-	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
-	unique=`for i in $$list; do \
-	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
-	  done | \
-	  $(AWK) '    { files[$$0] = 1; } \
+ID: $(HEADERS) $(SOURCES) $(LISP)
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
-	mkid -fID $$unique $(LISP)
+	here=`pwd` && cd $(srcdir) \
+	  && mkid -f$$here/ID $$unique $(LISP)
 
-TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
-		$(TAGS_FILES) $(LISP)
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
 	tags=; \
 	here=`pwd`; \
-	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
-	unique=`for i in $$list; do \
-	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
-	  done | \
-	  $(AWK) '    { files[$$0] = 1; } \
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
 	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
-	  || etags $(ETAGS_ARGS) $$tags  $$unique $(LISP)
+	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
 
-GTAGS:
-	here=`CDPATH=: && cd $(top_builddir) && pwd` \
-	  && cd $(top_srcdir) \
-	  && gtags -i $$here
+mostlyclean-tags:
+
+clean-tags:
 
 distclean-tags:
 	-rm -f TAGS ID
 
-@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/new_executable.Po@_am_quote@
-@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/normaliseContrast.Po@_am_quote@
-@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/ppm_comment.Po@_am_quote@
-@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/ppm_error.Po@_am_quote@
-@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/ppm_io.Po@_am_quote@
-@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/ppm_memory.Po@_am_quote@
-@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/ppm_normalize.Po@_am_quote@
-@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/ppm_plane.Po@_am_quote@
-@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/ppm_subimage.Po@_am_quote@
+maintainer-clean-tags:
 
-distclean-depend:
-	-rm -rf $(DEPDIR)
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 
-CCDEPMODE = @CCDEPMODE@
-
-.c.o:
-	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(COMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
-
-.c.lo:
-	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
-	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
-	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(LTCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
-
-.c.obj:
-	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-	$(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(COMPILE) -c -o $@ `cygpath -w $<`
-
-
-DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-
-top_distdir = ..
-distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
+subdir = libSquirePPM
 
 distdir: $(DISTFILES)
+	here=`cd $(top_builddir) && pwd`; \
+	top_distdir=`cd $(top_distdir) && pwd`; \
+	distdir=`cd $(distdir) && pwd`; \
+	cd $(top_srcdir) \
+	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnu libSquirePPM/Makefile
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pR $$d/$$file $(distdir) \
-	    || exit 1; \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
-	    || cp -p $$d/$$file $(distdir)/$$file \
-	    || exit 1; \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
+
+DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
+
+-include $(DEP_FILES)
+
+mostlyclean-depend:
+
+clean-depend:
+
+distclean-depend:
+	-rm -rf .deps
+
+maintainer-clean-depend:
+
+%.o: %.c
+	@echo '$(COMPILE) -c $<'; \
+	$(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+	tr ' ' '\012' < .deps/$(*F).pp \
+	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+	    >> .deps/$(*F).P; \
+	rm .deps/$(*F).pp
+
+%.lo: %.c
+	@echo '$(LTCOMPILE) -c $<'; \
+	$(LTCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
+	  < .deps/$(*F).pp > .deps/$(*F).P; \
+	tr ' ' '\012' < .deps/$(*F).pp \
+	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+	    >> .deps/$(*F).P; \
+	rm -f .deps/$(*F).pp
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
 check-am: all-am
 check: check-am
-all-am: Makefile $(LIBRARIES) $(PROGRAMS)
-
-installdirs:
-
-install: install-am
+installcheck-am:
+installcheck: installcheck-am
+install-exec-am:
 install-exec: install-exec-am
+
+install-data-am:
 install-data: install-data-am
-uninstall: uninstall-am
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
-
-installcheck: installcheck-am
-
+install: install-am
+uninstall-am:
+uninstall: uninstall-am
+all-am: Makefile $(LIBRARIES) $(PROGRAMS)
+all-redirect: all-am
 install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
-	  INSTALL_PROGRAM_ENV='$(INSTALL_STRIP_PROGRAM_ENV)' install
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
+installdirs:
+
 
 mostlyclean-generic:
 
@@ -345,56 +364,50 @@ distclean-generic:
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
-	@echo "This command is intended for maintainers to use"
-	@echo "it deletes files that may require special tools to rebuild."
-	-rm -f Makefile.in
-clean: clean-am
-
-clean-am: clean-generic clean-libtool clean-noinstLIBRARIES \
-	clean-noinstPROGRAMS mostlyclean-am
-
-distclean: distclean-am
-
-distclean-am: clean-am distclean-compile distclean-depend \
-	distclean-generic distclean-libtool distclean-tags
-
-dvi:
-
-dvi-am:
-
-info:
-
-info-am:
-
-install-data-am:
-
-install-exec-am:
-
-install-info:
-
-install-man:
-
-installcheck-am:
-
-maintainer-clean: maintainer-clean-am
-
-maintainer-clean-am: distclean-am maintainer-clean-generic
+mostlyclean-am:  mostlyclean-noinstLIBRARIES mostlyclean-compile \
+		mostlyclean-libtool mostlyclean-noinstPROGRAMS \
+		mostlyclean-tags mostlyclean-depend mostlyclean-generic
 
 mostlyclean: mostlyclean-am
 
-mostlyclean-am: mostlyclean-compile mostlyclean-generic \
-	mostlyclean-libtool
+clean-am:  clean-noinstLIBRARIES clean-compile clean-libtool \
+		clean-noinstPROGRAMS clean-tags clean-depend \
+		clean-generic mostlyclean-am
 
-.PHONY: all all-am check check-am clean clean-generic clean-libtool \
-	clean-noinstLIBRARIES clean-noinstPROGRAMS distclean \
-	distclean-compile distclean-depend distclean-generic \
-	distclean-libtool distclean-tags distdir dvi dvi-am info \
-	info-am install install-am install-data install-data-am \
-	install-exec install-exec-am install-info install-man \
-	install-strip installcheck installcheck-am installdirs \
-	maintainer-clean maintainer-clean-generic mostlyclean \
-	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
-	tags uninstall uninstall-am
+clean: clean-am
+
+distclean-am:  distclean-noinstLIBRARIES distclean-compile \
+		distclean-libtool distclean-noinstPROGRAMS \
+		distclean-tags distclean-depend distclean-generic \
+		clean-am
+	-rm -f libtool
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-noinstLIBRARIES \
+		maintainer-clean-compile maintainer-clean-libtool \
+		maintainer-clean-noinstPROGRAMS maintainer-clean-tags \
+		maintainer-clean-depend maintainer-clean-generic \
+		distclean-am
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+maintainer-clean: maintainer-clean-am
+
+.PHONY: mostlyclean-noinstLIBRARIES distclean-noinstLIBRARIES \
+clean-noinstLIBRARIES maintainer-clean-noinstLIBRARIES \
+mostlyclean-compile distclean-compile clean-compile \
+maintainer-clean-compile mostlyclean-libtool distclean-libtool \
+clean-libtool maintainer-clean-libtool mostlyclean-noinstPROGRAMS \
+distclean-noinstPROGRAMS clean-noinstPROGRAMS \
+maintainer-clean-noinstPROGRAMS tags mostlyclean-tags distclean-tags \
+clean-tags maintainer-clean-tags distdir mostlyclean-depend \
+distclean-depend clean-depend maintainer-clean-depend info-am info \
+dvi-am dvi check check-am installcheck-am installcheck install-exec-am \
+install-exec install-data-am install-data install-am install \
+uninstall-am uninstall all-redirect all-am all installdirs \
+mostlyclean-generic distclean-generic clean-generic \
+maintainer-clean-generic clean mostlyclean distclean maintainer-clean
 
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.

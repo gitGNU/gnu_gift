@@ -28,7 +28,9 @@
 * modification history:
 *
 * HM 090399 created the documentation
+* WM   1198 created file
 *
+* @Author: Wolfgang Müller
 ****************************************
 *
 * compiler defines used:

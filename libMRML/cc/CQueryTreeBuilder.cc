@@ -33,7 +33,7 @@ pair<CQueryContainer*,CQueryTreeNode*> CQueryTreeBuilder::buildQueryTree(CAlgori
   }
   
 
-  CSelfDestroyPointer<list< pair<string,string> > > lAttributes=inAlgorithm.createNamedValueList();
+  //  CSelfDestroyPointer<list< pair<string,string> > > lAttributes=inAlgorithm.createNamedValueList();
   cout << "mQ]"<<endl;
 
   //
@@ -91,7 +91,7 @@ pair<CQueryContainer*,CQueryTreeNode*> CQueryTreeBuilder::buildQueryTree(CAlgori
   //
   // In the very end configure the root
   //
-  lRoot->configure(*lAttributes,
+  lRoot->configure(inAlgorithm,
 		   inBaseConfiguration,
 		   inBaseTypeFactory);
 

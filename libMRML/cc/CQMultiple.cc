@@ -330,7 +330,7 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
        << endl;
 
 
-  list<CWeightedResult> lTemporary;
+  //list<CWeightedResult> lTemporary;
   double lWeightSum(0);
 
   hash_map<TID,CIDRelevanceLevelPair> lResultMap;
@@ -354,7 +354,7 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
       i++){
     lWeightSum+=i->mWeight;
     
-    lTemporary.push_back(CWeightedResult());
+    //lTemporary.push_back(CWeightedResult());
     
     cout << "this CMultiple:" << this 
 	 << ", i->mQuery:" << i->mQuery 
@@ -374,7 +374,7 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
 	   if(1==0 
 	   && (i==lLast)){
 	   lListOfThreads.back().callFunction();//something to do for the main thread
-	   }else*/
+§	   }else*/
       
     {
       cout << "Running thread" 

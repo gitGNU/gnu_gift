@@ -56,7 +56,9 @@ class CAccessorFactoryContainer{
       In this map is noted, which accessors are open for the
       collection with the given ID.
    */
+public:
   typedef map<string,CContentElement> CContent;
+protected:
   /** the content */
   CContent mContent;
      

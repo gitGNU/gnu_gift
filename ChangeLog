@@ -1,3 +1,29 @@
+2001-05-22  Wolfgang Mueller  <Wolfgang.Mueller@cui.unige.ch>
+
+	* libMRML/cc/CQMultiple.cc (fastQuery): commenting out 
+	lTemporary [was unused].
+
+	* scripts/perl/gift-add-collection.pre-pl (wanted): 
+	removing ^ in front of second http: s[^http:/][^http://]
+	is now s[^http:/][http://]
+
+	* libMRML/cc/CIDRelevanceLevelPair.cc: 
+	* libMRML/include/CIDRelevanceLevelPair.h: Added cmath include,
+	as well as an author notice
+	
+
+	* libMRML/include/CAlgorithm.h(CAlgorithm): 
+	* libMRML/cc/CAlgorithm.cc(CAlgorithm): 
+	Now we can construct an algorithm not only from another algorithm, but also 
+	from an exsisting CXMLElement
+
+	* libMRML/include/CAccessorAdminCollection.h: 
+	making private classes public where necessary
+
+	* libMRML/cc/CQueryTreeNode.cc(configure): inAttributes
+	is not any more a flat attribute list, but a tree of type
+	CXMLElement
+
 2001-04-19  Wolfgang Müller  <Wolfgang.Mueller@cui.unige.ch>
 
 	* libMRML/cc/CAccessorAdmin.cc(closeAccessor): 

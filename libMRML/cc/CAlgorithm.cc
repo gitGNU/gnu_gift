@@ -36,6 +36,11 @@ CAlgorithm::CAlgorithm(const CAlgorithm& inAlgorithm):
   CXMLElement(inAlgorithm){
   
 };
+/** clone this*/
+CAlgorithm::CAlgorithm(const CXMLElement& inAlgorithm):
+  CXMLElement(inAlgorithm){
+  
+};
 /**
    Add a child with the given attributes
    to the current node, and MAKE 

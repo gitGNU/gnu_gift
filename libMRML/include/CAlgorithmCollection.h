@@ -54,16 +54,18 @@ class CAccessorAdminCollection;
   @Author Wolfgang Mueller
  */
 class CAlgorithmCollection:public CStaticQueryFactory{
+protected:
   /** as the name sais*/
   CAlgorithm* mAlgorithmInConstruction;
   /** The content of an algorithm collection is a map
      between algorihm type and a pointer to 
      the corresponding CAlgorithm */
+protected:
   typedef map<string,CAlgorithm*> CContent;
+
   /** 
    */
   CContent mContent;
-protected:
   /** for being able to read all the content */
   CContent::const_iterator begin()const;
   /** for being able to read all the content */

@@ -28,7 +28,7 @@
 *
 * modification history:
 *
-* 
+*@Author Wolfgang Müller
 *
 ****************************************
 *
@@ -42,6 +42,7 @@
 #include <iostream.h>
 #include "TID.h"
 #include <functional>
+#include <cmath>
 
 /** Level of relevance given by the user to an image (URL) */
 class CIDRelevanceLevelPair{

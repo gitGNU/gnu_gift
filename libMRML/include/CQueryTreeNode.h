@@ -13,6 +13,7 @@
 #include "CSelfDestroyPointer.h"
 #include "CMagic.h"
 
+class CXMLElement;
 class CAlgorithm;
 class CStaticQueryFactory;
 
@@ -44,7 +45,7 @@ public:
   /** Configure this. This means:
    create an object of a subclass of CQuery, 
    and set its children*/
-  void configure(list<pair<string,string> >,
+  void configure(CXMLElement& inAlgorithm,
 		 CAccessorAdminCollection& inAccessors,
 		 CStaticQueryFactory& inBaseTypeFactory);
   /** 

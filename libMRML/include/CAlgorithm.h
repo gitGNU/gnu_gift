@@ -135,6 +135,8 @@ public:
   /** hand things through to the CXMLElement constructor */
   CAlgorithm(const string& ,
 	     const list< pair<string,string> >& inList);
+  /** construct CAlgorithm from XML Element */
+  CAlgorithm(const CXMLElement& inAlgorithm);
   /** copy constructor */
   CAlgorithm(const CAlgorithm& inAlgorithm);
 };
