@@ -93,9 +93,9 @@ GetOptions(\%lOptions,
 	   "no-ps");
 
 
-my($lInEncoding,$lOutEncoding)=!(defined($lOptions{"local-encoding"})
+my($lInEncoding,$lOutEncoding)=(defined($lOptions{"local-encoding"})
   ? (&main::findOutEncodings())
-  : ($lOptions{"local-encoding"},"UTF-8");
+  : ($lOptions{"local-encoding"},"UTF-8"));
 print "I am assuming that the system is using $lInEncoding as encoding. 
 Within the xml files generated, we will use $lOutEncoding as encoding method\n";
 
