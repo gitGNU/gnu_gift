@@ -217,7 +217,7 @@ void generateDistanceMatrix(const string& inBaseDir,
 			    const string& inCollection,
 			    int inSkip,
 			    int inTo){
-
+  cout << "Starting generateDistanceMatrix " << inAlgorithm << inCollection << inSkip << inTo << endl;
   map<string,int> lURLToPosition;
 
   string lOutputName=inOutputName
@@ -232,11 +232,12 @@ void generateDistanceMatrix(const string& inBaseDir,
 				  inBaseDir+"/gift-config.mrml",
 				  inBaseDir+"/gift-i18n.xml"
 				  );
-  
+  cout << "hier 0" << endl;
   // open a session
   string lSessionID(lSessionManager.newSession("DistanceMatrixMaker",""));
+  cout << "hier 1" << endl;
   // configure the session
-  CAlgorithm* lConfig(new CAlgorithm("algorithm",
+  CAlgorithm* lConfig(new CAlgorithm("adefault",
 				     0));
   assert(lConfig);
   lConfig->addAttribute(mrml_const::algorithm_id,
@@ -245,9 +246,10 @@ void generateDistanceMatrix(const string& inBaseDir,
 			inAlgorithm);
   lConfig->addAttribute(mrml_const::collection_id,
 			inCollection);
-  
+  cout << "hier 1" << endl;
   lSessionManager.setAlgorithm(lSessionID,
 			       lConfig);
+  cout << "hier 2" << endl;
 
   // fstream::in+fstream::out would cast to int IMPLICITLY
   fstream lMatrix(lOutputName.c_str(),
@@ -585,6 +587,12 @@ int main(int argc, char **argv){
   }
   }
 
+  if(!generateMatrix){
+    cout << "GIFT:Starting Server" << endl;
+  }else{
+    cout << "GIFT:Generating distance matrix" << endl;
+  }
+
   int idx = optind;
   if ( !generateMatrix ) {
     if ( idx < argc ) // more arguments -> backwards compat
@@ -635,7 +643,7 @@ int main(int argc, char **argv){
       ::exit(1);
     }
 
-exit(0);
+    //exit(0);
     generateDistanceMatrix(gGIFTHome,
 			   string("DistanceMatrix"),
 			   string(argv[idx]),

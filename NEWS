@@ -1,3 +1,7 @@
+0.1.9+4epsilon
+	License bug. Updated gift-guide.sgml concerning perl and 
+	url2fts.xml
+
 0.1.9+3epsilon
 	this fixes some anoying stuff found in 0.1.9 by testers. We 
 	hope some 0.1.10 out soon. 

@@ -1,3 +1,14 @@
+2003-09-15  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* Doc/gift-guide.sgml: removed non GPL compliant license statement.
+	Removed some cruft from the to-do-list. Updated the part 
+	about hacking the url2fts file. Updated perl prerequisites.
+
+2003-09-02  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libMRML/cc/CAccessorAdminCollection.cc(getProxy): throwing exception
+	on unknown collection
+
 2003-05-06  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
 
 	* PluginMaker/configure.in.in: fixed wrong options in call

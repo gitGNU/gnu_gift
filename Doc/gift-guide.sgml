@@ -3,9 +3,8 @@
   <article>
       <title>GIFT user's guide</title>
       <author>Wolfgang Müller</author>
-      <date>0.1.5, 12th of December 2000</date>
+      <date>0.1.9+4epsilon, 2003-09-15</date>
       <abstract>The GIFT is a content based image retrieval system.
-Military use or other use harmful to people is <bf>strictly prohibited</bf>.
       </abstract>
       
     <toc>
@@ -116,20 +115,27 @@ module might ask you plenty of questions.</item>
 convert image formats to PPM files.)</item>
 	      <item>Perl younger than 5.003 (you get that at 
 www.cpan.org)</item>
-	      <item>The Perl modules 
+	      <item>Currently we use the Perl modules
 <itemize>
-		  <item>XML::Parser (you also get that at 
-www.cpan.org)</item>
-		  <item>XML::Writer</item>
-		  <item>HTML::Parser (if not already provided by your GNU/Linux distribution)</item>		  
+		  <item>Parse-Yapp-1.05</item>
+		  <item>XML-Parser-2.34</item>
+		  <item>libxml-perl-0.07</item>
+		  <item>XML-RegExp-0.03</item>
+		  <item>XML-SAX-0.12</item>
+		  <item>XML-Writer-0.4</item>
+		  <item>XML-Handler-EasyTree-Traversal</item>
+		  <item>XML-Handler-Trees-0.02</item>
+		  <item>XML-DOM-1.43</item>
+		  <item>XML-XQL-0.68</item>
+		  <item>Text-Iconv-1.2</item>
 		  <item>libnet (if not already provided by your GNU/Linux distribution)</item>
 		  <item>libwww (if not already provided by your GNU/Linux distribution)</item>
 		</itemize>
 </item>
-<!--	      <item>doxygen (optional, for system documentation)</item>-->
+	      <item>doxygen (optional, for system documentation)</item>
 	    </itemize>
 </item>	  
-<item>Unpack it by doing <code>tar -xzvf gift-0.1.5.tgz</code>
+<item>Unpack it by doing <code>tar -xzvf gift-VERSION.tgz</code>
 </item>
 	  <item>Follow the install instructions in the file
 <code>INSTALL</code>
@@ -343,7 +349,7 @@ See the "digging in the indexing files" section for more information
       <sect1>
 	<heading>Digging in the indexing files</heading>
 	<sect2>
-	  <heading>url2fts</heading>
+	  <heading>url2fts.xml</heading>
 	  <p>
 MRML is based on URLs. Based on the url, it will see if it knows
 already the image, if the image is in the indexed collection etc. . If
@@ -351,31 +357,33 @@ the image is unknown, it will create new features for finding a
 corresponding image etc. . As a consequence, if you move images that
 have been indexed from one directory to another, you will have to
 change the translation table from url to feature file. This resides in
-the "url2fts" files.
+the "url2fts.xml" files.
 </p>
 	  <sect3>
-	    <heading>Where is the url2fts for a given collection?</heading>
+	    <heading>Where is the url2fts.xml for a given collection?</heading>
 	    <p>Assuming you have a collection containing images from
 <code>/this/is/a/path/to/my_collection/</code>
 You will find the indexing data in the directory 
 <code>${VIPER_HOME:-$HOME}/gift-indexing-data/my_collection/</code>
 The translation table from URL to feature file resides in 
-<code>${VIPER_HOME:-$HOME}/gift-indexing-data/my_collection/url2fts</code>
+<code>${VIPER_HOME:-$HOME}/gift-indexing-data/my_collection/url2fts.xml</code>
 </p></sect3>
 	  <sect3>
-	    <heading>Modifying url2fts for moving a collection</heading>
+	    <heading>Modifying url2fts.xml for moving a collection</heading>
 	    <p>Do <code>emacs \
-${VIPER_HOME:-$HOME}/gift-indexing-data/my_collection/url2fts</code>
+${VIPER_HOME:-$HOME}/gift-indexing-data/my_collection/url2fts.xml</code>
 What you get to see is a long table of the structure
 
-<verb>image_location_url thumbnail_location_url feature_file_name</verb>
+<verb>
+  &lt;image url-postfix="IMAGEURL" thumbnail-url-postfix="THUMBNAILURL" feature-file-name="NAME_OF_THE_FEATURE_FILE" /&gt;
+</verb>
 
 Clearly, if you move the images from one location to another, you have
 to adjust image_location and thumbnail_location. Usually this amounts
 to a simple query-replace operation.
 </p>
 	    <p>For example: at my place I have the collection TSR500,
-and the first line looks like this: <verb>http://localhost/~muellerw/images/TSR500/b_1002_scaled_small.jpg http://localhost/~muellerw/images/TSR500_thumbnails/b_1002_scaled_small_thumbnail_jpg.jpg /home/muellerw/gift-indexing-data/TSR500/b_1002_scaled_small_jpg.fts
+and the first line looks like this: <verb>&lt;image url-postfix="http://localhost/~muellerw/images/TSR500/b_1002_scaled_small.jpg" thumbnail-url-postfix="http://localhost/~muellerw/images/TSR500_thumbnails/b_1002_scaled_small_thumbnail_jpg.jpg" feature-file-name="/home/muellerw/gift-indexing-data/TSR500/b_1002_scaled_small_jpg.fts" /&gt;
 </verb>
 If I want to move this collection from 
 <verb>~muellerw/public_html/TSR500/</verb> 
@@ -399,7 +407,7 @@ shown, if they are specified by a file:/... URL. This renders giving
 defaults which work for everybody impossible. We give possibilites to specify
 all this in gift-add-collection.pl (try --help for viewing the
 options). However, if you are experiencing trouble you can simply
-do replacement of URLs in the url2fts file, as described in the
+do replacement of URLs in the url2fts.xml file, as described in the
 section above.
  </p>
 	  </sect3>
@@ -483,15 +491,14 @@ used in the cc file with the declaration in the include file.</item>
 	<heading>Known shortcomings</heading>
 	<p><itemize>
 	    <item><label id="problem-exceptions">Exceptions: GIFT has
-been designed to throw exceptions in case of errors. Unfortunately
-this feature is still too buggy in 2.8.1 to be used. So, in many
-cases, GIFT aborts where it should not. 
-Some of the aborts were deliberately left in to make some other errors
-more visible for us during development. </item>
+been designed to throw exceptions in case of errors. Some of them are not caught.
+Please tell us if this is the case, i.e. GIFT aborts where it should not. 
+Some of the aborts were deliberately left in at first to make some other errors
+more visible for us during development, but we would like to get rid of them now. </item>
 	  </itemize>
       </sect1>
       <sect1>
-	<heading>Features to be added soon</heading>
+	<heading>Features to be added soon (OK this has been "soon" for three years now!)</heading>
 	<p><itemize>
 	    <item>Adding images during runtime</item>
 	    <item>Persistent administration of sessions,
@@ -499,7 +506,6 @@ including interaction history. Here we will have to choose a database
 to link GIFT to (probably the GPLed version of MySQL or PostgreSQL). Otherwise, 
 we waste simply too much time on issues which are not really image processing.
 </item>
-	    <item>Integrate Christoph Giess's CORBA code</item>
 	  </itemize>
 </p>
       </sect1>

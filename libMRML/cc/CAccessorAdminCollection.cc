@@ -244,14 +244,15 @@ CAccessorAdmin& CAccessorAdminCollection::getProxy(const string& inID){
 	 << inID
 	 << ", and I did not find it"
 	 << endl;
-    // my_throw(VENotFound(string("mIDToProxy _"+inID+"_").c_str()));
-    // return the default collection
+    my_throw(VENotFound(string("mIDToProxy _"+inID+"_").c_str()));
 
     //
     // quick fix by WM against people nuking our server... :-(
     //
     // 	BE WARNED: this can fail, if not every query 
     // 	processor works with every collection.
+
+    // this code will not be reached.
     return *mIDToProxy[this->getDefaultAccessorID()];
   }
 };
