@@ -691,14 +691,28 @@ bool CCommunicationHandler::readAndParse(){
     ofstream lInLogFile((gGIFTHome
 			 +
 			 string("/gift-last-in-message.mrml")).c_str());
-    lInLogFile << lLogString 
+    lInLogFile << endl
+	       << "<!-- The following message was sent by " << endl 
+	       << this->getPeerAddressString() << endl;
+    time_t lNow(time(0));
+    string lNowASCII=string(ctime(&lNow));
+    lInLogFile << "At: " << lNowASCII
+	       << " --> " << endl
+	       << lLogString 
 	       << flush
 	       << endl;
   }
 
 
   if(lSuccess){
-    mLog << lLogString 
+    mLog << endl
+	       << "<!-- The following message was sent by " << endl 
+	       << this->getPeerAddressString() << endl;
+    time_t lNow(time(0));
+    string lNowASCII=string(ctime(&lNow));
+    mLog << "At: " << lNowASCII
+	 << " --> " << endl
+	 << lLogString 
 	 << flush
 	 << endl;
   }
@@ -919,3 +933,21 @@ void CCommunicationHandler::addToMultiResponse(CXMLElement* inElement){
 
 
 
+/** 
+    set the name of the peer,
+    this is just an informative string,
+    destined for the log.
+    
+    The string can contain either the IP of the
+    connecting computer, or else the peer credentials
+    of the connecting tasks.
+*/
+void CCommunicationHandler::setPeerAddressString(string inString){
+  gMutex->lock();
+  mPeerAddressString=inString;
+  gMutex->unlock();
+};
+/** get the Peer adress string */
+const string& CCommunicationHandler::getPeerAddressString()const{
+  return mPeerAddressString;
+}

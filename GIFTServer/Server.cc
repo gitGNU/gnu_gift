@@ -444,12 +444,18 @@ public:
   ofstream& mLogFile;
   /** The sessionManager of the communication */
   CSessionManager& mSessionManager;
+  /** 
+      The socket address of the peer
+   */
+  string mPeerAddress;
   /** makes this structure (needed because of the
-      use of references). */
+      use of references [ofstream& mLogFile]). */  
   CProcessMessageParameters(CSessionManager& inSessionManager,
+			    string& inPeerAddress,
 			    ofstream& inLogFile,
 			    int inSocket):
     mLogFile(inLogFile),
+    mPeerAddress(inPeerAddress),
     mSessionManager(inSessionManager),
     mSocket(inSocket){
   };
@@ -468,7 +474,7 @@ void* processMessage(void* inProcessMessageParameters){
   
   CCommunicationHandler* lCommunicationHandler(new CCommunicationHandler(lParameters->mSessionManager,
 									 lParameters->mLogFile));
-					      
+  lCommunicationHandler->setPeerAddressString(lParameters->mPeerAddress);
   lCommunicationHandler->setSocket(lParameters->mSocket);
   // this is the line which processes
   if (!lCommunicationHandler->readAndParse()) {
@@ -658,9 +664,22 @@ void main(int argc, char **argv){
       }else{// no error
 	cout << "Accepted Connection!" << endl << flush;
 
+
+	string lAddress;
+	{
+	  struct sockaddr  lName;
+	  socklen_t lNameLen(sizeof(lName));
+	  if(!getpeername(lOutSocket, 
+			  &lName, 
+			  &lNameLen)){
+	    lAddress="Peer INET Address: " + string(inet_ntoa(((sockaddr_in*)(&lName))->sin_addr));
+	    cout << "Accepted from adress [" << lAddress << "]" << endl;
+	  } 
+	}
 	CProcessMessageParameters* 
 	  lProcessMessageParameters(new 
 				    CProcessMessageParameters(gSessionManager,
+							      lAddress,
 							      gLogFile,
 							      lOutSocket));
 #ifdef  __GIFT_USES_THREADS__

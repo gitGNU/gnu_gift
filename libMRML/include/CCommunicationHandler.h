@@ -75,275 +75,297 @@ class CCommunicationHandler{
      
   */
   CSelfDestroyPointer<CXMLElement> mCurrentTree;
+
+  /** 
+      The string containing and describing 
+      the peer socket. This can be an IP socket,
+      or unix socket peer credentials
+   */
+  string mPeerAddressString;
   
-    public:
-    /**
-       A DOM-alike tree which will be built from all the answers 
-       given to the requests
+public:
+  /**
+     A DOM-alike tree which will be built from all the answers 
+     given to the requests
 
-       at the moment this is public, because I need it to 
-       slowly hack the negotiation code.
-    */
-    CSelfDestroyPointer<CXMLElement> mMultiResponse;
+     at the moment this is public, because I need it to 
+     slowly hack the negotiation code.
+  */
+  CSelfDestroyPointer<CXMLElement> mMultiResponse;
 
-    protected:
-    /** We have said, that the user can tell, if he wants a query
-	in the normal sense or rather a collection of random images,
-	in which case the inner parts of the query are ignored. 
+protected:
+  /** We have said, that the user can tell, if he wants a query
+      in the normal sense or rather a collection of random images,
+      in which case the inner parts of the query are ignored. 
 
-	The flag used to perform this is this variable.
-    */
-    int mQueryAtRandomCount;
-    protected:
-    /** The socket, which is used for this communication */
-    int mSocket;
-    /** The logfile which logs all communication. *this
-	will APPEND NEW DATA to the logfile, as you would expect
-    */
-    ofstream& mLog;
-    public:
-    //----------------------------------------
-    /** communications: */
-    //----------------------------------------
-    /**  setting the communication socket for this session */
-    void setSocket(int inSocket);
+      The flag used to perform this is this variable.
+  */
+  int mQueryAtRandomCount;
+protected:
+  /** The socket, which is used for this communication */
+  int mSocket;
+  /** The logfile which logs all communication. *this
+      will APPEND NEW DATA to the logfile, as you would expect
+  */
+  ofstream& mLog;
+public:
+  //----------------------------------------
+  /** communications: */
+  //----------------------------------------
+  /**  setting the communication socket for this session */
+  void setSocket(int inSocket);
 
-    //----------------------------------------
-    /**  helpers for creating mrml messages */
-    //----------------------------------------
-    /** the preamble for a session */
-    string preamble();
+  //----------------------------------------
+  /**  helpers for creating mrml messages */
+  //----------------------------------------
+  /** the preamble for a session */
+  string preamble();
 
 
 
-    /** Frame: this is for all messages the same */
-    string frame(const string& inSession,
-		 const string& inString);
+  /** Frame: this is for all messages the same */
+  string frame(const string& inSession,
+	       const string& inString);
 
     
-    //----------------------------------------
-    /** making attributes out of name/value pairs */
-    string toAttribute(string inName,
-		       string inString);
+  //----------------------------------------
+  /** making attributes out of name/value pairs */
+  string toAttribute(string inName,
+		     string inString);
 
   
-    string toAttribute(string inName,
-		       int inInt);
+  string toAttribute(string inName,
+		     int inInt);
 
   
-    string toAttribute(string inName,
-		       double inFloat);
+  string toAttribute(string inName,
+		     double inFloat);
     
-    //     //----------------------------------------
-    //     /** turning a relevance level element into a string */
-    //     /** (obsolete) */
-    //     string stringOfRelevanceLevelElement(const CRelevanceLevel& inRE,
-    // 					 double inUserRelevance=0.5);
+  //     //----------------------------------------
+  //     /** turning a relevance level element into a string */
+  //     /** (obsolete) */
+  //     string stringOfRelevanceLevelElement(const CRelevanceLevel& inRE,
+  // 					 double inUserRelevance=0.5);
     
-    //     string stringOfRelevanceLevelList(const CRelevanceLevelList& inRLL);
+  //     string stringOfRelevanceLevelList(const CRelevanceLevelList& inRLL);
     
     
-    //----------------------------------------
-    /** Error message */
-    int sendError(const string& inSession,
-		  const string& inMessage);
+  //----------------------------------------
+  /** Error message */
+  int sendError(const string& inSession,
+		const string& inMessage);
 
-    //----------------------------------------
-    /**  Opening a session */
-    void openSession(const string& inUserName,
-		     const string& inSessionName);
-    /**  renaming the current session */
-    void renameSession(const string& inSessionID,
-		       const string& inNewName);
+  //----------------------------------------
+  /**  Opening a session */
+  void openSession(const string& inUserName,
+		   const string& inSessionName);
+  /**  renaming the current session */
+  void renameSession(const string& inSessionID,
+		     const string& inNewName);
 
-    /**  renaming the current session */
-    void deleteSession(const string& inName);
+  /**  renaming the current session */
+  void deleteSession(const string& inName);
 
 
-    /**  Gets the property sheet contained in the algorithm 
-	 with inAlgorithmID*/
-    void getPropertySheet(const string& inSessionID,
-			  const string& inAlgorithmID);
-    //----------------------------------------
-    /** the handshake message (old MRML)*/
-    int sendHandshake(const string& inUser);
+  /**  Gets the property sheet contained in the algorithm 
+       with inAlgorithmID*/
+  void getPropertySheet(const string& inSessionID,
+			const string& inAlgorithmID);
+  //----------------------------------------
+  /** the handshake message (old MRML)*/
+  int sendHandshake(const string& inUser);
     
-    /** getting the sessions for one user (new MRML)*/
-    void getSessions(const string& inUser);
-    /** getting collections available on a system*/
-    void getCollections();
-    /** getting algorithms available on a system*/
-    void getAlgorithms();
-    //----------------------------------------
-    /** the result of a query */
-    int sendResult(const string& inSession,
-		   const CXMLElement& inRLL);
+  /** getting the sessions for one user (new MRML)*/
+  void getSessions(const string& inUser);
+  /** getting collections available on a system*/
+  void getCollections();
+  /** getting algorithms available on a system*/
+  void getAlgorithms();
+  //----------------------------------------
+  /** the result of a query */
+  int sendResult(const string& inSession,
+		 const CXMLElement& inRLL);
 
   
-    //----------------------------------------
-    /** random images */
-    int sendRandomImages(const string& inSession,
-			 const string& inAlgorithm,
-			 const string& inCollection,
-			 const string& inNumberOfImages) ;
-    ;
+  //----------------------------------------
+  /** random images */
+  int sendRandomImages(const string& inSession,
+		       const string& inAlgorithm,
+		       const string& inCollection,
+		       const string& inNumberOfImages) ;
+  ;
   
   
-    //----------------------------------------
-    /** processing a query */
-    //----------------------------------------
-    CXMLElement* gQueryImages;
-    string mSessionID;
-    int    mResultSize;
-    double mCutoff;
-    string mCollection;
-    string mAlgorithm;
+  //----------------------------------------
+  /** processing a query */
+  //----------------------------------------
+  CXMLElement* gQueryImages;
+  string mSessionID;
+  int    mResultSize;
+  double mCutoff;
+  string mCollection;
+  string mAlgorithm;
 
-    //----------------------------------------
-    /** setting properties of the query */
-    void setResultSize(int inResultSize);
-
-
-    void setResultCutoff(const string& inCutoff);
-
-    void setResultCutoff(double inCutoff);
+  //----------------------------------------
+  /** setting properties of the query */
+  void setResultSize(int inResultSize);
 
 
-    void setCollectionID(const string& inID);
+  void setResultCutoff(const string& inCutoff);
+
+  void setResultCutoff(double inCutoff);
 
 
-    void setAlgorithmID(const string& inID);
-
-    //----------------------------------------
-    /** Start building a tree by successive adding
-	of XML elements */
-    void startTreeBuilding(const char* inElementName,
-			   const char*const*const inAttributes);
-    /** Start building a tree by successive adding
-	of XML elements */
-    void addToCurrentTree(const char* inElementName,
-			  const char*const*const inAttributes);
-    /** 
-	move up in the tree
-    */
-    void moveUpCurrentTree();
-    /** 
-	is this building a tree at present?
-    */
-    bool isBuildingTree()const;
-
-    //----------------------------------------
-    /** parse XML using expat */
-    //----------------------------------------
-    void parseString(const string& inMessage);
+  void setCollectionID(const string& inID);
 
 
-    //----------------------------------------
-    /** 
-	Clear the algorithm tree element.
-	We do not assume destruction responsability here
+  void setAlgorithmID(const string& inID);
 
-	This responsability is transferred to the 
-	containing session.
+  //----------------------------------------
+  /** Start building a tree by successive adding
+      of XML elements */
+  void startTreeBuilding(const char* inElementName,
+			 const char*const*const inAttributes);
+  /** Start building a tree by successive adding
+      of XML elements */
+  void addToCurrentTree(const char* inElementName,
+			const char*const*const inAttributes);
+  /** 
+      move up in the tree
+  */
+  void moveUpCurrentTree();
+  /** 
+      is this building a tree at present?
+  */
+  bool isBuildingTree()const;
 
-	FIXME do something cleaner for the case of failure
-    */
-    void clearAlgorithmElement();
-    //----------------------------------------
-    /** start of 
-	an element in the tree of configured
-	algorithms.
+  //----------------------------------------
+  /** parse XML using expat */
+  //----------------------------------------
+  void parseString(const string& inMessage);
 
-	If mAlgorithm=0 then generate a new
-	XML element with the content given
-	by inName and inAttributes
 
-	@param inName The name like given by expat
-	@param inAttributes an attributes list like given by
-	expat
-    */
-    //----------------------------------------
-    void startAlgorithmElement(const char* inName,
-			       const char* const* const inAttributes);
-    //----------------------------------------
-    /** end of 
-	an element in the tree of configured
-	algorithms                          */
-    //----------------------------------------
-    void endAlgorithmElement();
-    //----------------------------------------
-    /** 
-	clear the pointer to the algorithm tree
-    */
-    //----------------------------------------
-    void initAlgorithmElement();
-    //----------------------------------------
-    /** read the pointer to the algorithm tree
-     */
-    //----------------------------------------
-    CAlgorithm* readAlgorithmElement();
-    //----------------------------------------
-    /** 
-	End the configuration i.e. make out
-	of the algorithm structure a query
-	processing structure.
-    */
-    void endConfiguration();
+  //----------------------------------------
+  /** 
+      Clear the algorithm tree element.
+      We do not assume destruction responsability here
 
-    //----------------------------------------
-    /** parsing from a stream: 
-     * read each character 
-     * parse it */
-    bool mParsingFinished;
-    void clearParsingFinished();
-    void setParsingFinished();
-    bool isParsingFinished()const;
+      This responsability is transferred to the 
+      containing session.
 
-    bool readAndParse();
+      FIXME do something cleaner for the case of failure
+  */
+  void clearAlgorithmElement();
+  //----------------------------------------
+  /** start of 
+      an element in the tree of configured
+      algorithms.
+
+      If mAlgorithm=0 then generate a new
+      XML element with the content given
+      by inName and inAttributes
+
+      @param inName The name like given by expat
+      @param inAttributes an attributes list like given by
+      expat
+  */
+  //----------------------------------------
+  void startAlgorithmElement(const char* inName,
+			     const char* const* const inAttributes);
+  //----------------------------------------
+  /** end of 
+      an element in the tree of configured
+      algorithms                          */
+  //----------------------------------------
+  void endAlgorithmElement();
+  //----------------------------------------
+  /** 
+      clear the pointer to the algorithm tree
+  */
+  //----------------------------------------
+  void initAlgorithmElement();
+  //----------------------------------------
+  /** read the pointer to the algorithm tree
+   */
+  //----------------------------------------
+  CAlgorithm* readAlgorithmElement();
+  //----------------------------------------
+  /** 
+      End the configuration i.e. make out
+      of the algorithm structure a query
+      processing structure.
+  */
+  void endConfiguration();
+
+  //----------------------------------------
+  /** parsing from a stream: 
+   * read each character 
+   * parse it */
+  bool mParsingFinished;
+  void clearParsingFinished();
+  void setParsingFinished();
+  bool isParsingFinished()const;
+
+  bool readAndParse();
 
   
 
-    void makeParser();
+  void makeParser();
 
 
-    /** 
+  /** 
 
-	If we process multiple queries which are part of one message,
-	we have to first collect the answers from the requests, and then
-	send the whole message.
+      If we process multiple queries which are part of one message,
+      we have to first collect the answers from the requests, and then
+      send the whole message.
 
-	startMultiRequest and endMultiRequest
+      startMultiRequest and endMultiRequest
 
-	are the functions which administer this process.
+      are the functions which administer this process.
 
-	startMultiRequest clears the message which is going to be built.
-    */
-    void startMultiRequest(const string& inSessionID);
-    /** sends the message which has been built*/
-    void endMultiRequest();
-    /** 
-	adds an XMLElement to the multi-response which is built
-    */
-    void addToMultiResponse(CXMLElement* inElement);
+      startMultiRequest clears the message which is going to be built.
+  */
+  void startMultiRequest(const string& inSessionID);
+  /** sends the message which has been built*/
+  void endMultiRequest();
+  /** 
+      adds an XMLElement to the multi-response which is built
+  */
+  void addToMultiResponse(CXMLElement* inElement);
+
+
   
-    //----------------------------------------
-    /** Using the session manager which is a member */
-    /** of this for other purposes */
-    //----------------------------------------
-    CSessionManager& getSessionManager();
+  //----------------------------------------
+  /** Using the session manager which is a member */
+  /** of this for other purposes */
+  //----------------------------------------
+  CSessionManager& getSessionManager();
   
-    /** incrementing the QueryAtRandomCount flag */
-    void incrementQueryAtRandomCount();
-    /** reading this flag */
-    int getQueryAtRandomCount()const;
+  /** incrementing the QueryAtRandomCount flag */
+  void incrementQueryAtRandomCount();
+  /** reading this flag */
+  int getQueryAtRandomCount()const;
 
-    //----------------------------------------
-    /** constructor/destructor */
-    //----------------------------------------
-    CCommunicationHandler(CSessionManager& inSessionManager,
-			  ofstream& inLogFile);
+  /** 
+      set the name of the peer,
+      this is just an informative string,
+      destined for the log.
 
-    ~CCommunicationHandler();
+      The string can contain either the IP of the
+      connecting computer, or else the peer credentials
+      of the connecting tasks.
+  */
+  void setPeerAddressString(string);
+  /** get the Peer adress string */
+  const string& getPeerAddressString()const;
+  
+  //----------------------------------------
+  /** constructor/destructor */
+  //----------------------------------------
+  CCommunicationHandler(CSessionManager& inSessionManager,
+			ofstream& inLogFile);
+
+  ~CCommunicationHandler();
 };
 
 

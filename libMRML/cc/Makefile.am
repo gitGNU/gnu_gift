@@ -31,7 +31,7 @@ INCLUDES= -DHAS_BOOL \
 	-DLINK_DYNAMICALLY\
 	-I$(top_srcdir)
 
-libMRML_la_LDFLAGS=@PRE_INSTALL_LIBDIRS@  -version-info 0:1:0
+libMRML_la_LDFLAGS=@PRE_INSTALL_LIBDIRS@  -version-info 0:2:0
 
 #CAccessorAdminCollection.cc: CAccessorAdminCollection.pre-cc
 #	$(CCCONFIG)

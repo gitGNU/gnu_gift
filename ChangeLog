@@ -1,3 +1,17 @@
+2002-01-08  MUELLER Wolfgang  <Wolfgang.Mueller@cui.unige.ch>
+
+	* libMRML/cc/CCommunicationHandler.cc (getPeerAddressString): 
+	(setPeerAddressString): 
+	New functions to get at the peer address
+
+	(readAndParse):	printing a time stamp, of the incoming message, 
+	as well as the peer address string
+
+	* GIFTServer/Server.cc(CProcessMessageParameters): 
+	(main):
+	Changes to get at the peer name, and pass it to the 
+	communication handler
+
 2002-01-03  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
 
 	* expat/Makefile.am: changing sequence of subdirs. xmlwf must be last,
