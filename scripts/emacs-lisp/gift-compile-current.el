@@ -129,7 +129,9 @@
       (find-file (gift-de-double-slash (concat (getenv "GIFT") 
 					    "/configure.in")))
       (compile (gift-de-double-slash 
-		(concat "automake;autoconf;./configure --enable-multi-threading --prefix " 
+		(concat "automake;autoconf;./configure " 
+			;"--enable-multi-threading "
+			"--prefix " 
 			(getenv "GIFT")
 			"/../GIFTInstall; make install"))))
     ))

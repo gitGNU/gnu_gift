@@ -33,6 +33,7 @@
 #include "CMagic.h"
 #include "CAttributeList.h"
 class CXMLElementVisitor;
+#include "CMutex.h"
 /**
    This class captures the structure of an XML element. 
    An Element has children and attributes.

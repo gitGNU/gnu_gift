@@ -258,7 +258,12 @@ void CAlgorithm::mergeAttributes(const CAlgorithm& inAlgorithm){
 	i++){
       //add attributes which are not yet found
       if(mAttributes.find(i->first)==mAttributes.end()){
+#ifdef SINGLE
 	mAttributes.add(i->first,i->second);
+#else
+	mAttributes.check();
+	mAttributes.add(i->first,i->second.first);
+#endif
       }
     }
   }

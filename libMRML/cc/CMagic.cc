@@ -7,6 +7,8 @@
 */
 void CMagic::check()const{
   if(mMagic==36){
+    cout << "Was constructed, has been destroyed in the meanwhile "
+	 << endl;
     assert(!"Was constructed, but destroyed to early");
   }else{
     if(mMagic!=42){

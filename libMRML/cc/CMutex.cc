@@ -27,7 +27,7 @@
 #include <pthread.h>
 CMutex::CMutex()
 {
-#ifdef HAVE_LIBPTHREAD
+#ifdef __GIFT_USES_THREADS__
   pthread_mutexattr_init(&mMutexAttribute);
   assert(!(pthread_mutexattr_settype(&mMutexAttribute,
 				     PTHREAD_MUTEX_RECURSIVE_NP)));
@@ -36,12 +36,12 @@ CMutex::CMutex()
 #endif
 }
 void CMutex::lock()const{
-#ifdef HAVE_LIBPTHREAD
+#ifdef __GIFT_USES_THREADS__
   pthread_mutex_lock(&mMutex);
 #endif
 };
 void CMutex::unlock()const{
-#ifdef HAVE_LIBPTHREAD
+#ifdef __GIFT_USES_THREADS__
   pthread_mutex_unlock(&mMutex);
 #endif
 }

@@ -23,11 +23,15 @@
 #include "../include/CTimeStampGenerator.h"
 #include "../include/CXMLElement.h"
 #include "../include/mrml_const.h"
+#include "CMutex.h"
 #include <time.h>
 #include <string>
 /** */
-CXMLElement* CTimeStampGenerator::generateTimeStamp()const{
 
+extern CMutex* gMutex;
+
+CXMLElement* CTimeStampGenerator::generateTimeStamp()const{
+  gMutex->lock();
   time_t lNow(time(0));
   
   CXMLElement* lReturnValue=new CXMLElement(mrml_const::cui_time_stamp,0);
@@ -37,5 +41,6 @@ CXMLElement* CTimeStampGenerator::generateTimeStamp()const{
     lReturnValue->addAttribute(mrml_const::calendar_time,
 			       lNowASCII);
   }
+  gMutex->unlock();
   return lReturnValue;
 }

@@ -33,7 +33,7 @@
 //the expat xml parser by J.Clark
 #include "xmlparse.h"
 
-
+extern CMutex* gMutex;
 
 #define USE_FLATFILE 0
 
@@ -88,7 +88,7 @@ CAcURL2FTS::CAcURL2FTS(const CXMLElement& inCollectionElement):
   mURLToFeatureFile((inCollectionElement.stringReadAttribute(mrml_const::cui_base_dir).second
                      +inCollectionElement.stringReadAttribute(mrml_const::cui_feature_file_location).second).c_str())
 {
-  mMutexURL2FTS.lock();
+  gMutex->lock();
 
   cout << endl
        << "Opening "
@@ -201,7 +201,7 @@ CAcURL2FTS::CAcURL2FTS(const CXMLElement& inCollectionElement):
        << " processed."
        << endl;
   mURLToFeatureFile.close();
-  mMutexURL2FTS.unlock();
+  gMutex->unlock();
 };
 CAcURL2FTS::operator bool()const{
   return mWellConstructed;

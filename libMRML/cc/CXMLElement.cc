@@ -378,12 +378,17 @@ bool CXMLElement::isSubtreeFinished()const{
 list<pair<string,string> >* CXMLElement::createNamedValueList()const{
 
     list<pair<string,string> >* lReturnValue=new list<pair<string,string> >();
+    mAttributes.check();
 
     if(lReturnValue)
 	for(CAttributeList::const_iterator i=mAttributes.begin();
 	    i!=mAttributes.end();
 	    i++){
+#ifdef SINGLE
 	    lReturnValue->push_back(*i);
+#else
+	    lReturnValue->push_back(make_pair(i->first,string(i->second.first)));
+#endif
 	}
   
     return lReturnValue;

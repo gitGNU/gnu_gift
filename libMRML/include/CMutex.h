@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CMUTEX
 #define _CMUTEX
-#ifdef HAVE_LIBPTHREAD
+#ifdef __GIFT_USES_THREADS__
 #include <pthread.h>
 #endif 
 /**
@@ -36,7 +36,7 @@
  */
 class CMutex{
 
-#ifdef HAVE_LIBPTHREAD
+#ifdef __GIFT_USES_THREADS__
   /** the mutex if needed */
   mutable pthread_mutex_t mMutex;
   /** attributes of the mutex */

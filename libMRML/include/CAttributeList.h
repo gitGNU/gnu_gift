@@ -30,8 +30,10 @@
 
 /** a simple class destined to contain attribute-value pairs in an 
     easily accessible fashion */
-class CAttributeList:public map<string,char*>,public CMagic{
+class CAttributeList:public map<string,pair<char*,char*> >,public CMagic{
 public:
+  void check()const;
+  typedef map<string,pair<char*,char*> > CBase;
   /** from expat */
   CAttributeList(const char* const * const inAttributeList);
   /** from other c++ */

@@ -864,8 +864,8 @@ void CCommunicationHandler::startMultiRequest(const string& inSessionID){
   mMultiResponse->addAttribute("session-id",
 			       inSessionID);
   
-  CTimeStampGenerator lGenerator;
-  addToMultiResponse(lGenerator.generateTimeStamp());
+  //CTimeStampGenerator lGenerator;
+  //addToMultiResponse(lGenerator.generateTimeStamp());
 };
 /** sends the message which has been built*/
 void CCommunicationHandler::endMultiRequest(){
@@ -874,8 +874,8 @@ void CCommunicationHandler::endMultiRequest(){
 
     mMultiResponse->addAttribute("just-for-test",
 				 "and-of-course-for-fun");
-    CTimeStampGenerator lGenerator;
-    addToMultiResponse(lGenerator.generateTimeStamp());
+    //    CTimeStampGenerator lGenerator;
+    //    addToMultiResponse(lGenerator.generateTimeStamp());
 
     mMultiResponse->toXML(lMessage);
 

@@ -70,8 +70,18 @@ extern CMutex* gMutex;
 //for debugging
 #define _DEBUG
 #define _NON_BLOCKING 0
+
 #include "CCommunicationHandler.h"
 
+#ifdef __GIFT_SERVER_TREADS__
+#define  __GIFT_USES_THREADS__
+#endif
+
+#ifdef __NO_GIFT_SERVER_THREADS__
+#undef  __GIFT_USES_THREADS__
+#endif
+
+//#undef  __GIFT_USES_THREADS__ // for debugging
 long PORT = 12789; /* port number: this line, for example, is by J. Raki ;-)*/
 
 
@@ -589,8 +599,8 @@ void main(int argc, char **argv){
 				    CProcessMessageParameters(gSessionManager,
 							      gLogFile,
 							      lOutSocket));
-	//#undef HAVE_LIBPTHREAD // for debugging purposes
-#ifdef  HAVE_LIBPTHREAD
+#ifdef  __GIFT_USES_THREADS__
+#warning "threading used"
 	pthread_t lThread;
 	int lErrorNumber(0);
 	if(lErrorNumber=pthread_create(&lThread, NULL, &processMessage,lProcessMessageParameters)){
@@ -611,6 +621,7 @@ void main(int argc, char **argv){
 	  }
 	}
 #else
+#warning "threading blocked"
 	cout << "calling processMessage (no thread)" << endl;
 	processMessage(lProcessMessageParameters);
 	cout << "returned processMessage (no thread)" << endl;

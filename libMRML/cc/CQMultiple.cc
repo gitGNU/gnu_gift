@@ -20,6 +20,16 @@
 
 */
 #include "CQMultiple.h"
+
+#ifdef  __GIFT_CQMULTIPLE_THREADS__ 
+#define  __GIFT_USES_THREADS__ 
+#endif
+
+#ifdef  __NO_GIFT_CQMULTIPLE_THREADS__ 
+#undef  __GIFT_USES_THREADS__ 
+#endif
+
+
 #ifdef HAVE_LIBPTHREAD
 #include <pthread.h>
 #endif
@@ -215,7 +225,8 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
 /** all information about a query thread for a CQMultiple*/
 class CQMThread{
   /** the thread administrator */
-#ifdef HAVE_LIBPTHREAD
+#ifdef __GIFT_USES_THREADS__
+#warning treading active
   pthread_t mThread;
 #endif
   /** is this called as a thread or as a function */
@@ -258,10 +269,12 @@ public:
   /** running the thread */
   void runThread(void){
     mResult=0;
-#ifdef HAVE_LIBPTHREAD
+#ifdef __GIFT_USES_THREADS__
+#warning treading active
     mIsThreaded=true;
     pthread_create(&mThread,0,CQMultiple::doQueryThread,this);
 #else
+#warning treading blocked
     CQMultiple::doQueryThread(this);
 #endif
   }
@@ -272,7 +285,7 @@ public:
   }
   /** joining this thread with the caller */
   void join(void){
-#ifdef HAVE_LIBPTHREAD
+#ifdef __GIFT_USES_THREADS__
     void** lReturnValue(NULL);
     cout << "PREJOIN" << endl;
     if(mIsThreaded){

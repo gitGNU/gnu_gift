@@ -1,3 +1,48 @@
+2001-04-03  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CMagic.cc: adding to assertion some
+	printout to cout
+
+	* libMRML/cc/CAttributeList.cc: 
+	adding mutex locks
+	
+2001-03-29  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libMRML/include/CXMLElement.h: 
+	adding mMutex
+
+	* libMRML/cc/CQMultiple.cc: put back copying of
+	CXMLElement on construction of CQMThread
+	the help-gplusplus mailing list suggests there is
+	a severe problem in bastring. quite a number of
+	people report mystical problems. The general strategy
+	is now to avoid synchronous reads on string 
+	incarnations.
+
+2001-03-28  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* configure.in:
+	* libMRML/cc/CQMultiple.cc: 
+	added  __GIFT_CQMULTIPLE_TREADS__
+	 __NO_GIFT_CQMULTIPLE_TREADS__
+
+	* configure.in:
+	* GIFTServer/Server.cc: 
+	added  __GIFT_SERVER_TREADS__
+	 __NO_GIFT_SERVER_TREADS__
+
+
+	* configure.in:
+	* libMRML/cc/CQMultiple.cc: 
+	* libMRML/cc/CMutex.cc: 
+	* libMRML/include/CMutex.h: introduced new flag
+	__GIFT_USES_THREADS__ instead of stupid use of
+	HAVE_LIBPTHREAD
+
+	* scripts/emacs-lisp/gift-compile-current.el (gift-Utomake): 
+	splitting concat strings in another way to make commenting 
+	options easier
+
 2001-04-02  Wolfgang Müller  <muellerw@cui.unige.ch>
 
 	* libMRML/cc/CAttributeList.cc: 
@@ -18,6 +63,15 @@
 	around debugging printouts
 	
 2001-03-27  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CQMultiple.cc: cut out lone of CQuery
+	in CQMThread
+
+	* libMRML/cc/CAttributeList.cc: checking if attributes
+	are longer than 200 char.
+
+	* libMRML/cc/CTimeStampGenerator.cc (generateTimeStamp): 
+	added lock/unlock
 
 	* libMRML/cc/CCommunicationHandler.cc(readAndParse): 
 	adding expressive debugging printouts to cerr<<

@@ -950,7 +950,7 @@ CXMLElement* CSessionManager::query(const string& inSessionID,
   //
   mMutexSessionManager.lock();
   CIDToSession::const_iterator lFound=mIDToSession.find(inSessionID);
-  mMutexSessionManager.unlock();
+  //mMutexSessionManager.unlock();
   //
   if(lFound==mIDToSession.end()){
 #ifdef GIFT_THROW_UNKNOWN_SESSION
@@ -964,8 +964,10 @@ CXMLElement* CSessionManager::query(const string& inSessionID,
     lError->addAttribute(mrml_const::message,"Could not process query: unknown session (ID:"+inSessionID+").");
 #endif
   }
-  return lFound->second->query(*this,
-			       inRelevanceLevelList);
+  CXMLElement* lReturnValue(lFound->second->query(*this,
+			       inRelevanceLevelList));
+  mMutexSessionManager.unlock();
+  return lReturnValue;
 };
 //--------------------------------------------------
 // retrieving random images as seeds

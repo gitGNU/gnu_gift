@@ -22,12 +22,33 @@
 #include "CAttributeList.h"
 #include "string.h"
 #include <cstdio>
+#include "CMutex.h"
+
+extern CMutex* gMutex;
+
 CAttributeList::CAttributeList(const char * const * const inAttributeList){
   clear();
   if(inAttributeList){
     const char*const*  lAttributes(inAttributeList);
     while(lAttributes[0] && strlen(lAttributes[0])){
+      if(strlen(lAttributes[0])>200){
+	cerr << __FILE__ << ":" 
+	     << __LINE__ << ":" << flush
+	     << "lAttributes[0] too long:[" << endl
+	     << lAttributes[0]
+	     << "]ENDOF STRING"
+	     << endl;
+      };//for debugging purposes DEBUG
+      if(strlen(lAttributes[1])>200){
+	cerr << __FILE__ << ":" 
+	     << __LINE__ << ":" << flush
+	     << "lAttributes[1] too long:[" << endl
+	     << lAttributes[1]
+	     << "]ENDOF STRING"
+	     << endl;
+      };//for debugging purposes DEBUG
 #ifndef _IS_SEQUENCE_AL
+      gMutex->lock();
       if(lAttributes[1]){
 	//	cout << "[L" << strlen(lAttributes[1]) << "L]" << flush;
 	if(strlen(lAttributes[1])){
@@ -35,19 +56,25 @@ CAttributeList::CAttributeList(const char * const * const inAttributeList){
 	  int lLen(strlen(lAttributes[1])+1);
 	  char* lBuffer(new char[lLen]);
 	  strcpy(lBuffer,lAttributes[1]);
+	  char* lBuffer2(new char[lLen]);
+	  strcpy(lBuffer2,lAttributes[1]);
 
-	  insert(pair<string,char*>(lAttributes[0],
-				    lBuffer));
+	  insert(make_pair(lAttributes[0],
+			   make_pair(lBuffer,lBuffer2)));
 	  
 	  //cout << "[" << lBuffer << "]" << flush;
-	  assert(strlen(operator[](lAttributes[0]))==lLen-1);
+	  assert(strlen(operator[](lAttributes[0]).second)==lLen-1);
+	  assert(strlen(operator[](lAttributes[0]).first)==lLen-1);
 	}else{
 	  char* lBuffer(new char[1]);
 	  lBuffer[0]=char(0);
+	  char* lBuffer2(new char[1]);
+	  lBuffer2[0]=char(0);
 	  insert(make_pair(string(lAttributes[0]),
-			   lBuffer));
+			   make_pair(lBuffer,lBuffer2)));
 	}
       }
+      gMutex->unlock();
 #else
       push_back(make_pair(string(lAttributes[0]),
 			  string((lAttributes[1] && strlen(lAttributes[1]))?lAttributes[1]:"")));
@@ -57,46 +84,81 @@ CAttributeList::CAttributeList(const char * const * const inAttributeList){
   }
 }
 CAttributeList::~CAttributeList(){
+  checkNPrint();
   for(iterator i=begin();
       i!=end();
       i++){
-    delete[] i->second;
+      
+    cout << "DELETING" << flush << int(i->second.second) << flush << i->second.first << i->second.second << endl;
+    assert(!strcmp(i->second.first,
+		   i->second.second));
+    delete[] i->second.first;
+    delete[] i->second.second;
   }
 }
 
 CAttributeList::CAttributeList(const list<pair <string,string> >& inAttributes){
+      gMutex->lock();
+
   clear();
   for(list<pair <string,string> >::const_iterator i=inAttributes.begin();
       i!=inAttributes.end();
       i++){
+    if(i->second.size()>200){
+      cerr << __FILE__ << ":" 
+	   << __LINE__ << ":" << flush
+	   << "i->second too long:[" << endl
+	   << i->second
+	   << "]ENDOF STRING"
+	   << endl;
+    }
 #ifndef _IS_SEQUENCE_AL
     int lLen(i->second.size()+1);
     char* lBuffer(new char[lLen]);
     strcpy(lBuffer,i->second.c_str());
-    insert(make_pair(i->first,lBuffer));
+    char* lBuffer2(new char[lLen]);
+    strcpy(lBuffer2,i->second.c_str());
+    insert(make_pair(i->first,
+		     make_pair(lBuffer,
+			       lBuffer2)));
     
     //    insert(*i); if the representation is map<string,string>
 #else
     push_back(*i);
 #endif
   }  
+  gMutex->unlock();
 }
 CAttributeList::CAttributeList(const CAttributeList& inAttributes){
+  gMutex->lock();
   clear();
   for(CAttributeList::const_iterator i=inAttributes.begin();
       i!=inAttributes.end();
       i++){
 #ifndef _IS_SEQUENCE_AL
-    int lLen(strlen(i->second)+1);
+    if(strcmp(i->second.first,
+	      i->second.second)){
+      cout << i->second.first << "/" << i->second.second << endl;
+    }
+    assert(!strcmp(i->second.first,
+		   i->second.second));
+    int lLen(strlen(i->second.first)+1);
     char* lBuffer(new char[lLen]);
-    strcpy(lBuffer,i->second);
-    insert(make_pair(i->first,lBuffer));
+    strcpy(lBuffer,i->second.first);
+    int lLen2(strlen(i->second.second)+1);
+    char* lBuffer2(new char[lLen2]);
+    strcpy(lBuffer2,i->second.second);
+
+    insert(make_pair(i->first,make_pair(lBuffer,lBuffer2)));
 #else
     push_back(*i);
 #endif
   }  
+  gMutex->unlock();
 }
 CAttributeList::const_iterator CAttributeList::find(string inString)const{
+  check();
+
 #ifdef _PRINTOUTS_AL
   cout << endl
        << "CAttributeList::find("
@@ -110,7 +172,7 @@ CAttributeList::const_iterator CAttributeList::find(string inString)const{
 #endif  
 
 #ifndef _CAL_FIND_WORKAROUND
-  return map<string,char*>::find(inString);
+  return CAttributeList::CBase::find(inString);
 #else
   for(const_iterator i=begin();
       i!=end();
@@ -140,6 +202,7 @@ CAttributeList::const_iterator CAttributeList::find(string inString)const{
 }
 void CAttributeList::add(const string& inFirst,
 			 const string& inSecond){
+  gMutex->lock();
 
 
 #ifdef _PRINTOUTS_AL
@@ -155,11 +218,16 @@ void CAttributeList::add(const string& inFirst,
   char* lBuffer=new char[inSecond.size()+1];
   lBuffer[inSecond.size()]=char(0);
   strncpy(lBuffer,inSecond.c_str(),inSecond.size());
-  operator[](inFirst)=lBuffer;
+  char* lBuffer1=new char[inSecond.size()+1];
+  lBuffer1[inSecond.size()]=char(0);
+  strncpy(lBuffer1,inSecond.c_str(),inSecond.size());
+
+  operator[](inFirst)=make_pair(lBuffer,lBuffer1);
   //  (*this).insert(make_pair(inFirst,inSecond));
 #else
   (*this).push_back(make_pair(inFirst,inSecond));
 #endif
+  gMutex->unlock();
 }
 /** adding an attribute for integers */
 void CAttributeList::add(const string& inAttribute,long inValue){
@@ -283,13 +351,13 @@ pair<bool,string> CAttributeList::stringReadAttribute(const string& inAttribute)
 #endif
 
   if(lFoundPosition != end()){
-    //cout << "[A;" << lFoundPosition->first << ";A]" << flush;
-    //cout << "[A;" << lFoundPosition->first.size() << ";A]" << flush;
-    string lFoundString(lFoundPosition->second);
-    //cout << "[S" << strlen(lFoundPosition->second) << "S]" << flush;
+    assert(!strcmp(lFoundPosition->second.first,
+		   lFoundPosition->second.second));
+
+    string lFoundString(lFoundPosition->second.first);
+
     pair<bool,string> lReturnValue=make_pair(bool(1),
 					     lFoundString);
-    //cout << "[s" << lReturnValue.second.size() << "s]" << flush;
     return lReturnValue;
   }
   return make_pair(bool(0),
@@ -301,6 +369,17 @@ void CAttributeList::toXML(string& outString)const{
   for(const_iterator i=begin();
       i!=end();
       i++){
-    outString += i->first + "=\"" + i->second + "\" ";
+    outString += i->first + "=\"" + i->second.first + "\" ";
+    assert(!strcmp(i->second.second,
+		   i->second.first));
+  }
+};
+/** reading an attribute for strings */
+void CAttributeList::check()const{
+  for(const_iterator i=begin();
+      i!=end();
+      i++){
+    assert(!strcmp(i->second.second,
+		   i->second.first));
   }
 };
