@@ -2,7 +2,7 @@
 noinst_PROGRAMS  = gennmtab
 
 nametab.h: gennmtab
-	gennmtab > $@
+	./gennmtab > $@
 
 gennmtab_SOURCES = gennmtab.c
 
