@@ -122,12 +122,20 @@ CAccessorAdminCollection::CAccessorAdminCollection(string inFileName):
     // presently this is just one directory,
     // the libdir
     CXMLElement* lFilesToScan(new CXMLElement("directories-to-scan",0));
+    assert(lFilesToScan);
+    cout << "." << flush;
     CXMLElement* lTemp(new CXMLElement("directory",0));
+    assert(lTemp);
+    cout << "." << __LIBDIR__ << "." << flush;
     lTemp->addAttribute("name",__LIBDIR__);
+    cout << "." << flush;
     lFilesToScan->addChild(lTemp);
+    cout << "." << flush;
     lFilesToScan->moveUp();
+    cout << "." << flush;
     // configure the factory i.e. make it scan directories
     mFactory->configure(lFilesToScan);
+    cout << "." << flush;
   }
 
   ifstream lConfigFile(inFileName.c_str());

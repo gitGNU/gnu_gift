@@ -34,6 +34,9 @@ using namespace std;
 CDebuggingMemoryManager gMemManager(MEMSIZE);
 #endif
 
+#define _GNU_SOURCE
+#include <getopt.h>
+
 #include <stdlib.h>
 #include <cassert>
 #include <iostream>
@@ -507,6 +510,18 @@ public:
 #endif
   }
 };
+
+
+static void displayHelp()
+{
+  cout << PACKAGE << "-" << VERSION << endl
+       << "Usage (server):              gift [--port <Port>] [--datadir <Configuration-Directory>] [--no-random-seed]" << endl;
+#ifdef WITH_GENERATE_DISTANCE_MATRIX
+  cout << "making distance matrices:    gift --generate-matrix [--datadir <Configuration-Directory>] <Algorithm> <Collection> <from> <to>" << endl;
+#endif
+  cout << endl << endl;
+}
+
 /***********************************************************************
   main								
   
@@ -523,26 +538,68 @@ int main(int argc, char **argv){
 
   gGIFTHome=string(getenv("GIFT_HOME")?getenv("GIFT_HOME"):getenv("HOME")?getenv("HOME"):".");
 
-  cout << PACKAGE << "-" << VERSION << endl
-       << "Usage (server):              gift [<Port> [<Configuration-Directory>] [<SeedRandom? 1 or 0>]]" << endl
-       << "making distance matrices:    gift <Port(ignored)> <Configuration-Directory> <Algorithm> <Colection> <from> <to>" << endl
-       << endl
-       << endl;
+  static struct option long_options[] = 
+  {
+    {"port", 	       required_argument, 0, 'p'},
+    {"datadir",        required_argument, 0, 'd'},
+    {"help",           no_argument,       0, 'h'},
+    {"no-random-seed", no_argument,       0, 'r'},
+#ifdef WITH_GENERATE_DISTANCE_MATRIX
+    {"generate-matrix",no_argument,       0, 'g'},
+#endif
+    { 0,               0,                 0,  0 }
+  };
 
-  if(argc>1){
-    PORT=atoi(argv[1]);
+  bool doRandom = true;
+  bool generateMatrix = false;
+
+  while ( 1 ) {
+    int c = getopt_long( argc, argv, "p:d:rgh", long_options, NULL );
+    if ( c == -1 )
+      break;
+
+    switch ( c ) {
+     case 'd':
+        gGIFTHome = string(optarg) + string("/");
+        break;
+
+      case 'p':
+        PORT=atoi(optarg);
+        break;
+
+      case 'r':
+        doRandom = false;
+        break;
+
+       case 'g':
+        generateMatrix = true;
+        break;
+ 
+     case 'h':
+        displayHelp();
+        ::exit(0);
+
+      case '?':
+      default:
+        break;
+  }
+  }
+
+  int idx = optind;
+  if ( !generateMatrix ) {
+    if ( idx < argc ) // more arguments -> backwards compat
+      PORT = atoi(argv[idx++]);
+    if ( idx < argc )
+      gGIFTHome = string(argv[idx++]) + string("/");
   }
 
 
-  if(argc>2 && argv[2]){
-    gGIFTHome=string(argv[2])+string("/");
-  }
-  if(argc==4 && !strcmp("1",argv[3])){
-    cerr << "Warning: the random generator stays unseeded" << endl;
-  }else{    
+  if ( doRandom ) {
     cerr << "Random number generator has been seeded with " 
 	 << getpid() << endl;
     srand(getpid());
+  } else {
+    cerr << "Warning: the random generator stays unseeded" << endl;
   }
 
   ofstream lPortFile;
@@ -571,13 +628,20 @@ int main(int argc, char **argv){
   }
   
 #ifdef WITH_GENERATE_DISTANCE_MATRIX
-  if(argc==7){
+  if( generateMatrix ){
+    if ( idx + 4 != argc ) {
+      cerr << endl << "Wrong number of parameters for generating the distance matrix." << endl;
+      displayHelp();
+      ::exit(1);
+    }
+
+exit(0);
     generateDistanceMatrix(gGIFTHome,
 			   string("DistanceMatrix"),
-			   string(argv[3]),
-			   string(argv[4]),
-			   atoi(argv[5]),
-			   atoi(argv[6]));
+			   string(argv[idx]),
+			   string(argv[idx + 1]),
+			   atoi(argv[idx + 2]),
+			   atoi(argv[idx + 3]));
     exit(0);
   }
 #endif
