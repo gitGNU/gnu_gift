@@ -1,3 +1,44 @@
+2002-01-03  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+
+	* PluginMaker/libGIFTQu@PLUGIN_NAME@/Makefile.am.in (SUBDIRS): 
+	cc AND include
+	
+	* PluginMaker/libGIFTAc@PLUGIN_NAME@/cc/CAF@PLUGIN_NAME@.cc.in: 
+	* PluginMaker/libGIFTAc@PLUGIN_NAME@/include/CAF@PLUGIN_NAME@.h.in: 
+	* PluginMaker/libGIFTAc@PLUGIN_NAME@/cc/CAc@PLUGIN_NAME@.cc.in: 
+	* PluginMaker/libGIFTAc@PLUGIN_NAME@/include/CAc@PLUGIN_NAME@.h.in: 
+	* PluginMaker/libGIFTQu@PLUGIN_NAME@/cc/CQ@PLUGIN_NAME@.cc.in: 
+	* PluginMaker/libGIFTQu@PLUGIN_NAME@/include/CQ@PLUGIN_NAME@.h.in: 
+	adjusting include paths
+	
+2002-01-03  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
+
+	* PluginMaker/configure.in.in(AC_OUTPUT): generate
+	make files in include directories
+
+	* PluginMaker/gift-plugin-maker.pl (wanted): don't copy
+	files in the CVS directory when making plugin
+
+2001-12-29  Wolfgang M&uuml;ller  <Wolfgang.Mueller@cui.unige.ch>
+
+	* libMRML/cc/libMRML-config.pre-cc: 
+	New file
+	
+
+2001-12-27  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CCommunicationHandler.cc (addToMultiResponse): 
+	don't add empty trees
+
+	* PluginMaker/libGIFTQu@PLUGIN_NAME@/include/Makefile.am.in: 
+	* PluginMaker/libGIFTAc@PLUGIN_NAME@/include/Makefile.am.in: 
+	new files
+
+2001-12-26  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
+
+	* expat/xmlwf/Makefile.am(wf_HEADERS): 
+	* expat/xmlparse/Makefile.am (parse_HEADERS): 
+
 2001-12-23  Wolfgang M&uuml;ller  <Wolfgang.Mueller@cui.unige.ch>
 
 	* expat/xmltok/Makefile.am (INCLUDES): adding gennmtab
