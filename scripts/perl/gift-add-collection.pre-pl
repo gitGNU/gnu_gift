@@ -27,10 +27,42 @@
 use Getopt::Long;
 use IO::File;
 use XML::Writer;
+use POSIX;
 use File::Find;
 use File::Path;
 use File::Copy;
+use Unicode::String;
+use strict;
+use vars qw($self
+	    
+	    $lFullName
+	    $lName
+	    $lExtension
 
+	    $lCountPotentialImages
+	    $lCountVisitedImages
+	    $lImageDirectory
+	    $lImageDirectory
+	    $lCollectionName
+	    $lFeaturePrefix
+	    $lIndexPrefix
+	    $lThumbnailDirectory
+	    $lURLPrefix
+	    $lThumbnailURLPrefix
+	    $gGiftHome
+	    $OLDCONFIG
+	    $CONFIG
+	    $lOptionList
+	    %lOptions
+	    $i
+	    $lIndexPrefix
+	    $url2fts_name
+	    $URL2FTS
+	    $lURL
+	    $lFts
+	    $lThumbnailURL
+	    $lThumbnailFile
+	   );
 #
 # reading .gift-add-collection file
 #
@@ -55,18 +87,20 @@ local $gGiftHome="";
 		"thumbnail-url-prefix" => \$lThumbnailURLPrefix
 	       };
   
-  while(<DOT_FILE>){
+  while (<DOT_FILE>) {
     chomp;
-    foreach $i (keys %$lOptionList){
-      next if m/^\#/;#skip comments
+    foreach $i (keys %$lOptionList) {
+      next if m/^\#/;		#skip comments
       eval("if(m/^$i=\\\"(.*)\\\"/){\${\$lOptionList->{\$i}}=\$1;}");
       
     }
   }
-  foreach $i (keys %$lOptionList){
-    print "$i => ${$lOptionList->{$i}}\n" if ${$lOptionList->{$i}};
+  foreach $i (keys %$lOptionList) {
+    print "$i => ${$lOptionList->{$i}}\n" if ${$lOptionList->{$i};
   }
+  ;
 }
+
 %lOptions=();
 
 GetOptions(\%lOptions,
@@ -101,8 +135,8 @@ $lImageDirectory=$ENV{PWD}.$lImageDirectory unless $lImageDirectory=~m[^/];
 
 $lImageDirectory=$lImageDirectory."/";
 
-$lImageDirectory=~s[ /+ ][/]gx;               #removing double backslashes in the end
-$lImageDirectory=~s[^([^/])][$ENV{PWD}/$1]x;   #making path absolute
+$lImageDirectory=~s[ /+ ][/]gx;	#removing double backslashes in the end
+$lImageDirectory=~s[^([^/])][$ENV{PWD}/$1]x; #making path absolute
 
 #take the last bit of the directory as database name
 $lCollectionName= $lOptions{'collection-name'} || $lCollectionName || (split("/",$lImageDirectory))[-1];
@@ -115,18 +149,19 @@ $lURLPrefix=          $lOptions{'url-prefix'}     || $lURLPrefix     || "file:$l
 # is the urlprefix in ~/public_html? create a http-url!
 $lURLPrefix=~s[^file:__WEB_PUBLISHING_DIRECTORY__][__WEB_PUBLISHING_LOCATION__/];
 
-if($lOptions{'thumbnail-dir'}){
+if ($lOptions{'thumbnail-dir'}) {
   $lThumbnailDirectory= $lOptions{'thumbnail-dir'} || $lThumbnailDirectory;
-  $lThumbnailDirectory=~s[ /+$ ][/]x;               #removing double backslashes in the end
-  $lThumbnailDirectory=~s[^([^/])][$ENV{PWD}/$1]x;   #making path absolute
-}else{
+$lThumbnailDirectory=~s[ /+$ ][/]x; #removing double backslashes in the end
+$lThumbnailDirectory=~s[^([^/])][$ENV{PWD}/$1]x; #making path absolute
+} else {
   unless($lThumbnailDirectory){
-    $lThumbnailDirectory= $lImageDirectory ;
-    $lThumbnailDirectory=~s[ /+$ ][_thumbnails]x;#strip trailing slashes and ad thumbnails
-  }
+  $lThumbnailDirectory= $lImageDirectory ;
+  $lThumbnailDirectory=~s[ /+$ ][_thumbnails]x;	#strip trailing slashes and ad thumbnails
+}
 }
 
-$lThumbnailURLPrefix= $lOptions{'thumbnail-url-prefix'} || $lOptions{'url-prefix'} || "file:$lThumbnailDirectory";
+  #$lThumbnailURLPrefix= $lOptions{'thumbnail-url-prefix'} || $lOptions{'url-prefix'} || "file:$lThumbnailDirectory";
+$lThumbnailURLPrefix= $lOptions{'thumbnail-url-prefix'} || $lThumbnailURLPrefix || $lOptions{'url-prefix'}     || $lURLPrefix     || "file:$lThumbnailDirectory";
 
 # is the thumbnail-urlprefix in ~/public_html? create a http-url!
 $lThumbnailURLPrefix=~s[^file:__WEB_PUBLISHING_DIRECTORY__][__WEB_PUBLISHING_LOCATION__/];
@@ -135,18 +170,18 @@ $lIndexPrefix= $lOptions{'index-prefix'} || $lIndexPrefix || $lFeaturePrefix;
 
 # we asume that the lIndexPrefix ends with 
 # a "/" throughout the program
-$lIndexPrefix.="/" unless($lIndexPefix=~m[/$]);
+  $lIndexPrefix.="/" unless($lIndexPrefix=~m[ /$ ]x);
+  
+					    #
+					    # replace variables:
+					    #
+					    foreach $i (values %$lOptionList) {
+					    $$i=~s/\@collection-name\@/$lCollectionName/g;
+					 }
 
-#
-# replace variables:
-#
-foreach $i (values %$lOptionList){
-  $$i=~s/\@collection-name\@/$lCollectionName/g;
-}
 
-
-if($lOptions{help}){
-print "
+			  if ($lOptions{help}) {
+			      print "
 gift-add-collection [options] [image-directory]: Add an image collection to your gift database.
 
 THE FOLLOWING LIST OF OPTIONS ALSO SHOWS THE CURRENT VALUES AND TAKES 
@@ -205,18 +240,18 @@ it will automatically generate http://localhost/~$ENV{HOME} URLs.
 Options override the contents of 
 $ENV{HOME}/.gift-add-collection
 ";
-  exit 0;
-}
+			      exit 0;
+			    }
 
-unless(-e "$gGiftHome/gift-config.mrml"){
-  copy("__DATADIR__/gift-config.mrml",
-       "$gGiftHome/gift-config.mrml");
-}
-unless(-e "$gGiftHome/gift-embed-perl-modules.pl"){
-  open PM_OUTFILE,">$gGiftHome/gift-embed-perl-modules.pl" 
-    or die "Could not write file $gGiftHome/gift-embed-perl-modules.pl";
+			  unless(-e "$gGiftHome/gift-config.mrml"){
+				 copy("__DATADIR__/gift-config.mrml",
+				      "$gGiftHome/gift-config.mrml");
+			       }
+			  unless(-e "$gGiftHome/gift-embed-perl-modules.pl"){
+				 open PM_OUTFILE,">$gGiftHome/gift-embed-perl-modules.pl" 
+				 or die "Could not write file $gGiftHome/gift-embed-perl-modules.pl";
 
-  print PM_OUTFILE "
+				 print PM_OUTFILE "
 #
 # This file was automatically generated
 # by the GNU Image-Finding Tool (GIFT).
@@ -231,13 +266,13 @@ use lib '__BINDIR__';
 
 use CGIFTLink;
 ";
-}
+			       }
 
-mkpath([$lThumbnailDirectory],1,0755);
-mkpath([$lIndexPrefix,$lFeaturePrefix],1,0711);
+			  mkpath([$lThumbnailDirectory],1,0755);
+				 mkpath([$lIndexPrefix,$lFeaturePrefix],1,0711);
 			  
-print 
-"
+				 print 
+				 "
 
  I will read the images in:
  $lImageDirectory
@@ -252,157 +287,202 @@ print
  $lURLPrefix
 
 ";
+  
+  
+  $url2fts_name=">${lIndexPrefix}/url2fts.xml";
+  $URL2FTS=new IO::File($url2fts_name) or die "Could not open database $url2fts_name for output!";
 			  
-			  
-$url2fts_name=">${lIndexPrefix}/url2fts.xml";
-$URL2FTS=new IO::File($url2fts_name) or die "Could not open database $url2fts_name for output!";
-			  
-local $self={};
+				 local $self={};
 			  			  
-$self->{writer}=new XML::Writer( OUTPUT => $URL2FTS,
+				 $self->{writer}=new XML::Writer( OUTPUT => $URL2FTS,
 				 DATA_MODE => 1,
 				 DATA_INDENT => 2 );
-$self->{writer}->xmlDecl("UTF-8","yes");
+			  $self->{writer}->xmlDecl("UTF-8","yes");
   
-$self->{writer}->startTag("image-list");  
+				  $self->{writer}->startTag("image-list");  
 
-$main::lImageCount=0;
+				  $main::lImageCount=0;
 
-$main::gModifyingDateOfThis=(stat($0))[9];
-print "This file was last modified $main::gModifyingDateOfThis after the epoch\n";
+				  $main::gModifyingDateOfThis=(stat($0))[9];
+				  print "This file was last modified $main::gModifyingDateOfThis after the epoch\n";
 
-find(\&wanted,$lImageDirectory);
+				  print "Estimating how many images we are going to index: ";
+				  $lCountPotentialImages=0;
+				  find(\&countPotentialImages,$lImageDirectory);
+				  print "$lCountPotentialImages\n";
+				  $lCountVisitedImages=0;
+				  find(\&wanted,$lImageDirectory);
 
-$self->{writer}->endTag("image-list");  
-$URL2FTS=0;#close the file
+				  $self->{writer}->endTag("image-list");  
+				  $URL2FTS=0; #close the file
 
-sub wanted{
-  my $lFullName=$File::Find::name;
+				  sub countPotentialImages{
+				    my $lFullName=$File::Find::name;
 
-  my $lName=$lFullName;
+				    my $lName=$lFullName;
 
-  $lName=~s[^${lImageDirectory}][];
-
-  $lName=~m§\.([^\.]*)$§;
-  my $lExtension=$1;
-
-  
-  if($lExtension && $lExtension=~m/^((tif)|(tiff)|(ppm)|(gif)|(jpg)|(jpeg)|(eps)|(png)|(ras))$/i){
-
-    my $lNameBase=$lName;
-    $lNameBase=~s§\.$lExtension$§§;
+				    $lName=~m§\.([^\.]*)$§;
+				    my $lExtension=$1;
 
   
-    $lURL="$lURLPrefix/$lName";
-    $lFts="$lFeaturePrefix/${lNameBase}_$lExtension.fts";
-    #the actual location of the thumbnail
-    $lThumbnailFile="$lThumbnailDirectory/${lNameBase}_thumbnail_$lExtension.jpg";
-    $lThumbnailURL ="$lThumbnailURLPrefix/${lNameBase}_thumbnail_$lExtension.jpg";
+				    if ($lExtension && $lExtension=~m/^((tif)|(tiff)|(ppm)|(gif)|(jpg)|(jpeg)|(eps)|(png)|(ras))$/i) {
+				      $main::lCountPotentialImages++;
+				    }
+				  }
+
+				  sub wanted{
+				    local $lFullName=$File::Find::name;
+
+				    local $lName=$lFullName;
+
+				    $lName=~s[^$lImageDirectory][];
+
+				  $lName=~m§\.([^\.]*)$§;
+				  local $lExtension=$1;
+
+  
+				  if ($lExtension && $lExtension=~m/^((tif)|(tiff)|(ppm)|(gif)|(jpg)|(jpeg)|(eps)|(png)|(ras))$/i) {
+				    eval{
+
+				      my $lNameBase=$lName;
+				      $lNameBase=~s§\.$lExtension$§§;
+       
+       
+				      $lURL="$lURLPrefix/$lName";
+				      $lFts="$lFeaturePrefix/${lNameBase}_$lExtension.fts";
+				      #the actual location of the thumbnail
+				      $lThumbnailFile="$lThumbnailDirectory/${lNameBase}_thumbnail_$lExtension.jpg";
+				      $lThumbnailURL ="$lThumbnailURLPrefix/${lNameBase}_thumbnail_$lExtension.jpg";
+       
+				      print         "$lURL $lFts\n";
+       
+				      my $lURL2FTSLine="$lURL $lThumbnailURL $lFts\n";
+				      $lURL2FTSLine=~s§/+§/§g;
+				      $lURL2FTSLine=~s§http:/§http://§g;
+
+				      my $i;
+				      foreach $i  ($lURL,
+						   $lThumbnailURL) {
+					#escaping the URL
+					$i=~s[//][/]g;
+					$i=~s[^http:/][http://];
+					$i=~s[ ][%20]g;
+	 
+					my $lUnicode=Unicode::String->new($i);
+	 
+					$i=$lUnicode->utf8();
+				      }
+       
+				      my $lAttributes={
+						       "url-postfix" => $lURL,
+						       "thumbnail-url-postfix" => $lThumbnailURL,
+						       "feature-file-name" => $lFts
+						      };
     
-    print         "$lURL $lFts\n";
-
-    my $lURL2FTSLine="$lURL $lThumbnailURL $lFts\n";
-    $lURL2FTSLine=~s§/+§/§g;
-    $lURL2FTSLine=~s§http:/§http://§g;
-
-    my $i;
-    foreach $i  ($lURL,
-		 $lThumbnailURL){
-      #escaping the URL
-      $i=~s[//][/]g;
-      $i=~s[^http:/][http://];
-      $i=~s[ ][%20]g;
-    }
-
-    my $lAttributes={
-		     "url-postfix" => $lURL,
-		     "thumbnail-url-postfix" => $lThumbnailURL,
-		     "feature-file-name" => $lFts
-		    };
     
+				      $self->{writer}->emptyTag("image",(%{$lAttributes}));  
+
+
+				      print "lURLPrefix: $lURLPrefix lNameBase: $lNameBase lExtension: $lExtension\n";
     
-    $self->{writer}->emptyTag("image",(%{$lAttributes}));  
+				      # uniqueness of names given by process id 
+				      # the variable containing the process id of this script 
+				      # is $$
+				      my $lTemp="/tmp/gift_tmp$$.ppm";
+				      my $lTempFts="/tmp/gift_tmp$$.fts";
 
+				      print "This script was last modified on $main::gModifyingDateOfThis\n";
 
-    print "$lURLPrefix--$lNameBase--$lExtension\n";
-    
-    # uniqueness of names given by process id 
-    # the variable containing the process id of this script 
-    # is $$
-    my $lTemp="/tmp/gift_tmp$$.ppm";
-    my $lTempFts="/tmp/gift_tmp$$.fts";
+				      my $lThumbnailModificationTime=(stat($lThumbnailFile))[9];
 
-    print "This script was last modified on $main::gModifyingDateOfThis\n";
+				      if (!-e($lThumbnailFile)
+					  || $lThumbnailModificationTime<$main::gModifyingDateOfThis) {
+					$lThumbnailFile=~m§^(.*/)([^/]*)$§;
+					print($lThumbnailModificationTime," is the modifying date of $lThumbnailFile\n") 
+					  if $lThumbnailModificationTime;
+					print("We will make a new thumbnail file\n");
+					print("making the path $1\n");
+					mkpath([$1],1,0711);
+					print("Converting $lFullName to $lThumbnailFile\n");
+					print STDERR "Warning: Thumbnail generation failed for $lThumbnailFile $!\n" 
+					  if system("convert",
+						    "-geometry",
+						    "128x128",
+						    $lFullName,
+						    $lThumbnailFile);
+				      } else {
+					print "Warning: more recent version of thumbnail file $lThumbnailFile  found!\n";
+				      }
 
-    my $lThumbnailModificationTime=(stat($lThumbnailFile))[9];
+				      my $lFtsModificationTime=(stat($lFts))[9];
+				      if (!-e($lFts)
+					  || $lFtsModificationTime<$main::gModifyingDateOfThis) {
+					if ($lFtsModificationTime) {
+					  print($lFtsModificationTime," is the modifying date of $lFts file\n") 
+					}
+					print("We will make a new feature file\n");
+					print("Converting $lFullName to $lTemp\n");
+				      
+					if (system("convert" ,
+						"-geometry",
+						"256x256!",
+						$lFullName,
+						$lTemp)) {
+					  die "Pre feature extraction convert call failed: $! \n";
+					}
 
-    if(!-e($lThumbnailFile)
-       || $lThumbnailModificationTime<$main::gModifyingDateOfThis){
-      $lThumbnailFile=~m§^(.*/)([^/]*)$§;
-      print($lThumbnailModificationTime," is the modifying date of $lThumbnailFile\n") 
-	if $lThumbnailModificationTime;
-      print("We will make a new thumbnail file\n");
-      print("making the path $1\n");
-      mkpath([$1],1,0711);
-      print("Converting $lFullName to $lThumbnailFile\n");
-      print STDERR "Warning: Thumbnail generation failed for $lThumbnailFile $!\n" 
-	if system("convert",
-		  "-geometry",
-		  "128x128",
-		  $lFullName,
-		  $lThumbnailFile);
-    }else{
-      print "Warning: more recent version of thumbnail file $lThumbnailFile  found!\n";
-    }
+					print("Extracting features from $lTemp\n");
 
-    my $lFtsModificationTime=(stat($lFts))[9];
-    if(!-e($lFts)
-       || $lFtsModificationTime<$main::gModifyingDateOfThis){
-      print($lFtsModificationTime," is the modifying date of $lFts file\n") 
-	if $lFtsModificationTime;
-      print("We will make a new feature file\n");
-      print("Converting $lFullName to $lTemp\n");
-      die "Pre feature extraction convert call failed: $! \n" 
-	if system("convert" ,
-		  "-geometry",
-		  "256x256!",
-		  $lFullName,
-		  $lTemp);
-      print("Extracting features from $lTemp\n");
-      die "Feature extraction failed: $! \n" if system("__BINDIR__/gift-extract-features $lTemp");
-      $lFts=~m§^(.*/)([^/]*)$§;
-      print("making the path $1\n");
-      mkpath([$1],1,0711);
-      print("...copying from $lTempFts to $lFts\n\n");
-      copy($lTempFts,$lFts);
-    }else{
-      print "warning: more recent version of feature file $lFts found!\n";
-    }
-    
-    if(!$main::lImageCount){
-      die "Pre feature extraction convert call failed: $! \n" if system("convert",
-									"-geometry",
-									"256x256!",
-									$lFullName,
-									$lTemp);
-      system qq(__BINDIR__/gift-write-feature-descs < $lTemp |perl -e 'print "Writing InvertedFileFeatureDescription...\n";open OF,">$main::lIndexPrefix/InvertedFileFeatureDescription.db" or die "could not open $lIndexPrefix";while(<STDIN>){print OF join(" ",(split(" ",\$_))[0..1]),"\\n";};print "finished.\n";' );
-      unlink $lTemp;
-    }
+					unless(system("__BINDIR__/gift-extract-features $lTemp")){
+					  $lFts=~m§^(.*/)([^/]*)$§;
+					  print("making the path $1\n");
+					  mkpath([$1],1,0711);
+					  print("...copying from $lTempFts to $lFts\n\n");
+					  copy($lTempFts,$lFts);
+					} else {
+					  print "warning: more recent version of feature file $lFts found!\n";
+					}
+      
+					if (!$main::lImageCount) {
+					  die "Pre feature extraction convert call failed: $! \n" if system("convert",
+													    "-geometry",
+													    "256x256!",
+													    $lFullName,
+													    $lTemp);
+					  system qq(__BINDIR__/gift-write-feature-descs < $lTemp |perl -e 'print "Writing InvertedFileFeatureDescription...\n";open OF,">$main::lIndexPrefix/InvertedFileFeatureDescription.db" or die "could not open $lIndexPrefix";while(<STDIN>){print OF join(" ",(split(" ",\$_))[0..1]),"\\n";};print "finished.\n";' );
+					  unlink $lTemp;
+					}
+      
+					$main::lImageCount++;
+					#    print "Number of images: $main::lImageCount\n\n";
+					unlink($lTemp);
+					unlink($lTempFts);
+      
+					$main::lCountVisitedImages++;
+					print "\nPROGRESS: ".$main::lCountVisitedImages." of ".$main::lCountPotentialImages." done (".POSIX::floor(90*$main::lCountVisitedImages/$main::lCountPotentialImages)."%)\n";
+				      } else {
+					die "Feature extraction failed: $! \n" 
+				      }
+				    };
+				    if ($@) {
+				      print STDERR "There was an error in extracting features from $File::Find::name\n";
+				    }
+				  }
+				}
+			      }
 
-    $main::lImageCount++;
-    print "Number of images: $main::lImageCount\n\n";
-    unlink($lTemp);
-    unlink($lTempFts);
-  }
-}
+				
 
-#i am looking for a match of this to place the newly made data	  
-my $lTheLine='<!-- xxyx gift-add-collection xyxx DEPENDS ON THIS LINE -->';
+  #i am looking for a match of this to place the newly made data	  
+  my $lTheLine='<!-- xxyx gift-add-collection xyxx DEPENDS ON THIS LINE -->';
 
 
 close URL2FTS;
 
 system("__BINDIR__/gift-generate-inverted-file $lIndexPrefix/");
+
+print "\nPROGRESS: 99%\n";
+
 
 my $lUniqueCollectionID="c-".join("-",gmtime());
 
@@ -425,35 +505,36 @@ Copying $CONFIG to $OLDCONFIG
   open OLDCONFIG or die "COULD NOT OPEN $OLDCONFIG";
   open CONFIG or die "COULD NOT OPEN $CONFIG";
 
-  while(<OLDCONFIG>){
+  while (<OLDCONFIG>) {
     
-    if(m/$lTheLine/){
-      print CONFIG qq(<!-- automatically added by v_add_collection.pl -->
-		      <collection 
-		      collection-id="$lUniqueCollectionID" 
-		      collection-name="$lCollectionName" 
+    if (m/$lTheLine/) {
+	print CONFIG qq(<!-- automatically added by v_add_collection.pl -->
+			<collection 
+			collection-id="$lUniqueCollectionID" 
+			collection-name="$lCollectionName" 
 		      
-		      cui-algorithm-id-list-id="ail-inverted-file"
+			cui-algorithm-id-list-id="ail-inverted-file"
 		      
-		      cui-number-of-images="$main::lImageCount" 
-		      cui-base-dir="${lIndexPrefix}"
-		      cui-inverted-file-location="InvertedFile.db" 
-		      cui-offset-file-location="InvertedFileOffset.db"
-		      cui-feature-description-location=
-		      "InvertedFileFeatureDescription.db"
-		      cui-feature-file-location="url2fts.xml"
-		      >
-		      <query-paradigm-list>
-                             <query-paradigm type="inverted-file"/>
-                             <query-paradigm type="perl-demo"/>
-                      </query-paradigm-list>
-		      </collection>
-		      \n\n);
-    }
+			cui-number-of-images="$main::lImageCount" 
+			cui-base-dir="${lIndexPrefix}"
+			cui-inverted-file-location="InvertedFile.db" 
+			cui-offset-file-location="InvertedFileOffset.db"
+			cui-feature-description-location=
+			"InvertedFileFeatureDescription.db"
+			cui-feature-file-location="url2fts.xml"
+			>
+			<query-paradigm-list>
+			<query-paradigm type="inverted-file"/>
+			<query-paradigm type="perl-demo"/>
+			</query-paradigm-list>
+			</collection>
+			\n\n);
+      }
 
     s/__COLLECTION__/$lUniqueCollectionID/g;
     print CONFIG $_;
 
   }
 }
-print "The image count: ",$main::lImageCount,"\n";
+#print "The image count: ",$main::lImageCount,"\n";
+print "\nPROGRESS: 100%\n";
