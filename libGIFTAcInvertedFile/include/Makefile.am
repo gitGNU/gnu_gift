@@ -1,4 +1,4 @@
-EXTRA_DIST=CADIHash.h \
+noinst_HEADERS=CADIHash.h \
 CADIHash.h.kdoc \
 CAFDistanceMatrix.h \
 CAFHierarchy.h \

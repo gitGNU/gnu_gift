@@ -1,5 +1,6 @@
 noinst_LIBRARIES= libSquirePPM.a
 
+noinst_HEADERS=normaliseContrast.h  ppm.h  ppm_noproto.h  typedefs.h
 
 libSquirePPM_a_SOURCES= ppm_comment.c\
 		ppm_error.c\

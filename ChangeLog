@@ -1,3 +1,23 @@
+2001-12-08  MUELLER Wolfgang  <Wolfgang.Mueller@cui.unige.ch>
+
+	* libGIFTAcDistanceMatrix/include/Makefile.am: new file
+
+	* libGIFTQuPerl/include/Makefile.am: new file
+	
+	* libGIFTQuPerl/Makefile.am(noinst_HEADERS): 
+	* libMRML/include/Makefile.am(noinst_HEADERS): 
+	add all *.h files
+
+	* scripts/perl/Makefile.am (EXTRA_SCRIPTS): pre-
+
+	* libSquirePPM/Makefile.am (noinst_HEADERS): 
+
+	* bootstrap-cvs.sh: Added bootstrap script which
+	is to be called when having checked out the GIFT from
+	CVS. 
+	
+	
+
 2001-12-03  Wolfgang Müller  <muellerw@cui.unige.ch>
 
 	* libMRML/include/CQMultiple.h(mUsesFastQuery): 

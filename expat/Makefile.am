@@ -1,1 +1,1 @@
-SUBDIRS= gennmtab xmlparse xmltok 
+SUBDIRS= gennmtab xmlwf xmltok xmlparse  

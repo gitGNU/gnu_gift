@@ -5,5 +5,23 @@ directory.h:
 
 all: directory.h
 
-noinst_HEADERS= directory.h
+noinst_HEADERS= directory.h \
+	CAFPlugin.h		     CMRMLStringConstants.h   CTimeStampGenerator.h \
+	CAccessor.h		     CMagic.h		      CXEVCommunication.h \
+	CAccessorAdmin.h	     CMutex.h		      CXEVTripletList.h \
+	CAccessorAdminCollection.h   CNoDelete.h	      CXMLElement.h \
+	CAccessorElement.h	     CPropertySheetList.h     CXMLElementBuilder.h \
+	CAccessorFactory.h	     CQMultiple.h	      CXMLElementVisitor.h \
+	CAccessorFactoryContainer.h  CQParallel.h	      CXMLHelper.h \
+	CAccessorImplementation.h    CQuery.h		      GIFTExceptions.h \
+	CAlgorithm.h		     CQueryParadigmMatcher.h  TID.h \
+	CAlgorithmCollection.h	     CQueryPlugin.h	      directory.h \
+	CArraySelfDestroyPointer.h   CQueryTreeBuilder.h      mrml_const.h \
+	CAttributeList.h	     CQueryTreeNode.h	      myNew.h \
+	CCommunicationHandler.h      CRelevanceLevel.h	      my_assert.h \
+	CDebuggingMemoryManager.h    CRelevanceLevelList.h    my_diagnose.h \
+	CDynamicQueryFactory.h	     CSelfDestroyPointer.h    my_throw.h \
+	CIDRelevanceLevelPair.h      CSessionManager.h \
+	CIDRelevanceLevelPairList.h  CStaticQueryFactory.h 
+
 CLEANFILES= directory.h

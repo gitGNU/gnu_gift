@@ -1,5 +1,4 @@
-#     -*- mode: makefile -*-
-
+#! /bin/sh 
 #     GIFT, a flexible content based image retrieval system.
 #     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
 
@@ -17,32 +16,20 @@
 #     along with this program; if not, write to the Free Software
 #     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-SUBDIRS= Doc scripts dtd expat\
-	@UNPUBLISHED_DIR@ \
-	libMRML \
-	libGIFTAcURL2FTS\
-	libGIFTAcHierarchy libGIFTQuHierarchy\
-	libGIFTAcInvertedFile libGIFTQuInvertedFile\
-	libGIFTAcPerl libGIFTQuPerl \
-	libGIFTAcDistanceMatrix \
-        @GIFT_BAYESIAN_DIR@ libSquirePPM GIFTServer FeatureExtraction 
+#
+# bootstrap for compile process
+#
 
+echo "This script generates a configure script for the GIFT"
+echo "Use this if you have checked out the GIFT from CVS"
 
-EXTRA_DIST=	PluginMaker\
-			bootstrap-cvs.sh \
-			notice.am \
-			notice.c\
-		       notice.cc\
-		       notice.el\
-		       notice.h\
-		       notice.in\
-		       notice.java\
-			notice.pre-pl\
-		       notice.pre-pm\
-		       perl-compile-test-program.cc\
-		       pthread-compile-test-program.cc\
-		       renamer.pl\
-			gift-file-to-gift-file.pl      \
-			gift-install-prerequisites.pl  teco.sh\
-			gift-install-prerequisites.sh
-
+echo "running aclocal"
+aclocal || (echo "bootstrap failed, because aclocal failed. exiting. " ; exit 100; )
+echo "...done"
+echo "running automake"
+automake || (echo "bootstrap failed, because automake failed. exiting." ; exit 101; )
+echo "...done"
+echo "running autoconf"
+autoconf || (echo "bootstrap failed, because autoconf failed. exiting." ; exit 102; )
+echo "...done"
+echo "Now you should be able to run ./configure"

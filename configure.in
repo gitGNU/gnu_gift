@@ -378,23 +378,31 @@ AC_OUTPUT([Makefile
 
 		libGIFTQuPerl/Makefile 
 		libGIFTQuPerl/cc/Makefile 
+		libGIFTQuPerl/include/Makefile 
 		libGIFTAcPerl/Makefile 
 		libGIFTAcPerl/cc/Makefile 
+		libGIFTAcPerl/include/Makefile 
 
 		libGIFTAcURL2FTS/Makefile
 		libGIFTAcURL2FTS/cc/Makefile 
+		libGIFTAcURL2FTS/include/Makefile 
 		libGIFTAcInvertedFile/Makefile
 		libGIFTAcInvertedFile/cc/Makefile 
+		libGIFTAcInvertedFile/include/Makefile 
 		libGIFTQuInvertedFile/Makefile
 		libGIFTQuInvertedFile/cc/Makefile 
+		libGIFTQuInvertedFile/include/Makefile 
 
 		libGIFTAcHierarchy/Makefile
 		libGIFTAcHierarchy/cc/Makefile 
+		libGIFTAcHierarchy/include/Makefile 
 		libGIFTQuHierarchy/Makefile
 		libGIFTQuHierarchy/cc/Makefile 
+		libGIFTQuHierarchy/include/Makefile 
 
 		libGIFTAcDistanceMatrix/Makefile
 		libGIFTAcDistanceMatrix/cc/Makefile 
+		libGIFTAcDistanceMatrix/include/Makefile
 
 		FeatureExtraction/Makefile
 
@@ -404,6 +412,12 @@ AC_OUTPUT([Makefile
 		scripts/emacs-lisp/Makefile
 		scripts/perl/Makefile
 		
+		expat/Makefile
+		expat/gennmtab/Makefile 
+		expat/xmlparse/Makefile
+		expat/xmltok/Makefile
+		expat/xmlwf/Makefile
+
 		dtd/Makefile
 
 		Doc/Makefile

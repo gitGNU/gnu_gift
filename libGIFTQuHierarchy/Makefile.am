@@ -1,2 +1,1 @@
-EXTRA_DIST= include
-SUBDIRS= cc
+SUBDIRS= include cc
