@@ -439,232 +439,7 @@ void generateDistanceMatrix(const string& inBaseDir,
 #endif
 
 
-#ifdef single
-/***********************************************************************
-  main								
-  
-  Function : waits for and accepts a connection from a Java Applet. 
-  Receives the request from the client and according the 
-  request, sends the answer to the client.	
-
-  Socket opening code snipped from J.Raki
-
-  ***********************************************************************/	       
-int main(int argc, char **argv){
-  gMutex=0;
-  gMutex=new CMutex();
-
-  gGIFTHome=string(getenv("GIFT_HOME")?getenv("GIFT_HOME"):getenv("HOME")?getenv("HOME"):".");
-
-  cout << PACKAGE << "-" << VERSION << endl
-       << "Usage (server):              gift [<Port> [<Configuration-Directory>] [<SeedRandom? 1 or 0>]]" << endl
-       << "making distance matrices:    gift <Port(ignored)> <Configuration-Directory> <Algorithm> <Colection> <from> <to>" << endl
-       << endl
-       << endl;
-
-  if(argc>1){
-    PORT=atoi(argv[1]);
-  }
-  if(argc>2 && argv[2]){
-    gGIFTHome=string(argv[2])+string("/");
-  }
-  if(argc==4 && !strcmp("1",argv[3])){
-    cerr << "Warning: the random generator stays unseeded" << endl;
-  }else{    
-    cerr << "Random number generator has been seeded with " 
-	 << getpid() << endl;
-    srand(getpid());
-  }
-
-
-  // the communication handler for this application
-  // class definition is just above in this file
-  CSessionManager gSessionManager(gGIFTHome+"/gift-sessions.mrml",
-				  gGIFTHome+"/gift-config.mrml",
-				  gGIFTHome+"/gift-i18n.xml");
-  ofstream gLogFile(string(gGIFTHome+"/gift-log.mrml").c_str(),
-		    ios::app);
-
-  {
-    time_t lNow(time(0));
-    gLogFile << endl
-	     << "<!-- This instance of the GIFT was started on -->" << endl
-	     << "<!-- " <<  string(ctime(&lNow)) << " -->" << endl
-	     << "<!-- PID " << long(getpid()) << " -->" << endl
-	     << endl;
-  }
-  
-#ifdef WITH_GENERATE_DISTANCE_MATRIX
-  if(argc==7){
-    generateDistanceMatrix(gGIFTHome,
-			   string("DistanceMatrix"),
-			   string(argv[3]),
-			   string(argv[4]),
-			   atoi(argv[5]),
-			   atoi(argv[6]));
-    exit(0);
-  }
-#endif
-
-  cout << "----------------------------------------"
-       << endl
-       << "The current configuration directory is: "
-       << gGIFTHome
-       << endl;
-
-  cout << "----------------------------------------"
-       << endl
-       << "Opening port " << PORT
-       << endl
-       << "----------------------------------------"
-       << endl;
-
-  int lSocketDescriptor;
-  int lOutSocket;
-  //a bound socket
-  //this prototype is copied when accepting
-  struct sockaddr_in lSocketAddress;
-  //the copy made of the prototype when accepting
-  struct sockaddr_in lSocketCopy; 
-  
-  lSocketAddress.sin_family = AF_INET ;
-  /* get the port number */
-  lSocketAddress.sin_port =  htons(PORT);
-  lSocketAddress.sin_addr.s_addr = INADDR_ANY ;
-  
-  /* create a socket */
-  if((lSocketDescriptor = socket(PF_INET,
-				 SOCK_STREAM,
-				 IPPROTO_TCP))<0) {
-    printf("SOCKET error %s\n",strerror(errno)) ;
-    
-    exit(1) ;
-  }
-
-  
-
-  int lOptionOn=1;
-  if(0 > setsockopt(lSocketDescriptor,
-		    SOL_SOCKET,
-		    SO_REUSEADDR,
-		    (char*)&lOptionOn,
-		    sizeof(lOptionOn))){
-      cerr << "could not set REUSEADDR: " 
-	   << strerror(errno)
-	   << flush 
-	   << endl;
-      exit(1);
-  };  
-  /* assigns a name to the socket */
-  if(bind(lSocketDescriptor,
-	  (struct sockaddr *) &lSocketAddress ,
-	  sizeof(lSocketAddress) ) == -1 ) {
-    printf("bind error: %s\n",strerror(errno)) ;
-    exit(1) ;
-  }
-  
-  /*listen to incoming connections */
-  /* backlog = 5 */
-  if(listen(lSocketDescriptor,
-	    5)==-1){ 
-    printf("listen error: %s\n",strerror(errno)) ;
-    exit(1) ;    
-  }
-  
-  /* loop to wait for connections */
-  try{
-    for(;;){
-#ifdef HAVE_LIBSOCKET
-       int lSocketCopySize = sizeof(lSocketCopy) ;
-#else
-       unsigned int lSocketCopySize = sizeof(lSocketCopy) ;
-#endif
-      /* accept a connection*/
-      cout << "Waiting for a connection..." 
-	   << endl 
-	   << flush;
-      if((lOutSocket=accept(lSocketDescriptor, 
-			    ( struct sockaddr * ) &lSocketCopy, 
-			    &lSocketCopySize)
-	  ) < 0 ) {// error
-
-	cout << "Error when accepting connection:"
-	     << endl
-	     << strerror(errno)
-	     << endl;
-	exit(1) ;
-      }else{// no error
-	cout << "Accepted Connection!" << endl << flush;
-
-
-	string lAddress;
-	{
-	  struct sockaddr  lName;
-	  socklen_t lNameLen(sizeof(lName));
-	  if(!getpeername(lOutSocket, 
-			  &lName, 
-			  &lNameLen)){
-	    lAddress="Peer INET Address: " + string(inet_ntoa(((sockaddr_in*)(&lName))->sin_addr));
-	    cout << "Accepted from adress [" << lAddress << "]" << endl;
-	  } 
-	}
-	CProcessMessageParameters* 
-	  lProcessMessageParameters(new 
-				    CProcessMessageParameters(gSessionManager,
-							      lAddress,
-							      gLogFile,
-							      lOutSocket));
-#ifdef  __GIFT_USES_THREADS__
-#warning "threading used"
-	pthread_t lThread;
-	int lErrorNumber(0);
-	if(lErrorNumber=pthread_create(&lThread, NULL, &processMessage,lProcessMessageParameters)){
-	  cerr << "Error in creating new thread: "
-	       << strerror(lErrorNumber) << endl
-	       << "Doing normal function call instead"
-	       << endl;
-	  processMessage(lProcessMessageParameters);
-	}else{
-	  cout << "Successfully created new message processing thread"
-	       << endl;
-	  if(lErrorNumber=pthread_detach(lThread)){
-	    cerr << "Error in detaching thread: "
-		 << strerror(lErrorNumber) << endl;
-	  }else{
-	    cout << "Successfully detached thread"
-		 << endl;
-	  }
-	}
-#else
-#warning "threading blocked"
-	cout << "calling processMessage (no thread)" << endl;
-	processMessage(lProcessMessageParameters);
-	cout << "returned processMessage (no thread)" << endl;
-	close(lOutSocket);// have to close socket here
-#endif
-      }
-    }
-  }
-  catch(GIFTException& inCaught){
-    cout << "Caught inServer Main:"
-	 << inCaught
-	 << endl
-	 << flush;
-  }
-  catch(exception& inCaught){
-    cout << "there was a standard exception" <<endl
-	 << inCaught.what()
-	 << flush;
-  }
-  catch(...){
-    cout << "there was an unknown exception" <<endl
-	 << flush;
-  }
-  //return 0;
-  delete gMutex;
-  return 0;
-}
-#else 
+ 
 #include "CMultiServer.h"
 #include "CTCPSocket.h"
 
@@ -757,6 +532,8 @@ int main(int argc, char **argv){
   if(argc>1){
     PORT=atoi(argv[1]);
   }
+
+
   if(argc>2 && argv[2]){
     gGIFTHome=string(argv[2])+string("/");
   }
@@ -768,6 +545,12 @@ int main(int argc, char **argv){
     srand(getpid());
   }
 
+  ofstream lPortFile;
+  {
+    string lPortFileName=gGIFTHome+"/gift-port.txt";
+    lPortFile.open(lPortFileName.c_str());
+    assert(lPortFile);
+  }
 
   // the communication handler for this application
   // class definition is just above in this file
@@ -817,6 +600,13 @@ int main(int argc, char **argv){
     CMultiServer lServer;
     CTCPSocket lSocket1("",PORT);
     CTCPSocket lSocket2("",PORT+1);
+
+    // write out the ports
+    lPortFile << PORT << endl;
+    lPortFile << PORT+1 << endl;
+    lPortFile.close();
+    // close that file
+
     CSFGift    lServeFunction(gSessionManager,gLogFile);
     lSocket1.setServeFunction((&lServeFunction));
     lSocket2.setServeFunction((&lServeFunction));
@@ -850,5 +640,5 @@ int main(int argc, char **argv){
   delete gMutex;
   return 0;
 }
-#endif 
+
 
