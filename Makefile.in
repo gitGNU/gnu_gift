@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4e from Makefile.am.
+# Makefile.in generated automatically by automake 1.5 from Makefile.am.
 
 # Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
 # Free Software Foundation, Inc.
@@ -32,7 +32,6 @@
 #     along with this program; if not, write to the Free Software
 #     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-
 SHELL = @SHELL@
 
 srcdir = @srcdir@
@@ -53,11 +52,9 @@ infodir = @infodir@
 mandir = @mandir@
 includedir = @includedir@
 oldincludedir = /usr/include
-
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
-
 top_builddir = .
 
 ACLOCAL = @ACLOCAL@
@@ -71,14 +68,12 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_HEADER = $(INSTALL_DATA)
 transform = @program_transform_name@
-
 NORMAL_INSTALL = :
 PRE_INSTALL = :
 POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-
 host_alias = @host_alias@
 host_triplet = @host@
 AMTAR = @AMTAR@
@@ -89,12 +84,15 @@ BAYESIAN_LD_ADD = @BAYESIAN_LD_ADD@
 CC = @CC@
 CONVERT = @CONVERT@
 CXX = @CXX@
+CXXCPP = @CXXCPP@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
 DOXYGEN = @DOXYGEN@
 ECHO = @ECHO@
 EMACS = @EMACS@
 EXEEXT = @EXEEXT@
+GCJ = @GCJ@
+GCJFLAGS = @GCJFLAGS@
 GIFT_BAYESIAN_FLAG = @GIFT_BAYESIAN_FLAG@
 GIFT_INTERNAL_FLAG = @GIFT_INTERNAL_FLAG@
 GIFT_INTERNAL_PERLS = @GIFT_INTERNAL_PERLS@
@@ -103,7 +101,7 @@ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 LN_S = @LN_S@
-MAKEINFO = @MAKEINFO@
+MAGICK = @MAGICK@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -112,6 +110,7 @@ PERL_LD_ADD = @PERL_LD_ADD@
 PRE_INSTALL_LIBDIRS = @PRE_INSTALL_LIBDIRS@
 PRE_INSTALL_LINKDIRS = @PRE_INSTALL_LINKDIRS@
 RANLIB = @RANLIB@
+RC = @RC@
 SGML2INFO = @SGML2INFO@
 SGML2LATEX = @SGML2LATEX@
 SGML2TXT = @SGML2TXT@
@@ -120,8 +119,8 @@ UNPUBLISHED = @UNPUBLISHED@
 VERSION = @VERSION@
 WEB_PUBLISHING_DIRECTORY = @WEB_PUBLISHING_DIRECTORY@
 WEB_PUBLISHING_LOCATION = @WEB_PUBLISHING_LOCATION@
-_am_include = @_am_include@
-_am_quote = @_am_quote@
+am__include = @am__include@
+am__quote = @am__quote@
 install_sh = @install_sh@
 lispdir = @lispdir@
 
@@ -141,7 +140,8 @@ CONFIG_HEADER = gift-config.h
 CONFIG_CLEAN_FILES =
 DIST_SOURCES =
 
-RECURSIVE_TARGETS = all-recursive install-data-recursive \
+RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
+	uninstall-info-recursive all-recursive install-data-recursive \
 	install-exec-recursive installdirs-recursive install-recursive \
 	uninstall-recursive check-recursive installcheck-recursive
 DIST_COMMON = README ./stamp-h.in AUTHORS COPYING ChangeLog INSTALL \
@@ -154,24 +154,29 @@ all: gift-config.h
 
 .SUFFIXES:
 
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+	-rm -f libtool
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  Makefile
-
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && \
 	  CONFIG_HEADERS= CONFIG_LINKS= \
 	  CONFIG_FILES=$@ $(SHELL) ./config.status
 
-config.status: $(srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
+$(top_builddir)/config.status: $(srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
-
 $(srcdir)/configure:  $(srcdir)/configure.in $(ACLOCAL_M4) $(CONFIGURE_DEPENDENCIES)
 	cd $(srcdir) && $(AUTOCONF)
 
 $(ACLOCAL_M4):  configure.in 
 	cd $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
-
 gift-config.h: stamp-h
 	@if test ! -f $@; then \
 		rm -f stamp-h; \
@@ -197,6 +202,7 @@ $(srcdir)/./stamp-h.in: $(top_srcdir)/configure.in $(ACLOCAL_M4)
 
 distclean-hdr:
 	-rm -f gift-config.h
+uninstall-info-am:
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -285,15 +291,16 @@ TAGS: tags-recursive $(HEADERS) $(SOURCES) gift-config.h.in $(TAGS_DEPENDENCIES)
 GTAGS:
 	here=`CDPATH=: && cd $(top_builddir) && pwd` \
 	  && cd $(top_srcdir) \
-	  && gtags -i $$here
+	  && gtags -i $(GTAGS_ARGS) $$here
 
 distclean-tags:
-	-rm -f TAGS ID
+	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
 top_distdir = .
-distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
+# Avoid unsightly `./'.
+distdir = $(PACKAGE)-$(VERSION)
 
 GZIP_ENV = --best
 
@@ -301,7 +308,11 @@ distdir: $(DISTFILES)
 	-chmod -R a+w $(distdir) >/dev/null 2>&1; rm -rf $(distdir)
 	mkdir $(distdir)
 	@for file in $(DISTFILES); do \
-	  d=$(srcdir); \
+	  if test -f $$file; then d=.; else d=$(srcdir); fi; \
+	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
+	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
+	    $(mkinstalldirs) "$(distdir)/$$dir"; \
+	  fi; \
 	  if test -d $$d/$$file; then \
 	    cp -pR $$d/$$file $(distdir) \
 	    || exit 1; \
@@ -352,7 +363,9 @@ distcheck: dist
 	  && $(MAKE) $(AM_MAKEFLAGS) install \
 	  && $(MAKE) $(AM_MAKEFLAGS) installcheck \
 	  && $(MAKE) $(AM_MAKEFLAGS) uninstall \
-	  && test `find $$dc_install_base -type f -print | wc -l` -le 1 \
+	  && (test `find $$dc_install_base -type f -print | wc -l` -le 1 \
+	     || (echo "Error: files left after uninstall" 1>&2; \
+	         exit 1) ) \
 	  && $(MAKE) $(AM_MAKEFLAGS) dist \
 	  && $(MAKE) $(AM_MAKEFLAGS) distclean \
 	  && rm -f $(distdir).tar.gz \
@@ -365,7 +378,6 @@ distcheck: dist
 check-am: all-am
 check: check-recursive
 all-am: Makefile gift-config.h
-
 installdirs: installdirs-recursive
 installdirs-am:
 
@@ -378,38 +390,37 @@ install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 
 installcheck: installcheck-recursive
-
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
-	  INSTALL_PROGRAM_ENV='$(INSTALL_STRIP_PROGRAM_ENV)' install
-
+	  `test -z '$(STRIP)' || \
+	    echo "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'"` install
 mostlyclean-generic:
 
 clean-generic:
 
 distclean-generic:
-	-rm -f Makefile $(CONFIG_CLEAN_FILES)
-	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+	-rm -f Makefile $(CONFIG_CLEAN_FILES) stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-rm -f Makefile.in
 clean: clean-recursive
 
-clean-am: clean-generic mostlyclean-am
+clean-am: clean-generic clean-libtool mostlyclean-am
 
-dist-all: dist
-
+dist-all: distdir
+	$(AMTAR) chof - $(distdir) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).tar.gz
+	-chmod -R a+w $(distdir) >/dev/null 2>&1; rm -rf $(distdir)
 distclean: distclean-recursive
-	-rm -f config.status
-distclean-am: clean-am distclean-generic distclean-hdr distclean-tags
+	-rm -f config.status config.cache config.log
+distclean-am: clean-am distclean-generic distclean-hdr distclean-libtool \
+	distclean-tags
 
-dvi:
+dvi: dvi-recursive
 
 dvi-am:
 
-info:
+info: info-recursive
 
 info-am:
 
@@ -417,33 +428,39 @@ install-data-am:
 
 install-exec-am:
 
-install-info:
+install-info: install-info-recursive
 
 install-man:
 
 installcheck-am:
 
 maintainer-clean: maintainer-clean-recursive
-	-rm -f config.status
+
 maintainer-clean-am: distclean-am maintainer-clean-generic
 
 mostlyclean: mostlyclean-recursive
 
-mostlyclean-am: mostlyclean-generic
+mostlyclean-am: mostlyclean-generic mostlyclean-libtool
 
-.PHONY: $(RECURSIVE_TARGETS) all all-am check check-am clean \
-	clean-generic clean-recursive dist dist-all distcheck distclean \
-	distclean-generic distclean-hdr distclean-recursive \
-	distclean-tags distdir dvi dvi-am info info-am install \
+uninstall-am: uninstall-info-am
+
+uninstall-info: uninstall-info-recursive
+
+.PHONY: $(RECURSIVE_TARGETS) GTAGS all all-am check check-am clean \
+	clean-generic clean-libtool clean-recursive dist dist-all \
+	distcheck distclean distclean-generic distclean-hdr \
+	distclean-libtool distclean-recursive distclean-tags distdir \
+	dvi dvi-am dvi-recursive info info-am info-recursive install \
 	install-am install-data install-data-am install-data-recursive \
 	install-exec install-exec-am install-exec-recursive \
-	install-info install-man install-recursive install-strip \
-	installcheck installcheck-am installdirs installdirs-am \
-	installdirs-recursive maintainer-clean maintainer-clean-generic \
+	install-info install-info-am install-info-recursive install-man \
+	install-recursive install-strip installcheck installcheck-am \
+	installdirs installdirs-am installdirs-recursive \
+	maintainer-clean maintainer-clean-generic \
 	maintainer-clean-recursive mostlyclean mostlyclean-generic \
-	mostlyclean-recursive tags tags-recursive uninstall \
-	uninstall-am uninstall-recursive
-
+	mostlyclean-libtool mostlyclean-recursive tags tags-recursive \
+	uninstall uninstall-am uninstall-info-am \
+	uninstall-info-recursive uninstall-recursive
 
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.

@@ -30,10 +30,33 @@ dnl
 
 
 AC_INIT(libMRML/cc/CAccessorFactory.cc)
+
+dnl old position of AC_ARG_ENABLE(interactive)
+
+AM_INIT_AUTOMAKE(gift,0.1.6pre3)
+
+
+AC_CHECK_LIB(dbi,dbi_result_bind_char,[DBI=yes])
+AC_CHECK_LIB(expat,XML_ParserCreate,[EXPAT=yes])
+#check if image magick is there by checking if the convert tool is there
+AC_PATH_PROG(MAGICK,convert)
+#check if there is perl on this system
+AC_PATH_PROG(PERL,perl)
+
 AC_ARG_ENABLE(interactive,
-	[  --enable-interactive get automatically the prerequisites for this package. NEEDS ANSWERING QUESTIONS INTERACTIVLY.],
+	[  --enable-interactive:
+		 GET AUTOMATICALLY THE PREREQUISITES FOR THIS PACKAGE. 
+		NEEDS ANSWERING QUESTIONS INTERACTIVLY.],
 	[
-	$SHELL gift-install-prerequisites.sh 
+	AC_MSG_WARN([INSTALLING PREREQUISITES
+	DUE TO TECHNICAL REASONS WE WILL HAVE TO IGNORE THE --prefix PARAMETERS HERE
+	IF YOU NEED THEM FOR YOUR APPLICATION/INSTALLATION, CALL 
+
+	echo "perl gift-install-prerequisites.pl <binary-directory> <lib-directory>"
+
+	BY HAND
+	])
+	${PERL:-perl} gift-install-prerequisites.pl
 	],
 	[
 	echo "------------------------------"
@@ -42,13 +65,13 @@ AC_ARG_ENABLE(interactive,
 	echo "the prerequisites to the gift automatically??"
 	echo
 	echo "call"
-	echo "perl gift-install-prerequisites.sh"
+	echo "perl gift-install-prerequisites.pl <binary-directory> <lib-directory>"
 	echo
 	echo "------------------------------"
 	]
 )
 
-AM_INIT_AUTOMAKE(gift,0.1.6pre3)
+
 
 AM_CONFIG_HEADER(gift-config.h)
 AC_ISC_POSIX
@@ -185,8 +208,6 @@ AC_ARG_ENABLE(set-web-publishing-location,
 	]
 )
 
-#check if there is perl on this system
-AC_PATH_PROG(PERL,perl)
 
 dnl 
 dnl Check if we can embed a perl interpreter
@@ -346,6 +367,7 @@ dnl the output
 
 dnl		libGIFTQuBayesian/Makefile
 dnl		libGIFTQuBayesian/cc/Makefile 
+
 
 AC_OUTPUT([Makefile 
 

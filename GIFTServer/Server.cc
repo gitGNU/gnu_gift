@@ -546,6 +546,15 @@ void main(int argc, char **argv){
 				  gGIFTHome+"/gift-config.mrml");
   ofstream gLogFile(string(gGIFTHome+"/gift-log.mrml").c_str(),
 		    ios::app);
+
+  {
+    time_t lNow(time(0));
+    gLogFile << endl
+	     << "<!-- This instance of the GIFT was started on -->" << endl
+	     << "<!-- " <<  string(ctime(&lNow)) << " -->" << endl
+	     << "<!-- PID " << long(getpid()) << " -->" << endl
+	     << endl;
+  }
   
 #ifdef WITH_GENERATE_DISTANCE_MATRIX
   if(argc==7){

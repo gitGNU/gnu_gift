@@ -15,6 +15,9 @@
 #     along with this program; if not, write to the Free Software
 #     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-${PERL:-perl} -MCPAN -e "install 'HTTP::Request'";
+#install HTTP::Request
 
-${PERL:-perl} gift-install-prerequisites.pl $libdir
+PREFIX_EXPRESSION="\$CPAN::Shell{makepl_arg}.='LIB=$bindir'"
+${PERL:-perl} -MCPAN -e $PREFIX_EXPRESSION -e "install 'HTTP::Request'";
+
+${PERL:-perl} gift-install-prerequisites.pl $libdir $bindir

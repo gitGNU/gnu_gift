@@ -1,3 +1,21 @@
+2001-10-25  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* GIFTServer/Server.cc (main): write out into
+	log file the time at which the GIFT was started 
+	(as XML comment)	
+
+2001-10-24  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* configure.in: Changed warning message for 
+	enable-interactive.
+	
+
+	* libMRML/cc/Makefile.am (INCLUDES): removed doubly
+	specified LDFLAGS
+
+	* gift-install-prerequisites.pl: Heavy modification
+	in all the script 
+
 2001-10-16  Wolfgang Müller  <Wolfgang.Mueller@cui.unige.ch>
 
 	* libMRML/cc/CAccessorAdminCollection.cc(getProxy): 
@@ -74,7 +92,6 @@
 	(AM_INIT_AUTOMAKE): Changed package version to 0.1.6pre2
 
 2001-05-31  Wolfgang Mueller  <Wolfgang.Mueller@cui.unige.ch>
->>>>>>> 1.20
 
 	* GIFTServer/generateInvertedFile.cc: have to initialise
 	gMutex. Otherwise failure in gift-generate-inverted-file when
@@ -178,7 +195,6 @@
 	* libMRML/cc/CAttributeList.cc: took out a couple
 	of checknprints as well as a call to check()
 
->>>>>>> 1.15
 2001-04-05  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* configure.in: allow full multithreading
@@ -277,7 +293,7 @@
 	added lock/unlock
 
 	* libMRML/cc/CCommunicationHandler.cc(readAndParse): 
-	adding expressive debugging printouts to cerr<<
+	adding expressive debugging printouts to cerr§
 
 	* scripts/perl/CFeedbackClient.pre-pm (addCollection): 
 	Uncommented if $vDEBUG{addCollection};
@@ -420,7 +436,6 @@
 	* scripts/perl/CXTVWriter.pre-pm: 
 	use CXMLTreeVisitor;
 
->>>>>>> 1.14
 2001-01-31  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc (_NO_CONSISTENCYPRINT):

@@ -27,8 +27,6 @@ CCCONFIG=sed "s:__PERL_LOCATION__:@PERL@:g;s:__BINDIR__:@bindir@:g;s:__DATADIR__
 
 lib_LTLIBRARIES = libMRML.la
 
-libMRML_la_LDFLAGS = -version-info 0:1:0
-
 INCLUDES= -DHAS_BOOL \
 	-DLINK_DYNAMICALLY\
 	-I$(top_srcdir)/libUnpublished/include \
@@ -40,7 +38,7 @@ INCLUDES= -DHAS_BOOL \
 	-I$(top_srcdir)/libMRML/include \
 	-I$(top_srcdir)/expat/xmlparse -I$(top_srcdir)/expat/xmltok 
 
-libMRML_la_LDFLAGS=@PRE_INSTALL_LIBDIRS@ 
+libMRML_la_LDFLAGS=@PRE_INSTALL_LIBDIRS@  -version-info 0:1:0
 
 #CAccessorAdminCollection.cc: CAccessorAdminCollection.pre-cc
 #	$(CCCONFIG)

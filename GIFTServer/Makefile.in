@@ -1,4 +1,4 @@
-# Makefile.in generated automatically by automake 1.4e from Makefile.am.
+# Makefile.in generated automatically by automake 1.5 from Makefile.am.
 
 # Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
 # Free Software Foundation, Inc.
@@ -14,7 +14,6 @@
 @SET_MAKE@
 
 # the bin programs to be made in this directory
-
 
 SHELL = @SHELL@
 
@@ -36,11 +35,9 @@ infodir = @infodir@
 mandir = @mandir@
 includedir = @includedir@
 oldincludedir = /usr/include
-
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
-
 top_builddir = ..
 
 ACLOCAL = @ACLOCAL@
@@ -54,14 +51,12 @@ INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
 INSTALL_HEADER = $(INSTALL_DATA)
 transform = @program_transform_name@
-
 NORMAL_INSTALL = :
 PRE_INSTALL = :
 POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-
 host_alias = @host_alias@
 host_triplet = @host@
 AMTAR = @AMTAR@
@@ -72,12 +67,15 @@ BAYESIAN_LD_ADD = @BAYESIAN_LD_ADD@
 CC = @CC@
 CONVERT = @CONVERT@
 CXX = @CXX@
+CXXCPP = @CXXCPP@
 DEPDIR = @DEPDIR@
 DLLTOOL = @DLLTOOL@
 DOXYGEN = @DOXYGEN@
 ECHO = @ECHO@
 EMACS = @EMACS@
 EXEEXT = @EXEEXT@
+GCJ = @GCJ@
+GCJFLAGS = @GCJFLAGS@
 GIFT_BAYESIAN_FLAG = @GIFT_BAYESIAN_FLAG@
 GIFT_INTERNAL_FLAG = @GIFT_INTERNAL_FLAG@
 GIFT_INTERNAL_PERLS = @GIFT_INTERNAL_PERLS@
@@ -86,7 +84,7 @@ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
 LIBTOOL = @LIBTOOL@
 LIBTOOL_DEPS = @LIBTOOL_DEPS@
 LN_S = @LN_S@
-MAKEINFO = @MAKEINFO@
+MAGICK = @MAGICK@
 OBJDUMP = @OBJDUMP@
 OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
@@ -95,6 +93,7 @@ PERL_LD_ADD = @PERL_LD_ADD@
 PRE_INSTALL_LIBDIRS = @PRE_INSTALL_LIBDIRS@
 PRE_INSTALL_LINKDIRS = @PRE_INSTALL_LINKDIRS@
 RANLIB = @RANLIB@
+RC = @RC@
 SGML2INFO = @SGML2INFO@
 SGML2LATEX = @SGML2LATEX@
 SGML2TXT = @SGML2TXT@
@@ -103,8 +102,8 @@ UNPUBLISHED = @UNPUBLISHED@
 VERSION = @VERSION@
 WEB_PUBLISHING_DIRECTORY = @WEB_PUBLISHING_DIRECTORY@
 WEB_PUBLISHING_LOCATION = @WEB_PUBLISHING_LOCATION@
-_am_include = @_am_include@
-_am_quote = @_am_quote@
+am__include = @am__include@
+am__quote = @am__quote@
 install_sh = @install_sh@
 lispdir = @lispdir@
 
@@ -224,46 +223,55 @@ gift_one_minus_OBJECTS = $(am_gift_one_minus_OBJECTS)
 gift_one_minus_LDADD = $(LDADD)
 gift_one_minus_DEPENDENCIES =
 gift_one_minus_LDFLAGS =
-CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
-	$(AM_CXXFLAGS) $(CXXFLAGS)
-LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) \
-	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
-CXXFLAGS = @CXXFLAGS@
-CXXLD = $(CXX)
-CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
-	$(AM_LDFLAGS) $(LDFLAGS) -o $@
 
-DEFS = @DEFS@ -I. -I$(srcdir) -I$(top_builddir)
+DEFS = @DEFS@
+DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-DIST_SOURCES = $(gift_SOURCES) $(gift_endianize_SOURCES) \
-	$(gift_generate_inverted_file_SOURCES) \
-	$(gift_modify_distance_matrix_SOURCES) \
-	$(gift_one_minus_SOURCES)
-
-RECURSIVE_TARGETS = all-recursive install-data-recursive \
-	install-exec-recursive installdirs-recursive install-recursive \
-	uninstall-recursive check-recursive installcheck-recursive
 depcomp = $(SHELL) $(top_srcdir)/depcomp
 @AMDEP_TRUE@DEP_FILES = $(DEPDIR)/Server.Po $(DEPDIR)/endianize.Po \
 @AMDEP_TRUE@	$(DEPDIR)/generateInvertedFile.Po \
 @AMDEP_TRUE@	$(DEPDIR)/modifyDistanceMatrix.Po \
 @AMDEP_TRUE@	$(DEPDIR)/oneMinus.Po
+CXXCOMPILE = $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) \
+	$(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) \
+	$(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
+	$(AM_CXXFLAGS) $(CXXFLAGS)
+CXXLD = $(CXX)
+CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) \
+	$(AM_LDFLAGS) $(LDFLAGS) -o $@
+CXXFLAGS = @CXXFLAGS@
+DIST_SOURCES = $(gift_SOURCES) $(gift_endianize_SOURCES) \
+	$(gift_generate_inverted_file_SOURCES) \
+	$(gift_modify_distance_matrix_SOURCES) \
+	$(gift_one_minus_SOURCES)
+
+RECURSIVE_TARGETS = info-recursive dvi-recursive install-info-recursive \
+	uninstall-info-recursive all-recursive install-data-recursive \
+	install-exec-recursive installdirs-recursive install-recursive \
+	uninstall-recursive check-recursive installcheck-recursive
 DIST_COMMON = Makefile.am Makefile.in
 DIST_SUBDIRS = $(SUBDIRS)
 SOURCES = $(gift_SOURCES) $(gift_endianize_SOURCES) $(gift_generate_inverted_file_SOURCES) $(gift_modify_distance_matrix_SOURCES) $(gift_one_minus_SOURCES)
-OBJECTS = $(am_gift_OBJECTS) $(am_gift_endianize_OBJECTS) $(am_gift_generate_inverted_file_OBJECTS) $(am_gift_modify_distance_matrix_OBJECTS) $(am_gift_one_minus_OBJECTS)
 
 all: all-recursive
 
 .SUFFIXES:
 .SUFFIXES: .cc .lo .o .obj
 
+mostlyclean-libtool:
+	-rm -f *.lo
+
+clean-libtool:
+	-rm -rf .libs _libs
+
+distclean-libtool:
+	-rm -f libtool
 $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
 	cd $(top_srcdir) && \
 	  $(AUTOMAKE) --gnu  GIFTServer/Makefile
-
 Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) && \
 	  CONFIG_HEADERS= CONFIG_LINKS= \
@@ -272,8 +280,11 @@ install-binPROGRAMS: $(bin_PROGRAMS)
 	@$(NORMAL_INSTALL)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	@list='$(bin_PROGRAMS)'; for p in $$list; do \
-	  if test -f $$p; then \
-	    f=`echo $$p|sed 's/$(EXEEXT)$$//;$(transform);s/$$/$(EXEEXT)/'`; \
+	  p1=`echo $$p|sed 's/$(EXEEXT)$$//'`; \
+	  if test -f $$p \
+	     || test -f $$p1 \
+	  ; then \
+	    f=`echo $$p1|sed '$(transform);s/$$/$(EXEEXT)/'`; \
 	   echo " $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/$$f"; \
 	   $(INSTALL_PROGRAM_ENV) $(LIBTOOL) --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/$$f; \
 	  else :; fi; \
@@ -289,24 +300,19 @@ uninstall-binPROGRAMS:
 
 clean-binPROGRAMS:
 	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
-
-gift$(EXEEXT): $(gift_OBJECTS) $(gift_DEPENDENCIES)
+gift$(EXEEXT): $(gift_OBJECTS) $(gift_DEPENDENCIES) 
 	@rm -f gift$(EXEEXT)
 	$(CXXLINK) $(gift_LDFLAGS) $(gift_OBJECTS) $(gift_LDADD) $(LIBS)
-
-gift-endianize$(EXEEXT): $(gift_endianize_OBJECTS) $(gift_endianize_DEPENDENCIES)
+gift-endianize$(EXEEXT): $(gift_endianize_OBJECTS) $(gift_endianize_DEPENDENCIES) 
 	@rm -f gift-endianize$(EXEEXT)
 	$(CXXLINK) $(gift_endianize_LDFLAGS) $(gift_endianize_OBJECTS) $(gift_endianize_LDADD) $(LIBS)
-
-gift-generate-inverted-file$(EXEEXT): $(gift_generate_inverted_file_OBJECTS) $(gift_generate_inverted_file_DEPENDENCIES)
+gift-generate-inverted-file$(EXEEXT): $(gift_generate_inverted_file_OBJECTS) $(gift_generate_inverted_file_DEPENDENCIES) 
 	@rm -f gift-generate-inverted-file$(EXEEXT)
 	$(CXXLINK) $(gift_generate_inverted_file_LDFLAGS) $(gift_generate_inverted_file_OBJECTS) $(gift_generate_inverted_file_LDADD) $(LIBS)
-
-gift-modify-distance-matrix$(EXEEXT): $(gift_modify_distance_matrix_OBJECTS) $(gift_modify_distance_matrix_DEPENDENCIES)
+gift-modify-distance-matrix$(EXEEXT): $(gift_modify_distance_matrix_OBJECTS) $(gift_modify_distance_matrix_DEPENDENCIES) 
 	@rm -f gift-modify-distance-matrix$(EXEEXT)
 	$(CXXLINK) $(gift_modify_distance_matrix_LDFLAGS) $(gift_modify_distance_matrix_OBJECTS) $(gift_modify_distance_matrix_LDADD) $(LIBS)
-
-gift-one-minus$(EXEEXT): $(gift_one_minus_OBJECTS) $(gift_one_minus_DEPENDENCIES)
+gift-one-minus$(EXEEXT): $(gift_one_minus_OBJECTS) $(gift_one_minus_DEPENDENCIES) 
 	@rm -f gift-one-minus$(EXEEXT)
 	$(CXXLINK) $(gift_one_minus_LDFLAGS) $(gift_one_minus_OBJECTS) $(gift_one_minus_LDADD) $(LIBS)
 
@@ -316,14 +322,34 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-mostlyclean-libtool:
-	-rm -f *.lo
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/Server.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/endianize.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/generateInvertedFile.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/modifyDistanceMatrix.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@$(DEPDIR)/oneMinus.Po@am__quote@
 
-clean-libtool:
-	-rm -rf .libs _libs
+distclean-depend:
+	-rm -rf $(DEPDIR)
 
-distclean-libtool:
-	-rm -f libtool
+.cc.o:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+
+.cc.obj:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
+
+.cc.lo:
+@AMDEP_TRUE@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
+@AMDEP_TRUE@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LTCXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
+CXXDEPMODE = @CXXDEPMODE@
+uninstall-info-am:
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -412,40 +438,10 @@ TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 GTAGS:
 	here=`CDPATH=: && cd $(top_builddir) && pwd` \
 	  && cd $(top_srcdir) \
-	  && gtags -i $$here
+	  && gtags -i $(GTAGS_ARGS) $$here
 
 distclean-tags:
-	-rm -f TAGS ID
-
-@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/Server.Po@_am_quote@
-@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/endianize.Po@_am_quote@
-@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/generateInvertedFile.Po@_am_quote@
-@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/modifyDistanceMatrix.Po@_am_quote@
-@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/oneMinus.Po@_am_quote@
-
-distclean-depend:
-	-rm -rf $(DEPDIR)
-
-CXXDEPMODE = @CXXDEPMODE@
-
-.cc.o:
-	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
-
-.cc.lo:
-	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
-	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
-	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(LTCXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
-
-.cc.obj:
-	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
-
+	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
 
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
@@ -454,7 +450,11 @@ distdir = $(top_distdir)/$(PACKAGE)-$(VERSION)
 
 distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
-	  d=$(srcdir); \
+	  if test -f $$file; then d=.; else d=$(srcdir); fi; \
+	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
+	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
+	    $(mkinstalldirs) "$(distdir)/$$dir"; \
+	  fi; \
 	  if test -d $$d/$$file; then \
 	    cp -pR $$d/$$file $(distdir) \
 	    || exit 1; \
@@ -480,7 +480,6 @@ distdir: $(DISTFILES)
 check-am: all-am
 check: check-recursive
 all-am: Makefile $(PROGRAMS)
-
 installdirs: installdirs-recursive
 installdirs-am:
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
@@ -494,23 +493,20 @@ install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 
 installcheck: installcheck-recursive
-
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
-	  INSTALL_PROGRAM_ENV='$(INSTALL_STRIP_PROGRAM_ENV)' install
-
+	  `test -z '$(STRIP)' || \
+	    echo "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'"` install
 mostlyclean-generic:
 
 clean-generic:
 
 distclean-generic:
-	-rm -f Makefile $(CONFIG_CLEAN_FILES)
-	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+	-rm -f Makefile $(CONFIG_CLEAN_FILES) stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
 	@echo "This command is intended for maintainers to use"
 	@echo "it deletes files that may require special tools to rebuild."
-	-rm -f Makefile.in
 clean: clean-recursive
 
 clean-am: clean-binPROGRAMS clean-generic clean-libtool mostlyclean-am
@@ -520,11 +516,11 @@ distclean: distclean-recursive
 distclean-am: clean-am distclean-compile distclean-depend \
 	distclean-generic distclean-libtool distclean-tags
 
-dvi:
+dvi: dvi-recursive
 
 dvi-am:
 
-info:
+info: info-recursive
 
 info-am:
 
@@ -532,7 +528,7 @@ install-data-am:
 
 install-exec-am: install-binPROGRAMS
 
-install-info:
+install-info: install-info-recursive
 
 install-man:
 
@@ -547,22 +543,26 @@ mostlyclean: mostlyclean-recursive
 mostlyclean-am: mostlyclean-compile mostlyclean-generic \
 	mostlyclean-libtool
 
-uninstall-am: uninstall-binPROGRAMS
+uninstall-am: uninstall-binPROGRAMS uninstall-info-am
 
-.PHONY: $(RECURSIVE_TARGETS) all all-am check check-am clean \
+uninstall-info: uninstall-info-recursive
+
+.PHONY: $(RECURSIVE_TARGETS) GTAGS all all-am check check-am clean \
 	clean-binPROGRAMS clean-generic clean-libtool clean-recursive \
 	distclean distclean-compile distclean-depend distclean-generic \
 	distclean-libtool distclean-recursive distclean-tags distdir \
-	dvi dvi-am info info-am install install-am install-binPROGRAMS \
-	install-data install-data-am install-data-recursive \
-	install-exec install-exec-am install-exec-recursive \
-	install-info install-man install-recursive install-strip \
-	installcheck installcheck-am installdirs installdirs-am \
-	installdirs-recursive maintainer-clean maintainer-clean-generic \
-	maintainer-clean-recursive mostlyclean mostlyclean-compile \
-	mostlyclean-generic mostlyclean-libtool mostlyclean-recursive \
-	tags tags-recursive uninstall uninstall-am \
-	uninstall-binPROGRAMS uninstall-recursive
+	dvi dvi-am dvi-recursive info info-am info-recursive install \
+	install-am install-binPROGRAMS install-data install-data-am \
+	install-data-recursive install-exec install-exec-am \
+	install-exec-recursive install-info install-info-am \
+	install-info-recursive install-man install-recursive \
+	install-strip installcheck installcheck-am installdirs \
+	installdirs-am installdirs-recursive maintainer-clean \
+	maintainer-clean-generic maintainer-clean-recursive mostlyclean \
+	mostlyclean-compile mostlyclean-generic mostlyclean-libtool \
+	mostlyclean-recursive tags tags-recursive uninstall \
+	uninstall-am uninstall-binPROGRAMS uninstall-info-am \
+	uninstall-info-recursive uninstall-recursive
 
 
 #gift_debug_test_SOURCES = gift-debug-test.cc
@@ -575,7 +575,6 @@ uninstall-am: uninstall-binPROGRAMS
 #	@PERL_LD_ADD@ 
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
-
 # Tell versions [3.59,3.63) of GNU make to not export all variables.
 # Otherwise a system limit (for SysV at least) may be exceeded.
 .NOEXPORT:
