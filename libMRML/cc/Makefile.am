@@ -101,8 +101,14 @@ libMRML_la_SOURCES= \
 
 CLEANFILES=libMRML-config.cc
 
-libMRML-config.cc: libMRML-config.pre-cc ../../make-gift-config.pl
-	perl ../../make-gift-config.pl CXXFLAGS ' $(CXXFLAGS) ' INCLUDES ' -I$(includedir)/libMRML/include ' LDFLAGS '$(LDFLAGS)' LIBS ' $(LIBS) ' libdir ' -L $(libdir) '  < libMRML-config.pre-cc  > libMRML-config.cc
+#libMRML-config.cc: libMRML-config.pre-cc ../../make-gift-config.pl
+#	perl ../../make-gift-config.pl CXXFLAGS ' $(CXXFLAGS) ' INCLUDES ' -I$(includedir)/libMRML/include ' LDFLAGS '$(LDFLAGS)' LIBS ' $(LIBS) ' libdir ' -L $(libdir) '  < libMRML-config.pre-cc  > libMRML-config.cc
+libMRML-config.cc: libMRML-config.pre-cc
+	sed -e "s§@CXXFLAGS@§ $(CXXFLAGS) §g;\
+	        s§@INCLUDES@§ -I$(includedir)/libMRML/include §g;\
+                s§@LDFLAGS@§ $(LDFLAGS) §g;\
+                s§@LIBS@§ $(LIBS) § g;\
+	        s§@libdir@§ -L $(libdir) §g;"  < libMRML-config.pre-cc  > libMRML-config.cc
 
 bin_PROGRAMS= libMRML-config
 
