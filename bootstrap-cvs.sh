@@ -22,14 +22,13 @@
 
 echo "This script generates a configure script for the GIFT"
 echo "Use this if you have checked out the GIFT from CVS"
-
 echo "running aclocal"
-aclocal || (echo "bootstrap failed, because aclocal failed. exiting. " ; exit 100; )
+aclocal || (echo "bootstrap failed, because aclocal failed. exiting. " , exit 100; )
 echo "...done"
-echo "running automake"
-automake || (echo "bootstrap failed, because automake failed. exiting." ; exit 101; )
+echo "running automake -a"
+automake -a || (echo "bootstrap failed, because automake failed. exiting." , exit 101; )
 echo "...done"
 echo "running autoconf"
-autoconf || (echo "bootstrap failed, because autoconf failed. exiting." ; exit 102; )
+autoconf || (echo "bootstrap failed, because autoconf failed. exiting." , exit 102; )
 echo "...done"
 echo "Now you should be able to run ./configure"
