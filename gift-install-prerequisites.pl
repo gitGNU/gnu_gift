@@ -244,4 +244,5 @@ installPerlModules($lPerlPrefixHash,
 		   'XML::Parser',
 		   'XML::Writer',
 		   'XML::Parser::EasyTree',
+		   'Parse::Yapp',
 		   'XML::XQL');
