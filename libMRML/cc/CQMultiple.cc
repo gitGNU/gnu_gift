@@ -36,12 +36,19 @@
 //§#undef HAVE_LIBPTHREAD//for debugging purposes
 /** 
 
-    There is no special initialisation to do,
-    so this function is empty
+We read the algorithm to find out 
+
+how we will dispatch the queries to the child nodes
+
+in which way we will merge the results 
+coming from the child nodes 
 
  */
 void CQMultiple::init(){
   
+
+  
+
 };
 
 /**
@@ -65,6 +72,7 @@ CQMultiple::CQMultiple(CAccessorAdminCollection& inAccessorAdminCollection,
     // by CQuery::CQuery
     mAccessor=mAccessorAdmin->openAccessor("url2fts");
     assert(mAccessor);
+
 
   }
 };

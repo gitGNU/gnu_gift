@@ -134,10 +134,16 @@ lib_LTLIBRARIES = libGIFTAcDistanceMatrix.la
 
 libGIFTAcDistanceMatrix_la_LDFLAGS = "@PRE_INSTALL_LIBDIRS@" -lMRML -lGIFTAcInvertedFile -lGIFTAcURL2FTS
 
-INCLUDES = -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTAcDistanceMatrix/include -I$(top_srcdir)/libGIFTAcURL2FTS/include -I$(top_srcdir)/libGIFTQuBayesian/include
+INCLUDES = -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTAcDistanceMatrix/include -I$(top_srcdir)/libGIFTAcURL2FTS/include -I$(top_srcdir)/libGIFTQuBayesian/include -I$(HOME)/browsing/libGIFTQuBayesian/include
 
 libGIFTAcDistanceMatrix_la_SOURCES = \
-	@CA_X_DISTANCEMATRIX@ \
+	CAcDistanceMatrix.cc \
+	CAFDistanceMatrix.cc \
+	CSquasher.cc \
+	CInformationCalculator.cc\
+	CProbabilityCombiner.cc\
+	CDrawer.cc\
+	CDistanceCalculator.cc\
 	plug_in_fo.cc
 
 subdir = libGIFTAcDistanceMatrix/cc
@@ -147,7 +153,10 @@ CONFIG_CLEAN_FILES =
 LTLIBRARIES = $(lib_LTLIBRARIES)
 
 libGIFTAcDistanceMatrix_la_LIBADD =
-am_libGIFTAcDistanceMatrix_la_OBJECTS = plug_in_fo.lo
+am_libGIFTAcDistanceMatrix_la_OBJECTS = CAcDistanceMatrix.lo \
+	CAFDistanceMatrix.lo CSquasher.lo CInformationCalculator.lo \
+	CProbabilityCombiner.lo CDrawer.lo CDistanceCalculator.lo \
+	plug_in_fo.lo
 libGIFTAcDistanceMatrix_la_OBJECTS = \
 	$(am_libGIFTAcDistanceMatrix_la_OBJECTS)
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) \
@@ -165,7 +174,13 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 DIST_SOURCES = $(libGIFTAcDistanceMatrix_la_SOURCES)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
-@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/plug_in_fo.Plo
+@AMDEP_TRUE@DEP_FILES = $(DEPDIR)/CAFDistanceMatrix.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/CAcDistanceMatrix.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/CDistanceCalculator.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/CDrawer.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/CInformationCalculator.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/CProbabilityCombiner.Plo \
+@AMDEP_TRUE@	$(DEPDIR)/CSquasher.Plo $(DEPDIR)/plug_in_fo.Plo
 DIST_COMMON = Makefile.am Makefile.in
 SOURCES = $(libGIFTAcDistanceMatrix_la_SOURCES)
 OBJECTS = $(am_libGIFTAcDistanceMatrix_la_OBJECTS)
@@ -253,6 +268,13 @@ GTAGS:
 distclean-tags:
 	-rm -f TAGS ID
 
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAFDistanceMatrix.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAcDistanceMatrix.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CDistanceCalculator.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CDrawer.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CInformationCalculator.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CProbabilityCombiner.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CSquasher.Plo@_am_quote@
 @AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/plug_in_fo.Plo@_am_quote@
 
 distclean-depend:

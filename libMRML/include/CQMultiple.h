@@ -84,11 +84,40 @@ class CAccessor;
     have to be more careful, and most of all: we have to operate using
     URLs.
 
+    [in the following I am talking about things I WANT to do,
+    so the two modes stuff is not yet implemented]
+
+    CQMultiple has two minor modes:
+
+    Merge-by-ID or Merge-by-URL
+
+    In the first case, we need information on how to translate image 
+    IDs to image URLs. We dispatche a <code>fastQuery()</code> to each
+    child node, and then we merge the results (by imageID). The resulting
+    list of ID-relevancelevel pairs is translated back to URLs using 
+    an URL2FTS accessor.
+
+    <em>Please note that I am aware that this needs refactoring:</em> we should
+    have an ULRToID accessor superclass, which provides the necessary translation
+    services, without being fixed on a given data representation.
+    
+    In the second case, we do not need any additional information: 
+    we dispatch a <code>query()</code> (as opposed to <code>fastQuery()</code>)  
+    to the child nodes, and then we merge the results. This means we have to 
+    merge plenty of XML.
+    *
     @Author: Wolfgang Müller
 
  */
 class CQMultiple:public CQuery{
 protected:
+
+  /** 
+      Do we merge the results by their URL or by their 
+      image ID? 
+  */
+
+  /** */
   void init();
 
  public:

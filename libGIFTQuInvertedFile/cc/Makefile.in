@@ -299,24 +299,24 @@ GTAGS:
 distclean-tags:
 	-rm -f TAGS ID
 
-@_am_include@ @_am_quote@$(DEPDIR)/CQInvertedFile.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CQNEuclideanLengthSquare.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CQNMaxDocumentFrequency.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CQNNoNormalization.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CQNSquareDFLogICFSum.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CQueryNormalizer.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CScoreBoard.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CWFBestFullyWeighted.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CWFBestProbabilistic.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CWFBinaryTerm.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CWFClassicalIDF.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CWFCoordinationLevel.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CWFProbability.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CWFStandardTF.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CWeighter.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CWeightingFunction.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CWeightingFunctionPointerHash.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/plug_in_fo.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CQInvertedFile.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CQNEuclideanLengthSquare.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CQNMaxDocumentFrequency.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CQNNoNormalization.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CQNSquareDFLogICFSum.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CQueryNormalizer.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CScoreBoard.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CWFBestFullyWeighted.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CWFBestProbabilistic.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CWFBinaryTerm.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CWFClassicalIDF.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CWFCoordinationLevel.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CWFProbability.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CWFStandardTF.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CWeighter.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CWeightingFunction.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CWeightingFunctionPointerHash.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/plug_in_fo.Plo@_am_quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)

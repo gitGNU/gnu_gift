@@ -286,17 +286,17 @@ GTAGS:
 distclean-tags:
 	-rm -f TAGS ID
 
-@_am_include@ @_am_quote@$(DEPDIR)/CAFIFMySQL.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CAFInvertedFile.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CAcIFFileSystem.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CAcIFMySQL.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CAdditionalDocumentInformation.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CDocumentFrequencyElement.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CDocumentFrequencyList.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CIFBuilderTriplet.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CIFListStart.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CInvertedFileChunk.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/plug_in_fo.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAFIFMySQL.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAFInvertedFile.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAcIFFileSystem.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAcIFMySQL.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAdditionalDocumentInformation.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CDocumentFrequencyElement.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CDocumentFrequencyList.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CIFBuilderTriplet.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CIFListStart.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CInvertedFileChunk.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/plug_in_fo.Plo@_am_quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)
