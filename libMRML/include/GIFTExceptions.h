@@ -45,12 +45,18 @@ class GIFTException{
  protected:
   /** The exception message*/
   const char* mMessage;
+  /** will the message be killed? */
+  bool mDestroy;
  public:
   /** get the message contained in this */
   const char* getMessage()const;
 
   /** Constructor */
   GIFTException(const char* inMessage);
+  /** Constructor */
+  GIFTException(char* inMessage);
+  /** Destructor */
+  virtual ~GIFTException();
   /** Output into a stream */
   friend ostream& operator<<(ostream& outStream,
 			     const GIFTException&);

@@ -1,4 +1,10 @@
-2002-02-18  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+2002-02-18  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
+
+	* libMRML/include/GIFTExceptions.h: 
+	* libMRML/cc/GIFTExceptions.cc: 
+	const and non-const constructor, destructor
+	
+2002-02-18  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
 
 	* libMRML/cc/CSessionManager.cc: catching non-default
 	exception in query

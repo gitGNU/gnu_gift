@@ -27,6 +27,7 @@
 
 #define _NO_PRINT_INIT
 #include <iostream>
+#include <cstdio>
 #include "libMRML/include/my_throw.h"
 #include "libMRML/include/GIFTExceptions.h"
 #include "libMRML/include/mrml_const.h"

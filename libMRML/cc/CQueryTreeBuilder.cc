@@ -120,7 +120,7 @@ CQueryTreeNode* CQueryContainer::getQueryByID(const string& inID)const{
 //       cerr << lThrowString << flush << endl; 
 //       return begin()->second;
 //     }    
-    my_throw(VENotFound(lThrowString.c_str()));
+    my_throw(VENotFound(strdup(lThrowString.c_str())));
     return 0;
   }else{
     return lFound->second;

@@ -22,7 +22,20 @@
 #include "libMRML/include/GIFTExceptions.h"
 
 GIFTException::GIFTException(const char* inMessage):
-    mMessage(inMessage){}
+    mMessage(inMessage),
+    mDestroy(0){
+}
+GIFTException::GIFTException(char* inMessage):
+    mMessage(inMessage),
+    mDestroy(1){
+}
+GIFTException::~GIFTException(){
+  if(mDestroy){
+    delete ((char*)mMessage);
+  }
+}
+
+
 const char* GIFTException::getMessage()const{
   return mMessage;
 }
