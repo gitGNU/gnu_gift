@@ -1,5 +1,10 @@
 2001-10-25  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
+	* libMRML/cc/CCommunicationHandler.cc(endMultiRequest): 
+	* libMRML/cc/CCommunicationHandler.cc(startMultiRequest): 
+	putting time stamp generation back into the code. Time stamp
+	generation is interesting for logging
+
 	* GIFTServer/Server.cc (main): write out into
 	log file the time at which the GIFT was started 
 	(as XML comment)	
