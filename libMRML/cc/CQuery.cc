@@ -299,10 +299,10 @@ CXMLElement* CQuery::query(const CXMLElement& inQuery){
   int inNumberOfInterestingImages=
     lNumberOfInterestingImages.second;
 
-  pair<bool,long> lCutoff=
-    inQuery.longReadAttribute(mrml_const::result_cutoff);
+  pair<bool,double> lCutoff=
+    inQuery.doubleReadAttribute(mrml_const::result_cutoff);
   
-  int inCutoff=
+  double inCutoff=
     lCutoff.second;
   
   //gMutex->lock();//debugging

@@ -52,7 +52,8 @@ AC_PROG_LIBTOOL
 AC_SUBST(LIBTOOL_DEPS)
 
 
-AC_CHECK_LIB(expat,XML_ParserCreate,[EXPAT=yes])
+AC_CHECK_LIB(expat,XML_ParserCreate)
+dnl ,[EXPAT=yes]
 #check if image magick is there by checking if the convert tool is there
 AC_PATH_PROG(MAGICK,convert)
 #check if there is perl on this system

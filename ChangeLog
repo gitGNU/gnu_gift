@@ -1,3 +1,20 @@
+2002-06-04  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
+
+	* libMRML/cc/CQuery.cc (query): reading cutoff attribute
+	as double value instead of long.
+
+2002-06-03  Wolfgang Müller  <kde3@btn1n6.inf.uni-bayreuth.de>
+
+	* Makefile.am: using current installed expat packaged
+	version. This has become necessary for reasons of
+	linking with external plugins. Sorry folx.
+
+2002-06-03  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
+
+	* expat/xmlparse/Makefile.am (LTLIBRARIES): It turns
+	out that I have to install lib_temp_xml_parse.la when
+	using new libtool and new gcc
+
 2002-05-29  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
 
 	* GIFTServer/CDomainSocket.cc(serveStream): 

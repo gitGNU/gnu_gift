@@ -20,7 +20,7 @@
 #gift-config.cc: gift-config.cc.in make-gift-config.pl
 #	perl make-gift-config.pl CXXFLAGS "$(CXXFLAGS)" LDFLAGS "$(LDFLAGS)" libdir "-l $(libdir)" < $< > $@
 
-SUBDIRS=  Doc scripts dtd expat\
+SUBDIRS=  Doc scripts dtd \
 	@UNPUBLISHED_DIR@ \
 	libMRML \
 	libGIFTAcURL2FTS\
