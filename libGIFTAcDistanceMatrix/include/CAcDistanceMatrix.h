@@ -58,11 +58,13 @@ class CXMLElement;
     Matrix has to have been calculated in advance, using a series
     of QBE queries
  */
-class CAcDistanceMatrix:public CAcURL2FTS, 
+class CAcDistanceMatrix:public CAcURL2FTS,
 			public CDistanceCalculator{
 
 protected:
-  
+  /** */
+  CContent mContent;
+
 public:
 
   /**

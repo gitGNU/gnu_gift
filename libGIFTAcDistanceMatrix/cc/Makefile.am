@@ -25,10 +25,16 @@ lib_LTLIBRARIES = libGIFTAcDistanceMatrix.la
 
 libGIFTAcDistanceMatrix_la_LDFLAGS="@PRE_INSTALL_LIBDIRS@" -lMRML -lGIFTAcInvertedFile -lGIFTAcURL2FTS
 
-INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTAcDistanceMatrix/include -I$(top_srcdir)/libGIFTAcURL2FTS/include -I$(top_srcdir)/libGIFTQuBayesian/include
+INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTAcDistanceMatrix/include -I$(top_srcdir)/libGIFTAcURL2FTS/include -I$(top_srcdir)/libGIFTQuBayesian/include -I$(HOME)/browsing/libGIFTQuBayesian/include
 
 
 libGIFTAcDistanceMatrix_la_SOURCES= \
-	@CA_X_DISTANCEMATRIX@ \
+	CAcDistanceMatrix.cc \
+	CAFDistanceMatrix.cc \
+	CSquasher.cc \
+	CInformationCalculator.cc\
+	CProbabilityCombiner.cc\
+	CDrawer.cc\
+	CDistanceCalculator.cc\
 	plug_in_fo.cc
 
