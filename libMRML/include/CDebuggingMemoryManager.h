@@ -1,6 +1,7 @@
 // -*- mode: c++ -*-
 #ifndef _CDEBUGMEMORYMANAGER
 #define _CDEBUGMEMORYMANAGER
+#include <iostream>
 // -*- mode: c++ -*- 
 /* 
 
@@ -22,11 +23,11 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
     
 */
-
+#include "CMutex.h"
 typedef long CDebuggingMemoryManagerSize;
 
 // we will allocate a chunk of 10 megs
-#define MEMSIZE 10000000
+#define MEMSIZE 20000000
 
 /** A structure, which is useful to maintain a twice connected
   list:
@@ -59,7 +60,7 @@ public:
    */
   
   /** Magic number, to see, if this Pointer was allocated using
-    this->GeCDebuggingMemoryManager() */
+    this->getMem() */
   long mMagic;
 }; 
 
@@ -75,21 +76,23 @@ protected:
     whose member it presently is.*/
   void FreeChunk(lTChunk* inChunk);
 
-  ///List of free memory chunks.
+  /**List of free memory chunks.*/
   lTChunk* mFreeList;
-  ///List of used memory chunks.
+  /** List of used memory chunks. */
   lTChunk* mUsedList;
 
-  ///THE memory used by this memory administrator.
+  /** THE memory used by this memory administrator. */
   lTChunk* mBuffer;
 
-  ///The magic number for valid lTChunk nodes
+  /** The magic number for valid lTChunk nodes */
   const long cMagic;
-  ///The magic number to invalidate lTChunk nodes
+  /** The magic number to invalidate lTChunk nodes */
   const long cUnMagic;
 
-  ///
+  /**  */
   long cVM;
+  /** for multithreading */
+  CMutex mMutex;
 public:
 
   /**Constructor. 
@@ -97,23 +100,24 @@ public:
     */
   CDebuggingMemoryManager(const CDebuggingMemoryManagerSize inSize);
 
-  ///Getting Mem.
-  void* GeCDebuggingMemoryManager(const CDebuggingMemoryManagerSize inSize);
+  /** Getting Mem. */
+  void* getMem(CDebuggingMemoryManagerSize inSize);
 
-  ///Deleting Mem.
-  bool FreeMem(void*);
+  /** Deleting Mem. */
+  bool freeMem(void*);
 
-  ///
-  bool Valid();
+  /**  */
+  bool isValid()const;
 
-  ///
-  friend ostream& operator <<(ostream&, const CDebuggingMemoryManager& inMem);
+  /**  */
+  friend ostream& operator <<(ostream& outStream, 
+			      const CDebuggingMemoryManager& inMem);
 };
 
-///Output for diagnosis.
+/** Output for diagnosis. */
 ostream& operator<<(ostream& o, const CDebuggingMemoryManager& inMem);
 
-///One instance for the whole Program.
-extern CDebuggingMemoryManager MemManager;
+/** One instance for the whole Program. */
+extern CDebuggingMemoryManager gMemManager;
 
 #endif

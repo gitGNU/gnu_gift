@@ -3,6 +3,7 @@
 #include <assert.h>
 #include <cstdlib>
 
+
 CDebuggingMemoryManager::CDebuggingMemoryManager(const CDebuggingMemoryManagerSize inSize):
   mBuffer(new lTChunk[inSize / sizeof(lTChunk) + 2]),
   mFreeList(mBuffer),
@@ -53,7 +54,10 @@ CDebuggingMemoryManager::CDebuggingMemoryManager(const CDebuggingMemoryManagerSi
 };
 
 
-void* CDebuggingMemoryManager::GeCDebuggingMemoryManager(const CDebuggingMemoryManagerSize inSize){
+void* CDebuggingMemoryManager::getMem( CDebuggingMemoryManagerSize inSize){
+  mMutex.lock();
+  inSize+=8;
+
   //Look for first free element of the right size;
   lTChunk* lCurrent= mFreeList;
 
@@ -111,13 +115,14 @@ void* CDebuggingMemoryManager::GeCDebuggingMemoryManager(const CDebuggingMemoryM
 
     lCurrent->mSize -= lSize;
 
-    
+    mMutex.unlock();   
     return (void*)(lPos+1);
   }else
     assert(0);
 };
 
 void CDebuggingMemoryManager::FreeChunk(lTChunk* inChunk){
+  mMutex.lock();
 
   assert(inChunk);
   assert(inChunk->mPrev);
@@ -130,15 +135,18 @@ void CDebuggingMemoryManager::FreeChunk(lTChunk* inChunk){
   inChunk->mPrev->mNext=inChunk->mNext;
 
   inChunk->mMagic=cUnMagic;
+  mMutex.unlock();
 }
 
-bool CDebuggingMemoryManager::FreeMem(void* inChunk){
-  
+bool CDebuggingMemoryManager::freeMem(void* inChunk){
+  mMutex.lock();
+
   lTChunk* lChunk= ((lTChunk*) inChunk);
   lChunk--;
 
   if(lChunk->mMagic != cMagic){
     //Deallocation of something free
+    mMutex.unlock();
     return false;
   }else{
     //The previous node is free
@@ -246,90 +254,88 @@ bool CDebuggingMemoryManager::FreeMem(void* inChunk){
       }
     }
   }
+  mMutex.unlock();
   return true;
 };
 
-bool CDebuggingMemoryManager::Valid(){
+bool CDebuggingMemoryManager::isValid()const{
   return cVM==0x88414004;
 }
 
 
-CDebuggingMemoryManager MemManager(MEMSIZE);
 
-
-
-ostream& operator<<(ostream& o,const CDebuggingMemoryManager& inMem){
-  o << endl << "FreeList" << endl;
+ostream& operator<<(ostream& outStream,const CDebuggingMemoryManager& inMem){
+  outStream << endl << "List of free memory chunks" << endl;
   {
     lTChunk* i=inMem.mFreeList;
     while(i && i!=i->mNext){
-      o << i
-	<< ","
-	<< i->mPrev
-	<< ","
-	<< i->mSize
-	<< ","
-	<< i->mMagic%16
-	<< endl;
+      outStream << i
+		<< ","
+		<< i->mPrev
+		<< ","
+		<< i->mSize
+		<< ","
+		<< i->mMagic%16
+		<< endl;
       i=i->mNext;
     }
 
-    o<< endl << "OccupiedList" << endl;
+    outStream<< endl << "List of occupied memory chunks" << endl;
 
     i=inMem.mUsedList;
     while(i && i!=i->mNext){
-      o << i
-	<< ","
-	<< i->mPrev
-	<< ","
-	<< i->mSize
-	<< ","
-	<< i->mMagic%16
-	<< endl;
+      outStream << i
+		<< ","
+		<< i->mPrev
+		<< ","
+		<< i->mSize
+		<< ","
+		<< i->mMagic%16
+		<< endl;
       i=i->mNext;
     }
 
-    o<< endl << "PrecedingFollowList" << endl;
+    outStream << endl << "PrecedingFollowList" << endl;
 
     i=inMem.mFreeList;
     while(i!=i->mFollowing){
-      o << i
-	<< ","
-	<< i->mPreceding
-	<< ","
-	<< i->mSize
-	<< ","
-	<< i->mMagic%16
-	<< endl;
+      outStream << i
+		<< ","
+		<< i->mPreceding
+		<< ","
+		<< i->mSize
+		<< ","
+		<< i->mMagic%16
+		<< endl;
       i=i->mFollowing;
     }
     {
-      o << i
-	<< ","
-	<< i->mPreceding
-	<< ","
-	<< i->mSize
-	<< ","
-	<< i->mMagic%16
-	<< endl;
+      outStream << i
+		<< ","
+		<< i->mPreceding
+		<< ","
+		<< i->mSize
+		<< ","
+		<< i->mMagic%16
+		<< endl;
       i=i->mFollowing;
     }
 
-  o << "ENDE" << endl;
-  i=inMem.mBuffer+(50000 / sizeof(lTChunk));
+    outStream << "END" << endl;
+    i=inMem.mBuffer+(50000 / sizeof(lTChunk));
 
 
-  o << "Terminator" << endl;
-  o << i 
-    << "," 
-    << i->mPreceding 
-    << ","
-    << i->mSize
-    << ","
-    << i->mMagic%16
-    << endl;
+    outStream << "Terminator" << endl;
+    outStream << i 
+	      << "," 
+	      << i->mPreceding 
+	      << ","
+	      << i->mSize
+	      << ","
+	      << i->mMagic%16
+	      << endl;
   }
-  return o;
+  return outStream;
 };
 
 

@@ -7856,7 +7856,7 @@ if test "${enable_multi_threading+set}" = set; then
 				echo "$as_me:7856: checking if we can use POSIX threads the way we want" >&5
 echo $ECHO_N "checking if we can use POSIX threads the way we want... $ECHO_C" >&6
 	RESCUE_CXXFLAGS=$CXXFLAGS
-	CXXFLAGS="$CXXFLAGS -DHAVE_LIBPTHREAD -D_PHTREADS -D__GIFT_USES_THREADS__ -D__NO_GIFT_SERVER_THREADS__"
+	CXXFLAGS="$CXXFLAGS -DHAVE_LIBPTHREAD -D_PHTREADS -D__GIFT_USES_THREADS__  -D__NO_GIFT_SERVER_THREADS__"
 
 #-D__NO_GIFT_CQMULTIPLE_THREADS__
 

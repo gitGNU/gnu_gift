@@ -102,7 +102,7 @@ libMRML_la_SOURCES= \
 	\
 	CCommunicationHandler.cc\
 	\
-	CTimeStampGenerator.cc
+	CTimeStampGenerator.cc\
 	\
 	CDebuggingMemoryManager.cc
 

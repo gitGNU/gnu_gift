@@ -130,7 +130,7 @@
 					    "/configure.in")))
       (compile (gift-de-double-slash 
 		(concat "automake;autoconf;./configure " 
-			;"--enable-multi-threading "
+			"--enable-multi-threading "
 			"--prefix " 
 			(getenv "GIFT")
 			"/../GIFTInstall; make install"))))

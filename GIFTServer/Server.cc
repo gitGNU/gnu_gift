@@ -22,6 +22,12 @@
 //use stuff by Wolfgang which has not yet been "released" to the group
 #define WOLFGANG_DEVELOPER
 
+// this is a self-made memory manager
+#include "CDebuggingMemoryManager.h"
+// this is for replacing the new() operator
+#include "myNew.h"
+CDebuggingMemoryManager gMemManager(MEMSIZE);
+
 // the gift exceptions
 #include "../gift-config.h"
 #include "GIFTExceptions.h"

@@ -1,4 +1,19 @@
+2001-04-05  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* configure.in: allow full multithreading
+
+	* libMRML/cc/CAttributeList.cc: changing some
+	printouts to asserts to increase speed.
+
 2001-04-04  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CDebuggingMemoryManager.cc: 
+	* libMRML/include/CDebuggingMemoryManager.h: 
+	* libMRML/include/myNew.h: 
+	* GIFTServer/Server.cc: 
+	replacing memory management in order to have a better view
+	on what happens in memory. part of memory overwrite problems
+	and their solutions (hopefully).
 
 	* libMRML/cc/CSessionManager.cc(setActiveAlgorithm): 
 	* libMRML/cc/CAlgorithmCollection.cc(makeDefaultAlgorithm): check

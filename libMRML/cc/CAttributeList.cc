@@ -89,9 +89,11 @@ CAttributeList::~CAttributeList(){
       i!=end();
       i++){
       
-    cout << "DELETING" << flush << int(i->second.second) << flush << i->second.first << i->second.second << endl;
-    assert(!strcmp(i->second.first,
-		   i->second.second));
+    if(strcmp(i->second.first,
+		   i->second.second)){
+      cout << "DELETING FAILED" << flush << int(i->second.second) << flush << i->second.first << i->second.second << endl;
+      assert(0);
+    }
     delete[] i->second.first;
     delete[] i->second.second;
   }
@@ -138,7 +140,11 @@ CAttributeList::CAttributeList(const CAttributeList& inAttributes){
 #ifndef _IS_SEQUENCE_AL
     if(strcmp(i->second.first,
 	      i->second.second)){
-      cout << i->second.first << "/" << i->second.second << endl;
+      if(strcmp(i->second.first,
+		i->second.second)){
+	cout << "ASSERTION FAILED" << i->second.first << "/" << i->second.second << endl;
+	assert(0);
+      }
     }
     assert(!strcmp(i->second.first,
 		   i->second.second));

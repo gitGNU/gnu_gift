@@ -1,6 +1,7 @@
-# Makefile.in generated automatically by automake 1.4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4c from Makefile.am
 
-# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000
+# Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -9,30 +10,6 @@
 # but WITHOUT ANY WARRANTY, to the extent permitted by law; without
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
-
-#     -*- Mode: makefile -*-
-
-#     GIFT, a flexible content based image retrieval system.
-#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
-
-#     This program is free software; you can redistribute it and/or modify
-#     it under the terms of the GNU General Public License as published by
-#     the Free Software Foundation; either version 2 of the License, or
-#     (at your option) any later version.
-
-#     This program is distributed in the hope that it will be useful,
-#     but WITHOUT ANY WARRANTY; without even the implied warranty of
-#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#     GNU General Public License for more details.
-
-#     You should have received a copy of the GNU General Public License
-#     along with this program; if not, write to the Free Software
-#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-#
-#Makefile for the inverted File library
-#
-
 
 SHELL = @SHELL@
 
@@ -55,8 +32,6 @@ mandir = @mandir@
 includedir = @includedir@
 oldincludedir = /usr/include
 
-DESTDIR =
-
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -69,9 +44,10 @@ AUTOMAKE = @AUTOMAKE@
 AUTOHEADER = @AUTOHEADER@
 
 INSTALL = @INSTALL@
-INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
+INSTALL_STRIP_FLAG =
 transform = @program_transform_name@
 
 NORMAL_INSTALL = :
@@ -80,6 +56,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+
+@SET_MAKE@
 host_alias = @host_alias@
 host_triplet = @host@
 AMDEP = @AMDEP@
@@ -143,6 +121,30 @@ lispdir = @lispdir@
 multi_basedir = @multi_basedir@
 pythondir = @pythondir@
 
+#     -*- Mode: makefile -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+#
+#Makefile for the inverted File library
+#
+
+
 CCCONFIG = sed "s:__PERL_LOCATION__:@PERL@:g;s:__BINDIR__:@bindir@:g;s:__DATADIR__:@datadir@:g;s:__LIBDIR__:@libdir@:g" < $< > $@
 
 # noinst_LIBRARIES= libMRML.a
@@ -151,7 +153,16 @@ lib_LTLIBRARIES = libMRML.la
 
 libMRML_la_LDFLAGS = @PRE_INSTALL_LIBDIRS@ 
 
-INCLUDES = -DHAS_BOOL 	-DLINK_DYNAMICALLY 	-I$(top_srcdir)/libUnpublished/include 	-I$(top_srcdir)/libGIFTAcPerl/include -I$(top_srcdir)/libGIFTQuPerl/include 	-I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTQuInvertedFile/include 	-I$(top_srcdir)/libGIFTAcHierarchy/include -I$(top_srcdir)/libGIFTQuHierarchy/include 	-I$(top_srcdir)/libGIFTQuBayesian/include -I$(top_srcdir)/libGIFTAcDistanceMatrix/include 	-I$(top_srcdir)/libGIFTAcURL2FTS/include 	-I$(top_srcdir)/libMRML/include 	-I$(top_srcdir)/expat/xmlparse -I$(top_srcdir)/expat/xmltok 
+INCLUDES = -DHAS_BOOL \
+	-DLINK_DYNAMICALLY\
+	-I$(top_srcdir)/libUnpublished/include \
+	-I$(top_srcdir)/libGIFTAcPerl/include -I$(top_srcdir)/libGIFTQuPerl/include \
+	-I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTQuInvertedFile/include \
+	-I$(top_srcdir)/libGIFTAcHierarchy/include -I$(top_srcdir)/libGIFTQuHierarchy/include \
+	-I$(top_srcdir)/libGIFTQuBayesian/include -I$(top_srcdir)/libGIFTAcDistanceMatrix/include \
+	-I$(top_srcdir)/libGIFTAcURL2FTS/include \
+	-I$(top_srcdir)/libMRML/include \
+	-I$(top_srcdir)/expat/xmlparse -I$(top_srcdir)/expat/xmltok 
 
 
 #CAccessorAdminCollection.cc: CAccessorAdminCollection.pre-cc
@@ -159,8 +170,66 @@ INCLUDES = -DHAS_BOOL 	-DLINK_DYNAMICALLY 	-I$(top_srcdir)/libUnpublished/includ
 
 # libMRML_a_SOURCES= 
 
-libMRML_la_SOURCES =  	CXMLElementBuilder.cc 	CAccessorElement.cc 		CAccessor.cc 	CAccessorImplementation.cc 		CAccessorFactoryContainer.cc 	CAccessorFactory.cc 	CAFPlugin.cc 		CRelevanceLevel.cc 	CRelevanceLevelList.cc 		CIDRelevanceLevelPair.cc 	CIDRelevanceLevelPairList.cc 		CAccessorAdmin.cc 	CAccessorAdminCollection.cc 	CPropertySheetList.cc 	CSessionManager.cc 		CAlgorithmCollection.cc 		CDynamicQueryFactory.cc 	CQueryPlugin.cc 	CStaticQueryFactory.cc 		GIFTExceptions.cc 		CAttributeList.cc 	CXMLHelper.cc 	CXMLElement.cc 		CAlgorithm.cc 		CQueryTreeNode.cc 	CQueryTreeBuilder.cc 		CQuery.cc 	CQMultiple.cc 		CMagic.cc 		CQueryParadigmMatcher.cc 		mrml_const.cc 		CXMLElementVisitor.cc 	CXEVCommunication.cc 		CMutex.cc 		CCommunicationHandler.cc 		CTimeStampGenerator.cc
+libMRML_la_SOURCES = \
+	CXMLElementBuilder.cc\
+	CAccessorElement.cc\
+	\
+	CAccessor.cc\
+	CAccessorImplementation.cc\
+	\
+	CAccessorFactoryContainer.cc\
+	CAccessorFactory.cc\
+	CAFPlugin.cc\
+	\
+	CRelevanceLevel.cc \
+	CRelevanceLevelList.cc \
+	\
+	CIDRelevanceLevelPair.cc \
+	CIDRelevanceLevelPairList.cc \
+	\
+	CAccessorAdmin.cc \
+	CAccessorAdminCollection.cc \
+	CPropertySheetList.cc \
+	CSessionManager.cc \
+	\
+	CAlgorithmCollection.cc \
+	\
+	CDynamicQueryFactory.cc\
+	CQueryPlugin.cc\
+	CStaticQueryFactory.cc\
+	\
+	GIFTExceptions.cc \
+	\
+	CAttributeList.cc \
+	CXMLHelper.cc \
+	CXMLElement.cc \
+	\
+	CAlgorithm.cc \
+	\
+	CQueryTreeNode.cc\
+	CQueryTreeBuilder.cc\
+	\
+	CQuery.cc \
+	CQMultiple.cc \
+	\
+	CMagic.cc\
+	\
+	CQueryParadigmMatcher.cc\
+	\
+	mrml_const.cc\
+	\
+	CXMLElementVisitor.cc\
+	CXEVCommunication.cc\
+	\
+	CMutex.cc\
+	\
+	CCommunicationHandler.cc\
+	\
+	CTimeStampGenerator.cc\
+	\
+	CDebuggingMemoryManager.cc
 
+subdir = libMRML/cc
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../../gift-config.h
 CONFIG_CLEAN_FILES = 
@@ -172,7 +241,7 @@ CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libMRML_la_LIBADD = 
-libMRML_la_OBJECTS =  CXMLElementBuilder.lo CAccessorElement.lo \
+am_libMRML_la_OBJECTS =  CXMLElementBuilder.lo CAccessorElement.lo \
 CAccessor.lo CAccessorImplementation.lo CAccessorFactoryContainer.lo \
 CAccessorFactory.lo CAFPlugin.lo CRelevanceLevel.lo \
 CRelevanceLevelList.lo CIDRelevanceLevelPair.lo \
@@ -184,45 +253,51 @@ CXMLHelper.lo CXMLElement.lo CAlgorithm.lo CQueryTreeNode.lo \
 CQueryTreeBuilder.lo CQuery.lo CQMultiple.lo CMagic.lo \
 CQueryParadigmMatcher.lo mrml_const.lo CXMLElementVisitor.lo \
 CXEVCommunication.lo CMutex.lo CCommunicationHandler.lo \
-CTimeStampGenerator.lo
-CXXFLAGS = @CXXFLAGS@
+CTimeStampGenerator.lo CDebuggingMemoryManager.lo
+libMRML_la_OBJECTS =  $(am_libMRML_la_OBJECTS)
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
+CXXFLAGS = @CXXFLAGS@
 CXXLD = $(CXX)
-CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
-DIST_COMMON =  Makefile.am Makefile.in
+CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
+DIST_SOURCES =  $(libMRML_la_SOURCES)
+depcomp = $(SHELL) $(top_srcdir)/depcomp
+DEP_FILES =  @AMDEP@ $(DEPDIR)/CAFPlugin.Plo $(DEPDIR)/CAccessor.Plo \
+$(DEPDIR)/CAccessorAdmin.Plo $(DEPDIR)/CAccessorAdminCollection.Plo \
+$(DEPDIR)/CAccessorElement.Plo $(DEPDIR)/CAccessorFactory.Plo \
+$(DEPDIR)/CAccessorFactoryContainer.Plo \
+$(DEPDIR)/CAccessorImplementation.Plo $(DEPDIR)/CAlgorithm.Plo \
+$(DEPDIR)/CAlgorithmCollection.Plo $(DEPDIR)/CAttributeList.Plo \
+$(DEPDIR)/CCommunicationHandler.Plo \
+$(DEPDIR)/CDebuggingMemoryManager.Plo \
+$(DEPDIR)/CDynamicQueryFactory.Plo $(DEPDIR)/CIDRelevanceLevelPair.Plo \
+$(DEPDIR)/CIDRelevanceLevelPairList.Plo $(DEPDIR)/CMagic.Plo \
+$(DEPDIR)/CMutex.Plo $(DEPDIR)/CPropertySheetList.Plo \
+$(DEPDIR)/CQMultiple.Plo $(DEPDIR)/CQuery.Plo \
+$(DEPDIR)/CQueryParadigmMatcher.Plo $(DEPDIR)/CQueryPlugin.Plo \
+$(DEPDIR)/CQueryTreeBuilder.Plo $(DEPDIR)/CQueryTreeNode.Plo \
+$(DEPDIR)/CRelevanceLevel.Plo $(DEPDIR)/CRelevanceLevelList.Plo \
+$(DEPDIR)/CSessionManager.Plo $(DEPDIR)/CStaticQueryFactory.Plo \
+$(DEPDIR)/CTimeStampGenerator.Plo $(DEPDIR)/CXEVCommunication.Plo \
+$(DEPDIR)/CXMLElement.Plo $(DEPDIR)/CXMLElementBuilder.Plo \
+$(DEPDIR)/CXMLElementVisitor.Plo $(DEPDIR)/CXMLHelper.Plo \
+$(DEPDIR)/GIFTExceptions.Plo $(DEPDIR)/mrml_const.Plo
+DIST_COMMON =  Makefile.am Makefile.in depcomp
 
 
-DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 
-TAR = tar
 GZIP_ENV = --best
-DEP_FILES =  .deps/CAFPlugin.P .deps/CAccessor.P .deps/CAccessorAdmin.P \
-.deps/CAccessorAdminCollection.P .deps/CAccessorElement.P \
-.deps/CAccessorFactory.P .deps/CAccessorFactoryContainer.P \
-.deps/CAccessorImplementation.P .deps/CAlgorithm.P \
-.deps/CAlgorithmCollection.P .deps/CAttributeList.P \
-.deps/CCommunicationHandler.P .deps/CDynamicQueryFactory.P \
-.deps/CIDRelevanceLevelPair.P .deps/CIDRelevanceLevelPairList.P \
-.deps/CMagic.P .deps/CMutex.P .deps/CPropertySheetList.P \
-.deps/CQMultiple.P .deps/CQuery.P .deps/CQueryParadigmMatcher.P \
-.deps/CQueryPlugin.P .deps/CQueryTreeBuilder.P .deps/CQueryTreeNode.P \
-.deps/CRelevanceLevel.P .deps/CRelevanceLevelList.P \
-.deps/CSessionManager.P .deps/CStaticQueryFactory.P \
-.deps/CTimeStampGenerator.P .deps/CXEVCommunication.P \
-.deps/CXMLElement.P .deps/CXMLElementBuilder.P \
-.deps/CXMLElementVisitor.P .deps/CXMLHelper.P .deps/GIFTExceptions.P \
-.deps/mrml_const.P
 SOURCES = $(libMRML_la_SOURCES)
-OBJECTS = $(libMRML_la_OBJECTS)
+OBJECTS = $(am_libMRML_la_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .S .c .cc .lo .o .obj .s
+.SUFFIXES: .c .cc .lo .o .obj
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnu libMRML/cc/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
@@ -241,27 +316,17 @@ install-libLTLIBRARIES: $(lib_LTLIBRARIES)
 	$(mkinstalldirs) $(DESTDIR)$(libdir)
 	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    echo "$(LIBTOOL)  --mode=install $(INSTALL) $$p $(DESTDIR)$(libdir)/$$p"; \
-	    $(LIBTOOL)  --mode=install $(INSTALL) $$p $(DESTDIR)$(libdir)/$$p; \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(libdir)/$$p"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(libdir)/$$p; \
 	  else :; fi; \
 	done
 
 uninstall-libLTLIBRARIES:
 	@$(NORMAL_UNINSTALL)
-	list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	@list='$(lib_LTLIBRARIES)'; for p in $$list; do \
+	  echo " $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p"; \
 	  $(LIBTOOL)  --mode=uninstall rm -f $(DESTDIR)$(libdir)/$$p; \
 	done
-
-# FIXME: We should only use cygpath when building on Windows,
-# and only if it is available.
-.c.obj:
-	$(COMPILE) -c `cygpath -w $<`
-
-.s.o:
-	$(COMPILE) -c $<
-
-.S.o:
-	$(COMPILE) -c $<
 
 mostlyclean-compile:
 	-rm -f *.o core *.core
@@ -273,12 +338,6 @@ distclean-compile:
 	-rm -f *.tab.c
 
 maintainer-clean-compile:
-
-.s.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
-
-.S.lo:
-	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -292,32 +351,35 @@ maintainer-clean-libtool:
 
 libMRML.la: $(libMRML_la_OBJECTS) $(libMRML_la_DEPENDENCIES)
 	$(CXXLINK) -rpath $(libdir) $(libMRML_la_LDFLAGS) $(libMRML_la_OBJECTS) $(libMRML_la_LIBADD) $(LIBS)
-.cc.o:
-	$(CXXCOMPILE) -c $<
-.cc.obj:
-	$(CXXCOMPILE) -c `cygpath -w $<`
-.cc.lo:
-	$(LTCXXCOMPILE) -c $<
 
 tags: TAGS
 
-ID: $(HEADERS) $(SOURCES) $(LISP)
-	list='$(SOURCES) $(HEADERS)'; \
-	unique=`for i in $$list; do echo $$i; done | \
-	  awk '    { files[$$0] = 1; } \
+ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
-	here=`pwd` && cd $(srcdir) \
-	  && mkid -f$$here/ID $$unique $(LISP)
+	mkid -fID $$unique $(LISP)
 
-TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
+		$(TAGS_FILES) $(LISP)
 	tags=; \
 	here=`pwd`; \
-	list='$(SOURCES) $(HEADERS)'; \
-	unique=`for i in $$list; do echo $$i; done | \
-	  awk '    { files[$$0] = 1; } \
+	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
+	unique=`for i in $$list; do \
+	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+	  done | \
+	  $(AWK) '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
 	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
-	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
+	  || etags $(ETAGS_ARGS) $$tags  $$unique $(LISP)
+
+GTAGS:
+	here=`CDPATH=: && cd $(top_builddir) && pwd` \
+	  && cd $(top_srcdir) \
+	  && gtags -i $$here
 
 mostlyclean-tags:
 
@@ -328,77 +390,88 @@ distclean-tags:
 
 maintainer-clean-tags:
 
-distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
-
-subdir = libMRML/cc
-
-distdir: $(DISTFILES)
-	here=`cd $(top_builddir) && pwd`; \
-	top_distdir=`cd $(top_distdir) && pwd`; \
-	distdir=`cd $(distdir) && pwd`; \
-	cd $(top_srcdir) \
-	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnu libMRML/cc/Makefile
-	@for file in $(DISTFILES); do \
-	  d=$(srcdir); \
-	  if test -d $$d/$$file; then \
-	    cp -pr $$/$$file $(distdir)/$$file; \
-	  else \
-	    test -f $(distdir)/$$file \
-	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
-	    || cp -p $$d/$$file $(distdir)/$$file || :; \
-	  fi; \
-	done
-
-DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
-
--include $(DEP_FILES)
+@AMDEP@include $(DEPDIR)/CAFPlugin.Plo
+@AMDEP@include $(DEPDIR)/CAccessor.Plo
+@AMDEP@include $(DEPDIR)/CAccessorAdmin.Plo
+@AMDEP@include $(DEPDIR)/CAccessorAdminCollection.Plo
+@AMDEP@include $(DEPDIR)/CAccessorElement.Plo
+@AMDEP@include $(DEPDIR)/CAccessorFactory.Plo
+@AMDEP@include $(DEPDIR)/CAccessorFactoryContainer.Plo
+@AMDEP@include $(DEPDIR)/CAccessorImplementation.Plo
+@AMDEP@include $(DEPDIR)/CAlgorithm.Plo
+@AMDEP@include $(DEPDIR)/CAlgorithmCollection.Plo
+@AMDEP@include $(DEPDIR)/CAttributeList.Plo
+@AMDEP@include $(DEPDIR)/CCommunicationHandler.Plo
+@AMDEP@include $(DEPDIR)/CDebuggingMemoryManager.Plo
+@AMDEP@include $(DEPDIR)/CDynamicQueryFactory.Plo
+@AMDEP@include $(DEPDIR)/CIDRelevanceLevelPair.Plo
+@AMDEP@include $(DEPDIR)/CIDRelevanceLevelPairList.Plo
+@AMDEP@include $(DEPDIR)/CMagic.Plo
+@AMDEP@include $(DEPDIR)/CMutex.Plo
+@AMDEP@include $(DEPDIR)/CPropertySheetList.Plo
+@AMDEP@include $(DEPDIR)/CQMultiple.Plo
+@AMDEP@include $(DEPDIR)/CQuery.Plo
+@AMDEP@include $(DEPDIR)/CQueryParadigmMatcher.Plo
+@AMDEP@include $(DEPDIR)/CQueryPlugin.Plo
+@AMDEP@include $(DEPDIR)/CQueryTreeBuilder.Plo
+@AMDEP@include $(DEPDIR)/CQueryTreeNode.Plo
+@AMDEP@include $(DEPDIR)/CRelevanceLevel.Plo
+@AMDEP@include $(DEPDIR)/CRelevanceLevelList.Plo
+@AMDEP@include $(DEPDIR)/CSessionManager.Plo
+@AMDEP@include $(DEPDIR)/CStaticQueryFactory.Plo
+@AMDEP@include $(DEPDIR)/CTimeStampGenerator.Plo
+@AMDEP@include $(DEPDIR)/CXEVCommunication.Plo
+@AMDEP@include $(DEPDIR)/CXMLElement.Plo
+@AMDEP@include $(DEPDIR)/CXMLElementBuilder.Plo
+@AMDEP@include $(DEPDIR)/CXMLElementVisitor.Plo
+@AMDEP@include $(DEPDIR)/CXMLHelper.Plo
+@AMDEP@include $(DEPDIR)/GIFTExceptions.Plo
+@AMDEP@include $(DEPDIR)/mrml_const.Plo
 
 mostlyclean-depend:
 
 clean-depend:
 
 distclean-depend:
-	-rm -rf .deps
+	-rm -rf $(DEPDIR)
 
 maintainer-clean-depend:
 
-%.o: %.c
-	@echo '$(COMPILE) -c $<'; \
-	$(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
-	@-cp .deps/$(*F).pp .deps/$(*F).P; \
-	tr ' ' '\012' < .deps/$(*F).pp \
-	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
-	    >> .deps/$(*F).P; \
-	rm .deps/$(*F).pp
+@AMDEP@CXXDEPMODE = @CXXDEPMODE@
 
-%.lo: %.c
-	@echo '$(LTCOMPILE) -c $<'; \
-	$(LTCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
-	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
-	  < .deps/$(*F).pp > .deps/$(*F).P; \
-	tr ' ' '\012' < .deps/$(*F).pp \
-	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
-	    >> .deps/$(*F).P; \
-	rm -f .deps/$(*F).pp
+.cc.o:
+@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
 
-%.o: %.cc
-	@echo '$(CXXCOMPILE) -c $<'; \
-	$(CXXCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
-	@-cp .deps/$(*F).pp .deps/$(*F).P; \
-	tr ' ' '\012' < .deps/$(*F).pp \
-	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
-	    >> .deps/$(*F).P; \
-	rm .deps/$(*F).pp
+.cc.lo:
+@AMDEP@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
+@AMDEP@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(LTCXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
 
-%.lo: %.cc
-	@echo '$(LTCXXCOMPILE) -c $<'; \
-	$(LTCXXCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
-	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
-	  < .deps/$(*F).pp > .deps/$(*F).P; \
-	tr ' ' '\012' < .deps/$(*F).pp \
-	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
-	    >> .deps/$(*F).P; \
-	rm -f .deps/$(*F).pp
+.cc.obj:
+@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
+@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
+@AMDEP@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
+
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pR $$d/$$file $(distdir) \
+	    || exit 1; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || cp -p $$d/$$file $(distdir)/$$file \
+	    || exit 1; \
+	  fi; \
+	done
 info-am:
 info: info-am
 dvi-am:
@@ -421,7 +494,7 @@ uninstall: uninstall-am
 all-am: Makefile $(LTLIBRARIES)
 all-redirect: all-am
 install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
 installdirs:
 	$(mkinstalldirs)  $(DESTDIR)$(libdir)
 
@@ -435,6 +508,7 @@ distclean-generic:
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
+	-rm -f Makefile.in
 mostlyclean-am:  mostlyclean-libLTLIBRARIES mostlyclean-compile \
 		mostlyclean-libtool mostlyclean-tags mostlyclean-depend \
 		mostlyclean-generic
@@ -462,19 +536,20 @@ maintainer-clean-am:  maintainer-clean-libLTLIBRARIES \
 
 maintainer-clean: maintainer-clean-am
 
-.PHONY: mostlyclean-libLTLIBRARIES distclean-libLTLIBRARIES \
-clean-libLTLIBRARIES maintainer-clean-libLTLIBRARIES \
-uninstall-libLTLIBRARIES install-libLTLIBRARIES mostlyclean-compile \
-distclean-compile clean-compile maintainer-clean-compile \
-mostlyclean-libtool distclean-libtool clean-libtool \
-maintainer-clean-libtool tags mostlyclean-tags distclean-tags \
-clean-tags maintainer-clean-tags distdir mostlyclean-depend \
-distclean-depend clean-depend maintainer-clean-depend info-am info \
-dvi-am dvi check check-am installcheck-am installcheck install-exec-am \
-install-exec install-data-am install-data install-am install \
-uninstall-am uninstall all-redirect all-am all installdirs \
-mostlyclean-generic distclean-generic clean-generic \
-maintainer-clean-generic clean mostlyclean distclean maintainer-clean
+.PHONY: all all-am all-redirect check check-am clean clean-compile \
+clean-depend clean-generic clean-libLTLIBRARIES clean-libtool \
+clean-tags distclean distclean-compile distclean-depend \
+distclean-generic distclean-libLTLIBRARIES distclean-libtool \
+distclean-tags distdir dvi dvi-am info info-am install install-am \
+install-data install-data-am install-exec install-exec-am \
+install-libLTLIBRARIES install-strip installcheck installcheck-am \
+installdirs maintainer-clean maintainer-clean-compile \
+maintainer-clean-depend maintainer-clean-generic \
+maintainer-clean-libLTLIBRARIES maintainer-clean-libtool \
+maintainer-clean-tags mostlyclean mostlyclean-compile \
+mostlyclean-depend mostlyclean-generic mostlyclean-libLTLIBRARIES \
+mostlyclean-libtool mostlyclean-tags tags uninstall uninstall-am \
+uninstall-libLTLIBRARIES
 
 
 #CLEANFILES=CAccessorAdminCollection.cc
