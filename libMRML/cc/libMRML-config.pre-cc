@@ -60,16 +60,16 @@ int main (int argc, char **argv) {
 
     switch (lC) {
     case 'c':
-      printf(" @CXXFLAGS@ ");
+      printf(" %CXXFLAGS% ");
       break;
     case 'l':
-      printf(" @LIBS@ ");
+      printf(" %LIBS% ");
       break;
     case 'L':
-      printf(" @LDFLAGS@ @libdir@ ");
+      printf(" %LDFLAGS% %libdir% ");
       break;
     case 'i':
-      printf(" @INCLUDES@  ");
+      printf(" %INCLUDES%  ");
       break;
     default:
       puts("gift-config [-c] [--cxxflags] [-l] [--ldflags]");
