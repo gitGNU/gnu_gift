@@ -1,3 +1,12 @@
+2002-09-03  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* scripts/perl/gift-remove-collection.pre-pl: 
+	* scripts/perl/Makefile.am: added gift-remove-collection.pre-pl
+	as well as gift-remove-collection.pl targets
+
+	* GIFTServer/Server.cc: applied patch by Carsten Pfeiffer
+	adding getopt support to GIFT
+
 2002-08-28  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
 
 	* GIFTServer/Server.cc (main): got rid of #ifdef single
