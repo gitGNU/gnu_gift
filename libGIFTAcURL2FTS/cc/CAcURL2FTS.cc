@@ -144,6 +144,7 @@ CAcURL2FTS::CAcURL2FTS(const CXMLElement& inCollectionElement):
       }
     }
   }else{// use an XML parser
+    cout << "constructing parser" << endl;
     XML_Parser lParser = XML_ParserCreate(NULL);//default encoding
     XML_SetUserData(lParser,
 		    this);
@@ -154,32 +155,45 @@ CAcURL2FTS::CAcURL2FTS(const CXMLElement& inCollectionElement):
     bool lParseError=false;
     string lURL2FTS;
 
+    cout << "Reading " << endl;
+
     mURLToFeatureFile.seekg(0,ios::end);
     int lFileSize(mURLToFeatureFile.tellg());
     mURLToFeatureFile.seekg(0,ios::beg);
 
-    char lBuffer[lFileSize+1];
+    cout << lFileSize 
+	 << " characters" 
+	 << endl;
+
+    char* lBuffer=new char[lFileSize+1];
     mURLToFeatureFile.read(lBuffer,lFileSize);
     lBuffer[lFileSize]=char(0);
+
+    cout << "Read url2fts.xml" << endl;
     
     bool lDone=false;
-    if (!XML_Parse(lParser,
-		   lBuffer,
-		   lFileSize,
-		   lDone)
-	) {
-      cerr << "CAcURL2FTS:__LINE__: XML ERROR: "
-	   << XML_ErrorString(XML_GetErrorCode(lParser))
+    for(int i=0;
+	i<lFileSize/10000;
+	i++){
+      if (!XML_Parse(lParser,
+		     lBuffer+i*10000,
+		     (lFileSize-i*10000<10000)
+		     ?lFileSize-i*10000:10000,
+		     lDone)
+	  ) {
+	cerr << "CAcURL2FTS:__LINE__: XML ERROR: "
+	     << XML_ErrorString(XML_GetErrorCode(lParser))
 	     << " at line "
-	   << XML_GetCurrentLineNumber(lParser)
-	   << endl;
-      exit(1);
-    }else{
-	cout << "Successfully processed" << endl;
+	     << XML_GetCurrentLineNumber(lParser)
+	     << endl;
+	exit(1);
+      }
     }
-
+    cout << "Successfully processed" << endl;
+    delete lBuffer;
     XML_ParserFree(lParser);
   }
+
 
 
   cout << "URLFile " 

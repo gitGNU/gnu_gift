@@ -38,8 +38,8 @@
    This is the principal helper function of merge_sort_streams
  */
 template<class T>
-void merge_streams(istream& in1, const int inCount1,
-		   istream& in2, const int inCount2,
+void merge_streams(istream& in1, const streampos inCount1,
+		   istream& in2, const streampos inCount2,
 		   ostream& out){
 
   {
@@ -52,7 +52,7 @@ void merge_streams(istream& in1, const int inCount1,
 
 
     if(!inCount1){// if there is nothing to merge
-      for(int i=0;//...copy
+      for(streampos i=0;//...copy
 	  i<inCount2;
 	  i++){
 	T l2;
@@ -67,7 +67,7 @@ void merge_streams(istream& in1, const int inCount1,
       return;//and return
     }
     if(!inCount2){//if there is nothing to merge
-      for(int i=0;//...copy
+      for(streampos i=0;//...copy
 	  i<inCount1;
 	  i++){
 	T l1;
@@ -81,8 +81,8 @@ void merge_streams(istream& in1, const int inCount1,
       return;//and return
     }
     
-    int lI1(0);
-    int lI2(0);
+    streampos lI1(0);
+    streampos lI2(0);
     
     //read the first record from both files
     T l1;
@@ -166,7 +166,7 @@ void merge_sort_streams(const char* inFileToBeSortedName,
   const char* lFileToBeSortedName(inFileToBeSortedName);
   const char* lTemporaryName(inTemporaryName);
 
-  int lFileSize(0);
+  streampos lFileSize(0);
   ifstream lToBeSorted1(inFileToBeSortedName);
   lToBeSorted1.seekg(0,
 		    ios::end);
@@ -176,8 +176,8 @@ void merge_sort_streams(const char* inFileToBeSortedName,
   ofstream lTemporary;
   ifstream lToBeSorted2;
     
-  int lCount(0);
-  for(int iMergeSize=sizeof(T);
+  streampos lCount(0);
+  for(streampos iMergeSize=sizeof(T);
       (iMergeSize < lFileSize)
 	|| (lCount%2)
 	// ||(lCount%2) makes sure that we will get 
@@ -200,10 +200,17 @@ void merge_sort_streams(const char* inFileToBeSortedName,
     lTemporary.clear();
     
     
-    for(int i=0;
+    for(streampos i=0;
 	i<lFileSize;
 	i += iMergeSize*2){
       lToBeSorted1.seekg(i);
+
+      if(!lToBeSorted1){
+	cerr << "__FILE__:__LINE__: lToBeSorted false, after seekg("
+	     << i
+	     << ")"
+	     << endl;
+      }
       
       assert(lToBeSorted1);
 
@@ -212,8 +219,8 @@ void merge_sort_streams(const char* inFileToBeSortedName,
 	assert(lToBeSorted2);
       }
 
-      int lMergeSize1=lFileSize-i;
-      int lMergeSize2=lFileSize-i-iMergeSize;
+      streampos lMergeSize1=lFileSize-i;
+      streampos lMergeSize2=lFileSize-i-iMergeSize;
       
       // lToBeSorted1.clear();
       // lToBeSorted2.clear();

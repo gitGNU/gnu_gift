@@ -1,4 +1,23 @@
+2001-02-21  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* scripts/perl/gift-add-collection.pre-pl (wanted): adding
+	code for URL escaping.
+
+	* scripts/perl/gift-start.pre-pl (REAPER): added reaper
+	to get rid of annoying problem in gift-start
+
 2001-02-15  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libGIFTAcInvertedFile/cc/CDocumentFrequencyElement.cc: 
+	_NO_PRINTOUT_WRITE_BINARY ifdeffed out annoying printouts
+	on writing
+
+	* libGIFTAcInvertedFile/include/merge_sort_streams.h: 
+	replaced "int" by streampos to follow linux's evolution
+
+	* libGIFTAcURL2FTS/cc/CAcURL2FTS.cc (CAcURL2FTS): 
+	made lBuffer a global variable. FIXME: it's not elegant
+	to slurp in the whole thing at once.
 
 	* GIFTServer/Makefile.am:
 	* configure.in: UNPUBLISHED_DIR contains

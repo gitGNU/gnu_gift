@@ -170,13 +170,14 @@ gift_SOURCES = Server.cc
 
 # generate inverted file
 
-gift_generate_inverted_file_LDADD = @PRE_INSTALL_LIBDIRS@  @UNPUBLISHED_DIR@ @BAYESIAN@ @UNPUBLISHED@ -lMRML\
-	 -lGIFTAcURL2FTS -lGIFTAcInvertedFile -lGIFTQuInvertedFile\
-	 -lGIFTAcPerl -lGIFTQuPerl\
-	 -lGIFTAcHierarchy -lGIFTQuHierarchy\
-	 @BAYESIAN_LD_ADD@\
-	 @PERL_LD_ADD@ 
+gift_generate_inverted_file_LDADD = @PRE_INSTALL_LIBDIRS@ -lMRML -lGIFTAcInvertedFile -lGIFTAcPerl -lGIFTQuPerl @PERL_LD_ADD@ 
 
+#	 -lGIFTAcURL2FTS -lGIFTAcInvertedFile -lGIFTQuInvertedFile\
+#	 
+#	 -lGIFTAcHierarchy -lGIFTQuHierarchy\
+#@PRE_INSTALL_LIBDIRS@  @UNPUBLISHED_DIR@ @BAYESIAN@ @UNPUBLISHED@ -lMRML\
+#	 @BAYESIAN_LD_ADD@\
+#	 
 
 gift_generate_inverted_file_LDFLAGS = ../expat/xmlparse/*.o ../expat/xmltok/*.o
 

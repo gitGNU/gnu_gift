@@ -32,7 +32,9 @@
 ****************************************
 *
 * compiler defines used:
-*
+* _IS_FLOAT_FEATURE_ features have float document frequencies
+* _NO_PRINTOUT_WRITE_BINARY   we do not want to be kept posted about 
+*                             the progress of the binary writing
 *
 ****************************************/
 #include "CDocumentFrequencyElement.h"
@@ -42,7 +44,7 @@
 
 #define _IS_FLOAT_FEATURE_
 
-
+#define _NO_PRINTOUT_WRITE_BINARY
 /*   */
 static unsigned const int sFREQ_MAX=(FREQ_MAX);
 
@@ -108,6 +110,7 @@ bool CDocumentFrequencyElement::writeBinary(ostream& outStream)const{
   outStream.write(&lDF,
 		  sizeof(lDF));
 #else
+#ifndef _NO_PRINTOUT_WRITE_BINARY
   cout << "[" 
        << sizeof(*this) 
        << ";"
@@ -115,7 +118,7 @@ bool CDocumentFrequencyElement::writeBinary(ostream& outStream)const{
        << ";"
        << getDocumentFrequency()
        << "]";
-  
+#endif
   outStream.write(this,
 		  sizeof(*this));
 #endif

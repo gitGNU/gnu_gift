@@ -303,6 +303,15 @@ sub wanted{
     $lURL2FTSLine=~s§/+§/§g;
     $lURL2FTSLine=~s§http:/§http://§g;
 
+    my $i;
+    foreach $i  ($lURL,
+		 $lThumbnailURL){
+      #escaping the URL
+      $i=~s[//][/]g;
+      $i=~s[^http:/][^http://];
+      $i=~s[ ][%20]g;
+    }
+
     my $lAttributes={
 		     "url-postfix" => $lURL,
 		     "thumbnail-url-postfix" => $lThumbnailURL,
