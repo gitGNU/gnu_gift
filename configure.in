@@ -33,7 +33,7 @@ AC_INIT(libMRML/cc/CAccessorFactory.cc)
 
 dnl old position of AC_ARG_ENABLE(interactive)
 
-AM_INIT_AUTOMAKE(gift,0.1.6pre3)
+AM_INIT_AUTOMAKE(gift,0.1.6pre4)
 
 AM_CONFIG_HEADER(gift-config.h)
 AC_ISC_POSIX
@@ -421,6 +421,7 @@ AC_OUTPUT([Makefile
 		dtd/Makefile
 
 		Doc/Makefile
+		Doc/Doxyfile
 
 		GIFTServer/Makefile
 		GIFTServer/gift-mrml-messages/Makefile

@@ -1,4 +1,4 @@
-§
+
 
 gift-guide.info: gift-guide.sgml 
 	-test "@SGML2INFO@" && @SGML2INFO@ gift-guide.sgml

@@ -1,5 +1,8 @@
 2001-12-11  MUELLER Wolfgang  <Wolfgang.Mueller@cui.unige.ch>
 
+	* Doc/Doxyfile.in (PROJECT_NAME): create ini file with
+	@PACKAGE@ and @VERSION@ that will be substituted.
+
 	* FeatureExtraction/Makefile.am (EXTRA_DIST): install headers
 
 	* GIFTServer/gift-mrml-messages/Makefile.am: 
