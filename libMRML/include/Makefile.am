@@ -35,10 +35,10 @@ libMRML_HEADERS= directory.h \
 	CIDRelevanceLevelPair.h      CSessionManager.h \
 	CIDRelevanceLevelPairList.h  CStaticQueryFactory.h uses-declarations.h \
  CRPipe.h CReaper.h CReaperDistributor.h safePopen.h\
-	createErrorMessage.h 	CI18nTranslator.h 	CXEVI18nTranslator.h
+	createErrorMessage.h 	CI18nTranslator.h 	CXEVI18nTranslator.h gift-config.h
 
-install-data-hook:
-	$(INSTALL_DATA) $(srcdir)/gift-config.h $(includedir)/libMRML/include/gift-config.h
+#install-data-hook:
+#	$(INSTALL_DATA) $(srcdir)/gift-config.h $(includedir)/libMRML/include/gift-config.h
 
 
-CLEANFILES= directory.h
+CLEANFILES= directory.h 

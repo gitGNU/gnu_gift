@@ -584,6 +584,7 @@ Copying $CONFIG to $OLDCONFIG
       while (<OLDCONFIG>) {
 	
 	if (m/$lTheLine/) {
+
 	  print CONFIG qq(<!-- automatically added by v_add_collection.pl -->
 			  <collection 
 			  collection-id="$lUniqueCollectionID" 
@@ -607,8 +608,7 @@ Copying $CONFIG to $OLDCONFIG
 			  \n\n);
 	}
 	
-	s/__COLLECTION__/$lUniqueCollectionID/g;
-	print CONFIG $_;
+	s/\_\_COLLECTION\_\_/$lUniqueCollectionID/g;
 	
       }
     }else{
@@ -650,6 +650,9 @@ Copying $CONFIG to $OLDCONFIG
       
       &addCollection(collection=>$lCollection,
 		     document=>$lGIFTConfig);
+
+      &setDefaultCollectionID("collection-id"=>$lUniqueCollectionID,
+			      document=>$lGIFTConfig);
       
       $lGIFTConfig->printToFile ("$gGiftHome/gift-config.mrml") or die $!;
     }
@@ -711,6 +714,19 @@ sub safeConvertString( $ ){
   return $gStringConverter->convert($lStringCopy) || $lStringCopy;# is now in UTF-8 or what it was before
 }
 # CONFIG SERVER CODE
+
+sub setDefaultCollectionID{
+   my $inParameters={};
+   %{$inParameters}=@_;
+
+   # find the attributes collection-id in <algorithm collection-id="__COLLECTION__">
+   my(@lToBeChanged)=$inParameters->{document}->xql("/mrml/cui-configuration/algorithm-list/algorithm/\@collection-id='__COLLECTION__'");
+   my $i;
+   # replace __COLLECTION__ by actual collection ID.
+   foreach $i (@lToBeChanged){
+     $i->setNodeValue($inParameters->{"collection-id"});
+   }
+}
 
 sub addCollection{
    my $inParameters={};

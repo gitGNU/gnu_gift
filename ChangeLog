@@ -1,3 +1,14 @@
+2004-06-18    <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* scripts/perl/gift-add-collection.pre-pl (setDefaultCollection): 
+	correctly set default collection on initial install 
+	__COLLECTION__ --> unique collection ID
+
+2004-06-16    <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libMRML/include/Makefile.am (libMRML_HEADERS): 
+	making libMRML gentoo-installable
+
 2004-06-11    <wolfgang.mueller2@uni-bayreuth.de>
 
 	* gift-install-prerequisites.pl: changed to accomodate
