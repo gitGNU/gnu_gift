@@ -264,11 +264,11 @@ GTAGS:
 distclean-tags:
 	-rm -f TAGS ID
 
-@_am_include@ @_am_quote@$(DEPDIR)/CQPerl.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CXEVTripletList.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CXMLTriplet.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/plug_in_fo.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/xs_init.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CQPerl.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CXEVTripletList.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CXMLTriplet.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/plug_in_fo.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/xs_init.Plo@_am_quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)

@@ -274,12 +274,12 @@ GTAGS:
 distclean-tags:
 	-rm -f TAGS ID
 
-@_am_include@ @_am_quote@$(DEPDIR)/extract_block_features.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/extract_features.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/gabor.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/quantize.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/rgb2hsv_utils.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/write_feature_descs.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/extract_block_features.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/extract_features.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/gabor.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/quantize.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/rgb2hsv_utils.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/write_feature_descs.Po@_am_quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)

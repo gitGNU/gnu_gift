@@ -231,11 +231,19 @@ CAccessorAdmin& CAccessorAdminCollection::getProxy(const string& inID){
   if(mIDToProxy.find(inID)!=mIDToProxy.end())
     return *mIDToProxy[inID];
   else{
-    cout << "The ID I am looking for is:"
+    cerr << "The ID I am looking for is:"
 	 << inID
 	 << ", and I did not find it"
 	 << endl;
-    my_throw(VENotFound(string("mIDToProxy _"+inID+"_").c_str()));
+    // my_throw(VENotFound(string("mIDToProxy _"+inID+"_").c_str()));
+    // return the default collection
+
+    //
+    // quick fix by WM against people nuking our server... :-(
+    //
+    // 	BE WARNED: this can fail, if not every query 
+    // 	processor works with every collection.
+    return *mIDToProxy[this->getDefaultAccessorID()];
   }
 };
 

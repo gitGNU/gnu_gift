@@ -417,11 +417,11 @@ GTAGS:
 distclean-tags:
 	-rm -f TAGS ID
 
-@_am_include@ @_am_quote@$(DEPDIR)/Server.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/endianize.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/generateInvertedFile.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/modifyDistanceMatrix.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/oneMinus.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/Server.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/endianize.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/generateInvertedFile.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/modifyDistanceMatrix.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/oneMinus.Po@_am_quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)

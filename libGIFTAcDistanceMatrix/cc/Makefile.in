@@ -267,14 +267,14 @@ GTAGS:
 distclean-tags:
 	-rm -f TAGS ID
 
-@_am_include@ @_am_quote@$(DEPDIR)/CAFDistanceMatrix.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CAcDistanceMatrix.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CDistanceCalculator.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CDrawer.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CInformationCalculator.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CProbabilityCombiner.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CSquasher.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/plug_in_fo.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAFDistanceMatrix.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAcDistanceMatrix.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CDistanceCalculator.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CDrawer.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CInformationCalculator.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CProbabilityCombiner.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CSquasher.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/plug_in_fo.Plo@_am_quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)

@@ -79,7 +79,10 @@ public:
   /**  get the proxy on which is presently worked on
    */
   CAccessorAdmin& getCurrentProxy();
-  /**  get a proxy for a given collectionID*/
+  /**  get a proxy for a given collectionID
+       if this collection is unknown, give back the
+       first collection in the stack
+  */
   CAccessorAdmin& getProxy(const string& inID);
   /**  simply take the first.*/
   string getDefaultAccessorID()const;

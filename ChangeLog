@@ -1,3 +1,14 @@
+2001-10-16  Wolfgang Müller  <Wolfgang.Mueller@cui.unige.ch>
+
+	* libMRML/cc/CAccessorAdminCollection.cc(getProxy): 
+	* libMRML/include/CAccessorAdminCollection.h: 
+	To counter problems with people who do queries
+	to a collection with "" as ID, give back
+	the default collection to the request.
+
+	This is a quick but useful fix, please see
+	code for caveats
+	
 2001-10-11  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* libMRML/cc/CSessionManager.cc: Returning error tag

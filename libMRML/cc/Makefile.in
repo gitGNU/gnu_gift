@@ -285,7 +285,7 @@ depcomp = $(SHELL) $(top_srcdir)/depcomp
 @AMDEP_TRUE@	$(DEPDIR)/CXMLHelper.Plo \
 @AMDEP_TRUE@	$(DEPDIR)/GIFTExceptions.Plo \
 @AMDEP_TRUE@	$(DEPDIR)/mrml_const.Plo
-DIST_COMMON = Makefile.am Makefile.in depcomp
+DIST_COMMON = Makefile.am Makefile.in
 SOURCES = $(libMRML_la_SOURCES)
 OBJECTS = $(am_libMRML_la_OBJECTS)
 
@@ -372,43 +372,43 @@ GTAGS:
 distclean-tags:
 	-rm -f TAGS ID
 
-@_am_include@ @_am_quote@$(DEPDIR)/CAFPlugin.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CAccessor.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CAccessorAdmin.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CAccessorAdminCollection.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CAccessorElement.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CAccessorFactory.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CAccessorFactoryContainer.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CAccessorImplementation.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CAlgorithm.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CAlgorithmCollection.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CAttributeList.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CCommunicationHandler.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CDebuggingMemoryManager.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CDynamicQueryFactory.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CIDRelevanceLevelPair.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CIDRelevanceLevelPairList.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CMagic.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CMutex.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CPropertySheetList.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CQMultiple.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CQuery.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CQueryParadigmMatcher.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CQueryPlugin.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CQueryTreeBuilder.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CQueryTreeNode.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CRelevanceLevel.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CRelevanceLevelList.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CSessionManager.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CStaticQueryFactory.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CTimeStampGenerator.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CXEVCommunication.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CXMLElement.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CXMLElementBuilder.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CXMLElementVisitor.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/CXMLHelper.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/GIFTExceptions.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/mrml_const.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAFPlugin.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAccessor.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAccessorAdmin.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAccessorAdminCollection.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAccessorElement.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAccessorFactory.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAccessorFactoryContainer.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAccessorImplementation.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAlgorithm.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAlgorithmCollection.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CAttributeList.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CCommunicationHandler.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CDebuggingMemoryManager.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CDynamicQueryFactory.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CIDRelevanceLevelPair.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CIDRelevanceLevelPairList.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CMagic.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CMutex.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CPropertySheetList.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CQMultiple.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CQuery.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CQueryParadigmMatcher.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CQueryPlugin.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CQueryTreeBuilder.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CQueryTreeNode.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CRelevanceLevel.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CRelevanceLevelList.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CSessionManager.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CStaticQueryFactory.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CTimeStampGenerator.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CXEVCommunication.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CXMLElement.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CXMLElementBuilder.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CXMLElementVisitor.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CXMLHelper.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/GIFTExceptions.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/mrml_const.Plo@_am_quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)

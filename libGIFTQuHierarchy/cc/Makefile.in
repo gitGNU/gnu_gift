@@ -251,8 +251,8 @@ GTAGS:
 distclean-tags:
 	-rm -f TAGS ID
 
-@_am_include@ @_am_quote@$(DEPDIR)/CQHierarchy.Plo@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/plug_in_fo.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/CQHierarchy.Plo@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/plug_in_fo.Plo@_am_quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)

@@ -245,15 +245,15 @@ GTAGS:
 distclean-tags:
 	-rm -f TAGS ID
 
-@_am_include@ @_am_quote@$(DEPDIR)/new_executable.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/normaliseContrast.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/ppm_comment.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/ppm_error.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/ppm_io.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/ppm_memory.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/ppm_normalize.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/ppm_plane.Po@_am_quote@
-@_am_include@ @_am_quote@$(DEPDIR)/ppm_subimage.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/new_executable.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/normaliseContrast.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/ppm_comment.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/ppm_error.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/ppm_io.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/ppm_memory.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/ppm_normalize.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/ppm_plane.Po@_am_quote@
+@AMDEP_TRUE@@_am_include@ @_am_quote@$(DEPDIR)/ppm_subimage.Po@_am_quote@
 
 distclean-depend:
 	-rm -rf $(DEPDIR)
