@@ -17,8 +17,11 @@
  * modification history:
  *
  * $Log: template.cc,v $
- * Revision 1.1  2001/02/01 11:22:29  muellerw
- * Initial revision
+ * Revision 1.2  2001/12/11 17:26:21  muellerw
+ * making the make dist target work out
+ *
+ * Revision 1.1.1.1  2001/02/01 11:22:29  muellerw
+ * gift-0.1.6pre: first version in GNU.org CVS
  *
  * Revision 1.1.1.1  2000/11/22 08:44:06  muellerw
  * Imported: gift-0.1.5-epsilon
@@ -64,7 +67,7 @@
  *
  */ 
 
-/** ... and in additions to that create change logs in $GIFT */
+/** ... and in additions to that update change log */
 
 
 

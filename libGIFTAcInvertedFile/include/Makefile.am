@@ -1,107 +1,12 @@
-noinst_HEADERS=CADIHash.h \
-CADIHash.h.kdoc \
-CAFDistanceMatrix.h \
-CAFHierarchy.h \
-CAFIFMySQL.h \
-CAFInvertedFile.h \
-CAFPerl.h \
-CAFPerl.h~ \
-CAFSpecialised.h \
-CAFURL2FTS.h \
-CAcDistanceMatrix.h \
-CAcHierarchy.h \
-CAcIFFileSystem.h \
-CAcIFFileSystem.h~ \
-CAcIFMySQL \
-CAcIFMySQL.h \
-CAcIFMySQL.h~ \
-CAcInvertedFile.h \
-CAcInvertedFile.h~ \
-CAcInvertedFileAbstraction.h \
-CAcPerl.h \
-CAcPerl.h~ \
-CAcSQLInvertedFile.h \
-CAcURL2FTS.h \
-CAccessor.h \
-CAccessorAdminCollection.h \
-CAccessorAdminCollection.h.kdoc \
-CAccessorElement.h \
-CAccessorFactory.h \
-CAccessorFactoryContainer.h \
-CAccessorImplementation.h \
-CAccessorImplementation.h~ \
-CAccessorAdmin.h \
-CAdditionalDocumentInformation.h \
-CAlgorithm.h \
-CAlgorithmCollection.h \
-CArraySelfDestroyPointer.h \
-CAttributeList.h \
-CStaticQueryFactory.h \
-CBitSetCollection.h \
-CComparisonResults.h \
-CDNBestFullyWeighted.h \
-CDocumentFrequencyElement.h \
-CDocumentFrequencyHash.h \
-CDocumentFrequencyList.h \
-CDocumentNormalizer.h \
-CIDRelevanceLevelPair.h \
-CIDRelevanceLevelPairList.h \
-CIFBuilderTriplet.h \
-CIFListStart.h \
-CInitializedDouble.h \
-CInvertedFileChunk.h \
-CMRMLStringConstants.h \
-CMagic.h \
-CPropertySheetList.h \
-CQHierarchy.h \
-CQInvertedFile.h \
-CQInvertedFile.h~ \
-CQMultiple.h \
-CQNBestFullyWeighted.h \
-CQNEuclideanLengthSquare.h \
-CQNMaxDocumentFrequency.h \
-CQNNoNormalization.h \
-CQNSquareDFLogICFSum.h \
-CQParallel.h \
-CQPerl.h \
-CQPerl.h~ \
-CQuery.h \
-CQueryNormalizer.h \
-CQueryParadigmMatcher.h \
-CQueryTreeBuilder.h \
-CQueryTreeNode.h \
-CRelevanceLevel.h \
-CRelevanceLevelList.h \
-CScoreBoard.h \
-CSelfDestroyPointer.h \
-CSessionManager.h \
-CSessionManager.h~ \
-CWFBestFullyWeighted.h \
-CWFBestProbabilistic.h \
-CWFBinaryTerm.h \
-CWFClassicalIDF.h \
-CWFCoordinationLevel.h \
-CWFProbability.h \
-CWFStandardTF.h \
-CWeighter.h \
-CWeightingFunction.h \
-CWeightingFunctionPointerHash.h \
-CWeightingFunctionPointerList.h \
-CXEVCommunication.h \
-CXEVTripletList.h \
-CXMLElement.h \
-CXMLElementVisitor.h \
-CXMLHelper.h \
-CXMLTriplet.h \
-CXMLTripletList.h \
-GIFTExceptions.h \
-Makefile \
-TID.h \
-WeightingFunctionsAndNormalizers.h \
-gift_features.h \
-map_to_list.h \
-merge_sort_streams.h \
-mrml_const.h \
-my_assert.h \
-my_diagnose.h \
-my_throw.h \
+noinst_HEADERS=CADIHash.h			  CDocumentFrequencyElement.h \
+CAFIFMySQL.h			  CDocumentFrequencyHash.h \
+CAFInvertedFile.h		  CDocumentFrequencyList.h \
+CAFSpecialised.h		  CIFBuilderTriplet.h \
+CAcIFFileSystem.h		  CIFListStart.h \
+CAcIFMySQL.h			  CInitializedDouble.h \
+CAcInvertedFile.h		  CInvertedFileChunk.h \
+CAcInvertedFileAbstraction.h	  WeightingFunctionsAndNormalizers.h \
+CAcSQLInvertedFile.h		  gift_features.h \
+CAdditionalDocumentInformation.h  map_to_list.h \
+CBitSetCollection.h		  merge_sort_streams.h \
+CComparisonResults.h

@@ -22,6 +22,14 @@
 
 echo "This script generates a configure script for the GIFT"
 echo "Use this if you have checked out the GIFT from CVS"
+
+echo "This script will be using the following GNU tools:"
+echo "---------------------------------------"
+echo `automake --version`
+echo `autoconf --version`
+echo `libtool --version`
+echo "---------------------------------------"
+
 echo "running aclocal"
 aclocal || (echo "bootstrap failed, because aclocal failed. exiting. " , exit 100; )
 echo "...done"

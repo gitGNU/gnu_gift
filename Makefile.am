@@ -17,32 +17,41 @@
 #     along with this program; if not, write to the Free Software
 #     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-SUBDIRS= Doc scripts dtd expat\
+SUBDIRS=  Doc scripts dtd expat\
 	@UNPUBLISHED_DIR@ \
 	libMRML \
 	libGIFTAcURL2FTS\
 	libGIFTAcHierarchy libGIFTQuHierarchy\
 	libGIFTAcInvertedFile libGIFTQuInvertedFile\
 	libGIFTAcPerl libGIFTQuPerl \
-	libGIFTAcDistanceMatrix \
         @GIFT_BAYESIAN_DIR@ libSquirePPM GIFTServer FeatureExtraction 
 
 
-EXTRA_DIST=	PluginMaker\
-			bootstrap-cvs.sh \
-			notice.am \
-			notice.c\
-		       notice.cc\
-		       notice.el\
-		       notice.h\
-		       notice.in\
-		       notice.java\
-			notice.pre-pl\
-		       notice.pre-pm\
-		       perl-compile-test-program.cc\
-		       pthread-compile-test-program.cc\
-		       renamer.pl\
-			gift-file-to-gift-file.pl      \
-			gift-install-prerequisites.pl  teco.sh\
-			gift-install-prerequisites.sh
+# doc should be the choice of the user...
+# libGIFTAcDistanceMatrix needs some unpublished class
+# where I (WM) have to look on to do accessor/query engine
+# separation
+# EXTRA_SUBDIRS=	Doc
+
+
+
+EXTRA_DIST=	libGIFTAcDistanceMatrix \
+		PluginMaker \
+		bootstrap-cvs.sh \
+		notice.am \
+		notice.c\
+		notice.cc\
+		notice.el\
+		notice.h\
+		notice.in\
+		notice.java\
+		notice.pre-pl\
+		notice.pre-pm\
+		perl-compile-test-program.cc\
+		pthread-compile-test-program.cc\
+		renamer.pl\
+		gift-file-to-gift-file.pl      \
+		gift-install-prerequisites.pl  \
+		teco.sh\
+		gift-install-prerequisites.sh
 

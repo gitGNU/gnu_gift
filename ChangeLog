@@ -1,15 +1,44 @@
+2001-12-11  MUELLER Wolfgang  <Wolfgang.Mueller@cui.unige.ch>
+
+	* FeatureExtraction/Makefile.am (EXTRA_DIST): install headers
+
+	* GIFTServer/gift-mrml-messages/Makefile.am: 
+	gift-ihandshake.pre-mrml gift-iconfigure.pre-mrml
+
+	* GIFTServer/gift-config/Makefile.am (EXTRA_DIST): gift-config.mrml
+
+	* libGIFTAcInvertedFile/include/Makefile.am (noinst_HEADERS): 
+	there were wrong headers in this file
+
+	* expat/xmltok/Makefile.am (EXTRA_DIST): xmltok_impl.c xmltok_ns.c
+	are actually  include files which need to be distributed using EXTRA_DIST
+
+	* dtd/Makefile.am: make mrml.dtd part of the distro
+
+	* Doc/Makefile.am: making doc makefile proof against missing tools
+
+	* scripts/perl/Makefile.am: making sure all prerequisites are distributed
+
+2001-12-10  MUELLER Wolfgang  <Wolfgang.Mueller@cui.unige.ch>
+
+	* bootstrap-cvs.sh: add missing
+	* expat/Makefile: removed
+
+	Globally: moving automatically generated files
+		out of CVS
+	Move towards a working "make dist" target
+	
 2001-12-08  MUELLER Wolfgang  <Wolfgang.Mueller@cui.unige.ch>
 
 	* libGIFTAcDistanceMatrix/include/Makefile.am: new file
-
 	* libGIFTQuPerl/include/Makefile.am: new file
-	
 	* libGIFTQuPerl/Makefile.am(noinst_HEADERS): 
 	* libMRML/include/Makefile.am(noinst_HEADERS): 
-	add all *.h files
+	make sure that *.h files are distributed
 
 	* scripts/perl/Makefile.am (EXTRA_SCRIPTS): pre-
-
+	pre-files must be distributed
+	
 	* libSquirePPM/Makefile.am (noinst_HEADERS): 
 
 	* bootstrap-cvs.sh: Added bootstrap script which
@@ -31,10 +60,6 @@
 	multiple query-result-element lists
 	(query-step): changing the sequence in the model
 	for working around bug in dtd-to-tex
-
-2001-11-21  Wolfgang Müller  <muellerw@cui.unige.ch>
-
-	* 
 
 2001-11-08  Wolfgang Müller  <muellerw@cui.unige.ch>
 

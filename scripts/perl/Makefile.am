@@ -20,7 +20,35 @@
 # this is also necessary for installing several versions of GIFT at the same time
 #
 
-EXTRA_SCRIPTS = gift-url-to-fts.pl gift-browser-benchmark.pl gift-extract-text-features.pl gift-annotation-to-html.pl gift-ranking-comparison.pl CFCRankingComparison.pm CGraphCollection.pm CQueryParadigmMatcher.pm CXTVTripletList.pm CTripleTransfer.pl CGLDAudreyMTam.pl CGLStructuredAnnotation.pm CGIFTLink.pm CGIFTLinkDemo.pl CGLDistanceMatrix.pm CXMLTreeBuilder.pm CXMLTreeWriter.pm CXMLTreeVisitor.pm CXTVWriter.pm CXTVTripletList.pm CXTVTripletList.pm  gift-start.pl gift-url-to-fts.pre-pl gift-browser-benchmark.pre-pl gift-extract-text-features.pre-pl gift-annotation-to-html.pre-pl gift-ranking-comparison.pre-pl CFCRankingComparison.pre-pm CGraphCollection.pre-pm CQueryParadigmMatcher.pre-pm CXTVTripletList.pre-pm CTripleTransfer.pre-pl CGLDAudreyMTam.pre-pl CGLStructuredAnnotation.pre-pm CGIFTLink.pre-pm CGIFTLinkDemo.pre-pl CGLDistanceMatrix.pre-pm CXMLTreeBuilder.pre-pm CXMLTreeWriter.pre-pm CXMLTreeVisitor.pre-pm CXTVWriter.pre-pm CXTVTripletList.pre-pm CXTVTripletList.pre-pm  gift-start.pre-pl
+EXTRA_DIST=  CTripleTransfer.pre-pl\
+ CGLDAudreyMTam.pre-pl\
+ CGLStructuredAnnotation.pre-pm\
+  CGIFTLink.pre-pm\
+ CGLDistanceMatrix.pre-pm\
+  CGIFTLinkDemo.pre-pl\
+  CXMLTreeBuilder.pre-pm\
+  CXMLTreeWriter.pre-pm\
+  CXMLTreeVisitor.pre-pm\
+  CXTVWriter.pre-pm\
+  CXTVTripletList.pre-pm\
+ gift-dtd-to-keywords.pre-pl\
+ gift-add-collection.pre-pl\
+ gift-browser-benchmark.pre-pl\
+ gift-ranking-comparison.pre-pl\
+ gift-mrml-client.pre-pl\
+ gift-url-to-fts.pre-pl\
+ CQueryParadigmMatcher.pre-pm\
+ CFeedbackClient.pre-pm\
+ CGraphCollection.pre-pm\
+ CFCMovingTarget.pre-pm\
+ CFCRankingComparison.pre-pm\
+ gift-diagnose-print-all-ADI.pre-pl\
+ gift-perl-example-server.pre-pl\
+ gift-dtd-to-tex.pre-pl\
+ gift-extract-text-features.pre-pl\
+ gift-annotation-to-html.pre-pl\
+ gift-old-to-new-url2fts.pre-pl\
+ gift-start.pre-pl
 
 
 PERLCONFIG=sed "s:__PERL_LOCATION__:@PERL@:g;s:__BINDIR__:@bindir@:g;s:__DATADIR__:@datadir@:g;s:__WEB_PUBLISHING_DIRECTORY__:@WEB_PUBLISHING_DIRECTORY@:g;s§__WEB_PUBLISHING_LOCATION__§@WEB_PUBLISHING_LOCATION@§g" < $< > $@
@@ -114,8 +142,9 @@ gift-start.pl: gift-start.pre-pl
 	$(PERLCONFIG)
 
 
-bin_SCRIPTS= @GIFT_INTERNAL_PERLS@ gift-url-to-fts.pl gift-diagnose-print-all-ADI.pl gift-mrml-client.pl CFeedbackClient.pm CFCMovingTarget.pm gift-perl-example-server.pl gift-add-collection.pl gift-dtd-to-tex.pl gift-dtd-to-keywords.pl CQueryParadigmMatcher.pm CTripleTransfer.pl CGLDAudreyMTam.pl CGLStructuredAnnotation.pm CGIFTLink.pm CGLDistanceMatrix.pm CGIFTLinkDemo.pl CXMLTreeBuilder.pm CXMLTreeWriter.pm CXMLTreeVisitor.pm CXTVTripletList.pm CXTVWriter.pm CGraphCollection.pm gift-old-to-new-url2fts.pl gift-start.pl
+bin_SCRIPTS= @GIFT_INTERNAL_PERLS@ gift-url-to-fts.pl gift-diagnose-print-all-ADI.pl gift-mrml-client.pl CFeedbackClient.pm CFCMovingTarget.pm gift-perl-example-server.pl gift-add-collection.pl gift-dtd-to-tex.pl gift-dtd-to-keywords.pl CQueryParadigmMatcher.pm CTripleTransfer.pl CGLDAudreyMTam.pl CGLStructuredAnnotation.pm CGIFTLink.pm CGLDistanceMatrix.pm CGIFTLinkDemo.pl CXMLTreeBuilder.pm CXMLTreeWriter.pm CXMLTreeVisitor.pm CXTVTripletList.pm CXTVWriter.pm CGraphCollection.pm gift-old-to-new-url2fts.pl gift-start.pl gift-diagnose-print-all-ADI.pl
 
+EXTRA_SCRIPTS=gift-browser-benchmark.pl gift-extract-text-features.pl gift-annotation-to-html.pl gift-ranking-comparison.pl CFCRankingComparison.pm CGraphCollection.pm
 
 clean: 
 	-rm *.pl *.pm

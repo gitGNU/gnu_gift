@@ -34,3 +34,4 @@ gift_write_feature_descs_LDADD= -L../libSquirePPM -lSquirePPM -lm
 
 
 bin_PROGRAMS = gift-extract-features gift-write-feature-descs
+EXTRA_DIST= gabor.h  gabor_old.h  gift_features.h

@@ -10,5 +10,6 @@ noinst_DATA= ../libMRML/cc/mrml_const.cc
 	mv mrml_const.cc ../libMRML/cc
 	mv mrml_const.java ../
 
+EXTRA_DIST=mrml.dtd
 
 data_DATA=mrml.dtd
