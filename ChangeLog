@@ -1,3 +1,18 @@
+2001-11-21  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* 
+
+2001-11-08  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* dtd/mrml.dtd: query step implied
+
+2001-10-11  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* dtd/mrml.dtd: I added "error" tags as children of
+	response tags where useful. The goal is to have components
+	report their errors, and thus to make it clearer where
+	the error occurred.
+
 2001-11-01  Wolfgang Mueller  <Wolfgang.Mueller@cui.unige.ch>
 
 	* dtd/mrml.dtd: added cui-text-query tag to dtd,

@@ -1,0 +1,13 @@
+#include "CQ@PLUGIN_NAME@.h"
+#include "CAccessorAdminCollection.h"
+extern "C" char* libGIFTQu@PLUGIN_NAME@_getClassName(){
+  return "@PLUGIN_TYPE@";
+}
+
+extern "C" CQuery* libGIFTQu@PLUGIN_NAME@_makeQuery(CAccessorAdminCollection& inAccessorAdminCollection,
+					    CAlgorithm& inAlgorithm
+					    ){
+  return new CQ@PLUGIN_NAME@(inAccessorAdminCollection,
+		     inAlgorithm
+		     );
+}

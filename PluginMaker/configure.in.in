@@ -1,0 +1,179 @@
+dnl -*- mode: autoconf -*-
+
+dnl  GIFT, a flexible content based image retrieval system.
+dnl  Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+dnl  This program is free software; you can redistribute it and/or modify
+dnl  it under the terms of the GNU General Public License as published by
+dnl  the Free Software Foundation; either version 2 of the License, or
+dnl  (at your option) any later version.
+
+dnl  This program is distributed in the hope that it will be useful,
+dnl  but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl  GNU General Public License for more details.
+
+dnl  You should have received a copy of the GNU General Public License
+dnl  along with this program; if not, write to the Free Software
+dnl  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+dnl
+dnl automake configuration for a htdig plugin for the GIFT system
+dnl 
+
+dnl
+dnl Author: Wolfgang Müller
+dnl
+dnl Process this file with autoconf to produce a configure script.
+dnl 
+
+## ----------------------------- ##
+## Set an environment variable   ##
+## ----------------------------- ##
+
+
+
+
+AC_INIT(libGIFTAc@PLUGIN_NAME@/cc/CAc@PLUGIN_NAME@.cc)
+
+AM_INIT_AUTOMAKE(GIFTPlugin-@PLUGIN_NAME@,0.1)
+
+
+#check if there is perl on this system
+AC_PATH_PROG(PERL,perl)
+
+AM_CONFIG_HEADER(config-@PLUGIN_NAME@.h)
+AC_ISC_POSIX
+dnl Checks for programs.
+
+dnl AC_LIBTOOL_DLOPEN
+AC_PROG_LIBTOOL
+AC_SUBST(LIBTOOL_DEPS)
+
+
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_RANLIB
+
+dnl
+dnl add the right lib versions:
+dnl 
+GIFT_LIB_VERSION_INFO="-version-info 0:1:5"
+AC_SUBST(GIFT_LIB_VERSION_INFO)
+
+GIFT_SOURCE_DIRECTORY=@PLUGIN_MAKER_PWD@
+AC_SUBST(GIFT_SOURCE_DIRECTORY)
+
+
+AC_C_CONST
+AC_EXEEXT
+AC_LANG_CPLUSPLUS
+
+dnl debugging
+
+CXXFLAGS="$CXXFLAGS -DEF_PROTECT_BELOW=1 -DEF_PROTECT_FREE -DEF_PROTECT_ALIGNMENT=8 -DEF_FILL=42 "	
+
+dnl BEGIN --enable-multi-threading
+
+AC_ARG_ENABLE(multi-threading,
+	[  --enable-multi-threading enable multithreading],
+	[
+	dnl 
+	dnl we need recursive locking, and this seems to be the way to test it
+	dnl	
+	AC_MSG_CHECKING([if we can use POSIX threads the way we want])
+	RESCUE_CXXFLAGS=$CXXFLAGS
+	CXXFLAGS="$CXXFLAGS -DHAVE_LIBPTHREAD -D_PHTREADS -D__GIFT_NEW_IS_MALLOC   -D__GIFT_USES_THREADS__ "
+
+#-D__GIFT_FREE_UNUSED_ACCESSORS
+#
+# -D__NO_GIFT_SERVER_THREADS__
+# -D__NO_GIFT_CQMULTIPLE_THREADS__ 
+# -D__USE_MALLOC
+# 
+
+	dnl echo $CXXFLAGS
+	dnl echo "$CC pthread-compile-test-program.cc $CXXFLAGS -o pthread-compile-test-program  $LDFLAGS -lpthread"
+	if($CXX $CXXFLAGS pthread-compile-test-program.cc  -o pthread-compile-test-program  $LDFLAGS -lpthread) ; then
+		if ./pthread-compile-test-program ; then
+			AC_MSG_RESULT([yes (will use pthread)])
+			LDFLAGS="$LDFLAGS -lpthread"
+		else
+			AC_MSG_RESULT([no: testprogram compiled but failed to run]);
+			CXXFLAGS=$RESCUE_CXXFLAGS
+		fi
+		rm pthread-compile-test-program
+else
+		CXXFLAGS=$RESCUE_CXXFLAGS
+		LDFLAGS=$RESCUE_LDFLAGS
+		AC_MSG_RESULT([no: failed: $CXX CXXFLAGS:($CXXFLAGS) pthread-compile-test-program.cc  -o pthread-compile-test-program  LDFLAGS:($LDFLAGS -lpthread)]);
+	fi
+	],
+	[
+	AC_MSG_WARN([Use --enable-multi-threading for enabling multi threading])
+	]
+)
+dnl END --enable-multithreading handling
+
+
+
+
+
+
+dnl try to find the installer program
+AC_PROG_INSTALL
+
+AM_PATH_LISPDIR
+
+AC_SUBST(EMACS)
+
+dnl ugh, beats me (phenomenological programming)
+AC_PROG_MAKE_SET
+dnl ugh, beats me.
+
+
+PRE_INSTALL_LIBDIRS="-L@GIFT_SOURCE_DIRECTORY@/../gift/libMRML/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcPerl/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuPerl/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcInvertedFile/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcHierarchy/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcDistanceMatrix/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuInvertedFile/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuBayesian/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuHierarchy/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcURL2FTS/cc/"
+
+PRE_INSTALL_LINKDIRS="--rpath@GIFT_SOURCE_DIRECTORY@/../gift/libMRML/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcPerl/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuPerl/cc/ --rpath@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcInvertedFile/cc/ --rpath@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcHierarchy/cc/ --rpath@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcDistanceMatrix/cc/ --rpath@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuInvertedFile/cc/ --rpath@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuBayesian/cc/ --rpath@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuHierarchy/cc/ --rpath@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcURL2FTS/cc/"
+
+AC_SUBST(PRE_INSTALL_LIBDIRS)
+AC_SUBST(PRE_INSTALL_LINKDIRS)
+
+
+dnl FIXME perl is missing here for full functionality
+
+dnl Checks for libraries.
+     
+dnl Checks for header files.
+AC_STDC_HEADERS
+AC_HAVE_HEADERS(string algorithm) 
+AC_HAVE_HEADERS(unistd.h) 
+dnl Checks for system dependent include files
+AC_HAVE_HEADERS( stdlib.h unistd.h sys/types.h time.h sys/time.h sys/socket.h arpa/inet.h netinet/tcp.h )
+
+dnl this is just to check that I have understood how things work
+AC_CHECK_LIB(m,sin)
+dnl do we have an expat parser installed?
+dnl THIS IS PRESENTLY UNUSED.
+dnl AC_CHECK_LIB(expat,XML_ParserCreate)
+dnl SUNs need to link the -lsocket to programs using sockets. 
+AC_CHECK_LIB(socket,socket)
+dnl check if we have posix threads
+AC_CHECK_LIB(pthread,pthread_mutexattr_destroy)
+
+
+
+dnl checks if this is big-endian or not
+AC_C_BIGENDIAN
+
+
+
+
+
+AC_OUTPUT([Makefile 
+
+		libGIFTAc@PLUGIN_NAME@/Makefile
+		libGIFTAc@PLUGIN_NAME@/cc/Makefile 
+		libGIFTQu@PLUGIN_NAME@/Makefile
+		libGIFTQu@PLUGIN_NAME@/cc/Makefile 
+	])

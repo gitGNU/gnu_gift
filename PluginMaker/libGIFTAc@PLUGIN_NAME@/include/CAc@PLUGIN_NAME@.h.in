@@ -1,0 +1,64 @@
+/* -*- mode: c++ -*- 
+*/
+/* 
+
+    GIFT, a flexible content based image retrieval system.
+    Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+*/
+// -*- mode: c++ -*-
+#ifndef _CAC@PLUGIN_NAME@
+#define _CAC@PLUGIN_NAME@
+
+#include <list>
+#include <map>
+#include "CAccessorImplementation.h"
+
+class CXMLElement;
+#include "CIDRelevanceLevelPairList.h"
+#include "CMutex.h" // multithreading
+/** 
+    ACCESSOR FOR THE @PLUGIN_NAME@ PLUGIN FOR THE GIFT
+
+    This Accessor will make configuration data accessible.
+
+    @author Wolfgang Müller
+*/
+class CAc@PLUGIN_NAME@:public CAccessorImplementation{
+protected:
+  /** mutual exclude for multithreading*/
+  CMutex mMutex@PLUGIN_NAME@;
+public:
+  /**  
+       constructor opens a hierarchy file and reads it.
+
+       Like every accessor, this accessor takes a <collection />
+       MRML element as input (@see CXMLElement for how to access 
+       the attributes of this element). Currently this accessor
+       understands  the following attributes:
+
+
+       NOTHING YET
+  */
+  CAc@PLUGIN_NAME@(const CXMLElement& inConfiguration);
+  /**
+     has this been successfully read?
+  */
+  operator bool()const;
+};
+
+#endif

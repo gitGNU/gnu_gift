@@ -75,7 +75,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
 
      ++++++++++++++++++++++++++++++ -->
-<!ELEMENT configuration-description EMPTY>
+<!ELEMENT configuration-description (error?)>
 
 
 <!-- ++++++++++++++++++++++++++++++ 
@@ -109,9 +109,9 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
 
      ++++++++++++++++++++++++++++++ -->
-<!ELEMENT session-list   (session+)
+<!ELEMENT session-list   (session+|error)
 >
-<!ELEMENT session       EMPTY
+<!ELEMENT session       (error?)
 >
 <!ATTLIST session       session-id          CDATA #REQUIRED
                         session-name        CDATA "Default session"
@@ -142,9 +142,9 @@ is supposed to hold a description about anything which is nonstandard \MRML.
      the methods you want to propose to the server.
 
      ++++++++++++++++++++++++++++++  -->
-<!ELEMENT collection-list         (collection*)
+<!ELEMENT collection-list         (collection*|error)
 >
-<!ELEMENT collection             (query-paradigm-list?)
+<!ELEMENT collection             (query-paradigm-list?|error)
 >
 <!ATTLIST collection  collection-id                       CDATA #REQUIRED
                       collection-name                     CDATA #REQUIRED
@@ -179,10 +179,10 @@ is supposed to hold a description about anything which is nonstandard \MRML.
      be performed with this algorithm/collection 
 
      ++++++++++++++++++++++++++++++ -->
-<!ELEMENT query-paradigm-list         (query-paradigm*)
+<!ELEMENT query-paradigm-list         (query-paradigm*|error)
 >
 
-<!ELEMENT query-paradigm  EMPTY
+<!ELEMENT query-paradigm  (error?)
 >
 <!ATTLIST query-paradigm  query-paradigm-id CDATA #REQUIRED
 >
@@ -208,7 +208,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
      returns a list of algorithms for a given collection on the server 
 
      ++++++++++++++++++++++++++++++ -->
-<!ELEMENT algorithm-list         (algorithm*)
+<!ELEMENT algorithm-list         (algorithm*|error)
 >
 
 <!-- ++++++++++++++++++++++++++++++ 
@@ -221,7 +221,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
      optionally an "allows-children" specification
 
      ++++++++++++++++++++++++++++++ -->
-<!ELEMENT algorithm             (algorithm*,property-sheet?,query-paradigm-list?,allows-children?)
+<!ELEMENT algorithm             ((algorithm*,property-sheet?,query-paradigm-list?,allows-children?)|error)
 >
 <!ATTLIST algorithm  algorithm-id      CDATA #REQUIRED
                      collectiom-id     CDATA #REQUIRED
@@ -257,7 +257,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
      children.
 
      ++++++++++++++++++++++++++++++ -->
-<!ELEMENT allows-children (query-paradigm-list?)>
+<!ELEMENT allows-children ((query-paradigm-list?)|error)>
                       
 <!-- ++++++++++++++++++++++++++++++ 
 
@@ -307,7 +307,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
                                             what should be the XML output coming back.
                                             Useful for configuring your database.}
      ++++++++++++++++++++++++++++++ -->
-<!ELEMENT property-sheet (property-sheet)*
+<!ELEMENT property-sheet ((property-sheet)*|error)
 >
 <!ATTLIST property-sheet  property-sheet-id   ID                        #REQUIRED
                           property-sheet-type (
@@ -363,7 +363,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
      you get a powerful tool.
 
      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<!ELEMENT algorithm (algorithm*)
+<!ELEMENT algorithm ((algorithm*)|error)
 >
 <!ATTLIST algorithm   algorithm-id   ID    #REQUIRED
                       algorithm-type CDATA "adefault"
@@ -449,7 +449,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
 <!ELEMENT query-step   ((cui-text-query|user-relevance-element-list|cui-hierarchy-up)*)
 >
-<!ATTLIST query-step   query-step-id        CDATA #REQUIRED
+<!ATTLIST query-step   query-step-id        CDATA #IMPLIED
 
                            result-size    CDATA #IMPLIED
                            result-cutoff  CDATA #IMPLIED
@@ -497,10 +497,10 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-    <!ELEMENT query-result  (query-resultelement-list?,query-result*)>
+    <!ELEMENT query-result  ((query-resultelement-list?,query-result*)|error)>
 
-    <!ELEMENT query-result-element-list (query-resultelement+)>
-    <!ELEMENT query-result-element EMPTY>
+    <!ELEMENT query-result-element-list ((query-result-element|error)+)>
+    <!ELEMENT query-result-element (error?)>
     <!ATTLIST query-result-element calculated-similarity      CDATA #REQUIRED
                              thumbnail-location              CDATA #REQUIRED
                              image-location                  CDATA #REQUIRED>
@@ -557,7 +557,5 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 <!ELEMENT cui-ihandshake              EMPTY>
 <!ELEMENT cui-shandshake              EMPTY>
 <!ELEMENT cui-random-images           EMPTY>
-
-
 
 ]>

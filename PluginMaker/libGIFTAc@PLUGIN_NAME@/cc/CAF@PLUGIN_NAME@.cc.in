@@ -1,0 +1,11 @@
+#include "CAF@PLUGIN_NAME@.h"
+
+
+CAccessor* CAF@PLUGIN_NAME@::makeAccessor(const CXMLElement& inConfiguration)const{
+  return new CAc@PLUGIN_NAME@(inConfiguration);
+};
+
+CAF@PLUGIN_NAME@::CAF@PLUGIN_NAME@(){
+  mName="@PLUGIN_TYPE@";
+};
+

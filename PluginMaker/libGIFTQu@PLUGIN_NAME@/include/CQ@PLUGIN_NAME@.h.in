@@ -1,0 +1,128 @@
+/* -*- mode: c++ -*- 
+*/
+/* 
+
+    GIFT, a flexible content based image retrieval system.
+    Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+*/
+// -*- mode: c++ -*-
+#ifndef _CQ@PLUGIN_NAME@
+#define _CQ@PLUGIN_NAME@
+
+
+/* -*- mode: c++ -*- 
+*/
+/**
+ *
+ * CQ@PLUGIN_NAME@.h
+ * An empty CQuery subclass
+ *
+ *
+ * modification history:
+ *
+ * WM 20000205 creation
+ *
+ *
+ *
+ * compiler defines used:
+ * _CQ@PLUGIN_NAME@.h avoids double inclusion
+ *
+ */
+#include <memory>
+#include <map>
+#include <list>
+#include "CQuery.h"
+#include "CSelfDestroyPointer.h"
+#include "CIDRelevanceLevelPairList.h"
+#include "CRelevanceLevelList.h"
+
+//#include "CWeightingFunctionPointerList.h"
+//#include "CWeightingFunctionPointerHash.h"
+
+#include "CAlgorithm.h"
+#include "CAccessor.h"
+#include "CAccessorAdminCollection.h"
+#include "CAccessorAdmin.h"
+
+
+class CScoreBoard;
+class CAccessor;
+
+
+/** 
+
+    This is a simple @PLUGIN_NAME@ based browser.
+    
+
+    @Author: Wolfgang Müller
+
+ */
+class CQ@PLUGIN_NAME@:public CQuery{
+protected:
+  /** sets mCurrentPosition to 0*/
+  void init();
+
+ public:
+  /**
+   *
+   * default constructor
+   * 
+   */
+  CQ@PLUGIN_NAME@();
+  /**
+   *
+   * we need to unregister the accessors used
+   * 
+   */
+  ~CQ@PLUGIN_NAME@();
+  /**
+   */
+  CQ@PLUGIN_NAME@(CAccessorAdminCollection& inAccessorAdminCollection,
+		  CAlgorithm&          inAlgorithm);
+    
+  /**
+   * Processing a query
+   *
+   *@param inQuery an CXMLElement containing a query-step element
+   */
+  virtual CXMLElement* query(const CXMLElement& inQuery);
+
+  /** This function is useless in the context of this plugin.
+      Please see CQuery and its documentation for more instructions 
+
+      The reason why this function is here, is to bail out on misconfiguration,
+      and to keep the compiler happy.
+
+      @see CQuery
+  */
+  virtual CIDRelevanceLevelPairList* fastQuery(const CXMLElement& ,
+					       int ,
+					       double);
+
+
+  /**
+   *
+   * set the Algorithm. DEPRECATED
+   *
+   */
+  virtual bool setAlgorithm(CAlgorithm& inAlgorithm);
+
+}; /* end of class */
+
+#endif
+
