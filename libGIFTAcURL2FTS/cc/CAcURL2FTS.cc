@@ -34,7 +34,8 @@
 #include "libGIFTAcURL2FTS/include/CAcURL2FTS.h"
 #include "libMRML/include/CXMLElement.h" // constructor
 //the expat xml parser by J.Clark
-#include "expat/xmlparse/xmlparse.h"
+//#include "expat/xmlparse/xmlparse.h"
+#include <expat.h>
 
 extern CMutex* gMutex;
 

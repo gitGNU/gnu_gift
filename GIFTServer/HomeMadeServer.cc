@@ -50,7 +50,8 @@
 //#include <linux/socket.h>
 
 //the expat xml parser by J.Clark
-#include "expat/xmlparse/xmlparse.h"
+//#include "expat/xmlparse/xmlparse.h"
+#include <xmlparse.h>
 //a class for using xpat attributes in a nice way
 #include "libMRML/include/CAttributeList.h"
 

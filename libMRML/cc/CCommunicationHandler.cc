@@ -880,7 +880,8 @@ CCommunicationHandler::~CCommunicationHandler(){
     
     startMultiRequest clears the message which is going to be built.
 */
-void CCommunicationHandler::startMultiRequest(const string& inSessionID){
+void CCommunicationHandler::startMultiRequest(const string& inSessionID,
+					      const string& inLanguageCode){
   mMultiResponse=new CXMLElement("mrml",0);
   mMultiResponse->addAttribute("session-id",
 			       inSessionID);
@@ -897,10 +898,14 @@ void CCommunicationHandler::endMultiRequest(){
 				 "and-of-course-for-fun");
     CTimeStampGenerator lGenerator;
     addToMultiResponse(lGenerator.generateTimeStamp());
-
+#warning FIXME add response translation here
+    if(mMultiResponse->stringReadAttribute(mrml_const::session_id).first){
+      mSessionManager.translate(mMultiResponse->stringReadAttribute(mrml_const::session_id).second,
+				*mMultiResponse);
+    }
+    
     gMutex->lock();
     mMultiResponse->toXML(lMessage);
-
     cout << "endMultiRequest: WRITING: "
 	 << lMessage
 	 << endl;

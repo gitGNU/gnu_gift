@@ -35,6 +35,8 @@ class CAttributeList:public map<string,pair<char*,char*> >,public CMagic{
 public:
   /** */
   void check()const;
+  /** Get the keys of all attributes in this list*/
+  list<string> getKeys()const;
   /** */
   typedef map<string,pair<char*,char*> > CBase;
   /** from expat */

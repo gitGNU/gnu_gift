@@ -389,3 +389,20 @@ void CAttributeList::check()const{
 		   i->second.first));
   }
 };
+/** a local function */
+template<typename T>
+static const string& _CAL_getFirst(const pair<string, T>& inElement){
+  return inElement.first;
+}
+
+/** Get the keys of all attributes in this list*/
+list<string> CAttributeList::getKeys()const{
+  list<string> lReturnValue;
+  transform(this->begin(),
+	    this->end(),
+	    back_inserter(lReturnValue),
+	    _CAL_getFirst<CAttributeList::mapped_type>
+	    );
+	    
+  return lReturnValue;
+}

@@ -115,7 +115,8 @@ void operator delete[](void* inToBeDeleted){
 //#include <linux/socket.h>
 
 //the expat xml parser by J.Clark
-#include "expat/xmlparse/xmlparse.h"
+//#include "expat/xmlparse/xmlparse.h"
+#include <expat.h>
 //a class for using xpat attributes in a nice way
 #include "libMRML/include/CAttributeList.h"
 
@@ -225,7 +226,9 @@ void generateDistanceMatrix(const string& inBaseDir,
     
 
   CSessionManager lSessionManager(inBaseDir+"/gift-sessions.mrml",
-				  inBaseDir+"/gift-config.mrml");
+				  inBaseDir+"/gift-config.mrml",
+				  inBaseDir+"/gift-i18n.xml"
+				  );
   
   // open a session
   string lSessionID(lSessionManager.newSession("DistanceMatrixMaker",""));
@@ -768,7 +771,9 @@ int main(int argc, char **argv){
   // the communication handler for this application
   // class definition is just above in this file
   CSessionManager gSessionManager(gGIFTHome+"/gift-sessions.mrml",
-				  gGIFTHome+"/gift-config.mrml");
+				  gGIFTHome+"/gift-config.mrml",
+				  gGIFTHome+"/gift-i18n.xml"
+				  );
   ofstream gLogFile(string(gGIFTHome+"/gift-log.mrml").c_str(),
 		    ios::app);
 

@@ -30,6 +30,7 @@
 #include <map>
 #include "libMRML/include/CXMLElement.h"
 #include "libMRML/include/CAccessorAdminCollection.h"
+#include "libMRML/include/CI18nTranslator.h"
 #include "libMRML/include/CAlgorithm.h"
 #include "libMRML/include/CPropertySheetList.h"
 #include "libMRML/include/CAccessorElement.h"
@@ -59,6 +60,12 @@ class CStaticQueryFactory;
  */
 class CSession{
 protected:
+  /** the language to be used in this session*/
+  string mPreferredLanguage;
+  /** the list of languages to be used */
+  typedef list<string> CLanguageList;
+  /** the list of languages to be used */
+  CLanguageList mLanguages;
   /** the mutex for this session */
   CMutex mMutexSession;
   /** */
@@ -161,6 +168,21 @@ public:
       (calls setSessionName, at present)
    */
   bool rename(const string& inName);
+  /** the list of preferred languages of this 
+      is cleared */
+  void CSession::clearLanguages();
+  /** one language code is added at the back of the list
+      of preferred languages */
+  void CSession::addLanguage(string inLanguageCode);
+  /** commit the list of languages. That means, here the
+      actual language that will be used throughout the 
+      translation is determined */
+  void CSession::commitLanguages(const CI18nTranslator& inTranslator);
+  /** get the preferred languages of this session */
+  list<string> CSession::getLanguages()const;
+  /** get the preferred languages of this session */
+  string CSession::getPreferredLanguage()const;
+
   //--------------------------------------------------
   /**  generating XML output for configuration/shandshake */
   string toXML(bool isPrivate)const;
@@ -192,6 +214,10 @@ protected:
      The accessor collection is needed for constructing queries
   */
   CAccessorAdminCollection mAccessorAdminCollection;
+  /**
+     The Translator for this
+  */
+  CI18nTranslator mI18nTranslator;
   /**  
        point the user to all the sessions
   */
@@ -219,7 +245,8 @@ public:
        and generates out of this its initial state.
   */
   CSessionManager(string inSessions,
-		  string inConfiguration);
+		  string inConfiguration,
+		  string inI18nFileName);
   //----------------------------------------
   /**
    *this CSessionManager has all the information
@@ -381,6 +408,18 @@ public:
   /** This function probably will quite soon be removed from this class,
       and it will become part of a class containing the CSessionManager*/
   CXMLElement* getAlgorithms()const;
+  /** i18n clear the preferred languages list of a given session */
+  bool clearSessionLanguages(const string& inSessionID);
+  /** i18n: add one language code to the list of preferred languages */
+  bool addSessionLanguage(const string& inSessionID,
+			  const string& inLanguageCode);
+  /** commit the languages to be used for a session.*/
+  bool commitSessionLanguages(const string& inSessionID);
+  /** i18n: get the list of preferred languages of this session */
+  list<string> getSessionLanguages(const string& inSessionID)const;
+  /** i18n: get the list of preferred languages of this session */
+  void CSessionManager::translate(string inSessionID,
+				  CXMLElement& inoutToBeTranslated)const;
 };
 
 #endif

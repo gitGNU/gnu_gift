@@ -25,19 +25,22 @@
 my $lModule;
 my $lReturnValue;
 while($lModule=shift){
+  print "Checking for module $lModule in your perl setup\n";
   eval "use $lModule;";
   my $lErrorString=join("\n    ",split("\n",$@));
   if($@){
-    my $lReturnValue=1;
+    $lReturnValue=1;
     print STDERR << "ENDSTRING" 
       $lModule is missing. 
 	Perl gives us the following error message:
 	$lErrorString;
 ENDSTRING
+  }else{
+    print "$lModule: OK\n"
   };
-  
 }
 
 die q(There were one or more missing Perl modules. Please install them
       or adjust your Perl library path befor trying again.
-     ), $lReturnValue if $lReturnValue
+
+     This error message was generated ) if $lReturnValue

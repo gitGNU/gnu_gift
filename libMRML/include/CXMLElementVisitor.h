@@ -42,6 +42,16 @@ class CXMLElementVisitor{
 	visiting on the way back
     */
     virtual void endVisit(const CXMLElement& inVisited)=0;
+    /** 
+	makes this visit inVisted.
+	The return value decides, if 
+	the visit recurses further or not
+    */
+    virtual bool startVisit(CXMLElement& inVisited);
+    /** 
+	visiting on the way back
+    */
+    virtual void endVisit(CXMLElement& inVisited);
 };
 
 #endif

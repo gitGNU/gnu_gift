@@ -1,3 +1,100 @@
+2002-07-23  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libMRML/cc/CXMLElementBuilder.cc: 
+	* libMRML/include/CCommunicationHandler.h: 
+	* libMRML/include/CI18nTranslator.h: 
+	* libGIFTAcURL2FTS/cc/CAcURL2FTS.cc: 
+	* GIFTServer/HomeMadeServer.cc: 
+	* libGIFTAcHierarchy/cc/CAcHierarchy.cc: 
+	* libMRML/cc/CSessionManager.cc: using pre-intalled
+	expat instead of GIFT-provided one. changing includes.
+
+2002-07-22  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libMRML/cc/CXMLElementVisitor.h:
+	* libMRML/cc/CXMLElementVisitor.cc: adding non-const
+	member functions to CXMLElementVisitor. By default
+	all they do is call the const members
+	
+
+	* libMRML/cc/CAttributeList.cc (getKeys): 
+	* libMRML/include/CAttributeList.h(getKeys): 
+	New function: get keys of all attributes
+
+2002-07-21  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libMRML/include/CSessionManager.h: 
+	* libMRML/cc/CSessionManager.cc(clearLanguages): 
+	* libMRML/cc/CSessionManager.cc(addLanguage): 
+	* libMRML/cc/CSessionManager.cc(getLanguages): 
+	* libMRML/cc/CSessionManager.cc(clearSessionLanguages): 
+	* libMRML/cc/CSessionManager.cc(addSessionLanguage): 
+	* libMRML/cc/CSessionManager.cc(getSessionLanguages): 
+	Three new procedures for maintaining the languages preferred by
+	a given session
+	
+	
+2002-07-19  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* scripts/perl/gift-add-collection.pre-pl: files with special 
+	characters now get correctly encoded. Little problem: the client
+	has to offer these encodings. The php does not do so, currently.
+
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc: fixed: opening
+	wrong file after indexing
+
+	* libMRML/include/Makefile.am (install-data-local): Fixed
+	strange intstallation problems seem to have to make
+	the path before doing intall-local
+
+	(install-data-hook): this target was an install-data-local 
+	before. That crashed if the installation directory was
+	not present before installation
+
+2002-07-18  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* pthread-compile-test-program.cc (main): 
+	return type must be int
+
+2002-07-17  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* GIFTServer/Server.cc: 
+
+	* libMRML/include/CSessionManager.h (class CSessionManager): 
+	* libMRML/cc/CSessionManager.cc: 
+	Uses now CI18nTranslator class
+	
+	* libMRML/cc/CI18nTranslator.cc: 
+	* libMRML/include/CI18nTranslator.h: 
+	adding support for internationalization of mrml files. This
+	i18n is adapted to frequent changes of the languages during
+	runtime, as it is appropriate for servers.
+
+2002-07-12  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
+
+	* scripts/perl/gift-add-collection.pre-pl: 
+	Finding all images within a tree before starting.
+	Enables us to write out progress.
+
+2002-07-10  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
+
+	* scripts/perl/gift-add-collection.pre-pl: 
+	1) use strict
+	2) applied bugfix for lThumbnailURLPrefix by karl s. eiringer
+
+2002-07-08  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
+
+	* dtd/mrml.dtd: Ralf Juengling tells me that there are 
+	two definitions for algorithm in the dtd. Changed
+
+2002-06-19  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
+
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc: 
+	* libGIFTAcInvertedFile/include/CAcIFFileSystem.h: 
+	Changes for putting temporary data at a place
+	where we know we can write
+	
+
 2002-06-17  Wolfgang Müller  <kde3@btn1n6.inf.uni-bayreuth.de>
 
 	* gift-check-perl-config.pl: this script checks if perl

@@ -24,7 +24,7 @@
 
 */
 #include <string>
-#include "expat/xmlparse/xmlparse.h"
+#include <expat.h>
 #include "libMRML/include/CXMLElement.h"
 #include "libMRML/include/CSelfDestroyPointer.h"
 

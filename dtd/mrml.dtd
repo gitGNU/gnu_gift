@@ -49,8 +49,8 @@
                 |cui-configuration
                 )?,
                end-transaction?) >
-<!ATTLIST mrml session-id     ID #IMPLIED
-               transaction-id ID #IMPLIED>
+<!ATTLIST mrml session-id     CDATA #IMPLIED
+               transaction-id CDATA #IMPLIED>
 
 
 <!-- ++++++++++++++++++++++++++++++
@@ -224,6 +224,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 <!ELEMENT algorithm             ((algorithm*,property-sheet?,query-paradigm-list?,allows-children?)|error)
 >
 <!ATTLIST algorithm  algorithm-id      CDATA #REQUIRED
+                     algorithm-type    CDATA #REQUIRED
                      collectiom-id     CDATA #REQUIRED
                      algorithm-name    CDATA #REQUIRED
 
@@ -350,25 +351,6 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
 >
 
-<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-     \tagtitle{algorithm}
-     An algorithm will be either an empty element with 
-     attributes (add some at your will, it will talk with your 
-     server anyway, and this is the server which sent the property 
-     sheet), or a tree of algorithms.
-
-     What is the use of this?
-     Think of configuring meta queries. Together with properties
-     you get a powerful tool.
-
-     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
-<!ELEMENT algorithm ((algorithm*)|error)
->
-<!ATTLIST algorithm   algorithm-id   ID    #REQUIRED
-                      algorithm-type CDATA "adefault"
-                      collection-id   CDATA "cdefault"
->
 
 
     

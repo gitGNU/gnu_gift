@@ -24,7 +24,8 @@
 #include "libGIFTAcHierarchy/include/CAcHierarchy.h"
 #include <cassert>
 #include "libMRML/include/GIFTExceptions.h"
-#include "expat/xmlparse/xmlparse.h"
+//#include "expat/xmlparse/xmlparse.h"
+#include <expat.h>
 #include <fstream>
 #include "libMRML/include/CXMLElement.h"
 #include "libMRML/include/CAttributeList.h"

@@ -108,6 +108,9 @@ protected:
 #else
   CArraySelfDestroyPointer<char> mInvertedFileBuffer;
 #endif
+
+  /** Some place for putting temporary indexing data*/
+  string mTemporaryIndexingFileBase;
   /** The inverted file */
   mutable CSelfDestroyPointer<istream> mInvertedFile;
 

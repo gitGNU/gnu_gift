@@ -27,7 +27,8 @@
 #include "libMRML/include/GIFTExceptions.h"
 #include <cstdio>
 #include <iterator>
-#include "expat/xmlparse/xmlparse.h"
+//#include "expat/xmlparse/xmlparse.h"
+#include <expat.h>
 #include "libGIFTQuInvertedFile/include/CQInvertedFile.h"
 #include "libMRML/include/CSessionManager.h"
 #include "libMRML/include/CAttributeList.h"
@@ -279,13 +280,41 @@ string CSession::toXML(bool isPrivate)const{
   return lHelper.toString();
 }
 
+void CSession::clearLanguages(){
+  mLanguages.clear();
+}
+void CSession::addLanguage(string inLanguageCode){
+  mLanguages.push_back(inLanguageCode);
+}
+/** commit the list of languages. That means, here the
+    actual language that will be used throughout the 
+    translation is determined */
+void CSession::commitLanguages(const CI18nTranslator& inTranslator){  
+  for(CLanguageList::const_iterator i=mLanguages.begin();
+      i!=mLanguages.end();
+      i++){
+    if(inTranslator.hasLanguage(*i)){
+      mPreferredLanguage=*i;
+      break;
+    }
+  }
+};
+
+list<string> CSession::getLanguages()const{
+  return mLanguages;
+}
+string CSession::getPreferredLanguage()const{
+  return mPreferredLanguage;
+}
+
 //
 CSession::CSession():
   mActiveAlgorithm(0),
   mSessionName(""),
   mID(""),
   mIsOpen(0),
-  mUser("")
+  mUser(""),
+  mPreferredLanguage("de")
 {
   mMutexSession.lock();
   // nothing: use it with read
@@ -298,7 +327,8 @@ CSession::CSession():
 CSession::CSession(string inUser,
 		   string inID,
 		   string inSessionName,
-		   CAlgorithm* inActiveAlgorithm)
+		   CAlgorithm* inActiveAlgorithm):
+  mPreferredLanguage("de")
 {
   // mutex not needed. if two call this 
   // at the same time, there is some
@@ -476,11 +506,13 @@ ostream& operator<<(ostream& outStream,
 
 ///
 CSessionManager::CSessionManager(string inSessionFileName,
-				 string inConfigFileName):
+				 string inConfigFileName,
+				 string inI18nFileName):
   mPropertySheetList(0),
   mPropertySheetSubtree(0),
   mAccessorAdminCollection(inConfigFileName),
   CAlgorithmCollection(inConfigFileName),
+  mI18nTranslator(inI18nFileName),
   mBaseTypeFactory(new CDynamicQueryFactory(__LIBDIR__)){
 
   ifstream lSessions(inSessionFileName.c_str());
@@ -1028,6 +1060,86 @@ bool CSessionManager::setAlgorithm(const string& inSessionID,
   mMutexSessionManager.unlock();
   return lResult;
 };
+bool CSessionManager::clearSessionLanguages(const string& inSessionID){
+  mMutexSessionManager.lock();
+  //this should also kick of the 
+  //creation of a suitable query tree
+
+  CIDToSession::const_iterator lFound(mIDToSession.find(inSessionID));
+  
+  //  assert(lSession);
+  if(lFound==mIDToSession.end()){
+    my_throw(VENotFound("Could not find Session"));
+  }
+  // if this fails this is a real bug
+  // it should never happen
+  // please don't delete
+  assert(lFound->second);
+    
+  lFound->second->clearLanguages();
+  mMutexSessionManager.unlock();
+  return true;
+};
+bool CSessionManager::addSessionLanguage(const string& inSessionID,
+					 const string& inLanguageCode){
+  mMutexSessionManager.lock();
+  //this should also kick of the 
+  //creation of a suitable query tree
+
+  CIDToSession::const_iterator lFound(mIDToSession.find(inSessionID));
+  
+  //  assert(lSession);
+  if(lFound==mIDToSession.end()){
+    my_throw(VENotFound("Could not find Session"));
+  }
+  // if this fails this is a real bug
+  // it should never happen
+  // please don't delete
+  assert(lFound->second);
+    
+  lFound->second->addLanguage(inLanguageCode);
+  mMutexSessionManager.unlock();
+  return true;
+};
+bool CSessionManager::commitSessionLanguages(const string& inSessionID){
+  mMutexSessionManager.lock();
+  //this should also kick of the 
+  //creation of a suitable query tree
+
+  CIDToSession::const_iterator lFound(mIDToSession.find(inSessionID));
+  
+  //  assert(lSession);
+  if(lFound==mIDToSession.end()){
+    my_throw(VENotFound("Could not find Session"));
+  }
+  // if this fails this is a real bug
+  // it should never happen
+  // please don't delete
+  assert(lFound->second);
+    
+  lFound->second->commitLanguages(mI18nTranslator);
+  mMutexSessionManager.unlock();
+  return true;
+};
+list<string> CSessionManager::getSessionLanguages(const string& inSessionID)const{
+  mMutexSessionManager.lock();
+  //this should also kick of the 
+  //creation of a suitable query tree
+  CIDToSession::const_iterator lFound(mIDToSession.find(inSessionID));
+  
+  //  assert(lSession);
+  if(lFound==mIDToSession.end()){
+    my_throw(VENotFound("Could not find Session"));
+  }
+  // if this fails this is a real bug
+  // it should never happen
+  // please don't delete
+  assert(lFound->second);
+    
+  list<string> lResult=lFound->second->getLanguages();
+  mMutexSessionManager.unlock();
+  return lResult;
+};
 
 CXMLElement* CSessionManager::query(const string& inSessionID,
 				    const CXMLElement& inRelevanceLevelList){
@@ -1162,9 +1274,32 @@ CXMLElement* CSessionManager::getCollections()const{
   mMutexSessionManager.unlock();
   return lReturnValue;
 };
+/** */
 CXMLElement* CSessionManager::getAlgorithms()const{
   mMutexSessionManager.lock();
   CXMLElement* lReturnValue(((CAlgorithmCollection*)this)->toXMLElement());
   mMutexSessionManager.unlock();
   return lReturnValue;
+};
+/** i18n: get the list of preferred languages of this session */
+void CSessionManager::translate(string inSessionID,
+				CXMLElement& inoutToBeTranslated)const{
+  mMutexSessionManager.lock();
+  //this should also kick of the 
+  //creation of a suitable query tree
+  CIDToSession::const_iterator lFound(mIDToSession.find(inSessionID));
+  
+  //  assert(lSession);
+  if(lFound==mIDToSession.end()){
+    my_throw(VENotFound("Could not find Session"));
+  }
+  // if this fails this is a real bug
+  // it should never happen
+  // please don't delete
+  assert(lFound->second);
+  
+  mI18nTranslator.translateXMLTree(lFound->second->getPreferredLanguage(),
+				   inoutToBeTranslated);
+
+  mMutexSessionManager.unlock();
 };

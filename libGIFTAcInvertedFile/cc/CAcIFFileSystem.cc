@@ -450,7 +450,10 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
   /// Meaning additional document information
   CADIHash lADI;
   
-  ofstream lAuxOutputStream("gift-auxiliary-1");
+  string lAuxiliaryName1(mTemporaryIndexingFileBase+"gift-auxiliary-1");
+  string lAuxiliaryName2(mTemporaryIndexingFileBase+"gift-auxiliary-2");
+
+  ofstream lAuxOutputStream(lAuxiliaryName1.c_str());
   
   list<CAccessorElement> lAllAccessorElements;
 
@@ -550,8 +553,8 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
        << flush
        << endl;
     
-  merge_sort_streams<CIFBuilderTriplet>("gift-auxiliary-1",
-					"gift-auxiliary-2");
+  merge_sort_streams<CIFBuilderTriplet>(lAuxiliaryName1.c_str(),
+					lAuxiliaryName2.c_str());
 
 
   cout << "after mergesort " 
@@ -561,9 +564,9 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
   
   /* now read the file  buildertriplet by buildertriplet.
      each time the ID changes, we are finished with one list */
-  ifstream lInAuxiliaryFile("gift-auxiliary-1");
+  ifstream lInAuxiliaryFile(string(mTemporaryIndexingFileBase+"gift-auxiliary-1").c_str());
 
-  cout << "Opening sorted stream for reading"
+  cout << "Opening sorted stream for reading. State (should be '1'): "
        << lInAuxiliaryFile
        << endl;
   
@@ -736,6 +739,7 @@ CAcIFFileSystem::CAcIFFileSystem(const CXMLElement& inCollectionElement):
 		    +inCollectionElement.stringReadAttribute(mrml_const::cui_inverted_file_location).second),
   mFeatureDescriptionFileName(inCollectionElement.stringReadAttribute(mrml_const::cui_base_dir).second
 			      +inCollectionElement.stringReadAttribute(mrml_const::cui_feature_description_location).second),
+  mTemporaryIndexingFileBase(inCollectionElement.stringReadAttribute(mrml_const::cui_base_dir).second),
   mInvertedFile(0),
 #ifdef V295
   mInvertedFileBuffer(0),

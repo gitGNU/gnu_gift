@@ -99,7 +99,8 @@ libMRML_la_SOURCES= \
 	\
 	CDebuggingMemoryManager.cc\
 	CRPipe.cc CReaper.cc CReaperDistributor.cc safePopen.cc\
-	createErrorMessage.cc
+	createErrorMessage.cc\
+	CI18nTranslator.cc 	CXEVI18nTranslator.cc
 
 CLEANFILES=libMRML-config.cc
 

@@ -7,6 +7,7 @@
 #include <list>
 
 #include <pthread.h>
+using namespace std;
 pthread_t gThread1;
 pthread_t gThread2;
 pthread_mutex_t gMutex=PTHREAD_RECURSIVE_MUTEX_INITIALIZER_NP;
@@ -38,7 +39,7 @@ void* test(void* inValue){
 int g1(1);
 int g2(2);
 
-void main(void){   
+int main(void){   
   void* lThreadReturn;
   
   pthread_mutexattr_init(&gMutexAttribute);
@@ -67,5 +68,6 @@ void main(void){
     cout << strerror(lErrno) << endl;
   }
   cout << "End of test program" << endl;
+  return 0;
 }
 

@@ -28,7 +28,7 @@
 #define _CCOMMUNICATIONHANDLER
 #include "libMRML/include/uses-declarations.h"
 //the expat xml parser by J.Clark
-#include "expat/xmlparse/xmlparse.h"
+#include <expat.h>
 //a class for using xpat attributes in a nice way
 #include "libMRML/include/CAttributeList.h"
 
@@ -323,9 +323,10 @@ public:
 
       are the functions which administer this process.
 
-      startMultiRequest clears the message which is going to be built.
+      startMultiRequest clears the message which is going to be built and
+      sets the language code
   */
-  void startMultiRequest(const string& inSessionID);
+  void startMultiRequest(const string& inSessionID, const string& inLanguageCode="en");
   /** sends the message which has been built*/
   void endMultiRequest();
   /** 
