@@ -231,6 +231,8 @@ class CQMThread{
 #endif
   /** is this called as a thread or as a function */
   bool mIsThreaded;
+  /** this is the weight the result should receive */
+  double mWeight;
 public:
   /**  query processor used in this thread*/
   CQuery& mQueryProcessor;
@@ -248,11 +250,13 @@ public:
   }
   /** constructor */
   CQMThread(CQuery& inQueryProcessor,
-	   const CXMLElement& inQuery,
-	   int inResultSize,
-	   double inDifferenceToBest):
+	    const CXMLElement& inQuery,
+	    double inWeight,
+	    int inResultSize,
+	    double inDifferenceToBest):
     mQueryProcessor(inQueryProcessor),
     mQuery(new CXMLElement(inQuery)),
+    mWeight(inWeight),
     mResultSize(inResultSize),
     mDifferenceToBest(inDifferenceToBest),
     mResult(0){
@@ -261,6 +265,7 @@ public:
   CQMThread(const CQMThread& in):
     mQueryProcessor(in.mQueryProcessor),
     mQuery(new CXMLElement(*in.mQuery)),
+    mWeight(in.mWeight),
     mResultSize(in.mResultSize),
     mDifferenceToBest(in.mDifferenceToBest),
     mResult(0),
@@ -304,6 +309,12 @@ public:
     cout << "POSTJOIN" << endl;
 #endif
   }
+  /** gives back the weight the results should receive 
+      when summing up */
+  double getWeight()const{
+    return mWeight;
+  }
+
 };
 
 void* CQMultiple::doQueryThread(void* inParameter){
@@ -364,6 +375,7 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
     
     lListOfThreads.push_back(CQMThread(*(i->mQuery),          // The Query processor to choose
 				       inQuery,            // the query to be processed
+				       i->mWeight,         // the weight the result will receive
 				       mAccessor->size(),  // the size of the accessor (to get all potential results)
 				       inDifferenceToBest));// the difference to the best which is allowed for a result
     /* EX-LEAK
@@ -403,21 +415,23 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
 	   << endl;
     }
     if(lThread->mResult){
-      for(CIDRelevanceLevelPairList::const_iterator i=lThread->mResult->begin();
+      for(CIDRelevanceLevelPairList::iterator i=lThread->mResult->begin();
 	  i!=lThread->mResult->end();
 	  i++){
 	
 	hash_map<TID,CIDRelevanceLevelPair>::const_iterator lFound=lResultMap.find(i->getID());
+
+	i->setRelevanceLevel(i->getRelevanceLevel()*lThread->getWeight());
 	
 	if(lFound==lResultMap.end()){
-	  
+
 	  lResultMap.insert(make_pair(i->getID(),
 				      *i));
-	  
 	}else{
 	  
 	  lResultMap[i->getID()].setRelevanceLevel(lResultMap[i->getID()].getRelevanceLevel()
-						   +i->getRelevanceLevel());
+						   +i->getRelevanceLevel()
+						   );
 	}
       }
       delete lThread->mResult;

@@ -48,7 +48,11 @@
 *
 * _NO_PRINT_INIT
 *
+* IGNORE_UNKNOWN_URLS    unknown images are considered to have an empty feature list
+*
 ****************************************/
+
+
 
 #include <unistd.h>     // for getpid
 #include "mrml_const.h" // for parsing
@@ -1436,17 +1440,22 @@ CAcIFFileSystem::URLToFeatureList(string inURL)const
 
   if(!lID.first){//i.e. the URL is not part of the collection
 
+#ifdef IGNORE_UNKNOWN_URLS
+    CDocumentFrequencyList* lReturnValue(0);
+#else
     pid_t lPID= getpid();
-
+    
     char lFeatureFileName[30];
     sprintf(lFeatureFileName,"/tmp/testFTS-%d.fts",int(lPID));
 
     system(string(string(__PERL_LOCATION__)+" "+string(__BINDIR__)+"/gift-url-to-fts.pl "+inURL+" "+lFeatureFileName).c_str());
     
     CDocumentFrequencyList* lReturnValue(this->getFeatureFile(lFeatureFileName));
+ 
     if(!lReturnValue){
       lReturnValue=new CDocumentFrequencyList();
     }
+#endif
     /**/gMutex->unlock();
     return lReturnValue;
     // {

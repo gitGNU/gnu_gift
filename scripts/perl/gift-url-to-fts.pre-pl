@@ -96,6 +96,18 @@ sub convertURLToFeatureFile( $ ){
       close IMAGEFILE;
     }
 
+    #
+    # write information about image processed to another file
+    #
+    {
+      open EXTERNAL_LOG,">>gift-external-urls.txt";
+      my $lGMTime=gmtime;
+
+      # if i am not mistaken, the splitting character § is illegal in URLs
+
+      print "$lGMTime§$inURL§$lTempFileName§$inFinalFeatureDestination\n";
+    }
+
 
     #
     # convert the images and extract the features

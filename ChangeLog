@@ -1,3 +1,26 @@
+2001-09-10  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CQMultiple.cc: CQMThread gets 
+	an additional attribute: mWeight. mWeight
+	describes which weight the result obtained
+	by this thread should receive. It has to be
+	taken care of manually, and it does not cause
+	any thing to happen automatically.
+	add CQMThread::getWeight function
+	(fastQuery): using CQMThread::getWeight() for
+	weighting result correctly.
+
+2001-07-30  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc: 
+	* configure.in: add option --disable-foreign-urls and compiler
+	define IGNORE_UNKNOWN_URLS for disabling people's use of URLs 
+	that are not part of the collection queried.
+
+	* scripts/perl/gift-url-to-fts.pre-pl (convertURLToFeatureFile): 
+	adding a line that logs the external URL along with the time and
+	the thumbnail file, as well as the name of the feature file generated
+
 2001-05-08  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* libMRML/include/CSessionManager.h (CSessionManager): 
