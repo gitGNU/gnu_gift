@@ -1,0 +1,160 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+
+#
+# this script starts the gift and opens at least one session
+#
+
+use IO::Socket;
+use lib '__BINDIR__';		# for including CFeedbackClient
+use CXMLTreeWriter;
+use CXMLTreeBuilder;
+use CXMLTreeVisitor;
+use Net::SMTP;
+      
+
+
+my($lHost,$lPort)=split(":",shift);
+my $lDirectory=shift or die "something wrong, no directory given";
+
+
+while(1){
+  open PS,"ps -axww|" or die "could not ps";
+  
+  my $lFound=0;
+  my $lPID=0;
+  while(<PS>){
+    my $lLine=$_;
+    my(@lParsed)=split(/:\d\d\s/,$lLine);
+    my $lCall=$lParsed[-1];
+    
+    if($lCall=~m/gift\s+(\d+)/){
+      
+      print "FOUND GIFT WITH PORT $1\n";
+      
+      if($1 == $lPort){
+	$lFound=1;
+	$lParsed[0]=~m/^\s+(\d+)/;
+	$lPID=$1;
+      }
+    }
+  }
+  unless($lFound){
+    if(fork == 0){
+      &sendIt($lHost,$lPort);
+      die "Sendit dies";
+    }else{
+
+      my $lCallstring="/home/wolfgang/GIFTInstall/bin/gift $lPort $lDirectory > /dev/null";
+      
+      system("$lCallstring");
+      print STDERR "gift DIED!\n";
+      print STDERR "trying to send mail\n";
+
+      my $smtp = Net::SMTP->new('cuismtp.unige.ch') or die "NO MAILHOST";
+      $smtp->mail("muellerw");
+      $smtp->to('muellerw@cui.unige.ch',
+		'stephane.marchand-maillet@cui.unige.ch');
+      
+      $smtp->data();
+      $smtp->datasend('To: muellerw@cui.unige.ch,stephane.marchand-mailled@cui.unige.ch\n');
+      $smtp->datasend("Subject: DEAD: $lCallstring\n");
+      $smtp->datasend("\n");
+      $smtp->datasend("$lCallstring\n
+just died
+It has been restarted automatically.
+
+this message has been generated automatically by
+$0
+");
+      $smtp->dataend();
+      
+      $smtp->quit;
+      print "Mail successfully sent\n";
+      sleep 10;
+      
+    }
+  }else{
+    sleep 300;#sleep for 5 minutes and try again
+  }
+}
+
+
+sub sendIt( $$ ){
+  my $lHost=shift;
+  my $lPort=shift;
+  sleep 5;
+  my $self={};
+  my $lTree={
+	     element=>"mrml",
+	     attributes=>{
+			 },
+	     children=>[
+			{
+			 element=>"open-session",
+			 attributes=>{
+				      "user-name"=>"suchsuch",
+				      "session-name"=>"bildbild",
+				     },
+			 children=>[]
+			}
+			,
+			{
+			 element=>"get-algorithms",
+			 attributes=>{},
+			 children=>[]
+			}
+			,
+			{
+			 element=>"get-collections",
+			 attributes=>{},
+			 children=>[]
+			}
+		       ]
+	    };
+  
+  
+  my $lSocket = IO::Socket::INET->new(PeerAddr => $lHost,
+				      PeerPort => $lPort,
+				      Proto    => 'tcp')
+    or die "No socket to $lHost:$lPort\n";
+  
+  $lSocket->autoflush(1);
+  my $lWriter=new CXMLTreeWriter();
+  
+  $lWriter->writeToStream($lTree,
+			  $lSocket);
+  $lSocket->shutdown(1);
+  my $lRead="";
+  
+  while(<$lSocket>){
+    $lRead.=$_;
+  }
+  
+  print "READ:$lRead:READ";
+  
+  my $lBuilder=new CXMLTreeBuilder();
+  my $lParsed=$lBuilder->stringToTree($lRead);
+  
+  print "The sessionID is : $lParsed->{attributes}->{'session-id'}\n";
+  
+  system("find /usr/local/httpd/htdocs/tutorial/ -name \"*.html.in\" -exec perl /home/wolfgang/configure-tutorial.pl $lParsed->{attributes}->{'session-id'} \{\} \\;");
+  
+}
