@@ -227,6 +227,7 @@ CAlgorithmCollection
 
 ///adding an algorithm with a given ID/name and a given base
 void CAlgorithmCollection::addAlgorithm(CAlgorithm* inAlgorithm){
+  inAlgorithm->check();
   mContent.insert(make_pair(inAlgorithm->getType().second,
 			    inAlgorithm));
 };
@@ -285,7 +286,15 @@ CAlgorithm* CAlgorithmCollection::getDefaultAlgorithm()const{
 CAlgorithm* CAlgorithmCollection::makeDefaultAlgorithm()const{
   //at present, take simply the first element
   //it might be an xml tag in the future
-  return new CAlgorithm(*getDefaultAlgorithm());
+
+  CAlgorithm* lDefaultAlgorithm(getDefaultAlgorithm());
+  lDefaultAlgorithm->check();
+
+  cout << __FILE__ << ":" << __LINE__ << "checked, now copying " << endl;
+  CAlgorithm* lReturnValue(new CAlgorithm(*lDefaultAlgorithm));
+  cout << __FILE__ << ":" << __LINE__ << "copied, now checking " << endl;
+  lReturnValue->check();
+  return lReturnValue;
 };
 
 string CAlgorithmCollection::toXML(bool inIsPrivate)const{

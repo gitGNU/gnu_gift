@@ -207,7 +207,8 @@ public:
   int getTypeOfNode()const;
   /** get the number of attributes in this */
   int getNumberOfAttributes()const;
-
+  /** checks consistency of attributes */
+  void check()const;
   
 };
 

@@ -355,6 +355,10 @@ CXMLElement::CXMLElement(const CXMLElement& in):
     mFather=0;
     mCurrentChild=this;
 
+    cout << "checking before making children " << endl;
+    check();
+    cout << "making children " << endl;
+
     for(lCChildren::const_iterator i=in.mChildren.begin();
 	i!=in.mChildren.end();
 	i++){
@@ -405,3 +409,14 @@ int const CXMLElement::cTextNode=1;
    This constant is destined to be a value of mTypeOfNode
 */
 int const CXMLElement::cElementNode=2; 
+void CXMLElement::check()const{
+  mAttributes.check();
+  for(lCChildren::const_iterator i=mChildren.begin();
+      i!=mChildren.end();
+      i++){
+    cout << "+" << flush;
+    (*i)
+->check();
+    cout << "/" << flush;
+  }
+}

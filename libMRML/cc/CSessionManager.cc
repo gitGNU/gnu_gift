@@ -337,6 +337,7 @@ bool CSession::setActiveAlgorithm(CAccessorAdminCollection& inCaller,
 				  CAlgorithm* inActiveAlgorithm,
 				  CStaticQueryFactory& inBaseTypeFactory){
   mMutexSession.lock();
+  inActiveAlgorithm->check();
   assert(inActiveAlgorithm);
   
   {
@@ -351,11 +352,11 @@ bool CSession::setActiveAlgorithm(CAccessorAdminCollection& inCaller,
   }
   cout << "[set" << endl;
   mActiveAlgorithm=inActiveAlgorithm;
-
+  
   if(inActiveAlgorithm->stringReadAttribute(mrml_const::algorithm_type).first)
     cout << inActiveAlgorithm->stringReadAttribute(mrml_const::algorithm_type).second
 	 << endl;
-
+  
   cout << "set]" << endl;
   cout << "[build" 
        << endl;
@@ -787,12 +788,12 @@ CXMLElement* CSessionManager::openSession(string inUserName,
     }else{
       cout << "making a new session I" << endl;
       lReturnID= newSession(inUserName,
-			  inSessionName);
+			    inSessionName);
     }
   }else{
       cout << "making a new session II" << endl;
-    lReturnID= newSession(inUserName,
-			  inSessionName);
+      lReturnID= newSession(inUserName,
+			    inSessionName);
   }
   if(lReturnID.size()){
     lReturnValue=new CXMLElement(mrml_const::acknowledge_session_op,0);

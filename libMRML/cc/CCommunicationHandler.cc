@@ -707,6 +707,9 @@ bool CCommunicationHandler::readAndParse(){
 
   cerr << __FILE__ << ":" 
        << __LINE__ << ":readAndParse before visit" << endl;
+  mDocumentRoot->check();
+  cerr << __FILE__ << ":" 
+       << __LINE__ << ":readAndParse before check" << endl;  
   mDocumentRoot->traverse(lVisitor);
   cerr << __FILE__ << ":" 
        << __LINE__ << ":readAndParse after visit" << endl;

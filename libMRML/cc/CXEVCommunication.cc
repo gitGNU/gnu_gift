@@ -12,6 +12,13 @@ CXEVCommunication::CXEVCommunication(CCommunicationHandler* inHandler):
 bool CXEVCommunication::startVisit(const CXMLElement& inElement){
     CXMLElement* lFather(inElement.getFather());
 
+    cout << "CHECKING: " << inElement.getName() << endl;
+    if(lFather){
+      lFather->check();
+    }else{
+      inElement.check();
+    }
+
     inElement.checkNPrint();
 
     cout << "VISITING: " << inElement.getName() << endl;
