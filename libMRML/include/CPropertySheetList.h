@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CPROPERTYSHEETLIST
 #define _CPROPERTYSHEETLIST
-
+#include "../include/uses-declarations.h"
 #include <map>
 #include <string>
 #include "libMRML/include/CSelfDestroyPointer.h"

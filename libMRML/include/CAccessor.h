@@ -22,7 +22,7 @@
 */
 #ifndef _CACCESSOR
 #define _CACCESSOR
-
+#include "../include/uses-declarations.h"
 #include <string>
 #include <list>
 #include "libMRML/include/TID.h"

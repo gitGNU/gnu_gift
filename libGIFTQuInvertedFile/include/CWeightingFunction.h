@@ -39,7 +39,7 @@
 */
 #ifndef _CWEIGHTINGFUNCTION
 #define _CWEIGHTINGFUNCTION
-
+#include "../include/uses-declarations.h"
 #include <math.h>
 #include "libMRML/include/TID.h"
 #include "libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h"

@@ -46,6 +46,7 @@
 */
 #ifndef _CINVERTEDFILEQUERY
 #define _CINVERTEDFILEQUERY
+#include "../include/uses-declarations.h"
 #include <memory>
 #include <map>
 #include "libMRML/include/CSelfDestroyPointer.h"

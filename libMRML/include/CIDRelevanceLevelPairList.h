@@ -42,7 +42,7 @@
 ****************************************/
 #ifndef _CIDRELEVANCELEVELPAIRLIST
 #define _CIDRELEVANCELEVELPAIRLIST
-
+#include "../include/uses-declarations.h"
 #include <string>
 #include <list>
 #include "libMRML/include/CIDRelevanceLevelPair.h"

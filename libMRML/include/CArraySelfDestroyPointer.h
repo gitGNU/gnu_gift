@@ -1,6 +1,6 @@
 #ifndef _CARRAYSELFDESTROYPOINTER
 #define _CARRAYSELFDESTROYPOINTER
-/*A pointer which stores along with itself, if it
+#include "../include/uses-declarations.h"/*A pointer which stores along with itself, if it
   destroys the element it points to
 */
 

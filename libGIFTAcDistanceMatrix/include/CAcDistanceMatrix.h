@@ -40,7 +40,7 @@
 */
 #ifndef _CDISTANCEMATRIXACCESSOR
 #define _CDISTANCEMATRIXACCESSOR
-
+#include "../include/uses-declarations.h"
 #include <string>
 #include "libMRML/include/TID.h"
 #include "libGIFTAcURL2FTS/include/CAcURL2FTS.h"

@@ -22,7 +22,7 @@
 */
 #ifndef _CPERSISTENTVECTOR
 #define _CPERSISTENTVECTOR
-
+#include "../include/uses-declarations.h"
 #include <vector>
 #include <algorithm>
 #include <functional>

@@ -47,6 +47,7 @@
 */
 #ifndef _CQUERY
 #define _CQUERY
+#include "../include/uses-declarations.h"
 #include <memory>
 #include <map>
 #include "libMRML/include/CSelfDestroyPointer.h"

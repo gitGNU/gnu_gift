@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CACCESSORPLUGIN
 #define _CACCESSORPLUGIN
-
+#include "../include/uses-declarations.h"
 #include <sys/types.h> // reading a directory
 #include <dirent.h>    // reading a directory
 #include <dlfcn.h>     // dynamic linking 

@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CQNMAXDOCUMENTFREQUENCY
 #define _CQNMAXDOCUMENTFREQUENCY
-
+#include "../include/uses-declarations.h"
 
 #include "libGIFTQuInvertedFile/include/CQueryNormalizer.h"
 

@@ -26,7 +26,7 @@
  */
 #ifndef _CXMLElement
 #define _CXMLElement
-
+#include "../include/uses-declarations.h"
 #include <map>
 #include <list>
 #include <string>

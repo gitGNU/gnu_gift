@@ -26,7 +26,7 @@
 //configuration files for sessions and algorithms/collections
 #ifndef _CCOMMUNICATIONHANDLER
 #define _CCOMMUNICATIONHANDLER
-
+#include "../include/uses-declarations.h"
 //the expat xml parser by J.Clark
 #include "expat/xmlparse/xmlparse.h"
 //a class for using xpat attributes in a nice way

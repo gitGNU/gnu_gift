@@ -23,6 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CMUTEX
 #define _CMUTEX
+#include "../include/uses-declarations.h"
 #ifdef __GIFT_USES_THREADS__
 #include <pthread.h>
 #endif 

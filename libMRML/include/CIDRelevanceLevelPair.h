@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CIDRELEVANCELEVELPAIR
 #define _CIDRELEVANCELEVELPAIR
-
+#include "../include/uses-declarations.h"
 #include <iostream.h>
 #include "libMRML/include/TID.h"
 #include <functional>

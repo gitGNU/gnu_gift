@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CAFURL2FTS
 #define _CAFURL2FTS
-
+#include "../include/uses-declarations.h"
 #include "libMRML/include/CAccessorFactory.h"
 /** 
  * A factory to make URL2FTS accessors

@@ -22,6 +22,7 @@
 */
 #ifndef _CDISTANCECALCULATOR
 #define _CDISTANCECALCULATOR
+#include "../include/uses-declarations.h"
 #include <functional>
 #include "libGIFTAcDistanceMatrix/include/CPersistentTranslatedIndexMatrix.h"
 #include <math.h>

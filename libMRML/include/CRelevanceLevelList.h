@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CRELEVANCELEVELLIST
 #define _CRELEVANCELEVELLIST
-
+#include "../include/uses-declarations.h"
 #include <string>
 #include <list>
 #include "libMRML/include/CRelevanceLevel.h"

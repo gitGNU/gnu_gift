@@ -49,7 +49,7 @@ class CXMLElement;
 
 #ifndef _CINVERTEDFILEACCESSOR
 #define _CINVERTEDFILEACCESSOR
-
+#include "../include/uses-declarations.h"
 #include <string>
 #include "libMRML/include/TID.h"
 #include "libMRML/include/CSelfDestroyPointer.h"

@@ -38,6 +38,7 @@
 ****************************************/
 #ifndef _CDOCUMENTFREQUENCYHASH
 #define _CDOCUMENTFREQUENCYHASH
+#include "../include/uses-declarations.h"
 #include "libMRML/include/TID.h"
 #include "libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h"
 #include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"

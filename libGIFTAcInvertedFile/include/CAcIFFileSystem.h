@@ -49,7 +49,7 @@ class CXMLElement;
 
 #ifndef _CACIFFILESYSTEM
 #define _CACIFFILESYSTEM
-
+#include "../include/uses-declarations.h"
 #include <string>
 #include "libMRML/include/TID.h"
 #include "libMRML/include/CSelfDestroyPointer.h"

@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CWFBESTFULLYWEIGHTED
 #define _CWFBESTFULLYWEIGHTED
-
+#include "../include/uses-declarations.h"
 #include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 
 ///Weighting function for method 1

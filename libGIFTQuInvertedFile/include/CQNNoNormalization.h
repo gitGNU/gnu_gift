@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CQNNONORMALIZATION
 #define _CQNNONORMALIZATION
-
+#include "../include/uses-declarations.h"
 
 #include "libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h"
 #include "libGIFTQuInvertedFile/include/CWeightingFunction.h"

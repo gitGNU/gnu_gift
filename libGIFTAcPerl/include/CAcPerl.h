@@ -25,7 +25,7 @@
 // -*- mode: c++ -*-
 #ifndef _CACPERL
 #define _CACPERL
-/**
+#include "../include/uses-declarations.h"/**
 *
 * CAcPerl
 * a class which makes the configuration of a collection

@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CIFBUILDERTRIPLET
 #define _CIFBUILDERTRIPLET
-
+#include "../include/uses-declarations.h"
 #include "libMRML/include/TID.h"
 
 /** When building an inverted file by successive merging

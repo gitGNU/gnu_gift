@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CWFBESTPROBABILISTIC
 #define _CWFBESTPROBABILISTIC
-
+#include "../include/uses-declarations.h"
 #include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 
 ///Weighting Function method 2

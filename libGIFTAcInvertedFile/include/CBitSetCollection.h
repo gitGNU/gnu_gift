@@ -22,7 +22,7 @@
 */
 #ifndef _CBITSETCOLLECTION
 #define _CBITSETCOLLECTION
-/***************************************
+#include "../include/uses-declarations.h"/***************************************
 *
 * CBitSetSelection
 *

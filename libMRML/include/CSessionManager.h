@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CSESSIONMANAGER
 #define _CSESSIONMANAGER
-
+#include "../include/uses-declarations.h"
 #include <iostream>
 #include <string>
 #include <list>

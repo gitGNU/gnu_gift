@@ -22,6 +22,7 @@
 */
 #ifndef _CATTRIBUTELIST
 #define _CATTRIBUTELIST
+#include "../include/uses-declarations.h"
 #include <map>
 #include <list>
 #include <string>

@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CACCESSORFACTORY
 #define _CACCESSORFACTORY
-
+#include "../include/uses-declarations.h"
 #include <string> //mName
 class CAccessor;
 class CAccessorFactory;

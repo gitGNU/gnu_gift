@@ -1,7 +1,7 @@
 // -*- mode: c++ -*-
 #ifndef _CXMLELEMENTBUILDER
 #define _CXMLELEMENTBUILDER
-/* -*- mode: c++ -*- 
+#include "../include/uses-declarations.h"/* -*- mode: c++ -*- 
 */
 /* 
 

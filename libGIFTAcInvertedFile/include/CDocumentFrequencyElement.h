@@ -38,7 +38,7 @@
 */
 #ifndef _CDOCUMENTFREQUENCYELEMENT
 #define _CDOCUMENTFREQUENCYELEMENT
-
+#include "../include/uses-declarations.h"
 #include <iostream.h>
 #include <functional>
 #include "libMRML/include/TID.h"

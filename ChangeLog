@@ -1,3 +1,128 @@
+2002-01-09  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
+
+	* libGIFTAcInvertedFile/include/uses-declarations.h:
+	* libGIFTAcDistanceMatrix/include/uses-declarations.h:
+	* libGIFTQuInvertedFile/include/uses-declarations.h:
+	* libMRML/include/uses-declarations.h:
+	* libGIFTAcHierarchy/include/uses-declarations.h:
+	* libGIFTAcPerl/include/uses-declarations.h:
+	* libGIFTQuHierarchy/include/uses-declarations.h:
+	* libGIFTQuPerl/include/uses-declarations.h:
+	* libGIFTAcURL2FTS/include/uses-declarations.h:
+
+	Added header files containing the "using namespace" declarations
+	for each library.
+
+	* /libGIFTAcInvertedFile/include/CADIHash.h:
+	* libGIFTAcInvertedFile/include/CAcSQLInvertedFile.h:
+	* libGIFTAcInvertedFile/include/CDocumentFrequencyHash.h:
+	* libGIFTAcInvertedFile/include/CDocumentFrequencyList.h:
+	* libGIFTAcInvertedFile/include/CIFListStart.h:
+	* libGIFTAcInvertedFile/include/CAdditionalDocumentInformation.h:
+	* libGIFTAcInvertedFile/include/CBitSetCollection.h:
+	* libGIFTAcInvertedFile/include/CAFSpecialised.h:
+	* libGIFTAcInvertedFile/include/CIFBuilderTriplet.h:
+	* libGIFTAcInvertedFile/include/CAFIFMySQL.h:
+	* libGIFTAcInvertedFile/include/CInitializedDouble.h:
+	* libGIFTAcInvertedFile/include/CInvertedFileChunk.h:
+	* libGIFTAcInvertedFile/include/CAFInvertedFile.h:
+	* libGIFTAcInvertedFile/include/CComparisonResults.h:
+	* libGIFTAcInvertedFile/include/CAcInvertedFile.h:
+	* libGIFTAcInvertedFile/include/CAcIFFileSystem.h:
+	* libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h:
+	* libGIFTAcInvertedFile/include/CAcIFMySQL.h:
+	* libGIFTAcInvertedFile/include/CAcInvertedFileAbstraction.h:
+	* libGIFTAcDistanceMatrix/include/CSquasher.h:
+	* libGIFTAcDistanceMatrix/include/CDistanceCalculator.h:
+	* libGIFTAcDistanceMatrix/include/CPersistentTranslatedIndexMatrix.h:
+	* libGIFTAcDistanceMatrix/include/CDrawer.h:
+	* libGIFTAcDistanceMatrix/include/CInformationCalculator.h:
+	* libGIFTAcDistanceMatrix/include/CIDToMatrixIndex.h:
+	* libGIFTAcDistanceMatrix/include/CAcDistanceMatrix.h:
+	* libGIFTAcDistanceMatrix/include/CAFDistanceMatrix.h:
+	* libGIFTAcDistanceMatrix/include/CPersistentVector.h:
+	* libGIFTAcDistanceMatrix/include/CProbabilityCombiner.h:
+	* libGIFTAcDistanceMatrix/include/CPersistentMatrix.h:
+	* libGIFTQuInvertedFile/include/CWeightingFunctionPointerList.h:
+	* libGIFTQuInvertedFile/include/CQInvertedFile.h:
+	* libGIFTQuInvertedFile/include/CWeightingFunction.h:
+	* libGIFTQuInvertedFile/include/CQueryNormalizer.h:
+	* libGIFTQuInvertedFile/include/CWFStandardTF.h:
+	* libGIFTQuInvertedFile/include/CWFBestFullyWeighted.h:
+	* libGIFTQuInvertedFile/include/CWFBinaryTerm.h:
+	* libGIFTQuInvertedFile/include/CQNEuclideanLengthSquare.h:
+	* libGIFTQuInvertedFile/include/CQNBestFullyWeighted.h:
+	* libGIFTQuInvertedFile/include/CQNSquareDFLogICFSum.h:
+	* libGIFTQuInvertedFile/include/CWFCoordinationLevel.h:
+	* libGIFTQuInvertedFile/include/CWeighter.h:
+	* libGIFTQuInvertedFile/include/CWFClassicalIDF.h:
+	* libGIFTQuInvertedFile/include/CScoreBoard.h:
+	* libGIFTQuInvertedFile/include/CQNNoNormalization.h:
+	* libGIFTQuInvertedFile/include/CWFBestProbabilistic.h:
+	* libGIFTQuInvertedFile/include/CQNMaxDocumentFrequency.h:
+	* libGIFTQuInvertedFile/include/CWFProbability.h:
+	* libGIFTQuInvertedFile/include/CWeightingFunctionPointerHash.h:
+	* libMRML/include/CTimeStampGenerator.h:
+	* libMRML/include/CXEVCommunication.h:
+	* libMRML/include/CXEVTripletList.h:
+	* libMRML/include/CMagic.h:
+	* libMRML/include/CSelfDestroyPointer.h:
+	* libMRML/include/CAccessorFactory.h:
+	* libMRML/include/CSessionManager.h:
+	* libMRML/include/CArraySelfDestroyPointer.h:
+	* libMRML/include/CQueryTreeBuilder.h:
+	* libMRML/include/CAccessorImplementation.h:
+	* libMRML/include/CAFPlugin.h:
+	* libMRML/include/CAccessorAdmin.h:
+	* libMRML/include/CAlgorithm.h:
+	* libMRML/include/CAccessorElement.h:
+	* libMRML/include/CAccessor.h:
+	* libMRML/include/CXMLHelper.h:
+	* libMRML/include/CMutex.h:
+	* libMRML/include/CQueryParadigmMatcher.h:
+	* libMRML/include/CPropertySheetList.h:
+	* libMRML/include/CXMLElementVisitor.h:
+	* libMRML/include/CAccessorFactoryContainer.h:
+	* libMRML/include/CRelevanceLevelList.h:
+	* libMRML/include/CNoDelete.h:
+	* libMRML/include/CQueryTreeNode.h:
+	* libMRML/include/CAlgorithmCollection.h:
+	* libMRML/include/CMRMLStringConstants.h:
+	* libMRML/include/CQMultiple.h:
+	* libMRML/include/CIDRelevanceLevelPairList.h:
+	* libMRML/include/CQueryPlugin.h:
+	* libMRML/include/CDebuggingMemoryManager.h:
+	* libMRML/include/CStaticQueryFactory.h:
+	* libMRML/include/CCommunicationHandler.h:
+	* libMRML/include/CAttributeList.h:
+	* libMRML/include/CRelevanceLevel.h:
+	* libMRML/include/CXMLElementBuilder.h:
+	* libMRML/include/CIDRelevanceLevelPair.h:
+	* libMRML/include/CAccessorAdminCollection.h:
+	* libMRML/include/CQuery.h:
+	* libMRML/include/CQParallel.h:
+	* libMRML/include/CXMLElement.h:
+	* libMRML/include/CDynamicQueryFactory.h:
+	* libGIFTAcHierarchy/include/CAFHierarchy.h:
+	* libGIFTAcHierarchy/include/CAcHierarchy.h:
+	* GIFTServer/CSelfDestroyPointer.h:
+	* GIFTServer/CArraySelfDestroyPointer.h:
+	* libGIFTAcPerl/include/CAFPerl.h:
+	* libGIFTAcPerl/include/CAcPerl.h:
+	* libGIFTQuHierarchy/include/CQHierarchy.h:
+	* libGIFTQuPerl/include/CXMLTripletList.h:
+	* libGIFTQuPerl/include/CQPerl.h:
+	* libGIFTQuPerl/include/CXMLTriplet.h:
+	* libGIFTAcURL2FTS/include/CAFURL2FTS.h:
+	* libGIFTAcURL2FTS/include/CAcURL2FTS.h:
+	Added an #include "../include/uses-declarations.h"
+	for proper namespace handling
+	
+2002-01-04  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/Makefile.am(libMRML-config.cc): bug in sed script
+	INCLUDE substitution fixed
+
 2002-01-08  MUELLER Wolfgang  <Wolfgang.Mueller@cui.unige.ch>
 
 	* libMRML/cc/CCommunicationHandler.cc (getPeerAddressString): 

@@ -47,7 +47,7 @@ class CXMLElement;
 
 #ifndef _CACIFMYSQL
 #define _CACIFMYSQL
-
+#include "../include/uses-declarations.h"
 class CXMLElement;
 
 #include "libGIFTAcInvertedFile/include/CAcInvertedFile.h"

@@ -22,7 +22,7 @@
 */
 #ifndef _CIDTOMATRIXINDEX
 #define _CIDTOMATRIXINDEX
-template<class T>
+#include "../include/uses-declarations.h"template<class T>
 class CIDToMatrixIndex<T>{
   ///
   map<T,long> mContent;

@@ -24,7 +24,7 @@
 // -*- mode: c++ -*-
 #ifndef _CAFIFMYSQL
 #define _CAFIFMYSQL
-
+#include "../include/uses-declarations.h"
 #include "libMRML/include/CAccessorFactory.h"
 #include "libGIFTAcInvertedFile/include/CAcInvertedFile.h"
 #include "libGIFTAcInvertedFile/include/CAcIFFileSystem.h"

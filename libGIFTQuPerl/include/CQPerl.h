@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CQPERL
 #define _CQPERL
-
+#include "../include/uses-declarations.h"
 #ifdef __GIFT_WITH_PERL__
 
 #ifdef bool

@@ -22,7 +22,7 @@
 */
 #ifndef _CACCESSORIMPLEMENTATION
 #define _CACCESSORIMPLEMENTATION
-
+#include "../include/uses-declarations.h"
 #include "libMRML/include/CMagic.h"
 #include <string>
 #include "libMRML/include/TID.h"

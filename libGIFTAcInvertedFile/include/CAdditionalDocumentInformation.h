@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CADDITIONALDOCUMENTINFORMATION
 #define _CADDITIONALDOCUMENTINFORMATION
-
+#include "../include/uses-declarations.h"
 #include "libMRML/include/TID.h"
 #include <string>
 #include <functional>

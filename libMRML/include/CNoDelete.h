@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CNODELETE
 #define _CNODELETE
-
+#include "../include/uses-declarations.h"
 /** 
     The use of this class is to control where an element
     is destroyed. If an instantiation of this class is

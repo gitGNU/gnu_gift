@@ -22,7 +22,7 @@
 */
 #ifndef _CADIHash
 #define _CADIHash
-
+#include "../include/uses-declarations.h"
 #include <map>
 #include "libMRML/include/TID.h"
 

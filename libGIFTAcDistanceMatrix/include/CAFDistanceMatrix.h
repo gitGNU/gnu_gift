@@ -23,6 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CAFDISTANCEMATRIX
 #define _CAFDISTANCEMATRIX
+#include "../include/uses-declarations.h"
 #include "libMRML/include/CAccessorFactory.h"
 
 /** 

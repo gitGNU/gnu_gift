@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CXMLTRIPLETLIST
 #define _CXMLTRIPLETLIST
-
+#include "../include/uses-declarations.h"
 #include <list>
 
 #include "libGIFTQuPerl/include/CXMLTriplet.h"

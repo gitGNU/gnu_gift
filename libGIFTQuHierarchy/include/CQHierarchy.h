@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CQHIERARCHY
 #define _CQHIERARCHY
-
+#include "../include/uses-declarations.h"
 
 /* -*- mode: c++ -*- 
 */

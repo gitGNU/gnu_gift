@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CTIMESTAMPGENERATOR
 #define _CTIMESTAMPGENERATOR
-
+#include "../include/uses-declarations.h"
 class CXMLElement;
 
 /**

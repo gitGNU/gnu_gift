@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CDYNAMICBASETYPEFACTORY
 #define _CDYNAMICBASETYPEFACTORY
-
+#include "../include/uses-declarations.h"
 
 #include <sys/types.h> // reading a directory
 #include <dirent.h>    // reading a directory

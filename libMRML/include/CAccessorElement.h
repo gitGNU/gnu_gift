@@ -1,6 +1,7 @@
 // -*- mode: c++ -*-
 #ifndef _CACCESSORELEMENT
 #define _CACCESSORELEMENT
+#include "../include/uses-declarations.h"
 #include <string>
 #include <functional>
 #include "libMRML/include/TID.h"

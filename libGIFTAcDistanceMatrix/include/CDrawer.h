@@ -22,6 +22,7 @@
 */
 #ifndef _CDRAWER
 #define _CDRAWER
+#include "../include/uses-declarations.h"
 #include <assert.h>
 #include <math.h>
 #include <functional>

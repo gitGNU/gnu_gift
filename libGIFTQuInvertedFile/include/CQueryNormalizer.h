@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CQUERYNORMALIZER
 #define _CQUERYNORMALIZER
-
+#include "../include/uses-declarations.h"
 #include "libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h"
 #include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 #include "libGIFTAcInvertedFile/include/CAcInvertedFile.h"
