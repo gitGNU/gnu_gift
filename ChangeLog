@@ -1,5 +1,8 @@
 2002-03-30  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
 
+	* dtd/mrml.dtd: appliet Pruet Boonma's segment query patch
+	as discussed in help-gift@gnu.org
+
 	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc (URLToFeatureList): 
 	Bugfix: deplaced endif to avoid returning NULL pointers.
 	(Bug report Dr. Stéphane Marchand-Maillet)

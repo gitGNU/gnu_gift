@@ -447,7 +447,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-<!ELEMENT query-step   ((user-relevance-element-list|cui-text-query|cui-hierarchy-up)*)
+<!ELEMENT query-step   ((user-relevance-element-list|cui-text-query|cui-hierarchy-up|get-segment-by-url-list)*)
 >
 <!ATTLIST query-step   query-step-id        CDATA #IMPLIED
 
@@ -462,7 +462,11 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 <!ELEMENT cui-hierarchy-up EMPTY
 >
 
-
+<!ELEMENT get-segment-by-url-list (get-segment-by-url+)>
+<!ELEMENT get-segment-by-url EMPTY>
+<!ATTLIST get-segment-by-url image-location CDATA #REQUIRED
+								thumbnail-location CDATA #REQUIRED
+>
 
 
 
@@ -483,6 +487,13 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 <!ATTLIST user-relevance-element 
                                  user-relevance CDATA #REQUIRED
                                  image-location CDATA #REQUIRED
+								 (user-segmented-element-list?)
+>
+
+<!ELEMENT user-segmented-element-list (user-segment-element+)>
+<!ELEMENT user-segmented-element EMPTY>
+<!ATTLIST user-segmented-element segmenet-id CDATA #REQUIRED
+								user-relevence CDATA #REQUIRED
 >
 
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -503,7 +514,17 @@ is supposed to hold a description about anything which is nonstandard \MRML.
     <!ELEMENT query-result-element (error?)>
     <!ATTLIST query-result-element calculated-similarity      CDATA #REQUIRED
                              thumbnail-location              CDATA #REQUIRED
-                             image-location                  CDATA #REQUIRED>
+                             image-location                  CDATA #REQUIRED
+							 (query-result-element-segment-list?)>
+
+	<!ELEMENT query-result-element-segment-list (query-result-element-segment+)>
+	<!ELEMENT query-result-element-segment (box|poly)*>
+	<!ATTLIST query-result-element-segment segment-id CDATA #REQUIRED
+								calculated-similarity	CDATA #REQUIRED>
+	<!ELEMENT box (Coords)>
+	<!ELEMENT poly (Coords)>
+	<!ELEMENT Coords (#PCDATA)>
+	<!ATTLIST Coords dim CDATA #REQUIRED>
 
 
 <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
