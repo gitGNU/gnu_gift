@@ -5,6 +5,8 @@
 	file lenght allowed by the system. The problem is that
 	stream_pos does not have incrementation operators etc...
 
+	Checked in again, have done some debugging in the meanwhile
+	
 	* configure.in: moving cp statement to very end of the file
 	makes sure that this is executed at the right moment
 

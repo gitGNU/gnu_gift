@@ -48,7 +48,7 @@ public:
   operator T()const{
     return mContent;
   }
-  operator bool()const{
+  operator long int()const{
     return mContent;
   }
 
@@ -72,7 +72,7 @@ public:
     return this->mContent < inThan.mContent;
   }
   bool operator! ()const{
-    return this->mContent;
+    return !(this->mContent);
   }
   CStreamPos<T> operator+ (CStreamPos<T>& inSummand){
     return CStreamPos<T>(mContent + inSummand.mContent);
@@ -267,7 +267,7 @@ void merge_sort_streams(const char* inFileToBeSortedName,
 
       if(!lToBeSorted1){
 	cerr << "__FILE__:__LINE__: lToBeSorted false, after seekg("
-	     << i
+	     << static_cast<long int>(i)
 	     << ")"
 	     << endl;
       }
@@ -280,7 +280,13 @@ void merge_sort_streams(const char* inFileToBeSortedName,
       }
 
       STREAMPOS_T lMergeSize1=lFileSize-i;
+      if(lFileSize < i){// underflow
+	lMergeSize1=0;//correct underflow
+      }
       STREAMPOS_T lMergeSize2=lFileSize-i-iMergeSize;
+      if(lFileSize < i + iMergeSize){// underflow of lMergeSize2
+	lMergeSize2=0;//correct underflow
+      }
       
       // lToBeSorted1.clear();
       // lToBeSorted2.clear();
@@ -291,13 +297,6 @@ void merge_sort_streams(const char* inFileToBeSortedName,
       if(lMergeSize2>iMergeSize){
 	lMergeSize2=iMergeSize;
       }
-//       if(lMergeSize1<0){
-// 	lMergeSize1=0;
-//       }
-
-//       if(lMergeSize2<0){
-// 	lMergeSize2=0;
-//       }
 
 #if __GNUC__==2
       merge_streams<T>(lToBeSorted1,
@@ -319,6 +318,7 @@ void merge_sort_streams(const char* inFileToBeSortedName,
     lToBeSorted2.close();
     swap(lFileToBeSortedName,
 	 lTemporaryName);
+    cout << "endmerge" << endl;
   }
 }
 #endif
