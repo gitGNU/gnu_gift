@@ -15,7 +15,7 @@ SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ..
-prefix = /home/wolfgang/gift/../GIFTInstall
+prefix = /home/wolfgang/gift-install
 exec_prefix = ${prefix}
 
 bindir = ${exec_prefix}/bin

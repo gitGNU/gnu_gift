@@ -15,7 +15,7 @@ SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ../..
-prefix = /home/wolfgang/gift/../GIFTInstall
+prefix = /home/wolfgang/gift-install
 exec_prefix = ${prefix}
 
 bindir = ${exec_prefix}/bin
@@ -163,7 +163,7 @@ LTLIBRARIES =  $(lib_LTLIBRARIES)
 
 DEFS = -DHAVE_CONFIG_H -I. -I$(srcdir) -I../..
 CPPFLAGS = 
-LDFLAGS =  -lpthread
+LDFLAGS = 
 LIBS = -lpthread -lm 
 libGIFTAcDistanceMatrix_la_LIBADD = 
 am_libGIFTAcDistanceMatrix_la_OBJECTS =  plug_in_fo.lo
@@ -171,7 +171,7 @@ libGIFTAcDistanceMatrix_la_OBJECTS =  \
 $(am_libGIFTAcDistanceMatrix_la_OBJECTS)
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
-CXXFLAGS = -g -O2 -I /usr/local/include/mysql -D__GIFT_WITH_PERL__ -fno-strict-aliasing -I/usr/local/include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -I/usr/local/lib/perl5/5.6.0/i686-linux/CORE -DHAVE_LIBPTHREAD
+CXXFLAGS = -g -O2 -I /usr/local/include/mysql -D__GIFT_WITH_PERL__ -fno-strict-aliasing -I/usr/local/include -D_LARGEFILE_SOURCE -D_FILE_OFFSET_BITS=64 -I/usr/local/lib/perl5/5.6.0/i686-linux/CORE
 CXXLD = $(CXX)
 CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
 DIST_SOURCES =  $(libGIFTAcDistanceMatrix_la_SOURCES)
