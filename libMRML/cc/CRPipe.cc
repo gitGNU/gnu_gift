@@ -1,6 +1,7 @@
-
 #include "libMRML/include/CReaper.h"
 #include "libMRML/include/CRPipe.h"
+#include <iostream>
+using namespace std;
 
 CRPipe::CRPipe(int inPID, 
 	       int inPipeToClose)
@@ -9,5 +10,7 @@ CRPipe::CRPipe(int inPID,
 }
 
 void CRPipe::reap(){
+  //cout << "ing..." << flush;
   close(mPipeToClose);
+  //cout << "...finished" << endl;
 }

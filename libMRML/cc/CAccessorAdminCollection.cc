@@ -27,7 +27,8 @@
 #include "libMRML/include/GIFTExceptions.h"
 #include "libMRML/include/CAccessorAdminCollection.h"
 #include "libMRML/include/CAttributeList.h"
-#include "expat/xmlparse/xmlparse.h"
+//#include "expat/xmlparse/xmlparse.h"
+#include <expat.h>
 #include <fstream>
 #include "libMRML/include/CXMLElement.h" // for adding collections 
 #include "libMRML/include/directory.h"

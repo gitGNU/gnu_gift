@@ -24,6 +24,7 @@
 #include <cstdio>
 #include "libMRML/include/CMutex.h"
 #include <iostream>
+#include <algorithm>
 extern CMutex* gMutex;
 
 CAttributeList::CAttributeList(const char * const * const inAttributeList){
@@ -398,11 +399,18 @@ static const string& _CAL_getFirst(const pair<string, T>& inElement){
 /** Get the keys of all attributes in this list*/
 list<string> CAttributeList::getKeys()const{
   list<string> lReturnValue;
+  // the following two implementations are equivalent
   transform(this->begin(),
 	    this->end(),
 	    back_inserter(lReturnValue),
 	    _CAL_getFirst<CAttributeList::mapped_type>
 	    );
-	    
+// #ifdef GCC30
+//   for(const_iterator i=begin();
+//       i!=end();
+//       i++){
+//     lReturnValue.push_back(i->first);
+//   }
+// #endif
   return lReturnValue;
 }

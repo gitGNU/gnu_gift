@@ -32,8 +32,6 @@ CReaperDistributor::~CReaperDistributor(){
 }
 
 void CReaperDistributor::reap(){
-  cout << "reaper";   
-
   int lChildTask;
   int lStatus;
   while ((lChildTask = waitpid(-1,&lStatus,WNOHANG))>0) {
@@ -42,6 +40,7 @@ void CReaperDistributor::reap(){
     CReaperMap::iterator lFound=mReapers.find(lChildTask);
     
     if(lFound!=mReapers.end())
+      cout << "reap" << flush;
       lFound->second->reap();
   }
 }     

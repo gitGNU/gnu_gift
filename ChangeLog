@@ -1,3 +1,30 @@
+2002-07-28  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* PluginMaker/libGIFTAc@PLUGIN_NAME@/cc/CAc@PLUGIN_NAME@.cc.in: 
+	removed unnecessary expat include
+
+2002-07-27  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* GIFTServer/HomeMadeServer.cc: i18n
+
+	* GIFTServer/Makefile.am: remove references to package-included
+	expat
+
+	* libMRML/cc/CAlgorithmCollection.cc: 
+	* libMRML/cc/CAccessorAdminCollection.cc: expat includes changed
+
+	* Makefile.am (EXTRA_DIST): gift-check-perl-config.pl
+
+2002-07-26  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libMRML/cc/CAttributeList.cc: include algorithm
+
+2002-07-24  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libMRML/cc/CXMLElement.cc(traverse): 
+	* libMRML/include/CXMLElement.h(traverse): added non-const 
+	version of this function. Needed for i18n
+
 2002-07-23  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
 
 	* libMRML/cc/CXMLElementBuilder.cc: 

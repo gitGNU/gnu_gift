@@ -56,6 +56,7 @@ EXTRA_DIST=PluginMaker \
 		gift-file-to-gift-file.pl      \
 		gift-install-prerequisites.pl  \
 		teco.sh\
-		gift-install-prerequisites.sh
+		gift-install-prerequisites.sh\
+		gift-check-perl-config.pl
 
 

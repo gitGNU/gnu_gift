@@ -16,7 +16,7 @@ bin_PROGRAMS = gift gift-endianize gift-generate-inverted-file gift-modify-dista
 
 # include directories for all programs in this dir
 
-INCLUDES = -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTAcURL2FTS/include -I$(srcdir) -I../expat/xmlparse -I../expat/xmltok -I.
+INCLUDES = -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTAcURL2FTS/include -I$(srcdir)   -I.
 
 #-------------------------------------------------
 
@@ -30,13 +30,12 @@ INCLUDES = -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile
 # The -L lines will be gone when libtool 1.4 is shipping
 # 1.3.5 does needs them
 #
-#
-gift_LDADD = ../expat/xmlparse/*.o ../expat/xmltok/*.o  \
-	@PRE_INSTALL_LIBDIRS@ @PRE_INSTALL_LIBDIRS@\
+# # removed ../expat/xmlparse/*.o ../expat/xmltok/*.o  
+gift_LDADD = @PRE_INSTALL_LIBDIRS@ @PRE_INSTALL_LIBDIRS@ \
 	@UNPUBLISHED_DIR@ @UNPUBLISHED@ @BAYESIAN@ \
         -lGIFTQuPerl -lGIFTAcPerl -lMRML\
 	@BAYESIAN_LD_ADD@\
-	@PERL_LD_ADD@ 
+	@PERL_LD_ADD@
 
 #	-lefence \
 # -lGIFTAcURL2FTS -lGIFTAcInvertedFile \
@@ -64,7 +63,9 @@ gift_generate_inverted_file_LDADD = @PRE_INSTALL_LIBDIRS@ -lMRML -lGIFTAcInverte
 #	 @BAYESIAN_LD_ADD@\
 #	 
 
-gift_generate_inverted_file_LDFLAGS = ../expat/xmlparse/*.o ../expat/xmltok/*.o
+gift_generate_inverted_file_LDFLAGS = 
+
+# removed ../expat/xmlparse/*.o ../expat/xmltok/*.o
 
 gift_generate_inverted_file_SOURCES=generateInvertedFile.cc 
 

@@ -181,6 +181,20 @@ void CXMLElement::traverse(CXMLElementVisitor& inoutVisitor)const{
 	inoutVisitor.endVisit(*this);
     }
 };
+/** visit this using a visitor */
+void CXMLElement::traverse(CXMLElementVisitor& inoutVisitor){
+    //if there are children, visit them
+    if(inoutVisitor.startVisit(*this)){
+	if(mChildren.size()){
+	    for(lCChildren::const_iterator i=mChildren.begin();
+		i!=mChildren.end();
+		i++){
+		(*i)->traverse(inoutVisitor);
+	    }
+	}
+	inoutVisitor.endVisit(*this);
+    }
+};
 
 /** get the first of the list of children */
 list<CXMLElement*>::const_iterator CXMLElement::child_list_begin()const{

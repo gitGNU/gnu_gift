@@ -37,7 +37,7 @@ AC_INIT(libMRML/cc/CAccessorFactory.cc)
 
 dnl old position of AC_ARG_ENABLE(interactive)
 
-AM_INIT_AUTOMAKE(gift,0.1.8)
+AM_INIT_AUTOMAKE(gift,0.1.9pre)
 
 AM_CONFIG_HEADER(gift-config.h)
 AC_ISC_POSIX
@@ -448,11 +448,6 @@ AC_OUTPUT([Makefile
 		scripts/emacs-lisp/Makefile
 		scripts/perl/Makefile
 		
-		expat/Makefile
-		expat/gennmtab/Makefile 
-		expat/xmlparse/Makefile
-		expat/xmltok/Makefile
-		expat/xmlwf/Makefile
 
 		dtd/Makefile
 
@@ -464,3 +459,10 @@ AC_OUTPUT([Makefile
 		GIFTServer/gift-config/Makefile])
 
 cp gift-config.h libMRML/include
+
+dnl the expat related make files are not generated any more
+dnl		expat/Makefile
+dnl		expat/gennmtab/Makefile 
+dnl		expat/xmlparse/Makefile
+dnl		expat/xmltok/Makefile
+dnl		expat/xmlwf/Makefile

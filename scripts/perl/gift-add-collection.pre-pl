@@ -68,11 +68,6 @@ use vars qw($self
 	    $gDoRemove
 	   );
 
-my($lInEncoding,$lOutEncoding)=(&main::findOutEncodings());
-print "I am assuming that the system is using $lInEncoding as encoding. 
-Within the xml files generated, we will use $lOutEncoding as encoding method\n";
-
-$gStringConverter = Text::Iconv->new($lInEncoding,$lOutEncoding);
 
 #
 # first: get the options given on the command line
@@ -83,6 +78,7 @@ GetOptions(\%lOptions,
 	   "help",
 	   "remove-collection",
 	   "gift-home=s",
+	   "local-encoding=s",
 	   "image-directory=s",
 	   "collection-name:s",
 	   "feature-prefix:s",
@@ -95,6 +91,15 @@ GetOptions(\%lOptions,
 	   "no-jpg",
 	   "no-nps",
 	   "no-ps");
+
+
+my($lInEncoding,$lOutEncoding)=($lOptions{"local-encoding"})
+  ? (&main::findOutEncodings())
+  : ($lOptions{"local-encoding"},"UTF-8");
+print "I am assuming that the system is using $lInEncoding as encoding. 
+Within the xml files generated, we will use $lOutEncoding as encoding method\n";
+
+$gStringConverter = Text::Iconv->new($lInEncoding,$lOutEncoding);
 
 #
 # second: read the options from the .gift-add-collection file
@@ -179,12 +184,25 @@ if ($lOptions{'thumbnail-dir'}) {
 } else {
   unless($lThumbnailDirectory){
     $lThumbnailDirectory= $lImageDirectory ;
-    $lThumbnailDirectory=~s[ /+$ ][_thumbnails]x;	#strip trailing slashes and ad thumbnails
+    $lThumbnailDirectory=~s[ /*$ ][_thumbnails]x;	#strip trailing slashes and add thumbnails
   }
 }
 
 #$lThumbnailURLPrefix= $lOptions{'thumbnail-url-prefix'} || $lOptions{'url-prefix'} || "file:$lThumbnailDirectory";
-$lThumbnailURLPrefix= $lOptions{'thumbnail-url-prefix'} || $lThumbnailURLPrefix || $lOptions{'url-prefix'}     || $lURLPrefix     || "file:$lThumbnailDirectory";
+$lThumbnailURLPrefix= $lOptions{'thumbnail-url-prefix'} 
+  || $lThumbnailURLPrefix 
+  || $lOptions{'url-prefix'} 
+  || $lURLPrefix     
+  || "file:$lThumbnailDirectory";
+
+#cleanup: if there is no "thumbnails" in the end of the url,
+# but there is thumbnails in the end of the directory
+# automatically add that
+
+if(($lThumbnailDirectory=~m/_thumbnails$ /x)
+   && (!($lThumbnailURLPrefix=~m[^(.*)_thumbnails/*$ ]x))){
+  $lThumbnailURLPrefix=~s[/*$ ][_thumbnails/]x;
+}
 
 # is the thumbnail-urlprefix in ~/public_html? create a http-url!
 $lThumbnailURLPrefix=~s[^file:__WEB_PUBLISHING_DIRECTORY__][__WEB_PUBLISHING_LOCATION__/];

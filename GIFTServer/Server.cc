@@ -480,7 +480,8 @@ int main(int argc, char **argv){
   // the communication handler for this application
   // class definition is just above in this file
   CSessionManager gSessionManager(gGIFTHome+"/gift-sessions.mrml",
-				  gGIFTHome+"/gift-config.mrml");
+				  gGIFTHome+"/gift-config.mrml",
+				  gGIFTHome+"/gift-i18n.xml");
   ofstream gLogFile(string(gGIFTHome+"/gift-log.mrml").c_str(),
 		    ios::app);
 

@@ -356,7 +356,8 @@ void generateDistanceMatrix(const string& inBaseDir,
     
 
   CSessionManager lSessionManager(inBaseDir+"/gift-sessions.mrml",
-				  inBaseDir+"/gift-config.mrml");
+				  inBaseDir+"/gift-config.mrml",
+				  inBaseDir+"/gift-i18n.xml");
   
   // open a session
   string lSessionID(lSessionManager.newSession("DistanceMatrixMaker",""));

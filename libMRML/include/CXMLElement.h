@@ -137,6 +137,10 @@ public:
 	Visit the subtree using a visitor
     */
   void traverse(CXMLElementVisitor& inoutVisitor)const;
+  /** 
+	Visit the subtree using a visitor (non-const version)
+    */
+  void traverse(CXMLElementVisitor& inoutVisitor);
     
   /** For interoperating with the STL */
   list<CXMLElement*>::const_iterator child_list_begin()const;

@@ -25,7 +25,7 @@
 #include "libMRML/include/GIFTExceptions.h"
 #include "libMRML/include/CAlgorithmCollection.h"
 
-#include "expat/xmlparse/xmlparse.h" // for reading the xml
+#include <expat.h> // for reading the xml
 
 #include "libMRML/include/CXMLHelper.h"
 
