@@ -1,3 +1,7 @@
+2003-11-12  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc: changed UF to Unknown Feature in debug printout
+
 2003-09-15  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
 
 	* Doc/gift-guide.sgml: removed non GPL compliant license statement.

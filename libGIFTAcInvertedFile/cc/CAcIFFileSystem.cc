@@ -1659,7 +1659,7 @@ unsigned int CAcIFFileSystem::getFeatureDescription(TID inID)const{
     /**/gMutex->unlock();  
     return lReturnValue;
   }else{
-    cout << "[UF: "
+    cout << "[UnknownFeature: "
 	 << inID
 	 << "]"
 	 << flush;
