@@ -101,6 +101,6 @@ bool CTCPSocket::acceptAndServe(){
 
   (this)->serveStream(s2);
   
-  close(s2);
+  // close(s2); I cannot close sockets here, otherwise multithreading goes down the drain
   return true;
 }

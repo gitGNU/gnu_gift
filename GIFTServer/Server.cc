@@ -636,6 +636,7 @@ int main(int argc, char **argv){
 	cout << "calling processMessage (no thread)" << endl;
 	processMessage(lProcessMessageParameters);
 	cout << "returned processMessage (no thread)" << endl;
+	close(lOutSocket);// have to close socket here
 #endif
       }
     }

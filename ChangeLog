@@ -1,5 +1,10 @@
 2002-05-29  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
 
+	* GIFTServer/CDomainSocket.cc(serveStream): 
+	* GIFTServer/CTCPSocket.cc(serveStream): 
+	cannot close socket in serveStream, otherwise multithreading
+	goes down the drain
+
 	* libGIFTAcInvertedFile/include/merge_sort_streams.h: 
 	Quite massive changes to make it work with the full 
 	file lenght allowed by the system. The problem is that

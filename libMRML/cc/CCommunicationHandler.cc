@@ -675,6 +675,8 @@ bool CCommunicationHandler::readAndParse(){
 	   << XML_ErrorString(XML_GetErrorCode(mParser))
 	   << " at line "
 	   << XML_GetCurrentLineNumber(mParser)
+	   << endl
+	   << "The cstdio stream was " << mSocket
 	   << endl;
       lSuccess=false;
     }	
