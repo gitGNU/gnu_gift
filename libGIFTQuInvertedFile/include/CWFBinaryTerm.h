@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CWFBINARYTERM
 #define _CWFBINARYTERM
-#include "../include/uses-declarations.h"
+#include "libGIFTQuInvertedFile/include/uses-declarations.h"
 #include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 
 ///Method

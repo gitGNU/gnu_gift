@@ -30,6 +30,7 @@ libMRML_HEADERS= directory.h \
 	CDebuggingMemoryManager.h    CRelevanceLevelList.h    my_diagnose.h \
 	CDynamicQueryFactory.h	     CSelfDestroyPointer.h    my_throw.h \
 	CIDRelevanceLevelPair.h      CSessionManager.h \
-	CIDRelevanceLevelPairList.h  CStaticQueryFactory.h 
+	CIDRelevanceLevelPairList.h  CStaticQueryFactory.h uses-declarations.h \
+ CRPipe.h CReaper.h CReaperDistributor.h safePopen.h
 
 CLEANFILES= directory.h

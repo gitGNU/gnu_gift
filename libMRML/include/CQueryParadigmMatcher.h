@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CPROPERTYSHEETMATCHER
 #define _CPROPERTYSHEETMATCHER
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include <functional>
 #include "libMRML/include/CXMLElement.h" // the type of the operands of the function we are creating
 

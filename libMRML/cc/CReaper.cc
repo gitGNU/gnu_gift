@@ -1,5 +1,4 @@
-/* -*- mode: c++ -*- 
-*/
+// -*- mode: c++ -*- 
 /* 
 
     GIFT, a flexible content based image retrieval system.
@@ -20,19 +19,12 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-// -*- mode: c++ -*-
-#ifndef _CTIMESTAMPGENERATOR
-#define _CTIMESTAMPGENERATOR
-#include "libMRML/include/uses-declarations.h"
-class CXMLElement;
 
-/**
-   This class generates a cui-time-stamp MRML element
- */
-class CTimeStampGenerator{
- public:
-  /** this generates a time stamp it might be interesting to inherit 
-      from this class, so we make it a virtual function*/
-  virtual CXMLElement* generateTimeStamp()const;
-};
-#endif
+#include "libMRML/include/CReaper.h"
+
+/** set the PID for which this reaper is responsible */
+CReaper::CReaper(int inPID):mPID(inPID){};
+/** get the PID forr which this reaper is responsible */
+int CReaper::getPID()const{
+  return mPID;
+}

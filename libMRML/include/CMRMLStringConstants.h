@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CMRMLSTRINGCONSTANTS
 #define _CMRMLSTRINGCONSTANTS
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 class 
 
 #endif

@@ -22,7 +22,7 @@
 */
 #ifndef _CPERSISTENTTRANSLATEDINDEXMATRIX
 #define _CPERSISTENTTRANSLATEDINDEXMATRIX
-#include "../include/uses-declarations.h"
+#include "libGIFTAcDistanceMatrix/include/uses-declarations.h"
 #include "assert.h"
 #include <vector>
 #include <map>

@@ -18,4 +18,5 @@
 #     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 libGIFTAcURL2FTSdir=$(includedir)/libGIFTAcURL2FTS/include
-libGIFTAcURL2FTS_HEADERS= CAFURL2FTS.h  CAcURL2FTS.h
+libGIFTAcURL2FTS_HEADERS= CAFURL2FTS.h  CAcURL2FTS.h uses-declarations.h
+

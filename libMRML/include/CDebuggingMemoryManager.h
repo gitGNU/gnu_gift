@@ -1,7 +1,7 @@
 // -*- mode: c++ -*-
 #ifndef _CDEBUGMEMORYMANAGER
 #define _CDEBUGMEMORYMANAGER
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include <iostream>
 // -*- mode: c++ -*- 
 /* 

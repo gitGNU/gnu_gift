@@ -1,5 +1,38 @@
+2002-01-26  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+
+	* libMRML/cc/Makefile.am (libMRML_la_LDFLAGS): 
+	changed libtool version number
+
+	* CRPipe.cc:
+	* CReaper.cc:
+	* CReaperDistributor.cc:
+	* executeVector.cc:
+	* CRPipe.h: 
+	* CReaper.h: 
+	* CReaperDistributor.h:
+	* safePopen.h:
+	these files contain the implementation of a kind of
+	safe popen
+	
+	* libMRML/cc/Makefile.am: added CRPipe.cc CReaper.cc 
+	CReaperDistributor.cc safePopen.cc 
+
+	* libMRML/include/Makefile.am (libMRML_HEADERS): added
+	 CRPipe.h CReaper.h CReaperDistributor.h safePopen.h
+
 2002-01-23  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
 
+	* libGIFTAcInvertedFile/include/Makefile.am (InvertedFile_HEADERS): 
+	* libGIFTAcDistanceMatrix/include/Makefile.am (DistanceMatrix_HEADERS): 
+	* libGIFTQuInvertedFile/include/Makefile.am (libGIFTQuInvertedFile_HEADERS): 
+	* libMRML/include/Makefile.am (libMRML_HEADERS): 
+	* libGIFTAcHierarchy/include/Makefile.am (libGIFTAcHierarchydir): 
+	(libGIFTAcHierarchy_HEADERS): 
+	* libGIFTQuHierarchy/include/Makefile.am: 
+	* libGIFTAcURL2FTS/include/Makefile.am: 
+	adding uses-declarations.h to distribution
+
+	
 	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc (init): 
 	show errno
 	(init): have to clear file flags after close

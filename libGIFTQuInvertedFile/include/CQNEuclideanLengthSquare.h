@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CQNEUCLIDEANLENGTHSQUARE
 #define _CQNEUCLIDEANLENGTHSQUARE
-#include "../include/uses-declarations.h"
+#include "libGIFTQuInvertedFile/include/uses-declarations.h"
 
 #include "libGIFTQuInvertedFile/include/CQueryNormalizer.h"
 

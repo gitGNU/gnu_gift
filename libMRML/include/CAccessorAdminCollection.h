@@ -23,7 +23,7 @@
 // -*- Mode: c++ -*-
 #ifndef _CACCESSORCOLLECTION
 #define _CACCESSORCOLLECTION
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include <map>
 #include "libMRML/include/CAccessorAdmin.h"
 

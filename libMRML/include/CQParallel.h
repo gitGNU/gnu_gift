@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CQPARALLEL
 #define _CQPARALLEL
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include "libMRML/include/CQuery.h"
 #include "libMRML/include/CSelfDestroyPointer.h"
 // -*- mode: c++ -*- 

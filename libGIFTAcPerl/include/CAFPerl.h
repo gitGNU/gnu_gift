@@ -24,7 +24,7 @@
 #ifdef __GIFT_WITH_PERL__
 #ifndef _CAFPERL
 #define _CAFPERL
-#include "../include/uses-declarations.h"
+#include "libGIFTAcPerl/include/uses-declarations.h"
 #include "libMRML/include/CAccessorFactory.h"
 #include "libGIFTAcPerl/include/CAcPerl.h"
 

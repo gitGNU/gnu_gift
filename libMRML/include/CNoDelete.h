@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CNODELETE
 #define _CNODELETE
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 
 #define INLINE
 

@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CIFLISTSTART
 #define _CIFLISTSTART
-#include "../include/uses-declarations.h"
+#include "libGIFTAcInvertedFile/include/uses-declarations.h"
 #include "libMRML/include/TID.h"
 #include <iostream>
 

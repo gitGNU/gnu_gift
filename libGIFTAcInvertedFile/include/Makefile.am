@@ -13,4 +13,4 @@ CAcInvertedFileAbstraction.h	  WeightingFunctionsAndNormalizers.h \
 CAcSQLInvertedFile.h		  gift_features.h \
 CAdditionalDocumentInformation.h  map_to_list.h \
 CBitSetCollection.h		  merge_sort_streams.h \
-CComparisonResults.h
+CComparisonResults.h uses-declarations.h

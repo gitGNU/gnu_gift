@@ -38,7 +38,7 @@
 */
 #ifndef _CQNBESTFULLYWEIGHTED
 #define _CQNBESTFULLYWEIGHTED
-#include "../include/uses-declarations.h"
+#include "libGIFTQuInvertedFile/include/uses-declarations.h"
 
 #include "libGIFTQuInvertedFile/include/CQueryNormalizer.h"
 

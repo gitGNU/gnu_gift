@@ -22,7 +22,7 @@
 */
 #ifndef _CIDTOMATRIXINDEX
 #define _CIDTOMATRIXINDEX
-#include "../include/uses-declarations.h"template<class T>
+#include "libGIFTAcDistanceMatrix/include/uses-declarations.h"
 class CIDToMatrixIndex<T>{
   ///
   map<T,long> mContent;

@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CWFCOORDINATIONLEVEL
 #define _CWFCOORDINATIONLEVEL
-#include "../include/uses-declarations.h"
+#include "libGIFTQuInvertedFile/include/uses-declarations.h"
 #include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 
 ///Coordination Level, i.e. no weighting

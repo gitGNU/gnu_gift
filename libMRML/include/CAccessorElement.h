@@ -1,7 +1,7 @@
 // -*- mode: c++ -*-
 #ifndef _CACCESSORELEMENT
 #define _CACCESSORELEMENT
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include <string>
 #include <functional>
 #include <iostream>

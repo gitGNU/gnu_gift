@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CBASETYPEFACTORY
 #define _CBASETYPEFACTORY
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include <string>
 
 class CQuery;

@@ -42,7 +42,7 @@
 */
 #ifndef _CACURL2FTS
 #define _CACURL2FTS
-#include "../include/uses-declarations.h"
+#include "libGIFTAcURL2FTS/include/uses-declarations.h"
 #include <string>
 #include "libMRML/include/TID.h"
 #include <iostream>

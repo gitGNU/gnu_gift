@@ -1,7 +1,7 @@
 // -*- mode: c++ -*-
 #ifndef _CQUERYTREEBUILDER
 #define _CQUERYTREEBUILDER
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 class CAlgorithm;
 class CAccessorAdminCollection;
 

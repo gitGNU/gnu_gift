@@ -21,18 +21,49 @@
 
 */
 // -*- mode: c++ -*-
-#ifndef _CTIMESTAMPGENERATOR
-#define _CTIMESTAMPGENERATOR
-#include "libMRML/include/uses-declarations.h"
-class CXMLElement;
 
 /**
-   This class generates a cui-time-stamp MRML element
- */
-class CTimeStampGenerator{
- public:
-  /** this generates a time stamp it might be interesting to inherit 
-      from this class, so we make it a virtual function*/
-  virtual CXMLElement* generateTimeStamp()const;
+   Author of this file:
+   Wolfgang Müller
+   
+*/
+
+#ifndef _CREAPER
+#define _CREAPER
+#include <unistd.h>
+#include <iostream>
+#include <cstdio>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <sys/socket.h>
+#include <string.h>
+#include <errno.h>
+#include <signal.h>
+
+#include <map>
+#include <vector>
+/**
+   This file is what Wall et al. call REAPER
+   in the perlipc manpage. It class knows which 
+   PID it's waiting for. When the time has come
+   the reaper distributor will call reap() on this.
+   
+   @author: Wolfgang Mueller
+   @see: CReaperDistributor, man perlipc
+*/
+class CReaper{
+protected:
+  /** the ID of the process to which the reaper belongs */
+  int mPID;
+public:
+  /** the PID for which this reaper
+      is responsible */
+  CReaper(int inPID);
+  /** react to a sigchild signal */
+  virtual void reap()=0; 
+  /** 
+      get the PID of this reaper 
+  */
+  int getPID()const;
 };
 #endif

@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CACHIERARCHY
 #define _CACHIERARCHY
-#include "../include/uses-declarations.h"
+#include "libGIFTAcHierarchy/include/uses-declarations.h"
 #include <list>
 #include <map>
 #include "libMRML/include/CAccessorImplementation.h"

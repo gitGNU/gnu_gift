@@ -22,7 +22,7 @@
 */
 #ifndef _CINFORMATIONCALCULATOR
 #define _CINFORMATIONCALCULATOR
-#include "../include/uses-declarations.h"
+#include "libGIFTAcDistanceMatrix/include/uses-declarations.h"
 #include <math.h>
 #include <functional>
 

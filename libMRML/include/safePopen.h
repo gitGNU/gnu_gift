@@ -1,3 +1,6 @@
+// -*- mode: c++ -*-
+#ifndef _SAFEPOPEN
+#define _SAFEPOPEN
 /* -*- mode: c++ -*- 
 */
 /* 
@@ -20,19 +23,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-// -*- mode: c++ -*-
-#ifndef _CTIMESTAMPGENERATOR
-#define _CTIMESTAMPGENERATOR
-#include "libMRML/include/uses-declarations.h"
-class CXMLElement;
 
-/**
-   This class generates a cui-time-stamp MRML element
- */
-class CTimeStampGenerator{
- public:
-  /** this generates a time stamp it might be interesting to inherit 
-      from this class, so we make it a virtual function*/
-  virtual CXMLElement* generateTimeStamp()const;
-};
+extern int safePopen(char* const* argv);
+
 #endif

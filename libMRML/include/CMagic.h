@@ -1,7 +1,7 @@
 // -*- mode: c++ -*-
 #ifndef _CMAGIC
 #define _CMAGIC
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include <assert.h>
 /** This is a simple class for debugging.
     It checks if it has been properly initialised

@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CCOMPARISONRESULTS
 #define _CCOMPARISONRESULTS
-#include "../include/uses-declarations.h"
+#include "libGIFTAcInvertedFile/include/uses-declarations.h"
 #include <list>
 #include <set>
 #include "libMRML/include/CRelevanceLevel.h"

@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CWFPROBABILITY
 #define _CWFPROBABILITY
-#include "../include/uses-declarations.h"
+#include "libGIFTQuInvertedFile/include/uses-declarations.h"
 #include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 
 ///Method

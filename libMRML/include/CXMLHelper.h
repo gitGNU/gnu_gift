@@ -22,7 +22,7 @@
 */
 #ifndef _CXMLHELPER
 #define _CXMLHELPER
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include <string>
 #include <map>
 

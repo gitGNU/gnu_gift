@@ -6,4 +6,4 @@ CAcDistanceMatrix.h	  CPersistentVector.h \
 CDistanceCalculator.h	  CProbabilityCombiner.h \
 CDrawer.h		  CSquasher.h \
 CIDToMatrixIndex.h	  \
-CInformationCalculator.h
+CInformationCalculator.h uses-declarations.h

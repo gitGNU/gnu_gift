@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CINITIALIZEDDOUBLE
 #define _CINITIALIZEDDOUBLE
-#include "../include/uses-declarations.h"
+#include "libGIFTAcInvertedFile/include/uses-declarations.h"
 /** A class of doubles which are initialized with a zero
  (unnecessary, it seems) */
 class CInitializedDouble{

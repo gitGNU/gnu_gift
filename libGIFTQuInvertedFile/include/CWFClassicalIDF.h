@@ -38,7 +38,7 @@
 ****************************************/
 #ifndef _CWFCLASSICALIDF
 #define _CWFCLASSICALIDF
-#include "../include/uses-declarations.h"
+#include "libGIFTQuInvertedFile/include/uses-declarations.h"
 #include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 
 ///Classical IDF weight

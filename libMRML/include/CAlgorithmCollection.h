@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CALGORITHMCOLLECTION
 #define _CALGORITHMCOLLECTION
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include <string>
 #include <map>
 #include "libMRML/include/CAlgorithm.h"

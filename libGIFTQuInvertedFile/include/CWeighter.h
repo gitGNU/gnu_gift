@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CWEIGHTER
 #define _CWEIGHTER
-#include "../include/uses-declarations.h"
+#include "libGIFTQuInvertedFile/include/uses-declarations.h"
 class CWeightingFunction;
 class CQueryNormalizer;
 class CAcInvertedFile;

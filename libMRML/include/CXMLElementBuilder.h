@@ -1,8 +1,8 @@
 // -*- mode: c++ -*-
 #ifndef _CXMLELEMENTBUILDER
 #define _CXMLELEMENTBUILDER
-#include "../include/uses-declarations.h"/* -*- mode: c++ -*- 
-*/
+#include "libMRML/include/uses-declarations.h"
+
 /* 
 
     GIFT, a flexible content based image retrieval system.

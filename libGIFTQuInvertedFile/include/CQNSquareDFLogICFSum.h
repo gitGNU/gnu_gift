@@ -38,7 +38,7 @@
 */
 #ifndef _CQNSQUAREDFLOGICFSUM
 #define _CQNSQUAREDFLOGICFSUM
-#include "../include/uses-declarations.h"
+#include "libGIFTQuInvertedFile/include/uses-declarations.h"
 
 #include "libGIFTQuInvertedFile/include/CQueryNormalizer.h"
 

@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CXEVCOMMUNICATION
 #define _CXEVCOMMUNICATION
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include <string> //mSessionID
 
 #include "libMRML/include/CXMLElementVisitor.h" //base class

@@ -24,7 +24,7 @@
 
 #ifndef _CALGORITHM
 #define _CALGORITHM
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include "libMRML/include/CXMLElement.h"
 #include "libMRML/include/CSelfDestroyPointer.h"
 #include <map>

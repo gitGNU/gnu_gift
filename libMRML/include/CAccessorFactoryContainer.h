@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CACCESSORFACTORYCONTAINER
 #define _CACCESSORFACTORYCONTAINER
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include <map>
 #include <string>
 #include "libMRML/include/CSelfDestroyPointer.h"

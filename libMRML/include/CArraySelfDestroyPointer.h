@@ -1,6 +1,8 @@
 #ifndef _CARRAYSELFDESTROYPOINTER
 #define _CARRAYSELFDESTROYPOINTER
-#include "../include/uses-declarations.h"/*A pointer which stores along with itself, if it
+/*
+#include "libMRML/include/uses-declarations.h"
+
   destroys the element it points to
 */
 

@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CAFSPECIALISED
 #define _CAFSPECIALISED
-#include "../include/uses-declarations.h"
+#include "libGIFTAcInvertedFile/include/uses-declarations.h"
 #include "react_to_perl.h"
 #include "libMRML/include/CAccessorFactory.h"
 

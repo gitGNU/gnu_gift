@@ -10,4 +10,4 @@ CQueryNormalizer.h	    CWeightingFunction.h\
 CScoreBoard.h		    CWeightingFunctionPointerHash.h \
 			    CWeightingFunctionPointerList.h \
 CWFBestFullyWeighted.h	    \
-CWFBestProbabilistic.h
+CWFBestProbabilistic.h uses-declarations.h

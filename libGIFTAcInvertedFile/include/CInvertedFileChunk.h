@@ -39,7 +39,7 @@
 */
 #ifndef _CINVERTEDFILECHUNK
 #define _CINVERTEDFILECHUNK
-#include "../include/uses-declarations.h"
+#include "libGIFTAcInvertedFile/include/uses-declarations.h"
 #include <iostream>
 #include <fstream>
 #include "libMRML/include/TID.h"

@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CQMULTIPLE
 #define _CQMULTIPLE
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 
 /* -*- mode: c++ -*- 
 */

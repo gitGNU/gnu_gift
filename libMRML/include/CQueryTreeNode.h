@@ -1,7 +1,7 @@
 // -*- mode: c++ -*-
 #ifndef _CQUERYTREENODE
 #define _CQUERYTREENODE
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include "libMRML/include/CQuery.h"
 
 #ifdef LINK_DYNAMICALLY

@@ -38,7 +38,7 @@
 */
 #ifndef _CWEIGHTINGFUNCTIONPOINTERHASH
 #define _CWEIGHTINGFUNCTIONPOINTERHASH
-#include "../include/uses-declarations.h"
+#include "libGIFTQuInvertedFile/include/uses-declarations.h"
 #include <map>
 #include <algorithm>
 #ifdef HAS_HASH_MAP

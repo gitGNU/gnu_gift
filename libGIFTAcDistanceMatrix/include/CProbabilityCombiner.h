@@ -22,7 +22,7 @@
 */
 #ifndef _CPROBABILITYCOMBINER
 #define _CPROBABILITYCOMBINER
-#include "../include/uses-declarations.h"
+#include "libGIFTAcDistanceMatrix/include/uses-declarations.h"
 #include <functional>
 #include <assert.h>
 

@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CAFHIERARCHY
 #define _CAFHIERARCHY
-#include "../include/uses-declarations.h"
+#include "libGIFTAcHierarchy/include/uses-declarations.h"
 #include "libMRML/include/CAccessorFactory.h"
 #include "libGIFTAcHierarchy/include/CAcHierarchy.h"
 

@@ -22,7 +22,7 @@
 */
 #ifndef _CACCESSORPROXY
 #define _CACCESSORPROXY
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include "libMRML/include/CSelfDestroyPointer.h"
 #include <string>
 #include <functional>

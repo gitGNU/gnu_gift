@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CXMLELEMENTVISITOR
 #define _CXMLELEMENTVISITOR
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include "libMRML/include/CXMLElement.h"
 
 /**

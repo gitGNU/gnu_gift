@@ -21,18 +21,26 @@
 
 */
 // -*- mode: c++ -*-
-#ifndef _CTIMESTAMPGENERATOR
-#define _CTIMESTAMPGENERATOR
-#include "libMRML/include/uses-declarations.h"
-class CXMLElement;
+#ifndef _CRPIPE
+#define _CRPIPE
+
+#include "libMRML/include/CReaper.h"
 
 /**
-   This class generates a cui-time-stamp MRML element
+   A reaper that closes a pipe after
+   the piping child has exited
+   
+   @author: Wolfgang Mueller
  */
-class CTimeStampGenerator{
- public:
-  /** this generates a time stamp it might be interesting to inherit 
-      from this class, so we make it a virtual function*/
-  virtual CXMLElement* generateTimeStamp()const;
+class CRPipe:public CReaper{
+protected:
+  /** when receiving a sigchild,
+      this has to close the outgoing pipe */
+  int mPipeToClose;
+public:
+  /** get the pipe to close */
+  CRPipe(int inPID,int inPipeToClose);
+  /** do the real action*/
+  virtual void reap(); 
 };
 #endif

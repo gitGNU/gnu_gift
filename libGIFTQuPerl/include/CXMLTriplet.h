@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CXMLTRIPLET
 #define _CXMLTRIPLET
-#include "../include/uses-declarations.h"
+#include "libGIFTQuPerl/include/uses-declarations.h"
 #include <string>
 
 /**

@@ -23,7 +23,7 @@
 // -*- mode: c++ -*-
 #ifndef _CXEVTRIPLETLIST
 #define _CXEVTRIPLETLIST
-#include "../include/uses-declarations.h"
+#include "libMRML/include/uses-declarations.h"
 #include <string> //mSessionID
 
 #include "libGIFTQuPerl/include/CXMLTripletList.h"

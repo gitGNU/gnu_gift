@@ -22,7 +22,7 @@
 */
 #ifndef _CSQUASHER
 #define _CSQUASHER
-#include "../include/uses-declarations.h"
+#include "libGIFTAcDistanceMatrix/include/uses-declarations.h"
 #include <functional>
 
 //
