@@ -780,7 +780,9 @@ sub removeCollection{
 					       %{$inAttributes}=(@_);
 					       print "Clearing out collection $lCollectionName: Deleting ", $inAttributes->{"feature-file-name"},"\n";
 					       unlink $inAttributes->{"feature-file-name"};
+					       unlink $inAttributes->{"feature-file-name"}.".ADI";
 					     }});
+     unlink $lURL2FTSLocation;
      # now remove the collection element
      $lToBeDeleted[0]->getParentNode()->removeChild($lToBeDeleted[0]);
 
