@@ -28,13 +28,13 @@ INCLUDES = -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile
 #
 #
 gift_LDADD = ../expat/xmlparse/*.o ../expat/xmltok/*.o  \
-	-lefence \
 	@PRE_INSTALL_LIBDIRS@ @PRE_INSTALL_LIBDIRS@\
 	@UNPUBLISHED_DIR@ @UNPUBLISHED@ @BAYESIAN@ \
         -lGIFTQuPerl -lGIFTAcPerl -lMRML\
 	@BAYESIAN_LD_ADD@\
 	@PERL_LD_ADD@ 
 
+#	-lefence \
 # -lGIFTAcURL2FTS -lGIFTAcInvertedFile \
 # -lGIFTAcHierarchy \
 # -lGIFTQuInvertedFile  -lGIFTQuHierarchy

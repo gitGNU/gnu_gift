@@ -70,7 +70,13 @@ void* operator new[](size_t s){
   return operator new(s);
 }
 void operator delete(void * inToBeDeleted){
+  if(gMutex){
+    gMutex->lock();
+  }
   free(inToBeDeleted);
+  if(gMutex){
+    gMutex->unlock();
+  }
 }
 void operator delete[](void* inToBeDeleted){ 
   delete(inToBeDeleted); 
