@@ -1,3 +1,8 @@
+2001-02-13  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* GIFTServer/generateInvertedFile.cc (main): 
+	changed url2fts to url2fts.xml
+
 2001-02-06  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* scripts/perl/gift-add-collection.pre-pl (wanted): 

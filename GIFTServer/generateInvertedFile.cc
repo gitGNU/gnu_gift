@@ -41,7 +41,7 @@ main(int argc,
   if(argc==2){
     /* reading the parameters */
     string lPrefix(argv[1]);
-    string lURL2FTS(lPrefix+"/url2fts");
+    string lURL2FTS(lPrefix+"/url2fts.xml");
     string lFeatureDescription(lPrefix+"/InvertedFileFeatureDescription.db");
 
     cout << "Creating an inverted file using the files"
@@ -57,7 +57,7 @@ main(int argc,
     lElement.addAttribute(mrml_const::cui_base_dir,
 			  lPrefix);			 
     lElement.addAttribute(mrml_const::cui_feature_file_location,
-			  "url2fts");
+			  "url2fts.xml");
     lElement.addAttribute(mrml_const::cui_feature_description_location,
 			  "InvertedFileFeatureDescription.db");
     lElement.addAttribute(mrml_const::cui_inverted_file_location,
