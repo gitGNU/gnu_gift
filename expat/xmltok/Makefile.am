@@ -21,7 +21,7 @@
 # the library wont be used, and the resulting objects will be 
 # statically linked into the GIFT where needed
 
-INCLUDES= -I../xmltok -DXML_NS
+INCLUDES= -I../xmltok -I../gennmtab -DXML_NS
 noinst_LTLIBRARIES = lib_temp_xml_tok.la
 
 nametab.h:

@@ -1,3 +1,10 @@
+2001-12-23  Wolfgang M&uuml;ller  <Wolfgang.Mueller@cui.unige.ch>
+
+	* expat/xmltok/Makefile.am (INCLUDES): adding gennmtab
+
+	* expat/gennmtab/Makefile.am: making nametab.h at the right 
+	place and time
+
 2001-12-11  MUELLER Wolfgang  <Wolfgang.Mueller@cui.unige.ch>
 
 	* libMRML/include/CQMultiple.h: 
