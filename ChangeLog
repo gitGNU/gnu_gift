@@ -1,3 +1,8 @@
+2002-04-30  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* scripts/perl/Makefile.am (PERLCONFIG): adding "-e" before
+	sed expression.
+
 2002-03-30  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
 
 	* dtd/mrml.dtd: appliet Pruet Boonma's segment query patch
