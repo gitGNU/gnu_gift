@@ -35,7 +35,7 @@
 *
 *
 ****************************************/
-#include "CWFCoordinationLevel.h"
+#include "libGIFTQuInvertedFile/include/CWFCoordinationLevel.h"
 #include <math.h>
 
 /***************************************

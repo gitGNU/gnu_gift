@@ -26,8 +26,8 @@
 #include <vector>
 #include <map>
 #include <string>
-#include "GIFTExceptions.h"
-#include "CPersistentMatrix.h"
+#include "libMRML/include/GIFTExceptions.h"
+#include "libGIFTAcDistanceMatrix/include/CPersistentMatrix.h"
 ///#include "CIDToMatrixIndex.h"
 //defining this activates printouts in this file
 #undef CPTIM_DEBUG

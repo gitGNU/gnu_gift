@@ -25,7 +25,7 @@
 #define _CPROPERTYSHEETMATCHER
 
 #include <functional>
-#include "CXMLElement.h" // the type of the operands of the function we are creating
+#include "libMRML/include/CXMLElement.h" // the type of the operands of the function we are creating
 
 
 /** A class for checking if the content of two query-paradigm

@@ -3,7 +3,7 @@
 //Automatically generated from the dtd by gift-dtd-to-keywords
 #include <string>
 
-#include "mrml_const.h"
+#include "libMRML/include/mrml_const.h"
 
 const string mrml_const::acknowledge_session_op("acknowledge-session-op");
  const string mrml_const::algorithm("algorithm");

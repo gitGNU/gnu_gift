@@ -24,7 +24,7 @@
 #ifndef _CXMLELEMENTVISITOR
 #define _CXMLELEMENTVISITOR
 
-#include "CXMLElement.h"
+#include "libMRML/include/CXMLElement.h"
 
 /**
    This class is designed for visiting XML document trees.

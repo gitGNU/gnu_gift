@@ -26,7 +26,7 @@
 
 #include <string> //mSessionID
 
-#include "CXMLElementVisitor.h" //base class
+#include "libMRML/include/CXMLElementVisitor.h" //base class
 
 class CCommunicationHandler;
 

@@ -40,10 +40,10 @@
 #define _CQNNONORMALIZATION
 
 
-#include "CDocumentFrequencyElement.h"
-#include "CWeightingFunction.h"
-#include "CAcInvertedFile.h"
-#include "CQueryNormalizer.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
+#include "libGIFTAcInvertedFile/include/CAcInvertedFile.h"
+#include "libGIFTQuInvertedFile/include/CQueryNormalizer.h"
 
 /** Empty normalizer for the trivial case.
  */

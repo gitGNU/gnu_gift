@@ -1,3 +1,3 @@
-#include "CXMLElement.h"
-#include "CXMLElementVisitor.h"
+#include "libMRML/include/CXMLElement.h"
+#include "libMRML/include/CXMLElementVisitor.h"
 

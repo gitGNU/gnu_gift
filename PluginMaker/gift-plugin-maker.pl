@@ -47,7 +47,8 @@ sub wanted {
 
   my $l_dir=$File::Find::dir;
   
-  if( -f "$l_file"){
+  if(( -f "$l_file")
+     && (!($l_dir =~ m/CVS/))){
     my $l_destination_file=replace_list("$g_destination_directory$l_dir/$l_file",
 					{
 					 "\@PLUGIN_NAME\@" => $l_plugin_name,

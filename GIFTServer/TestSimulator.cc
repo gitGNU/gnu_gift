@@ -20,12 +20,12 @@
 #include <strstream.h>
 #include <iostream.h>
 
-#include "CRelevanceLevelList.h"
-#include "CDocumentFrequencyList.h"
+#include "libMRML/include/CRelevanceLevelList.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"
 #include "CInvertedFileAccessor.h"
 #include "CInvertedFileQuery.h"
 #include "CIFQuickAndDirtyHunter.h"
-#include "TID.h"
+#include "libMRML/include/TID.h"
 
 #include <algorithm>
 #include <stdlib.h>
@@ -34,7 +34,7 @@
 
 #include <strstream>
 
-#include "WeightingFunctionsAndNormalizers.h"
+#include "libGIFTAcInvertedFile/include/WeightingFunctionsAndNormalizers.h"
 
 CInvertedFileAccessor gAccessor(INVERTED_FILE_LOCATION,
 				OFFSET_FILE_LOCATION,

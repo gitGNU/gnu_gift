@@ -21,7 +21,10 @@
 # the library wont be used, and the resulting objects will be 
 # statically linked into the GIFT where needed
 
+wfdir=$(includedir)/expat/xmlwf
+
+
 INCLUDES= -DXML_NS
 noinst_LTLIBRARIES = lib_temp_xml_filemap.la
-noinst_HEADERS = filemap.h
+wf_HEADERS = filemap.h
 lib_temp_xml_filemap_la_SOURCES = unixfilemap.c

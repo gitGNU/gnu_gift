@@ -14,10 +14,10 @@
 *
 *
 ****************************************/
-#include "CDocumentFrequencyList.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"
 #include <unistd.h> // debugging
 
-#include "CMutex.h"
+#include "libMRML/include/CMutex.h"
 extern CMutex* gMutex;
 
 #ifdef __CDFL_MEM_DEBUG__

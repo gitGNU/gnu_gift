@@ -35,7 +35,7 @@
 *
 *
 ****************************************/
-#include "CQNSquareDFLogICFSum.h"
+#include "libGIFTQuInvertedFile/include/CQNSquareDFLogICFSum.h"
 #include <math.h>
 
 /***************************************

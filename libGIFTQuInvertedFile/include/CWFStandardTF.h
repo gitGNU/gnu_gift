@@ -39,7 +39,7 @@
 #ifndef _CWFSTANDARDTF
 #define _CWFSTANDARDTF
 
-#include "CWeightingFunction.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 
 ///Standard TermFrequency weight
 class CWFStandardTF:public CWeightingFunction{

@@ -23,7 +23,7 @@
 #include "../include/CTimeStampGenerator.h"
 #include "../include/CXMLElement.h"
 #include "../include/mrml_const.h"
-#include "CMutex.h"
+#include "libMRML/include/CMutex.h"
 #include <time.h>
 #include <string>
 /** */

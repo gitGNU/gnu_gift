@@ -19,7 +19,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "CSquasher.h"
+#include "libGIFTAcDistanceMatrix/include/CSquasher.h"
 #include <math.h>
 #include <iostream>
 double CStandardSquasher::operator()(double inCloser,

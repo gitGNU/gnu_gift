@@ -42,9 +42,9 @@
 
 #include <iostream.h>
 #include <fstream.h>
-#include "TID.h"
+#include "libMRML/include/TID.h"
 #include <map>
-#include "CDocumentFrequencyList.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"
 
 
 /**  */

@@ -1,6 +1,6 @@
-#include "CQueryTreeNode.h"
-#include "CAlgorithm.h"
-#include "mrml_const.h"
+#include "libMRML/include/CQueryTreeNode.h"
+#include "libMRML/include/CAlgorithm.h"
+#include "libMRML/include/mrml_const.h"
 
 /** Construct this */
 CQueryTreeNode::CQueryTreeNode():

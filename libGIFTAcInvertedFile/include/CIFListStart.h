@@ -39,7 +39,7 @@
 #ifndef _CIFLISTSTART
 #define _CIFLISTSTART
 
-#include "TID.h"
+#include "libMRML/include/TID.h"
 #include <iostream.h>
 
 /**The chunk which starts a list

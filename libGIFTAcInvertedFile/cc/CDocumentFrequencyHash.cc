@@ -35,4 +35,4 @@
 *
 *
 ****************************************/
-#include "CDocumentFrequencyHash.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyHash.h"

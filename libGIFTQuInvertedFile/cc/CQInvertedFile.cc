@@ -19,9 +19,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "mrml_const.h" // constants for parsing
-#include "my_throw.h"
-#include "my_diagnose.h"
+#include "libMRML/include/mrml_const.h" // constants for parsing
+#include "libMRML/include/my_throw.h"
+#include "libMRML/include/my_diagnose.h"
 /***************************************
 *
 * CInvertedFileQuery - this is the class that handles a query
@@ -80,7 +80,7 @@
 
 //#define _RTTI_WORKS
 
-#include "gift_features.h"
+#include "FeatureExtraction/gift_features.h"
 #include <algorithm>
 #include <functional>
 #include <string>
@@ -88,23 +88,23 @@
 #include <math.h>
 #include <assert.h>
 
-#include "map_to_list.h"
+#include "libGIFTAcInvertedFile/include/map_to_list.h"
 
-#include "CDocumentFrequencyHash.h"
-#include "CWeightingFunctionPointerHash.h"
-#include "CQueryNormalizer.h"
-#include "CWeightingFunction.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyHash.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunctionPointerHash.h"
+#include "libGIFTQuInvertedFile/include/CQueryNormalizer.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 
-#include "CDocumentFrequencyList.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"
 #include <vector>
-#include "CInitializedDouble.h"
-#include "CScoreBoard.h"
+#include "libGIFTAcInvertedFile/include/CInitializedDouble.h"
+#include "libGIFTQuInvertedFile/include/CScoreBoard.h"
 
-#include "CAcInvertedFile.h"
-#include "CQInvertedFile.h"
-#include "GIFTExceptions.h"
+#include "libGIFTAcInvertedFile/include/CAcInvertedFile.h"
+#include "libGIFTQuInvertedFile/include/CQInvertedFile.h"
+#include "libMRML/include/GIFTExceptions.h"
 
-#include "CXMLElement.h"
+#include "libMRML/include/CXMLElement.h"
 
 #include <time.h>
 

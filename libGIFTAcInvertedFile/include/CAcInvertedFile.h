@@ -51,9 +51,9 @@ class CXMLElement;
 #define _CINVERTEDFILEACCESSOR
 
 #include <string>
-#include "TID.h"
-#include "CAccessor.h"
-#include "CDocumentFrequencyList.h"
+#include "libMRML/include/TID.h"
+#include "libMRML/include/CAccessor.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"
 #include <iostream.h>
 #include <fstream.h>
 #include <map>
@@ -62,7 +62,7 @@ class CXMLElement;
 #include <functional>
 #include <algorithm>
 
-#include "CMagic.h"
+#include "libMRML/include/CMagic.h"
 
 
 typedef TID TFeatureID ;

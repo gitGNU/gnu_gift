@@ -37,8 +37,8 @@
 *                             the progress of the binary writing
 *
 ****************************************/
-#include "CDocumentFrequencyElement.h"
-#include "gift_features.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h"
+#include "FeatureExtraction/gift_features.h"
 #include <assert.h>
 
 

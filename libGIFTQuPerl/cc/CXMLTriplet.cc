@@ -1,4 +1,4 @@
-#include "CXMLTriplet.h"
+#include "libGIFTQuPerl/include/CXMLTriplet.h"
 
  const int CXMLTriplet::element(1);
  const int CXMLTriplet::up(2);

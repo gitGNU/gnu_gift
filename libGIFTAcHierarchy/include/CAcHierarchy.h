@@ -26,11 +26,11 @@
 
 #include <list>
 #include <map>
-#include "CAccessorImplementation.h"
+#include "libMRML/include/CAccessorImplementation.h"
 
 class CXMLElement;
-#include "CIDRelevanceLevelPairList.h"
-#include "CMutex.h" // multithreading
+#include "libMRML/include/CIDRelevanceLevelPairList.h"
+#include "libMRML/include/CMutex.h" // multithreading
 /** 
     A very simple accessor for hierarchies of images 
     Stored in an XML file.

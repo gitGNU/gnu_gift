@@ -1,8 +1,8 @@
-#include "my_throw.h"
-#include "GIFTExceptions.h"
-#include "CQueryTreeBuilder.h"
-#include "CAlgorithm.h"
-#include "mrml_const.h"
+#include "libMRML/include/my_throw.h"
+#include "libMRML/include/GIFTExceptions.h"
+#include "libMRML/include/CQueryTreeBuilder.h"
+#include "libMRML/include/CAlgorithm.h"
+#include "libMRML/include/mrml_const.h"
 //----------------------------------------
 
 CQueryTreeBuilder::CQueryTreeBuilder(){};

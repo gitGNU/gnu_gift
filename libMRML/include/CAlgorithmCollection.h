@@ -26,13 +26,13 @@
 
 #include <string>
 #include <map>
-#include "CAlgorithm.h"
+#include "libMRML/include/CAlgorithm.h"
 #ifdef LINK_DYNAMICALLY
-#include "CStaticQueryFactory.h"
+#include "libMRML/include/CStaticQueryFactory.h"
 #else
-#include "CDynamicQueryFactory.h"
+#include "libMRML/include/CDynamicQueryFactory.h"
 #endif
-#include "CXMLElement.h" // for toXMLElement
+#include "libMRML/include/CXMLElement.h" // for toXMLElement
 
 class CAccessorAdminCollection;
 

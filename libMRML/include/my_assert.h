@@ -23,7 +23,7 @@
 
 #ifndef _MYASSERT
 #define _MYASSERT
-#include "GIFTExceptions.h"
+#include "libMRML/include/GIFTExceptions.h"
 /** a more verbose assertion */
 #define my_assert(x,y) if(!(x)){cout << __FILE__ << ':' << __LINE__ << ": Assertion failed, throwing" << endl << y << endl << flush; throw(VEProgrammingMistake(y));}
 

@@ -24,9 +24,9 @@
 
 */
 #include <string>
-#include "xmlparse.h"
-#include "CXMLElement.h"
-#include "CSelfDestroyPointer.h"
+#include "expat/xmlparse/xmlparse.h"
+#include "libMRML/include/CXMLElement.h"
+#include "libMRML/include/CSelfDestroyPointer.h"
 
 // #define XEB_PRINTOUT // uncomment this to get debugging printouts
 

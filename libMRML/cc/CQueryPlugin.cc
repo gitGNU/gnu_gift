@@ -20,7 +20,7 @@
 
 */
 
-#include "CQueryPlugin.h"
+#include "libMRML/include/CQueryPlugin.h"
 
 /** makes a CQuery object*/
 CQuery* CQueryPlugin::makeQuery(CAccessorAdminCollection& inAccessorAdminCollection,

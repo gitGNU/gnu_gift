@@ -27,9 +27,9 @@
 
 #ifdef __GIFT_WITH_PERL__ 
 #define _NO_PRINT_INIT
-#include "mrml_const.h"
-#include "CAcPerl.h"
-#include "CXMLElement.h" // constructor
+#include "libMRML/include/mrml_const.h"
+#include "libGIFTAcPerl/include/CAcPerl.h"
+#include "libMRML/include/CXMLElement.h" // constructor
 
 /**
  */

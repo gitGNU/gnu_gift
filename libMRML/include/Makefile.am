@@ -5,7 +5,15 @@ directory.h:
 
 all: directory.h
 
-noinst_HEADERS= directory.h \
+#install-data-local:
+#		echo "ca marche"
+
+#install-data-hook:
+#		echo "pas"
+
+libMRMLdir=$(includedir)/libMRML/include
+
+libMRML_HEADERS= directory.h \
 	CAFPlugin.h		     CMRMLStringConstants.h   CTimeStampGenerator.h \
 	CAccessor.h		     CMagic.h		      CXEVCommunication.h \
 	CAccessorAdmin.h	     CMutex.h		      CXEVTripletList.h \

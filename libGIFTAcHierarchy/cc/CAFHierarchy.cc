@@ -1,4 +1,4 @@
-#include "CAFHierarchy.h"
+#include "libGIFTAcHierarchy/include/CAFHierarchy.h"
 
 
 CAccessor* CAFHierarchy::makeAccessor(const CXMLElement& inConfiguration)const{

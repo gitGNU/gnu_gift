@@ -36,18 +36,18 @@
 *
 *
 ****************************************/
-#include "CQNBestFullyWeighted.h"
-#include "CWFBestFullyWeighted.h"
-#include "CQNNoNormalization.h"
-#include "CQNEuclideanLengthSquare.h"
-#include "CQNSquareDFLogICFSum.h"
-#include "CQNMaxDocumentFrequency.h"
-#include "CWFBestProbabilistic.h"
-#include "CWFClassicalIDF.h"
-#include "CWFBinaryTerm.h"
-#include "CWFProbability.h"
-#include "CWFStandardTF.h"
-#include "CWFCoordinationLevel.h"
+#include "libGIFTQuInvertedFile/include/CQNBestFullyWeighted.h"
+#include "libGIFTQuInvertedFile/include/CWFBestFullyWeighted.h"
+#include "libGIFTQuInvertedFile/include/CQNNoNormalization.h"
+#include "libGIFTQuInvertedFile/include/CQNEuclideanLengthSquare.h"
+#include "libGIFTQuInvertedFile/include/CQNSquareDFLogICFSum.h"
+#include "libGIFTQuInvertedFile/include/CQNMaxDocumentFrequency.h"
+#include "libGIFTQuInvertedFile/include/CWFBestProbabilistic.h"
+#include "libGIFTQuInvertedFile/include/CWFClassicalIDF.h"
+#include "libGIFTQuInvertedFile/include/CWFBinaryTerm.h"
+#include "libGIFTQuInvertedFile/include/CWFProbability.h"
+#include "libGIFTQuInvertedFile/include/CWFStandardTF.h"
+#include "libGIFTQuInvertedFile/include/CWFCoordinationLevel.h"
 
 
 

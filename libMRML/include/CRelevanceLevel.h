@@ -42,7 +42,7 @@
 
 #include <iostream.h>
 #include <string>
-#include "TID.h"
+#include "libMRML/include/TID.h"
 #include <functional>
 
 /** 

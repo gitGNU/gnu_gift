@@ -1,1 +1,2 @@
-noinst_HEADERS=CAFHierarchy.h	CAcHierarchy.h
+libGIFTAcHierarchydir=$(includedir)/libGIFTAcHierarchy/include
+libGIFTAcHierarchy_HEADERS=CAFHierarchy.h	CAcHierarchy.h

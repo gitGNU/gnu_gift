@@ -2,16 +2,16 @@
 #ifndef _CQUERYTREENODE
 #define _CQUERYTREENODE
 
-#include "CQuery.h"
+#include "libMRML/include/CQuery.h"
 
 #ifdef LINK_DYNAMICALLY
-#include "CDynamicQueryFactory.h"
+#include "libMRML/include/CDynamicQueryFactory.h"
 #else
-#include "CStaticQueryFactory.h"
+#include "libMRML/include/CStaticQueryFactory.h"
 #endif
 
-#include "CSelfDestroyPointer.h"
-#include "CMagic.h"
+#include "libMRML/include/CSelfDestroyPointer.h"
+#include "libMRML/include/CMagic.h"
 
 class CXMLElement;
 class CAlgorithm;

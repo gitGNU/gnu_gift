@@ -40,7 +40,7 @@
 #define _CQNMAXDOCUMENTFREQUENCY
 
 
-#include "CQueryNormalizer.h"
+#include "libGIFTQuInvertedFile/include/CQueryNormalizer.h"
 
 
 class CQNMaxDocumentFrequency:public CQueryNormalizer{

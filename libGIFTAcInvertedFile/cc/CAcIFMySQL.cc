@@ -20,16 +20,16 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "CAcIFMySQL.h"
+#include "libGIFTAcInvertedFile/include/CAcIFMySQL.h"
 #include <sqlplus.hh>
 #include <iostream>
 #include <map> 
 #include <list>
 #include <fstream>
 #include <sys/stat.h>
-#include "mrml_const.h"
-#include "CXMLElement.h"
-#include "CDocumentFrequencyElement.h"
+#include "libMRML/include/mrml_const.h"
+#include "libMRML/include/CXMLElement.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h"
 
 sql_create_3 (documentFeatureConnection,
               1, 3,             

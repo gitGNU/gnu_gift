@@ -23,15 +23,15 @@
 #ifndef _CACCESSORIMPLEMENTATION
 #define _CACCESSORIMPLEMENTATION
 
-#include "CMagic.h"
+#include "libMRML/include/CMagic.h"
 #include <string>
-#include "TID.h"
+#include "libMRML/include/TID.h"
 #include <iostream.h>
 #include <fstream.h>
 #include <map>
 #include <hash_map>
-#include "CAccessor.h"
-#include "CAccessorElement.h"
+#include "libMRML/include/CAccessor.h"
+#include "libMRML/include/CAccessorElement.h"
 
 /**
 *

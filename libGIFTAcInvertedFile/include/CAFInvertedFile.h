@@ -24,9 +24,9 @@
 #ifndef _CAFINVERTEDFILE
 #define _CAFINVERTEDFILE
 
-#include "CAccessorFactory.h"
-#include "CAcInvertedFile.h"
-#include "CAcIFFileSystem.h"
+#include "libMRML/include/CAccessorFactory.h"
+#include "libGIFTAcInvertedFile/include/CAcInvertedFile.h"
+#include "libGIFTAcInvertedFile/include/CAcIFFileSystem.h"
 
 /** 
  * A factory to make inverted Files

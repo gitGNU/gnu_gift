@@ -1,4 +1,4 @@
-#include "CAF@PLUGIN_NAME@.h"
+#include "libGIFTAc@PLUGIN_NAME@/include/CAF@PLUGIN_NAME@.h"
 
 
 CAccessor* CAF@PLUGIN_NAME@::makeAccessor(const CXMLElement& inConfiguration)const{

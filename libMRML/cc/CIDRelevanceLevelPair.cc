@@ -38,7 +38,7 @@
 *
 ****************************************/
 #include <cstdio>
-#include "CIDRelevanceLevelPair.h"
+#include "libMRML/include/CIDRelevanceLevelPair.h"
 
 
 

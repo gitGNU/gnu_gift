@@ -22,9 +22,9 @@
 
 /** Author: Wolfgang Müller */
 
-#include "CQueryNormalizer.h"
-#include "CWeightingFunction.h"
-#include "CWeighter.h"
+#include "libGIFTQuInvertedFile/include/CQueryNormalizer.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
+#include "libGIFTQuInvertedFile/include/CWeighter.h"
 /** constructor */
 CWeighter::CWeighter(CWeightingFunction* inWeightingFunction,
 		     CQueryNormalizer* inDocumentNormalizer,

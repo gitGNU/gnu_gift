@@ -25,7 +25,7 @@
 #define _CACCESSORCOLLECTION
 
 #include <map>
-#include "CAccessorAdmin.h"
+#include "libMRML/include/CAccessorAdmin.h"
 
 class CXMLElement;
 

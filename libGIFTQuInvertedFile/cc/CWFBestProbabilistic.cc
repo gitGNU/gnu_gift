@@ -35,9 +35,9 @@
 *
 *
 ****************************************/
-#include "CWFBestProbabilistic.h"
+#include "libGIFTQuInvertedFile/include/CWFBestProbabilistic.h"
 #include <math.h>
-#include "gift_features.h"
+#include "FeatureExtraction/gift_features.h"
 
 /***************************************
 *

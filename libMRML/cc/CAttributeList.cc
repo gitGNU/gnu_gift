@@ -19,10 +19,10 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "CAttributeList.h"
+#include "libMRML/include/CAttributeList.h"
 #include "string.h"
 #include <cstdio>
-#include "CMutex.h"
+#include "libMRML/include/CMutex.h"
 
 extern CMutex* gMutex;
 

@@ -35,8 +35,8 @@
 *
 *
 ****************************************/
-#include "CWFClassicalIDF.h"
-#include "gift_features.h"
+#include "libGIFTQuInvertedFile/include/CWFClassicalIDF.h"
+#include "FeatureExtraction/gift_features.h"
 #include <math.h>
 
 /***************************************

@@ -19,9 +19,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "CDynamicQueryFactory.h"
-#include "CQMultiple.h"
-#include "CQPerl.h"
+#include "libMRML/include/CDynamicQueryFactory.h"
+#include "libMRML/include/CQMultiple.h"
+#include "libGIFTQuPerl/include/CQPerl.h"
 
 CQuery* CDynamicQueryFactory::makeQuery(const string & inBaseType, 
 					   CAccessorAdminCollection & inAccessorAdminCollection,

@@ -1,7 +1,7 @@
-#include "mrml_const.h"
+#include "libMRML/include/mrml_const.h"
 
-#include "CCommunicationHandler.h"
-#include "CXEVCommunication.h"
+#include "libMRML/include/CCommunicationHandler.h"
+#include "libMRML/include/CXEVCommunication.h"
 
 CXEVCommunication::CXEVCommunication(CCommunicationHandler* inHandler):
     mHandler(inHandler),

@@ -39,7 +39,7 @@
 #ifndef _CWFBINARYTERM
 #define _CWFBINARYTERM
 
-#include "CWeightingFunction.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 
 ///Method
 class CWFBinaryTerm:public CWeightingFunction{

@@ -39,7 +39,7 @@
 #ifndef _CWFBESTPROBABILISTIC
 #define _CWFBESTPROBABILISTIC
 
-#include "CWeightingFunction.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 
 ///Weighting Function method 2
 class CWFBestProbabilistic:public CWeightingFunction{

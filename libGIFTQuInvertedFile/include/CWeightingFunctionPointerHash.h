@@ -41,9 +41,9 @@
 #include <map>
 #include <algorithm>
 
-#include "TID.h"
-#include "CWeightingFunction.h"
-#include "CWeightingFunctionPointerList.h"
+#include "libMRML/include/TID.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunctionPointerList.h"
 
 /** 
     A hash of weighting function pointers

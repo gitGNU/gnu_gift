@@ -39,7 +39,7 @@
 #ifndef _CWFCOORDINATIONLEVEL
 #define _CWFCOORDINATIONLEVEL
 
-#include "CWeightingFunction.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 
 ///Coordination Level, i.e. no weighting
 class CWFCoordinationLevel:public CWeightingFunction{

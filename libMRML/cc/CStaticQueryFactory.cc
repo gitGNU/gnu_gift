@@ -1,19 +1,19 @@
-#include "my_throw.h"
+#include "libMRML/include/my_throw.h"
 
-#include "CStaticQueryFactory.h"
+#include "libMRML/include/CStaticQueryFactory.h"
 
-#include "GIFTExceptions.h"
-#include "CAlgorithm.h"
-#include "CQInvertedFile.h"
-#include "CQParallel.h"
-#include "CQMultiple.h"
+#include "libMRML/include/GIFTExceptions.h"
+#include "libMRML/include/CAlgorithm.h"
+#include "libGIFTQuInvertedFile/include/CQInvertedFile.h"
+#include "libMRML/include/CQParallel.h"
+#include "libMRML/include/CQMultiple.h"
 #ifdef __GIFT_BAYESIAN__
 #include "CIFQuickAndDirtyHunter.h"
 #endif
-#include "CQHierarchy.h"
+#include "libGIFTQuHierarchy/include/CQHierarchy.h"
 
 #ifdef __GIFT_WITH_PERL__
-#include "CQPerl.h"
+#include "libGIFTQuPerl/include/CQPerl.h"
 #endif
 
 //These are files which belong to yet unpublished worked
@@ -21,7 +21,7 @@
 #include "CQIFFerDeLance.h"
 #endif
 
-#include "CAccessorAdminCollection.h"
+#include "libMRML/include/CAccessorAdminCollection.h"
 
 CQuery* CStaticQueryFactory::makeQuery(const string & inBaseType, 
 				    CAccessorAdminCollection & inAccessorAdminCollection,

@@ -1,6 +1,6 @@
 
-#include "CSelfDestroyPointer.h"
-#include "CXEVTripletList.h"
+#include "libMRML/include/CSelfDestroyPointer.h"
+#include "libMRML/include/CXEVTripletList.h"
 
 /** Constructor */
 CXEVTripletList::CXEVTripletList(){

@@ -1,4 +1,4 @@
-#include "CMagic.h"
+#include "libMRML/include/CMagic.h"
 
 #include <iostream>
 

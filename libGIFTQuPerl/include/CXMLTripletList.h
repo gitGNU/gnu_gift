@@ -26,7 +26,7 @@
 
 #include <list>
 
-#include "CXMLTriplet.h"
+#include "libGIFTQuPerl/include/CXMLTriplet.h"
 
 class CXMLTripletList:public list<CXMLTriplet>{};
 

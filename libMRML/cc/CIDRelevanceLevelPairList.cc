@@ -35,7 +35,7 @@
 *
 *
 ****************************************/
-#include "CIDRelevanceLevelPairList.h"
+#include "libMRML/include/CIDRelevanceLevelPairList.h"
 
 CIDRelevanceLevelPairList::CIDRelevanceLevelPairList(){
 };

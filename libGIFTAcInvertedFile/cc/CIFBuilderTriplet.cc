@@ -1,4 +1,4 @@
-#include "CIFBuilderTriplet.h"
+#include "libGIFTAcInvertedFile/include/CIFBuilderTriplet.h"
 
 /** default constructor */
 CIFBuilderTriplet::CIFBuilderTriplet():

@@ -24,7 +24,7 @@
 #ifndef _CAFURL2FTS
 #define _CAFURL2FTS
 
-#include "CAccessorFactory.h"
+#include "libMRML/include/CAccessorFactory.h"
 /** 
  * A factory to make URL2FTS accessors
  *@author Wolfgang Müller

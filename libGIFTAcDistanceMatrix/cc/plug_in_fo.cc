@@ -1,5 +1,5 @@
-#include "CAcDistanceMatrix.h"
-#include "CAccessorAdminCollection.h"
+#include "libGIFTAcDistanceMatrix/include/CAcDistanceMatrix.h"
+#include "libMRML/include/CAccessorAdminCollection.h"
 #include <iostream>
 extern "C" char* libGIFTAcDistanceMatrix_getClassName(){
   return "distance_matrix";

@@ -26,7 +26,7 @@
 
 #include <map>
 #include <string>
-#include "CSelfDestroyPointer.h"
+#include "libMRML/include/CSelfDestroyPointer.h"
 class CXMLElement;
 class CAccessor;
 class CAccessorFactory;

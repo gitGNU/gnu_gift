@@ -19,13 +19,13 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "mrml_const.h" // for parsing
-#include "CXMLElement.h" // mCollectionElement 
-#include "CXMLHelper.h"
-#include "CMutex.h"
+#include "libMRML/include/mrml_const.h" // for parsing
+#include "libMRML/include/CXMLElement.h" // mCollectionElement 
+#include "libMRML/include/CXMLHelper.h"
+#include "libMRML/include/CMutex.h"
 extern CMutex* gMutex;
 #include <unistd.h> // printing process ID for debugging
-#include "CAccessorAdmin.h"
+#include "libMRML/include/CAccessorAdmin.h"
 
 ///
 void CAccessorAdmin::setCollectionElement(CXMLElement* inElement){

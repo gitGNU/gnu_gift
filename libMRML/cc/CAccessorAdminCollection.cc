@@ -20,17 +20,17 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "mrml_const.h"
-#include "my_throw.h"
-#include "my_assert.h"
+#include "libMRML/include/mrml_const.h"
+#include "libMRML/include/my_throw.h"
+#include "libMRML/include/my_assert.h"
 #include <assert.h>
-#include "GIFTExceptions.h"
-#include "CAccessorAdminCollection.h"
-#include "CAttributeList.h"
-#include "xmlparse.h"
+#include "libMRML/include/GIFTExceptions.h"
+#include "libMRML/include/CAccessorAdminCollection.h"
+#include "libMRML/include/CAttributeList.h"
+#include "expat/xmlparse/xmlparse.h"
 #include <fstream>
-#include "CXMLElement.h" // for adding collections 
-#include "directory.h"
+#include "libMRML/include/CXMLElement.h" // for adding collections 
+#include "libMRML/include/directory.h"
 
 void startAccessorAdminCollectionElement(void *userData, 
 				    const char *inElementName, 

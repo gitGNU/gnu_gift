@@ -35,9 +35,9 @@
 *
 *
 ****************************************/
-#include "CWFStandardTF.h"
+#include "libGIFTQuInvertedFile/include/CWFStandardTF.h"
 #include <math.h>
-#include "gift_features.h"
+#include "FeatureExtraction/gift_features.h"
 
 /***************************************
 *

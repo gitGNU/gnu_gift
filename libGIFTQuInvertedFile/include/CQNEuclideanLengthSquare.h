@@ -40,7 +40,7 @@
 #define _CQNEUCLIDEANLENGTHSQUARE
 
 
-#include "CQueryNormalizer.h"
+#include "libGIFTQuInvertedFile/include/CQueryNormalizer.h"
 
 /**The query normalizer for the Best Fully Weighted Method
   does not work yet (1.12.1998) */

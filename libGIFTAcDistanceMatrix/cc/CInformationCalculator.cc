@@ -19,7 +19,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "CInformationCalculator.h"
+#include "libGIFTAcDistanceMatrix/include/CInformationCalculator.h"
 #include <algorithm>
 #include <functional>
 #include <math.h>

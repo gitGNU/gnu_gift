@@ -42,14 +42,14 @@
 */
 
 #include <string>
-#include "TID.h"
+#include "libMRML/include/TID.h"
 #include <iostream.h>
 #include <fstream.h>
 #include <list>
 #include <map>
 #include <hash_map>
-#include "CAccessor.h"
-#include "CSelfDestroyPointer.h"
+#include "libMRML/include/CAccessor.h"
+#include "libMRML/include/CSelfDestroyPointer.h"
 
 class CXMLElement;//constructor
 

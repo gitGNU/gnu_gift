@@ -44,13 +44,13 @@
 #define _CACURL2FTS
 
 #include <string>
-#include "TID.h"
+#include "libMRML/include/TID.h"
 #include <iostream.h>
 #include <fstream.h>
 #include <map>
 #include <hash_map>
-#include "CAccessorImplementation.h"
-#include "CMutex.h" // multithreading
+#include "libMRML/include/CAccessorImplementation.h"
+#include "libMRML/include/CMutex.h" // multithreading
 class CXMLElement;  // parameter of constructor
 
 /** 

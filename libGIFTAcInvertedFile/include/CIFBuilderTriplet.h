@@ -24,7 +24,7 @@
 #ifndef _CIFBUILDERTRIPLET
 #define _CIFBUILDERTRIPLET
 
-#include "TID.h"
+#include "libMRML/include/TID.h"
 
 /** When building an inverted file by successive merging
     we need first to create a file containing triplets of

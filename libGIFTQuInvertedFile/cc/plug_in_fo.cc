@@ -1,5 +1,5 @@
-#include "CQInvertedFile.h"
-#include "CAccessorAdminCollection.h"
+#include "libGIFTQuInvertedFile/include/CQInvertedFile.h"
+#include "libMRML/include/CAccessorAdminCollection.h"
 extern "C" char* libGIFTQuInvertedFile_getClassName(){
   return "inverted_file";
 }

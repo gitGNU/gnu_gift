@@ -39,7 +39,7 @@
 */
 #ifndef _CDOCUMENTFREQUENCYLIST
 #define _CDOCUMENTFREQUENCYLIST
-#include "CDocumentFrequencyElement.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h"
 
 //#define _CDocumentFrequencyListIsVector
 //#define _CDocumentFrequencyListIsList

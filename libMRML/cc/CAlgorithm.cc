@@ -19,14 +19,14 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "mrml_const.h"
-#include "my_throw.h"
+#include "libMRML/include/mrml_const.h"
+#include "libMRML/include/my_throw.h"
 #include <algorithm>
-#include "CQuery.h"
-#include "CAlgorithm.h"
-#include "CXMLHelper.h"
-#include "CQueryTreeBuilder.h"
-#include "CAlgorithmCollection.h"
+#include "libMRML/include/CQuery.h"
+#include "libMRML/include/CAlgorithm.h"
+#include "libMRML/include/CXMLHelper.h"
+#include "libMRML/include/CQueryTreeBuilder.h"
+#include "libMRML/include/CAlgorithmCollection.h"
 /** clone this*/
 CAlgorithm* CAlgorithm::clone()const{
   return new CAlgorithm(*this);

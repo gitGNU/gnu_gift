@@ -36,7 +36,7 @@
 *
 ****************************************/
 #include <iostream>
-#include "CWeightingFunctionPointerHash.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunctionPointerHash.h"
 
 /***************************************
 *

@@ -1,5 +1,5 @@
-#include "CAFDistanceMatrix.h"
-#include "CAcDistanceMatrix.h"
+#include "libGIFTAcDistanceMatrix/include/CAFDistanceMatrix.h"
+#include "libGIFTAcDistanceMatrix/include/CAcDistanceMatrix.h"
 
 
 CAccessor* CAFDistanceMatrix::makeAccessor(const CXMLElement& inConfiguration)const{

@@ -35,7 +35,7 @@
 *
 *
 ****************************************/
-#include "CQueryNormalizer.h"
+#include "libGIFTQuInvertedFile/include/CQueryNormalizer.h"
 
 /***************************************
 *

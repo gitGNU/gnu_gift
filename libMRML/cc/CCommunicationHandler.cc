@@ -9,12 +9,12 @@
 #include <sys/socket.h>
 #include <errno.h>
 //
-#include "CXEVCommunication.h" // the visitor analyzing the document trees built
-#include "CCommunicationHandler.h"
+#include "libMRML/include/CXEVCommunication.h" // the visitor analyzing the document trees built
+#include "libMRML/include/CCommunicationHandler.h"
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
-#include "mrml_const.h" //mrml string constants newStart/EndMRMLElement
+#include "libMRML/include/mrml_const.h" //mrml string constants newStart/EndMRMLElement
 #include "../include/CTimeStampGenerator.h" // for time stamps
 string gGIFTHome;//dirty but necessary
 CMutex* gMutex(0);   //we need a global one
@@ -910,8 +910,10 @@ void CCommunicationHandler::addToMultiResponse(CXMLElement* inElement){
   }
 
   assert(mMultiResponse);
-  mMultiResponse->addChild(inElement);
-  mMultiResponse->moveUp();
+  if(inElement){
+    mMultiResponse->addChild(inElement);
+    mMultiResponse->moveUp();
+  }
   gMutex->unlock();
 };
 

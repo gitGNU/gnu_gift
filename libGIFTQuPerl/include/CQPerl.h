@@ -36,7 +36,7 @@
 #undef list // perl lists
 
 #include <list>
-#include "CQuery.h"
+#include "libMRML/include/CQuery.h"
 
 
 /** Linking GIFT to Perl.

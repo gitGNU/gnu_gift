@@ -23,7 +23,7 @@
 #define WOLFGANG_DEVELOPER
 
 // the gift exceptions
-#include "GIFTExceptions.h"
+#include "libMRML/include/GIFTExceptions.h"
 
 // c++ standard library stuff
 #include <functional>
@@ -50,28 +50,28 @@
 //#include <linux/socket.h>
 
 //the expat xml parser by J.Clark
-#include "xmlparse.h"
+#include "expat/xmlparse/xmlparse.h"
 //a class for using xpat attributes in a nice way
-#include "CAttributeList.h"
+#include "libMRML/include/CAttributeList.h"
 
 //"classical" gift specific includes
-#include "CRelevanceLevelList.h"
-#include "CDocumentFrequencyList.h"
-#include "CAcInvertedFile.h"
-#include "CQInvertedFile.h"
-#include "TID.h"
-#include "WeightingFunctionsAndNormalizers.h"
-#include "CAccessorElement.h"
-#include "CIDRelevanceLevelPairList.h"
+#include "libMRML/include/CRelevanceLevelList.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"
+#include "libGIFTAcInvertedFile/include/CAcInvertedFile.h"
+#include "libGIFTQuInvertedFile/include/CQInvertedFile.h"
+#include "libMRML/include/TID.h"
+#include "libGIFTAcInvertedFile/include/WeightingFunctionsAndNormalizers.h"
+#include "libMRML/include/CAccessorElement.h"
+#include "libMRML/include/CIDRelevanceLevelPairList.h"
 //This is mrml+gift specific
-#include "mrml_const.h" //important constants for parsing
-#include "CAccessorAdminCollection.h"
-#include "CSessionManager.h"
-#include "CAccessor.h" // distance matrix
+#include "libMRML/include/mrml_const.h" //important constants for parsing
+#include "libMRML/include/CAccessorAdminCollection.h"
+#include "libMRML/include/CSessionManager.h"
+#include "libMRML/include/CAccessor.h" // distance matrix
 //for debugging
 #define _DEBUG
 #define _NON_BLOCKING 0
-#include "CCommunicationHandler.h"
+#include "libMRML/include/CCommunicationHandler.h"
 
 //the "ID administration subsystem"
 TID gID;

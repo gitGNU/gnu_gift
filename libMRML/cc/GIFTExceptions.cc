@@ -19,7 +19,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "GIFTExceptions.h"
+#include "libMRML/include/GIFTExceptions.h"
 
 GIFTException::GIFTException(const char* inMessage):
     mMessage(inMessage){}

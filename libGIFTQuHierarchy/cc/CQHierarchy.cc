@@ -19,9 +19,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "mrml_const.h" // for parsing
-#include "CQHierarchy.h"
-#include "CAcHierarchy.h"
+#include "libMRML/include/mrml_const.h" // for parsing
+#include "libGIFTQuHierarchy/include/CQHierarchy.h"
+#include "libGIFTAcHierarchy/include/CAcHierarchy.h"
 /** 
 
     There is no special initialisation to do,

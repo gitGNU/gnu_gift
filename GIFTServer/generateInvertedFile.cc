@@ -19,9 +19,9 @@
 *
 ****************************************/
 
-#include "mrml_const.h"
-#include "CXMLElement.h"
-#include "CAcIFFileSystem.h"
+#include "libMRML/include/mrml_const.h"
+#include "libMRML/include/CXMLElement.h"
+#include "libGIFTAcInvertedFile/include/CAcIFFileSystem.h"
 
 /***************************************
 *

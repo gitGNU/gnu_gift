@@ -19,15 +19,15 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "mrml_const.h"
-#include "my_throw.h"
-#include "CAc@PLUGIN_NAME@.h"
+#include "libMRML/include/mrml_const.h"
+#include "libMRML/include/my_throw.h"
+#include "libGIFTAc@PLUGIN_NAME@/include/CAc@PLUGIN_NAME@.h"
 #include <assert.h>
-#include "GIFTExceptions.h"
-#include "xmlparse.h"
+#include "libMRML/include/GIFTExceptions.h"
+#include "expat/xmlparse/xmlparse.h"
 #include <fstream>
-#include "CXMLElement.h"
-#include "CAttributeList.h"
+#include "libMRML/include/CXMLElement.h"
+#include "libMRML/include/CAttributeList.h"
 
 CAc@PLUGIN_NAME@::CAc@PLUGIN_NAME@(const CXMLElement& inCollectionElement){
   mMutex@PLUGIN_NAME@.lock();

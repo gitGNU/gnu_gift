@@ -37,8 +37,8 @@
 *
 ****************************************/
 
-#include "gift_features.h"
-#include "CInvertedFileChunk.h"
+#include "FeatureExtraction/gift_features.h"
+#include "libGIFTAcInvertedFile/include/CInvertedFileChunk.h"
 #include <algorithm>
 
 

@@ -1,1 +1,2 @@
-noinst_HEADERS=CQHierarchy.h
+libGIFTQuHierarchydir=$(includedir)/libGIFTQuHierarchy/include
+libGIFTQuHierarchy_HEADERS=CQHierarchy.h

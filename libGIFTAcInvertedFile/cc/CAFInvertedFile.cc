@@ -1,7 +1,7 @@
-#include "CAFInvertedFile.h"
-#include "CAcIFMySQL.h"
-#include "CAcIFFileSystem.h"
-#include "CXMLElement.h"
+#include "libGIFTAcInvertedFile/include/CAFInvertedFile.h"
+#include "libGIFTAcInvertedFile/include/CAcIFMySQL.h"
+#include "libGIFTAcInvertedFile/include/CAcIFFileSystem.h"
+#include "libMRML/include/CXMLElement.h"
 /**
  */
 CAccessor* CAFInvertedFile::makeAccessor(const CXMLElement& inConfiguration)const{

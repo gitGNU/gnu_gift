@@ -19,7 +19,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "CQParallel.h"
+#include "libMRML/include/CQParallel.h"
 /** 
 
     FIXME: The name WRONGLY suggests that this actually does parallel

@@ -1,5 +1,5 @@
 
-#include "CXMLElementBuilder.h"
+#include "libMRML/include/CXMLElementBuilder.h"
 
 void newStartXMLElement(void *inUserData, 
 			 const char *inElementName, 

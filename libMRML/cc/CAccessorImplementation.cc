@@ -48,7 +48,7 @@
 
 #include <string>
 #include <set> 
-#include "CAccessorImplementation.h"
+#include "libMRML/include/CAccessorImplementation.h"
 #include <iostream>
 #include <cassert>
 #include <cmath>

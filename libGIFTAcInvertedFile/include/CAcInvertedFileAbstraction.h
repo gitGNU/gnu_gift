@@ -51,13 +51,13 @@ class CXMLElement;
 #define _CINVERTEDFILEACCESSOR
 
 #include <string>
-#include "TID.h"
-#include "CSelfDestroyPointer.h"
-#include "CArraySelfDestroyPointer.h"
-#include "CDocumentFrequencyList.h"
+#include "libMRML/include/TID.h"
+#include "libMRML/include/CSelfDestroyPointer.h"
+#include "libMRML/include/CArraySelfDestroyPointer.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"
 #include "CCollectionFrequencyList.h"
-#include "CADIHash.h"
-#include "CAcURL2FTS.h"
+#include "libGIFTAcInvertedFile/include/CADIHash.h"
+#include "libGIFTAcURL2FTS/include/CAcURL2FTS.h"
 #include <iostream.h>
 #include <fstream.h>
 #include <map>
@@ -66,7 +66,7 @@ class CXMLElement;
 #include <functional>
 #include <algorithm>
 
-#include "CMagic.h"
+#include "libMRML/include/CMagic.h"
 
 
 typedef TID TFeatureID ;

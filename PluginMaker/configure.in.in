@@ -61,8 +61,6 @@ dnl
 GIFT_LIB_VERSION_INFO="-version-info 0:1:5"
 AC_SUBST(GIFT_LIB_VERSION_INFO)
 
-GIFT_SOURCE_DIRECTORY=@PLUGIN_MAKER_PWD@
-AC_SUBST(GIFT_SOURCE_DIRECTORY)
 
 
 AC_C_CONST
@@ -132,9 +130,9 @@ AC_PROG_MAKE_SET
 dnl ugh, beats me.
 
 
-PRE_INSTALL_LIBDIRS="-L@GIFT_SOURCE_DIRECTORY@/../gift/libMRML/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcPerl/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuPerl/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcInvertedFile/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcHierarchy/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcDistanceMatrix/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuInvertedFile/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuBayesian/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuHierarchy/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcURL2FTS/cc/"
+PRE_INSTALL_LIBDIRS=""
 
-PRE_INSTALL_LINKDIRS="--rpath@GIFT_SOURCE_DIRECTORY@/../gift/libMRML/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcPerl/cc/ -L@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuPerl/cc/ --rpath@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcInvertedFile/cc/ --rpath@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcHierarchy/cc/ --rpath@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcDistanceMatrix/cc/ --rpath@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuInvertedFile/cc/ --rpath@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuBayesian/cc/ --rpath@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTQuHierarchy/cc/ --rpath@GIFT_SOURCE_DIRECTORY@/../gift/libGIFTAcURL2FTS/cc/"
+PRE_INSTALL_LINKDIRS=""
 
 AC_SUBST(PRE_INSTALL_LIBDIRS)
 AC_SUBST(PRE_INSTALL_LINKDIRS)
@@ -167,13 +165,22 @@ dnl checks if this is big-endian or not
 AC_C_BIGENDIAN
 
 
+dnl find out what flags to add for libmrml
+MRMLLIBS=[`libMRML-config --ldflags --libs`]
+AC_SUBST(MRMLLIBS)
+
+MRMLINCLUDES=`libMRML-config --includes --cxxflags`
+AC_SUBST(MRMLINCLUDES)
 
 
 
 AC_OUTPUT([Makefile 
 
 		libGIFTAc@PLUGIN_NAME@/Makefile
+		libGIFTAc@PLUGIN_NAME@/include/Makefile 
 		libGIFTAc@PLUGIN_NAME@/cc/Makefile 
+
 		libGIFTQu@PLUGIN_NAME@/Makefile
+		libGIFTQu@PLUGIN_NAME@/include/Makefile 
 		libGIFTQu@PLUGIN_NAME@/cc/Makefile 
 	])

@@ -1,4 +1,8 @@
-noinst_HEADERS=CADIHash.h			  CDocumentFrequencyElement.h \
+
+InvertedFiledir=$(includedir)/libGIFTAcInvertedFile/include
+
+
+InvertedFile_HEADERS=CADIHash.h			  CDocumentFrequencyElement.h \
 CAFIFMySQL.h			  CDocumentFrequencyHash.h \
 CAFInvertedFile.h		  CDocumentFrequencyList.h \
 CAFSpecialised.h		  CIFBuilderTriplet.h \

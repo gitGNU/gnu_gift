@@ -1,5 +1,5 @@
-#include "CQHierarchy.h"
-#include "CAccessorAdminCollection.h"
+#include "libGIFTQuHierarchy/include/CQHierarchy.h"
+#include "libMRML/include/CAccessorAdminCollection.h"
 extern "C" char* libGIFTQuHierarchy_getClassName(){
   return "hierarchy";
 }

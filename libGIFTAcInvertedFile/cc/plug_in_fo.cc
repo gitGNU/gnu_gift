@@ -1,5 +1,5 @@
-#include "CAcIFFileSystem.h"
-#include "CAccessorAdminCollection.h"
+#include "libGIFTAcInvertedFile/include/CAcIFFileSystem.h"
+#include "libMRML/include/CAccessorAdminCollection.h"
 #include <iostream>
 extern "C" extern "C" char* libGIFTAcInvertedFile_getClassName(){
   return "inverted_file";

@@ -33,8 +33,8 @@
 #include <string>
 #include <map>
 
-#include "CStaticQueryFactory.h"
-#include "CQueryPlugin.h"
+#include "libMRML/include/CStaticQueryFactory.h"
+#include "libMRML/include/CQueryPlugin.h"
 
 class CDynamicQueryFactory:public CStaticQueryFactory,protected map<string,CQueryPlugin*>{
   

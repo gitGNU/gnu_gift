@@ -1,7 +1,7 @@
 #ifdef __GIFT_WITH_MYSQL__
 
-#include "CAFIFMySQL.h"
-#include "CAcIFMySQL.h"
+#include "libGIFTAcInvertedFile/include/CAFIFMySQL.h"
+#include "libGIFTAcInvertedFile/include/CAcIFMySQL.h"
 
 /**
  */

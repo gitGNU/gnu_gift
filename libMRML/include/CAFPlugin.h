@@ -32,9 +32,9 @@
 #include <string>
 #include <map>
 
-#include "CAccessor.h"
-#include "CXMLElement.h"
-#include "CAccessorFactory.h"
+#include "libMRML/include/CAccessor.h"
+#include "libMRML/include/CXMLElement.h"
+#include "libMRML/include/CAccessorFactory.h"
 
 class CAFPlugin:public CAccessorFactory{
 protected:

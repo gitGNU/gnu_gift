@@ -19,9 +19,9 @@
    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "my_throw.h"
-#include "CXMLElement.h"
-#include "CXMLElementVisitor.h"
+#include "libMRML/include/my_throw.h"
+#include "libMRML/include/CXMLElement.h"
+#include "libMRML/include/CXMLElementVisitor.h"
 #include <cstdio>
 
 

@@ -42,8 +42,8 @@
 * _TREE_BUILD_PRINTOUT in query(): building a result tree
 *
 ****************************************/
-#include "mrml_const.h" // for parsing
-#include "gift_features.h"
+#include "libMRML/include/mrml_const.h" // for parsing
+#include "FeatureExtraction/gift_features.h"
 #include <algorithm>
 #include <functional>
 #include <string>
@@ -51,17 +51,17 @@
 #include <math.h>
 #include <assert.h>
 
-#include "map_to_list.h"
+#include "libGIFTAcInvertedFile/include/map_to_list.h"
 
-#include "CQuery.h"
-#include "GIFTExceptions.h"
+#include "libMRML/include/CQuery.h"
+#include "libMRML/include/GIFTExceptions.h"
 
 #include <time.h>
 #define _NO_FIDPRINT    
 
 int gQuery;
 
-#include "CMutex.h"
+#include "libMRML/include/CMutex.h"
 extern CMutex* gMutex;//for debugging
 
 /***************************************

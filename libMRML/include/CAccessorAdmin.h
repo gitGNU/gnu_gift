@@ -22,12 +22,12 @@
 */
 #ifndef _CACCESSORPROXY
 #define _CACCESSORPROXY
-#include "CSelfDestroyPointer.h"
+#include "libMRML/include/CSelfDestroyPointer.h"
 #include <string>
 #include <functional>
-#include "CAccessor.h"
-#include "CAccessorFactory.h"
-#include "CAccessorFactoryContainer.h"
+#include "libMRML/include/CAccessor.h"
+#include "libMRML/include/CAccessorFactory.h"
+#include "libMRML/include/CAccessorFactoryContainer.h"
 /**
   CAccessorAdmin: The goal of this is to make it possible
   to have a list containing accessors to all possible

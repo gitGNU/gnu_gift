@@ -28,14 +28,14 @@
 #include <string>
 #include <list>
 #include <map>
-#include "CXMLElement.h"
-#include "CAccessorAdminCollection.h"
-#include "CAlgorithm.h"
-#include "CPropertySheetList.h"
-#include "CAccessorElement.h"
-#include "CAlgorithmCollection.h"
-#include "CQueryTreeBuilder.h"
-#include "CMutex.h" // multithreading
+#include "libMRML/include/CXMLElement.h"
+#include "libMRML/include/CAccessorAdminCollection.h"
+#include "libMRML/include/CAlgorithm.h"
+#include "libMRML/include/CPropertySheetList.h"
+#include "libMRML/include/CAccessorElement.h"
+#include "libMRML/include/CAlgorithmCollection.h"
+#include "libMRML/include/CQueryTreeBuilder.h"
+#include "libMRML/include/CMutex.h" // multithreading
 class CStaticQueryFactory;
 class CAlgorithm;
 class CSessionManager;

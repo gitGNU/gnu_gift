@@ -29,14 +29,7 @@ lib_LTLIBRARIES = libMRML.la
 
 INCLUDES= -DHAS_BOOL \
 	-DLINK_DYNAMICALLY\
-	-I$(top_srcdir)/libUnpublished/include \
-	-I$(top_srcdir)/libGIFTAcPerl/include -I$(top_srcdir)/libGIFTQuPerl/include \
-	-I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTQuInvertedFile/include \
-	-I$(top_srcdir)/libGIFTAcHierarchy/include -I$(top_srcdir)/libGIFTQuHierarchy/include \
-	-I$(top_srcdir)/libGIFTQuBayesian/include -I$(top_srcdir)/libGIFTAcDistanceMatrix/include \
-	-I$(top_srcdir)/libGIFTAcURL2FTS/include \
-	-I$(top_srcdir)/libMRML/include \
-	-I$(top_srcdir)/expat/xmlparse -I$(top_srcdir)/expat/xmltok 
+	-I$(top_srcdir)
 
 libMRML_la_LDFLAGS=@PRE_INSTALL_LIBDIRS@  -version-info 0:1:0
 
@@ -44,6 +37,8 @@ libMRML_la_LDFLAGS=@PRE_INSTALL_LIBDIRS@  -version-info 0:1:0
 #	$(CCCONFIG)
 
 # libMRML_a_SOURCES= 
+
+
 
 libMRML_la_SOURCES= \
 	CAccessorElement.cc\
@@ -104,4 +99,14 @@ libMRML_la_SOURCES= \
 	\
 	CDebuggingMemoryManager.cc
 
-#CLEANFILES=CAccessorAdminCollection.cc
+CLEANFILES=libMRML-config.cc
+
+libMRML-config.cc: libMRML-config.pre-cc ../../make-gift-config.pl
+	perl ../../make-gift-config.pl CXXFLAGS ' $(CXXFLAGS) ' INCLUDES ' -I$(includedir)/libMRML/include ' LDFLAGS '$(LDFLAGS)' LIBS ' $(LIBS) ' libdir ' -L $(libdir) '  < libMRML-config.pre-cc  > libMRML-config.cc
+
+bin_PROGRAMS= libMRML-config
+
+libMRML_config_SOURCES= libMRML-config.cc
+
+EXTRA_DIST=libMRML-config.pre-cc
+

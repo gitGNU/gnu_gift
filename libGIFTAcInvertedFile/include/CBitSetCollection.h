@@ -40,7 +40,7 @@
 ****************************************/
 
 #include <list>
-#include "TID.h"
+#include "libMRML/include/TID.h"
 #include "CBitVector.h"
 
 /** 

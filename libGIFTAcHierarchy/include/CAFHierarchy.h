@@ -24,8 +24,8 @@
 #ifndef _CAFHIERARCHY
 #define _CAFHIERARCHY
 
-#include "CAccessorFactory.h"
-#include "CAcHierarchy.h"
+#include "libMRML/include/CAccessorFactory.h"
+#include "libGIFTAcHierarchy/include/CAcHierarchy.h"
 
 /** 
  * A factory to make inverted Files

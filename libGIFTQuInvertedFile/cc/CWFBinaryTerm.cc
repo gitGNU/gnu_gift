@@ -36,9 +36,9 @@
 *
 ****************************************/
 
-#include "CWFBinaryTerm.h"
+#include "libGIFTQuInvertedFile/include/CWFBinaryTerm.h"
 #include <math.h>
-#include "gift_features.h"
+#include "FeatureExtraction/gift_features.h"
 
 
 /***************************************

@@ -21,7 +21,7 @@ Contributor(s):
 #ifndef XmlRole_INCLUDED
 #define XmlRole_INCLUDED 1
 
-#include "xmltok.h"
+#include "expat/xmltok/xmltok.h"
 
 #ifdef __cplusplus
 extern "C" {

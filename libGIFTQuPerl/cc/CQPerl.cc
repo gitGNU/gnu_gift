@@ -44,22 +44,22 @@
 #define _bool char
 #endif
 
-#include "GIFTExceptions.h"
-#include "my_throw.h"
-#include "mrml_const.h" // for parsing
+#include "libMRML/include/GIFTExceptions.h"
+#include "libMRML/include/my_throw.h"
+#include "libMRML/include/mrml_const.h" // for parsing
 #include <algorithm>
 #include <functional>
 #include <string>
 
-#include "GIFTExceptions.h"
+#include "libMRML/include/GIFTExceptions.h"
 
 #include <time.h>
 
-#include "CAlgorithm.h"
-#include "CAccessorAdminCollection.h"
-#include "CQPerl.h"
-#include "CAcPerl.h"
-#include "CXEVTripletList.h"
+#include "libMRML/include/CAlgorithm.h"
+#include "libMRML/include/CAccessorAdminCollection.h"
+#include "libGIFTQuPerl/include/CQPerl.h"
+#include "libGIFTAcPerl/include/CAcPerl.h"
+#include "libMRML/include/CXEVTripletList.h"
 
 extern "C" void xs_init(void);
 

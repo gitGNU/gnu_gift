@@ -12,7 +12,7 @@
    of this code still stem from 
    Jilali Raki's MREP based server)
  									
-  Last modification: August 1999
+  Last modification: December 2001 (don't count on this date)
 
 
   defines: _NON_BLOCKING: if !=0 then the socket will be used as a non-blocking one
@@ -26,9 +26,9 @@
 
 #ifdef __GIFT_NEW_OPERATOR_NEW
 //  this is a self-made memory manager
-#include "CDebuggingMemoryManager.h"
+#include "libMRML/include/CDebuggingMemoryManager.h"
 //  this is for replacing the new() operator
-#include "myNew.h"
+#include "libMRML/include/myNew.h"
 CDebuggingMemoryManager gMemManager(MEMSIZE);
 #endif
 
@@ -38,7 +38,7 @@ CDebuggingMemoryManager gMemManager(MEMSIZE);
 
 // mutual excludes for
 // multithreading
-#include "CMutex.h"
+#include "libMRML/include/CMutex.h"
 extern CMutex* gMutex;
 
 #ifdef __GIFT_NEW_IS_MALLOC
@@ -85,7 +85,7 @@ void operator delete[](void* inToBeDeleted){
 
 // the gift exceptions
 #include "../gift-config.h"
-#include "GIFTExceptions.h"
+#include "libMRML/include/GIFTExceptions.h"
 
 // c++ standard library stuff
 #include <functional>
@@ -112,23 +112,23 @@ void operator delete[](void* inToBeDeleted){
 //#include <linux/socket.h>
 
 //the expat xml parser by J.Clark
-#include "xmlparse.h"
+#include "expat/xmlparse/xmlparse.h"
 //a class for using xpat attributes in a nice way
-#include "CAttributeList.h"
+#include "libMRML/include/CAttributeList.h"
 
 //for making distance matrices
-#include "CAcURL2FTS.h"
+#include "libGIFTAcURL2FTS/include/CAcURL2FTS.h"
 
 //This is mrml+gift specific
-#include "mrml_const.h" //important constants for parsing
-#include "CAccessorAdminCollection.h"
-#include "CSessionManager.h"
-#include "CAccessor.h" // distance matrix
+#include "libMRML/include/mrml_const.h" //important constants for parsing
+#include "libMRML/include/CAccessorAdminCollection.h"
+#include "libMRML/include/CSessionManager.h"
+#include "libMRML/include/CAccessor.h" // distance matrix
 //for debugging
 #define _DEBUG
 #define _NON_BLOCKING 0
 
-#include "CCommunicationHandler.h"
+#include "libMRML/include/CCommunicationHandler.h"
 
 #ifdef __GIFT_SERVER_TREADS__
 #define  __GIFT_USES_THREADS__

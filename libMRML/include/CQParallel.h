@@ -24,8 +24,8 @@
 #ifndef _CQPARALLEL
 #define _CQPARALLEL
 
-#include "CQuery.h"
-#include "CSelfDestroyPointer.h"
+#include "libMRML/include/CQuery.h"
+#include "libMRML/include/CSelfDestroyPointer.h"
 // -*- mode: c++ -*- 
 /**
  *
@@ -49,17 +49,17 @@
 #include <memory>
 #include <map>
 #include <list>
-#include "CSelfDestroyPointer.h"
-#include "CIDRelevanceLevelPairList.h"
-#include "CRelevanceLevelList.h"
+#include "libMRML/include/CSelfDestroyPointer.h"
+#include "libMRML/include/CIDRelevanceLevelPairList.h"
+#include "libMRML/include/CRelevanceLevelList.h"
 
 //#include "CWeightingFunctionPointerList.h"
 //#include "CWeightingFunctionPointerHash.h"
 
-#include "CAlgorithm.h"
-#include "CAccessor.h"
-#include "CAccessorAdminCollection.h"
-#include "CAccessorAdmin.h"
+#include "libMRML/include/CAlgorithm.h"
+#include "libMRML/include/CAccessor.h"
+#include "libMRML/include/CAccessorAdminCollection.h"
+#include "libMRML/include/CAccessorAdmin.h"
 
 
 class CScoreBoard;

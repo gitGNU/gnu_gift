@@ -1,5 +1,5 @@
 #include <iostream>
-#include "CDebuggingMemoryManager.h"
+#include "libMRML/include/CDebuggingMemoryManager.h"
 #include <assert.h>
 #include <cstdlib>
 

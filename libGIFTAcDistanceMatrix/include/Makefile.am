@@ -1,4 +1,6 @@
-noinst_HEADERS= CAFDistanceMatrix.h	  CPersistentMatrix.h \
+DistanceMatrixdir=$(includedir)/libGIFTAcDistanceMatrix/include
+
+DistanceMatrix_HEADERS= CAFDistanceMatrix.h	  CPersistentMatrix.h \
 CAFDistanceMatrix.h.kdoc  CPersistentTranslatedIndexMatrix.h \
 CAcDistanceMatrix.h	  CPersistentVector.h \
 CDistanceCalculator.h	  CProbabilityCombiner.h \

@@ -44,11 +44,11 @@
 *
 ****************************************/
 
-#include "CScoreBoard.h"
-#include "CWeightingFunction.h"
-#include "CAcInvertedFile.h"
-#include "CRelevanceLevelList.h"
-#include "CIDRelevanceLevelPairList.h"
+#include "libGIFTQuInvertedFile/include/CScoreBoard.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
+#include "libGIFTAcInvertedFile/include/CAcInvertedFile.h"
+#include "libMRML/include/CRelevanceLevelList.h"
+#include "libMRML/include/CIDRelevanceLevelPairList.h"
 #include <map>
 
 /***************************************

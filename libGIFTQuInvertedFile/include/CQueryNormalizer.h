@@ -39,9 +39,9 @@
 #ifndef _CQUERYNORMALIZER
 #define _CQUERYNORMALIZER
 
-#include "CDocumentFrequencyElement.h"
-#include "CWeightingFunction.h"
-#include "CAcInvertedFile.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
+#include "libGIFTAcInvertedFile/include/CAcInvertedFile.h"
 
 /** For normalizing weights like in Salton/Buckley we need to now all the
   features in the query or all the features in a document. This base class is

@@ -24,8 +24,8 @@
 #ifdef __GIFT_WITH_PERL__
 #ifndef _CAFPERL
 #define _CAFPERL
-#include "CAccessorFactory.h"
-#include "CAcPerl.h"
+#include "libMRML/include/CAccessorFactory.h"
+#include "libGIFTAcPerl/include/CAcPerl.h"
 
 /** 
  * A factory to make perl links

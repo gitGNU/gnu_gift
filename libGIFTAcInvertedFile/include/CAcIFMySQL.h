@@ -50,15 +50,15 @@ class CXMLElement;
 
 class CXMLElement;
 
-#include "CAcInvertedFile.h"
-#include "CAcURL2FTS.h"
+#include "libGIFTAcInvertedFile/include/CAcInvertedFile.h"
+#include "libGIFTAcURL2FTS/include/CAcURL2FTS.h"
 #include <string>
-#include "TID.h"
-#include "CSelfDestroyPointer.h"
-#include "CArraySelfDestroyPointer.h"
-#include "CDocumentFrequencyList.h"
+#include "libMRML/include/TID.h"
+#include "libMRML/include/CSelfDestroyPointer.h"
+#include "libMRML/include/CArraySelfDestroyPointer.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"
 
-#include "CADIHash.h"
+#include "libGIFTAcInvertedFile/include/CADIHash.h"
 #include <iostream.h>
 #include <fstream.h>
 #include <map>
@@ -69,7 +69,7 @@ class CXMLElement;
 
 #include <sqlplus.hh>
 #include <custom.hh>
-#include "CMagic.h"
+#include "libMRML/include/CMagic.h"
 
 
 typedef TID TFeatureID ;

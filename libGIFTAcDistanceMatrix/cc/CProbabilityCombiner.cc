@@ -22,7 +22,7 @@
 #include <functional>
 #include <algorithm>
 
-#include "CProbabilityCombiner.h"
+#include "libGIFTAcDistanceMatrix/include/CProbabilityCombiner.h"
 
 CProbabilityCombiner::CProbabilityCombiner(){
   setBelief();

@@ -1,4 +1,4 @@
-#include "CAccessorElement.h"
+#include "libMRML/include/CAccessorElement.h"
 
 /** creating clean output */
 ostream& operator<<(ostream& outStream,

@@ -23,7 +23,7 @@
 #ifndef _CPERSISTENTMATRIX
 #define _CPERSISTENTMATRIX
 
-#include "CPersistentVector.h"
+#include "libGIFTAcDistanceMatrix/include/CPersistentVector.h"
 #define CPM_debug
 
 template<class T>

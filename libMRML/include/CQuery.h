@@ -22,8 +22,8 @@
 */
 // -*- mode: c++ -*- 
 
-#include "CAccessorElement.h"
-#include "CXMLElement.h"
+#include "libMRML/include/CAccessorElement.h"
+#include "libMRML/include/CXMLElement.h"
 /**
  *
  * CQuery.h 
@@ -49,18 +49,18 @@
 #define _CQUERY
 #include <memory>
 #include <map>
-#include "CSelfDestroyPointer.h"
-#include "CIDRelevanceLevelPairList.h"
-#include "CXMLElement.h"
+#include "libMRML/include/CSelfDestroyPointer.h"
+#include "libMRML/include/CIDRelevanceLevelPairList.h"
+#include "libMRML/include/CXMLElement.h"
 
 //#include "CWeightingFunctionPointerList.h"
 //#include "CWeightingFunctionPointerHash.h"
 
-#include "CAlgorithm.h"
-#include "CAccessor.h"
-#include "CAccessorAdminCollection.h"
-#include "CAccessorAdmin.h"
-#include "CMagic.h" //public CMagic
+#include "libMRML/include/CAlgorithm.h"
+#include "libMRML/include/CAccessor.h"
+#include "libMRML/include/CAccessorAdminCollection.h"
+#include "libMRML/include/CAccessorAdmin.h"
+#include "libMRML/include/CMagic.h" //public CMagic
 
 class CScoreBoard;
 class CAccessor;

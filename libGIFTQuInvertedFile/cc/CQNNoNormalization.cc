@@ -35,8 +35,8 @@
 *
 *
 ****************************************/
-#include "CQNNoNormalization.h"
-#include "my_diagnose.h"
+#include "libGIFTQuInvertedFile/include/CQNNoNormalization.h"
+#include "libMRML/include/my_diagnose.h"
 /***************************************
 *
 * CQNNoNormalization

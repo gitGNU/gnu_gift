@@ -1,4 +1,6 @@
-noinst_HEADERS=CQInvertedFile.h	    CWFBinaryTerm.h \
+libGIFTQuInvertedFiledir=$(includedir)/libGIFTQuInvertedFile/include
+
+libGIFTQuInvertedFile_HEADERS=CQInvertedFile.h	    CWFBinaryTerm.h \
 CQNBestFullyWeighted.h	    CWFClassicalIDF.h \
 CQNEuclideanLengthSquare.h  CWFCoordinationLevel.h \
 CQNMaxDocumentFrequency.h   CWFProbability.h \

@@ -19,8 +19,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "CQueryParadigmMatcher.h"
-#include "mrml_const.h" // mrml string constants
+#include "libMRML/include/CQueryParadigmMatcher.h"
+#include "libMRML/include/mrml_const.h" // mrml string constants
 bool CQueryParadigmMatcher::matches(const CXMLElement& inQuery,const CXMLElement& inResult)const{
   const CXMLElement* lQuery(&inQuery);
   const CXMLElement* lResult(&inResult);

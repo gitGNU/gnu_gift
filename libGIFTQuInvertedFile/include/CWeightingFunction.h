@@ -41,9 +41,9 @@
 #define _CWEIGHTINGFUNCTION
 
 #include <math.h>
-#include "TID.h"
-#include "CDocumentFrequencyElement.h"
-#include "CAcInvertedFile.h"
+#include "libMRML/include/TID.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h"
+#include "libGIFTAcInvertedFile/include/CAcInvertedFile.h"
 
 class CQueryNormalizer;
 
@@ -366,7 +366,7 @@ public:
   };
 };
 
-#include "CQueryNormalizer.h"
+#include "libGIFTQuInvertedFile/include/CQueryNormalizer.h"
 
 #endif
 

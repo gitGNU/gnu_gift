@@ -45,7 +45,7 @@
 
 #include <string>
 #include <list>
-#include "CIDRelevanceLevelPair.h"
+#include "libMRML/include/CIDRelevanceLevelPair.h"
 
 class CIDRelevanceLevelPairList:public list<CIDRelevanceLevelPair>{
  public:

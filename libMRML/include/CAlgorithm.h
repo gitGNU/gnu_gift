@@ -25,8 +25,8 @@
 #ifndef _CALGORITHM
 #define _CALGORITHM
 
-#include "CXMLElement.h"
-#include "CSelfDestroyPointer.h"
+#include "libMRML/include/CXMLElement.h"
+#include "libMRML/include/CSelfDestroyPointer.h"
 #include <map>
 
 class CQuery;

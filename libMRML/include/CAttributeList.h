@@ -25,7 +25,7 @@
 #include <map>
 #include <list>
 #include <string>
-#include "CMagic.h"
+#include "libMRML/include/CMagic.h"
 //#define _PRINTOUTS_AL
 
 /** a simple class destined to contain attribute-value pairs in an 

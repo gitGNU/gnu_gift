@@ -19,24 +19,24 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "my_throw.h"
-#include "GIFTExceptions.h"
-#include "CAccessor.h"
-#include "CAccessorFactory.h"
-#include "CAccessorFactoryContainer.h"
+#include "libMRML/include/my_throw.h"
+#include "libMRML/include/GIFTExceptions.h"
+#include "libMRML/include/CAccessor.h"
+#include "libMRML/include/CAccessorFactory.h"
+#include "libMRML/include/CAccessorFactoryContainer.h"
 
 #include <sys/types.h> // reading a directory
 #include <dirent.h>    // reading a directory
 
 // classes to include into the CAccessorFactoryContainer
-#include "CAFInvertedFile.h"
-#include "CAFIFMySQL.h"
-#include "CAFPerl.h"
-#include "CAFURL2FTS.h"
-#include "CAFDistanceMatrix.h"
-#include "CAFHierarchy.h"
-#include "CXMLElement.h"
-#include "CAFPlugin.h"
+#include "libGIFTAcInvertedFile/include/CAFInvertedFile.h"
+#include "libGIFTAcInvertedFile/include/CAFIFMySQL.h"
+#include "libGIFTAcPerl/include/CAFPerl.h"
+#include "libGIFTAcURL2FTS/include/CAFURL2FTS.h"
+#include "libGIFTAcDistanceMatrix/include/CAFDistanceMatrix.h"
+#include "libGIFTAcHierarchy/include/CAFHierarchy.h"
+#include "libMRML/include/CXMLElement.h"
+#include "libMRML/include/CAFPlugin.h"
 #include <string>
 
 CAccessorFactoryContainer::CAccessorFactoryContainer():

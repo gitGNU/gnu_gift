@@ -1,1 +1,2 @@
-noinst_HEADERS=CQPerl.h  CXMLTriplet.h  CXMLTripletList.h
+libGIFTQuPerldir=$(includedir)/libGIFTQuPerl/include
+libGIFTQuPerl_HEADERS=CQPerl.h  CXMLTriplet.h  CXMLTripletList.h

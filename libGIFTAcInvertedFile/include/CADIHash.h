@@ -24,9 +24,9 @@
 #define _CADIHash
 
 #include <map>
-#include "TID.h"
+#include "libMRML/include/TID.h"
 
-#include "CAdditionalDocumentInformation.h"
+#include "libGIFTAcInvertedFile/include/CAdditionalDocumentInformation.h"
 #include <fstream.h>
 
 /**

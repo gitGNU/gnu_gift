@@ -19,10 +19,10 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "mrml_const.h" // for parsing
-#include "CQ@PLUGIN_NAME@.h"    // the header for this class
-#include "CAc@PLUGIN_NAME@.h"   // the header for its accessor
-#include "CXMLElementBuilder.h" //building XML elements from a string
+#include "libMRML/include/mrml_const.h" // for parsing
+#include "libGIFTQu@PLUGIN_NAME@/include/CQ@PLUGIN_NAME@.h"    // the header for this class
+#include "libGIFTAc@PLUGIN_NAME@/include/CAc@PLUGIN_NAME@.h"   // the header for its accessor
+#include "libMRML/include/CXMLElementBuilder.h" //building XML elements from a string
 
 // for pipes
 #include <errno.h>  // error number (man errno)

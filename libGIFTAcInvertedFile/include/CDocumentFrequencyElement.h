@@ -41,7 +41,7 @@
 
 #include <iostream.h>
 #include <functional>
-#include "TID.h"
+#include "libMRML/include/TID.h"
 
 /** A pair of Document Frequency ID: Can be used for FeatureIDs and DocumentIDs */
 class CDocumentFrequencyElement{

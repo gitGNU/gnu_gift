@@ -19,9 +19,9 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "CPropertySheetList.h"
-#include "CXMLElement.h"
-#include "mrml_const.h"
+#include "libMRML/include/CPropertySheetList.h"
+#include "libMRML/include/CXMLElement.h"
+#include "libMRML/include/mrml_const.h"
 /** */
 CPropertySheetList::CPropertySheetList(CXMLElement* inUnprocessedContent):
   mUnprocessedContent(inUnprocessedContent){

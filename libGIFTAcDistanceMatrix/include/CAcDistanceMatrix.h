@@ -42,15 +42,15 @@
 #define _CDISTANCEMATRIXACCESSOR
 
 #include <string>
-#include "TID.h"
-#include "CAcURL2FTS.h"
+#include "libMRML/include/TID.h"
+#include "libGIFTAcURL2FTS/include/CAcURL2FTS.h"
 #include <iostream.h>
 #include <fstream.h>
 #include <map>
 #include <hash_map>
 
 class CXMLElement;
-#include "CDistanceCalculator.h"
+#include "libGIFTAcDistanceMatrix/include/CDistanceCalculator.h"
 
 /** In addition to basic CAccessor functionality, this 
     accessor permits the lookup of distances between elements 

@@ -21,7 +21,7 @@
 */
 // WITHOUT THIS DEFINE THE INITIALISATION WILL COMPLAIN
 #define   _GNU_SOURCE
-#include "CMutex.h"
+#include "libMRML/include/CMutex.h"
 #include <assert.h>
 #include <iostream>
 #include <unistd.h>

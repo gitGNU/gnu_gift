@@ -25,14 +25,14 @@
 
 #include <string>
 #include <list>
-#include "TID.h"
+#include "libMRML/include/TID.h"
 
 #ifdef GIFT_MULTI_THREAD
 #include <pthread.h>
 #endif
 
-#include "CMutex.h"
-#include "CAccessorElement.h"
+#include "libMRML/include/CMutex.h"
+#include "libMRML/include/CAccessorElement.h"
 
 /**
 *

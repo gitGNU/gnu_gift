@@ -38,8 +38,8 @@
 ****************************************/
 #ifndef _CWEIGHTINGFUNCTIONPOINTERLIST
 #define _CWEIGHTINGFUNCTIONPOINTERLIST
-#include "TID.h"
-#include "CWeightingFunction.h"
+#include "libMRML/include/TID.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 #include <map>
 #include <algorithm>
 

@@ -41,9 +41,9 @@
 
 #include <list>
 #include <set>
-#include "CRelevanceLevel.h"
-#include "CWeightingFunctionPointerHash.h"
-#include "CDocumentFrequencyElement.h"
+#include "libMRML/include/CRelevanceLevel.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunctionPointerHash.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h"
 //#include "CBitVector.h"
 
 class CIFQPicHunter;

@@ -35,7 +35,7 @@
 *
 *
 ****************************************/
-#include "CRelevanceLevelList.h"
+#include "libMRML/include/CRelevanceLevelList.h"
 
 /***************************************
 *

@@ -1,5 +1,5 @@
-#include "CAFPlugin.h"
-#include "CAccessorFactoryContainer.h"
+#include "libMRML/include/CAFPlugin.h"
+#include "libMRML/include/CAccessorFactoryContainer.h"
 
 /** makes a CAccessor object*/
 CAccessor* CAFPlugin::makeAccessor(const CXMLElement& inXMLElement)const{

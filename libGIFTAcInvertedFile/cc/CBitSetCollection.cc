@@ -39,8 +39,8 @@
 #include <algorithm>
 #include <list>
 #include "CBitVector.h"
-#include "CBitSetCollection.h"
-#include "CComparisonResults.h"
+#include "libGIFTAcInvertedFile/include/CBitSetCollection.h"
+#include "libGIFTAcInvertedFile/include/CComparisonResults.h"
 
 /***************************************
 *

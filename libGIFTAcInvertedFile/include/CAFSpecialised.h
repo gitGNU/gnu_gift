@@ -25,7 +25,7 @@
 #define _CAFSPECIALISED
 
 #include "react_to_perl.h"
-#include "CAccessorFactory.h"
+#include "libMRML/include/CAccessorFactory.h"
 
 /**
  *

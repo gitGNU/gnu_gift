@@ -24,8 +24,8 @@
 #ifndef _CAF@PLUGIN_NAME@
 #define _CAF@PLUGIN_NAME@
 
-#include "CAccessorFactory.h"
-#include "CAc@PLUGIN_NAME@.h"
+#include "libMRML/include/CAccessorFactory.h"
+#include "libGIFTAc@PLUGIN_NAME@/include/CAc@PLUGIN_NAME@.h"
 
 /** 
  * A factory to make inverted Files

@@ -19,8 +19,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "CQMultiple.h"
-#include "mrml_const.h"
+#include "libMRML/include/CQMultiple.h"
+#include "libMRML/include/mrml_const.h"
 #ifdef  __GIFT_CQMULTIPLE_THREADS__ 
 #define  __GIFT_USES_THREADS__ 
 #endif

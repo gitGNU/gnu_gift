@@ -26,10 +26,10 @@
 #include <functional>
 #include <map>
 #include <iostream.h>
-#include "CRelevanceLevel.h"
-#include "CRelevanceLevelList.h"
-#include "CWeightingFunction.h"
-#include "CDocumentFrequencyElement.h"
+#include "libMRML/include/CRelevanceLevel.h"
+#include "libMRML/include/CRelevanceLevelList.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h"
 class CAcInvertedFile;
 
 /**

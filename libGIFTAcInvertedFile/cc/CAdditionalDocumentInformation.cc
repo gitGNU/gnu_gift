@@ -37,10 +37,10 @@
 *
 ****************************************/
 
-#include "TID.h"
+#include "libMRML/include/TID.h"
 #include <string>
 #include <functional>
-#include "CAdditionalDocumentInformation.h"
+#include "libGIFTAcInvertedFile/include/CAdditionalDocumentInformation.h"
 #include <algorithm>
 #include <assert.h>
 

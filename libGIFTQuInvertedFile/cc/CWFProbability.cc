@@ -36,9 +36,9 @@
 *
 ****************************************/
 
-#include "CWFProbability.h"
+#include "libGIFTQuInvertedFile/include/CWFProbability.h"
 #include <math.h>
-#include "gift_features.h"
+#include "FeatureExtraction/gift_features.h"
 
 
 /***************************************

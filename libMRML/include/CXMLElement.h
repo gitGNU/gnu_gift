@@ -30,11 +30,11 @@
 #include <map>
 #include <list>
 #include <string>
-#include "CMagic.h"
-#include "CAttributeList.h"
+#include "libMRML/include/CMagic.h"
+#include "libMRML/include/CAttributeList.h"
 class CXMLElementVisitor;
-#include "CMutex.h"
-#include "CNoDelete.h" //debugging
+#include "libMRML/include/CMutex.h"
+#include "libMRML/include/CNoDelete.h" //debugging
 /**
    This class captures the structure of an XML element. 
    An Element has children and attributes.

@@ -29,6 +29,8 @@ nametab.h:
 	../gennmtab/gennmtab >$@
 
 
-noinst_HEADERS = asciitab.h iasciitab.h latin1tab.h nametab.h utf8tab.h xmldef.h xmlrole.h xmltok.h xmltok_impl.h
+tokdir=$(includedir)/expat/xmltok
+
+tok_HEADERS = asciitab.h iasciitab.h latin1tab.h nametab.h utf8tab.h xmldef.h xmlrole.h xmltok.h xmltok_impl.h
 lib_temp_xml_tok_la_SOURCES = xmlrole.c xmltok.c
 EXTRA_DIST= xmltok_impl.c xmltok_ns.c

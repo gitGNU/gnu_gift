@@ -27,11 +27,11 @@
 
 #define _NO_PRINT_INIT
 #include <iostream>
-#include "mrml_const.h"
-#include "CAcURL2FTS.h"
-#include "CXMLElement.h" // constructor
+#include "libMRML/include/mrml_const.h"
+#include "libGIFTAcURL2FTS/include/CAcURL2FTS.h"
+#include "libMRML/include/CXMLElement.h" // constructor
 //the expat xml parser by J.Clark
-#include "xmlparse.h"
+#include "expat/xmlparse/xmlparse.h"
 
 extern CMutex* gMutex;
 

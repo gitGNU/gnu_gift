@@ -41,7 +41,7 @@
 
 #include <string>
 #include <list>
-#include "CRelevanceLevel.h"
+#include "libMRML/include/CRelevanceLevel.h"
 
 class CRelevanceLevelList:public list<CRelevanceLevel>{
  public:

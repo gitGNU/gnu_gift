@@ -19,23 +19,23 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-#include "mrml_const.h" // for parsing
-#include "my_throw.h"
-#include "my_assert.h"
-#include "GIFTExceptions.h"
-#include "CAlgorithmCollection.h"
+#include "libMRML/include/mrml_const.h" // for parsing
+#include "libMRML/include/my_throw.h"
+#include "libMRML/include/my_assert.h"
+#include "libMRML/include/GIFTExceptions.h"
+#include "libMRML/include/CAlgorithmCollection.h"
 
-#include "xmlparse.h" // for reading the xml
+#include "expat/xmlparse/xmlparse.h" // for reading the xml
 
-#include "CXMLHelper.h"
+#include "libMRML/include/CXMLHelper.h"
 
 #include <vector>
 
-#include "CQInvertedFile.h"
+#include "libGIFTQuInvertedFile/include/CQInvertedFile.h"
 #ifdef __GIFT_BAYESIAN__
 #include "CIFQuickAndDirtyHunter.h"
 #endif
-#include "CQParallel.h"
+#include "libMRML/include/CQParallel.h"
 
 void startAlgorithmCollectionElement(void *userData, 
 				     const char *inElementName, 

@@ -1,5 +1,5 @@
-#include "CAcURL2FTS.h"
-#include "CAccessorAdminCollection.h"
+#include "libGIFTAcURL2FTS/include/CAcURL2FTS.h"
+#include "libMRML/include/CAccessorAdminCollection.h"
 extern "C" char* libGIFTAcURL2FTS_getClassName(){
   return "url2fts";
 }

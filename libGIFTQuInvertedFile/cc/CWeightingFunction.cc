@@ -16,9 +16,9 @@
 * $Log:
 ***************************************************/
 #include <math.h>
-#include "CWeightingFunction.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 #include "iostream.h"
-#include "gift_features.h"
+#include "FeatureExtraction/gift_features.h"
 
 #include <algorithm>
 #include <math.h>

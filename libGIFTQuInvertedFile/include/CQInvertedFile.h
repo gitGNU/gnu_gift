@@ -48,21 +48,21 @@
 #define _CINVERTEDFILEQUERY
 #include <memory>
 #include <map>
-#include "CSelfDestroyPointer.h"
-#include "CRelevanceLevelList.h"
-#include "CIDRelevanceLevelPairList.h"
-#include "CWeightingFunctionPointerList.h"
-#include "CWeightingFunctionPointerHash.h"
-#include "CAlgorithm.h"
-#include "CQuery.h"
-#include "CAcInvertedFile.h"
-#include "CWeightingFunction.h"
-#include "CQueryNormalizer.h"
-#include "WeightingFunctionsAndNormalizers.h"
+#include "libMRML/include/CSelfDestroyPointer.h"
+#include "libMRML/include/CRelevanceLevelList.h"
+#include "libMRML/include/CIDRelevanceLevelPairList.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunctionPointerList.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunctionPointerHash.h"
+#include "libMRML/include/CAlgorithm.h"
+#include "libMRML/include/CQuery.h"
+#include "libGIFTAcInvertedFile/include/CAcInvertedFile.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
+#include "libGIFTQuInvertedFile/include/CQueryNormalizer.h"
+#include "libGIFTAcInvertedFile/include/WeightingFunctionsAndNormalizers.h"
 class CScoreBoard;
 class CAcInvertedFile;
 
-#include "CWeighter.h"
+#include "libGIFTQuInvertedFile/include/CWeighter.h"
 
 /** A factory for weighting functions with associated normalizers.
     The weighting functions are intended to be members of

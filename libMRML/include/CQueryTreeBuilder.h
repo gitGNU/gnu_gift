@@ -6,9 +6,9 @@ class CAlgorithm;
 class CAccessorAdminCollection;
 
 
-#include "CMagic.h" // checking CQueryTreeNode
-#include "CQueryTreeNode.h"
-#include "CSelfDestroyPointer.h"
+#include "libMRML/include/CMagic.h" // checking CQueryTreeNode
+#include "libMRML/include/CQueryTreeNode.h"
+#include "libMRML/include/CSelfDestroyPointer.h"
 
 class CStaticQueryFactory;
 /** 

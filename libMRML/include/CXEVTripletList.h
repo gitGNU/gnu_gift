@@ -26,8 +26,8 @@
 
 #include <string> //mSessionID
 
-#include "CXMLTripletList.h"
-#include "CXMLElementVisitor.h" //base class
+#include "libGIFTQuPerl/include/CXMLTripletList.h"
+#include "libMRML/include/CXMLElementVisitor.h" //base class
 
 /**
 

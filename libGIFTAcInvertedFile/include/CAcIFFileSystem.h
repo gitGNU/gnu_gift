@@ -51,15 +51,15 @@ class CXMLElement;
 #define _CACIFFILESYSTEM
 
 #include <string>
-#include "TID.h"
-#include "CSelfDestroyPointer.h"
-#include "CArraySelfDestroyPointer.h"
-#include "CDocumentFrequencyList.h"
-#include "CMutex.h" // multi threading
+#include "libMRML/include/TID.h"
+#include "libMRML/include/CSelfDestroyPointer.h"
+#include "libMRML/include/CArraySelfDestroyPointer.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"
+#include "libMRML/include/CMutex.h" // multi threading
 //#include "CCollectionFrequencyList.h"
-#include "CADIHash.h"
-#include "CAcURL2FTS.h"
-#include "CAcInvertedFile.h"
+#include "libGIFTAcInvertedFile/include/CADIHash.h"
+#include "libGIFTAcURL2FTS/include/CAcURL2FTS.h"
+#include "libGIFTAcInvertedFile/include/CAcInvertedFile.h"
 #include <iostream.h>
 #include <fstream.h>
 #include <map>
@@ -68,7 +68,7 @@ class CXMLElement;
 #include <functional>
 #include <algorithm>
 
-#include "CMagic.h"
+#include "libMRML/include/CMagic.h"
 
 
 typedef TID TFeatureID ;

@@ -20,25 +20,25 @@
 
 */
 /** my way of throwing exceptions */
-#include "mrml_const.h"
-#include "my_throw.h"
-#include "my_assert.h"
-#include "my_diagnose.h"
+#include "libMRML/include/mrml_const.h"
+#include "libMRML/include/my_throw.h"
+#include "libMRML/include/my_assert.h"
+#include "libMRML/include/my_diagnose.h"
 
 #include <stdio.h>
-#include "xmlparse.h"
-#include "CQInvertedFile.h"
-#include "CSessionManager.h"
-#include "CAttributeList.h"
-#include "CXMLHelper.h"
-#include "GIFTExceptions.h"
+#include "expat/xmlparse/xmlparse.h"
+#include "libGIFTQuInvertedFile/include/CQInvertedFile.h"
+#include "libMRML/include/CSessionManager.h"
+#include "libMRML/include/CAttributeList.h"
+#include "libMRML/include/CXMLHelper.h"
+#include "libMRML/include/GIFTExceptions.h"
 
-#include "CQueryTreeNode.h"
+#include "libMRML/include/CQueryTreeNode.h"
 
 #include <stdlib.h>
-#include "CAlgorithm.h" //getPropertySheet
+#include "libMRML/include/CAlgorithm.h" //getPropertySheet
 
-#include "directory.h" // directorys as determined by ./configure
+#include "libMRML/include/directory.h" // directorys as determined by ./configure
 
 //the "ID administration subsystem"
 TID gID;
@@ -177,8 +177,8 @@ void endConfigElement(void *userData, const char *inElementName)
 }
 
 #include <time.h>
-#include "CSessionManager.h"
-#include "TID.h"
+#include "libMRML/include/CSessionManager.h"
+#include "libMRML/include/TID.h"
 #include <iostream>
 extern TID gID;
 

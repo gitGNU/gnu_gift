@@ -17,6 +17,9 @@
 #     along with this program; if not, write to the Free Software
 #     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
+#gift-config.cc: gift-config.cc.in make-gift-config.pl
+#	perl make-gift-config.pl CXXFLAGS "$(CXXFLAGS)" LDFLAGS "$(LDFLAGS)" libdir "-l $(libdir)" < $< > $@
+
 SUBDIRS=  Doc scripts dtd expat\
 	@UNPUBLISHED_DIR@ \
 	libMRML \
@@ -54,4 +57,5 @@ EXTRA_DIST=	libGIFTAcDistanceMatrix \
 		gift-install-prerequisites.pl  \
 		teco.sh\
 		gift-install-prerequisites.sh
+
 

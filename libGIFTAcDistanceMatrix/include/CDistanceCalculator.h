@@ -23,12 +23,12 @@
 #ifndef _CDISTANCECALCULATOR
 #define _CDISTANCECALCULATOR
 #include <functional>
-#include "CPersistentTranslatedIndexMatrix.h"
+#include "libGIFTAcDistanceMatrix/include/CPersistentTranslatedIndexMatrix.h"
 #include <math.h>
-#include "CMagic.h"
+#include "libMRML/include/CMagic.h"
 #include "CProbabilisticSet.h"
 
-#include "CSquasher.h"
+#include "libGIFTAcDistanceMatrix/include/CSquasher.h"
 
 template<class TTIterator,
   class TTInserter,

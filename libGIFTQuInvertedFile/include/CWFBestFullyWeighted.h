@@ -39,7 +39,7 @@
 #ifndef _CWFBESTFULLYWEIGHTED
 #define _CWFBESTFULLYWEIGHTED
 
-#include "CWeightingFunction.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 
 ///Weighting function for method 1
 class CWFBestFullyWeighted:public CWeightingFunction{

@@ -110,7 +110,7 @@
     (find-file (gift-de-double-slash (concat (getenv "GIFT") 
 					  "/configure.in")))
     (compile (gift-de-double-slash 
-	      (concat "rm config.cache;automake;autoconf;./configure --enable-multi-threading --prefix " 
+	      (concat "rm config.cache; sh boostrap-cvs.sh ;./configure --enable-multi-threading --prefix " 
 		      (getenv "GIFT")
 		      "/../GIFTInstall")))))
 
@@ -129,7 +129,7 @@
       (find-file (gift-de-double-slash (concat (getenv "GIFT") 
 					    "/configure.in")))
       (compile (gift-de-double-slash 
-		(concat "automake;autoconf;./configure " 
+		(concat "sh boostrap-cvs.sh && ./configure " 
 			"--enable-multi-threading "
 			"--prefix " 
 			(getenv "GIFT")
@@ -151,13 +151,13 @@
       (find-file (gift-de-double-slash (concat (getenv "GIFT") 
 					    "/configure.in")))
       (compile (gift-de-double-slash 
-		(concat "automake;autoconf;./configure --enable-multi-threading --enable-gift --prefix " 
+		(concat "sh boostrap-cvs.sh && ./configure --enable-multi-threading --enable-gift --prefix " 
 			(getenv "GIFT")
 			"/../GIFTInstall; make install"))))
     ))
 
 (defun gift-GIFTServerMake ()
-  "Makes the server without running automake;autoconfig;configure first."
+  "Makes the server without running sh boostrap-cvs.sh && configure first."
   (interactive)
   (progn
     (progn; touch the server file

@@ -28,17 +28,17 @@
 #define _CCOMMUNICATIONHANDLER
 
 //the expat xml parser by J.Clark
-#include "xmlparse.h"
+#include "expat/xmlparse/xmlparse.h"
 //a class for using xpat attributes in a nice way
-#include "CAttributeList.h"
+#include "libMRML/include/CAttributeList.h"
 
 //This is mrml+gift specific
-#include "CSessionManager.h"
-#include "CXMLElement.h"
+#include "libMRML/include/CSessionManager.h"
+#include "libMRML/include/CXMLElement.h"
 #include <functional>
 #include <iostream>
 #include <fstream>
-#include "CMutex.h"
+#include "libMRML/include/CMutex.h"
 //----------------------------------------
 /** prototypes for use with expat */
 extern void startMRMLElement(void *userData, 

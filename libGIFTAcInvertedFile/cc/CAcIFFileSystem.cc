@@ -55,7 +55,7 @@
 
 
 #include <unistd.h>     // for getpid
-#include "mrml_const.h" // for parsing
+#include "libMRML/include/mrml_const.h" // for parsing
 #include <unistd.h>
 #include <cstdio>       // for sprintf
 #include <strstream>
@@ -64,19 +64,19 @@
 #include <algorithm>
 #include <functional>
 
-#include "my_assert.h"
+#include "libMRML/include/my_assert.h"
 
-#include "merge_sort_streams.h"    //newGenerateInvertedFile
-#include "CIFBuilderTriplet.h"     //newGenerateInvertedFile
-#include "CDocumentFrequencyList.h"
-#include "CAcIFFileSystem.h"
-#include "CInvertedFileChunk.h"
+#include "libGIFTAcInvertedFile/include/merge_sort_streams.h"    //newGenerateInvertedFile
+#include "libGIFTAcInvertedFile/include/CIFBuilderTriplet.h"     //newGenerateInvertedFile
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"
+#include "libGIFTAcInvertedFile/include/CAcIFFileSystem.h"
+#include "libGIFTAcInvertedFile/include/CInvertedFileChunk.h"
 #include <iostream.h>
 #include <assert.h>
 #include <math.h>
-#include "CIFListStart.h"
-#include "CXMLElement.h" // constructor
-#include "directory.h"   // the install locations etc. as determined by ./configure
+#include "libGIFTAcInvertedFile/include/CIFListStart.h"
+#include "libMRML/include/CXMLElement.h" // constructor
+#include "libMRML/include/directory.h"   // the install locations etc. as determined by ./configure
 #define _NO_PRINT_OFFSET_CHECK
 #define _NO_CHECK_OFFSET_FILE
 #define _NO_CHECK_CONSISTENCY

@@ -1,7 +1,7 @@
 #ifdef __GIFT_WITH_PERL__
 
-#include "CQPerl.h"
-#include "CAccessorAdminCollection.h"
+#include "libGIFTQuPerl/include/CQPerl.h"
+#include "libMRML/include/CAccessorAdminCollection.h"
 
 
 

@@ -39,7 +39,7 @@
 #ifndef _CWFPROBABILITY
 #define _CWFPROBABILITY
 
-#include "CWeightingFunction.h"
+#include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 
 ///Method
 class CWFProbability:public CWeightingFunction{

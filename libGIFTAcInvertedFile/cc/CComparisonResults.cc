@@ -38,9 +38,9 @@
 
 #include <algorithm>
 #include "CBitVector.h"
-#include "CComparisonResults.h"
+#include "libGIFTAcInvertedFile/include/CComparisonResults.h"
 #include "CIFQPicHunter.h"
-#include "CDocumentFrequencyList.h"
+#include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"
 
 
 
