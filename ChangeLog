@@ -1,5 +1,8 @@
 2002-01-03  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
 
+	* expat/Makefile.am: changing sequence of subdirs. xmlwf must be last,
+	gennmtab must be first.
+
 	* PluginMaker/libGIFTQu@PLUGIN_NAME@/Makefile.am.in (SUBDIRS): 
 	cc AND include
 	
