@@ -584,6 +584,7 @@ void CCommunicationHandler::setAlgorithmID(const string& inID){
 //parse XML using expat
 //----------------------------------------
 void CCommunicationHandler::parseString(const string& inMessage){
+  gMutex->lock();
   bool lDone=false;
   do {
     if (!XML_Parse(mParser, 
@@ -601,6 +602,7 @@ void CCommunicationHandler::parseString(const string& inMessage){
       return;// instead of exit
     }
   } while (!lDone);
+  gMutex->unlock();
 }
 
 //----------------------------------------
@@ -620,6 +622,7 @@ bool CCommunicationHandler::isParsingFinished()const{
 
 
 bool CCommunicationHandler::readAndParse(){
+  gMutex->lock();
   clearParsingFinished();
   makeParser();
   bool lSuccess=false;
@@ -654,9 +657,11 @@ bool CCommunicationHandler::readAndParse(){
 		     lBuffer, 
 		     1, 
 		     false)) {
-	cerr << "CCommunicationHandler.cc __LINE__: XML ERROR "
+	cerr << "CCommunicationHandler.cc:"
+	     << __LINE__ 
+	     << ": XML ERROR "
 	     << XML_ErrorString(XML_GetErrorCode(mParser))
-	     << " at line "
+	     << " at xml line "
 	     << XML_GetCurrentLineNumber(mParser)
 	     << endl;
 	lSuccess=false;
@@ -697,6 +702,8 @@ bool CCommunicationHandler::readAndParse(){
 
   CXEVCommunication lVisitor(this);
 
+  gMutex->unlock();
+
   mDocumentRoot->traverse(lVisitor);
 
   return lSuccess;
@@ -704,6 +711,7 @@ bool CCommunicationHandler::readAndParse(){
   
 
 void CCommunicationHandler::makeParser(){
+  gMutex->lock();
   if(mParser)
     XML_ParserFree(mParser);
   mParser = XML_ParserCreate(NULL);//default encoding
@@ -715,7 +723,7 @@ void CCommunicationHandler::makeParser(){
 			newEndMRMLElement);//ex  endMRMLElement
   XML_SetCharacterDataHandler(mParser,
  			      newMRMLTextElement);
-
+  gMutex->unlock();
 }
 
 
@@ -828,7 +836,10 @@ CCommunicationHandler::CCommunicationHandler(CSessionManager& inSessionManager,
 }
 CCommunicationHandler::~CCommunicationHandler(){
   //deleting the expat parser
+  gMutex->lock();
   XML_ParserFree(mParser);
+  gMutex->unlock();
+
 }
 
 /** 

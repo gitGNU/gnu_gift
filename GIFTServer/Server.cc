@@ -396,12 +396,13 @@ public:
 
  */
 void* processMessage(void* inProcessMessageParameters){
+  //gMutex->lock();//for debugging only
   CProcessMessageParameters* lParameters((CProcessMessageParameters*) inProcessMessageParameters);
   
   assert(lParameters);
   
   CCommunicationHandler* lCommunicationHandler(new CCommunicationHandler(lParameters->mSessionManager,
-					       lParameters->mLogFile));
+									 lParameters->mLogFile));
 					      
   lCommunicationHandler->setSocket(lParameters->mSocket);
   // this is the line which processes
@@ -439,6 +440,8 @@ void* processMessage(void* inProcessMessageParameters){
   delete lCommunicationHandler;
   cout << "DONE"
        << endl;
+  //gMutex->unlock();//for debugging only
+
   return((void*)0);
 }
 
@@ -586,6 +589,7 @@ void main(int argc, char **argv){
 				    CProcessMessageParameters(gSessionManager,
 							      gLogFile,
 							      lOutSocket));
+	//#undef HAVE_LIBPTHREAD // for debugging purposes
 #ifdef  HAVE_LIBPTHREAD
 	pthread_t lThread;
 	int lErrorNumber(0);

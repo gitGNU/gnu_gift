@@ -439,7 +439,7 @@ Copying $CONFIG to $OLDCONFIG
 		      cui-offset-file-location="InvertedFileOffset.db"
 		      cui-feature-description-location=
 		      "InvertedFileFeatureDescription.db"
-		      cui-feature-file-location="url2fts"
+		      cui-feature-file-location="url2fts.xml"
 		      >
 		      <query-paradigm-list>
                              <query-paradigm type="inverted-file"/>

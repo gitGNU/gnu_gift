@@ -51,8 +51,6 @@ extern void endMRMLElement(void *userData, const char *name);
  */
 class CCommunicationHandler{
 
-  CMutex mMutex;
-  
   /** 
       the root of the Document tree which we are making.
       It is destroyed automatically when overwritten.

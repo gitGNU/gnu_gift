@@ -209,7 +209,7 @@ AC_ARG_ENABLE(multi-threading,
 	dnl	
 	AC_MSG_CHECKING([if we can use POSIX threads the way we want])
 	RESCUE_CXXFLAGS=$CXXFLAGS
-	CXXFLAGS="$CXXFLAGS -DHAVE_LIBPTHREAD"
+	CXXFLAGS="$CXXFLAGS -DHAVE_LIBPTHREAD -D_PHTREADS"
 
 	dnl echo $CXXFLAGS
 	dnl echo "$CC pthread-compile-test-program.cc $CXXFLAGS -o pthread-compile-test-program  $LDFLAGS -lpthread"

@@ -23,6 +23,7 @@
 #ifdef HAVE_LIBPTHREAD
 #include <pthread.h>
 #endif
+//§#undef HAVE_LIBPTHREAD//for debugging purposes
 /** 
 
     There is no special initialisation to do,
@@ -223,20 +224,24 @@ public:
   /**  query processor used in this thread*/
   CQuery& mQueryProcessor;
   /** the query (an xml parse tree) */
-  const CXMLElement& mQuery;
+  const CXMLElement* mQuery;
   /** the desired result size */
   int mResultSize;
   /** the cutoff */
   double mDifferenceToBest;
   /** the result of the query*/
   CIDRelevanceLevelPairList* mResult;
+  /** destructor */
+  ~CQMThread(){
+    delete mQuery;
+  }
   /** constructor */
   CQMThread(CQuery& inQueryProcessor,
 	   const CXMLElement& inQuery,
 	   int inResultSize,
 	   double inDifferenceToBest):
     mQueryProcessor(inQueryProcessor),
-    mQuery(inQuery),
+    mQuery(new CXMLElement(inQuery)),
     mResultSize(inResultSize),
     mDifferenceToBest(inDifferenceToBest),
     mResult(0){
@@ -244,7 +249,7 @@ public:
   /** copy constructor */
   CQMThread(const CQMThread& in):
     mQueryProcessor(in.mQueryProcessor),
-    mQuery(in.mQuery),
+    mQuery(new CXMLElement(*in.mQuery)),
     mResultSize(in.mResultSize),
     mDifferenceToBest(in.mDifferenceToBest),
     mResult(0),
@@ -252,6 +257,7 @@ public:
   };
   /** running the thread */
   void runThread(void){
+    mResult=0;
 #ifdef HAVE_LIBPTHREAD
     mIsThreaded=true;
     pthread_create(&mThread,0,CQMultiple::doQueryThread,this);
@@ -261,6 +267,7 @@ public:
   }
   /** running the function which would be called by the thread */
   void callFunction(void){
+    mResult=0;
     CQMultiple::doQueryThread(this);
   }
   /** joining this thread with the caller */
@@ -269,7 +276,13 @@ public:
     void** lReturnValue(NULL);
     cout << "PREJOIN" << endl;
     if(mIsThreaded){
-      pthread_join(mThread,lReturnValue);
+      int lJoinResult(pthread_join(mThread,lReturnValue));
+
+      if(lJoinResult){
+	cout << "CQMultiple: ERROR IN JOINING " 
+	     << lJoinResult
+	     << endl;
+      }
     }else{
       cout << "This was an unthreaded join!" 
 	   << endl;
@@ -282,7 +295,7 @@ public:
 
 void* CQMultiple::doQueryThread(void* inParameter){
   class CQMThread* lParam((CQMThread*) inParameter);
-  lParam->mResult=lParam->mQueryProcessor.fastQuery(lParam->mQuery,
+  lParam->mResult=lParam->mQueryProcessor.fastQuery(*(lParam->mQuery),
 						    lParam->mResultSize,
 						    lParam->mDifferenceToBest);
   cout << "I AM FINISHED HERE " << lParam << "result" << lParam->mResult << endl;
@@ -340,9 +353,17 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
 				       inQuery,            // the query to be processed
 				       mAccessor->size(),  // the size of the accessor (to get all potential results)
 				       inDifferenceToBest));// the difference to the best which is allowed for a result
-    if(i==lLast){
-      lListOfThreads.back().callFunction();//something to do for the main thread
-    }else{
+    /* EX-LEAK
+       the following was a special branch for reducing the
+       number of spawned threads by one. Apparently this did 
+       not work and caused a memory leak. Now it seems to work.
+       
+	   if(1==0 
+	   && (i==lLast)){
+	   lListOfThreads.back().callFunction();//something to do for the main thread
+	   }else*/
+      
+    {
       cout << "Running thread" 
 	   << endl;
       lListOfThreads.back().runThread();//run the thread
@@ -365,7 +386,7 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
     cout << "before merging " << endl;
 
     if(!lThread->mResult){
-      cerr << "The the result of this thread was nil " 
+      cout << "THE THE RESULT OF THIS THREAD WAS NIL " 
 	   << endl;
     }
     if(lThread->mResult){

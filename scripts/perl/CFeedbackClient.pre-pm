@@ -166,6 +166,7 @@ sub initialize(){
   # debugging code printed in this function
   # warning: this is done by hand, there is nothing automatic...
   #
+  # HM 070301 added debug switch others, so we can have a completely silent mode
   $self->{vDEBUG}={
 		   configureSession =>  0,
 		   startSession =>      0,
@@ -178,11 +179,12 @@ sub initialize(){
 		   handleEnd =>         0,
 		   setRelevantImages => 0,
 		   sendQueryString =>   0,
+		   others =>            0,
 		  };
   #
   # printing which functions are to be debugged
   #
-  print "Printing debugging info for the functions:\n";
+  print "Printing debugging info for the functions:\n" if ($self->{debug}->{others});
   {
     my $i;
     foreach $i (keys(%{$self->{vDEBUG}})){
@@ -693,7 +695,8 @@ sub getAlgorithmID( ;$){
     return $inAlgorithmNumber;#in fact, the algorithm number was already an ID
   }
 
-  return $self->getAlgorithm($inAlgorithmNumber||0)->{"algorithm-id"};
+  return $self->getAlgorithm($inAlgorithmNumber||0)->{"algorithm-id"} if defined($self->getAlgorithm($inAlgorithmNumber||0)->{"algorithm-id"}); 
+  return "adefault";
 }
 
 ##############################
@@ -742,7 +745,7 @@ sub addCollection( $ ){
   my $lNewCollection={"collection-id" => $lCollectionID,
 		      "query-paradigm-list" => []};
   
-  print("\nxxx addcollection $lCollectionID:",join(",",(%{$lNewCollection})),"\n") ;#if $vDEBUG{addCollection};
+  print("\nxxx addcollection $lCollectionID:",join(",",(%{$lNewCollection})),"\n") if $vDEBUG{addCollection};
 
 
   $self->clearCollection() unless defined $self->{collection};
@@ -1095,15 +1098,10 @@ sub startSession(){
   my$self=shift;
   
   my $lUser=shift || "default-user";  
-
-  #tentative  my $MESSAGEFILE="__DATADIR__/gift-ihandshake.mrml";
-
+  my $lSession=shift || "--feedback-client-session--";  
   
   $self->opensock();
   
-  #   open MESSAGEFILE,$MESSAGEFILE  or  die "There is no $MESSAGEFILE: $!";
-  #   while(<MESSAGEFILE>){
-  #     s/PPusernamePP/$lUser/g;
   $_= qq(<?xml version="1.0" standalone="no" ?>
 	 <!DOCTYPE mrml SYSTEM "file:__DATADIR__/mrml.dtd">
 	 <mrml session-id="nothing">
@@ -1141,14 +1139,20 @@ sub closeSession(){
 #
 # configures an algorithm
 # to the server.
+# HM 060201 added parametres that are needed for the benchmark
 #
-sub configureSession(;$$$$ ){
+sub configureSession(;$$$$$$$$$ ){
   my$self=shift;
   
   my $inSessionID=shift    || $self->getSessionID();
   my $inAlgorithmID=shift  || $self->getAlgorithmID();
   my $inCollectionID=shift || $self->getCollectionID();
   my $inAdditionalAlgorithmAttributes=shift || "";
+  my $inColorHistogramBlocked=shift || "false";
+  my $inColorBlocksBlocked=shift || "false";
+  my $inGaborHistogramBlocked=shift || "false";
+  my $inGaborBlocksBlocked=shift || "false";
+  my $inFeaturePercentage=shift || "100";
 
 
   my $MESSAGEFILE="__DATADIR__/gift-iconfigure.mrml";
@@ -1160,16 +1164,37 @@ sub configureSession(;$$$$ ){
   # We read a prefabricated configuration message, in which we
   # replace the appropriate attribute values
   #
-  open MESSAGEFILE,$MESSAGEFILE  or  die "There is no $MESSAGEFILE: $!";
-  while(<MESSAGEFILE>){
-    s/PPsessionidPP/$inSessionID/;
-    s/PPalgorithmidPP/$inAlgorithmID/;
-    s/PPcollectionidPP/$inCollectionID/;
-    s/PPadditionalalgorithmattributesPP/$inAdditionalAlgorithmAttributes/;
-    $self->{mSocket}->print($_);
-    print "Sent: $_" if $self->{vDEBUG}->{configureSession};
-  }
-  
+#  open MESSAGEFILE,$MESSAGEFILE  or  die "There is no $MESSAGEFILE: $!";
+#  while(<MESSAGEFILE>){
+#    s/PPsessionidPP/$inSessionID/;
+#    s/PPalgorithmidPP/$inAlgorithmID/;
+#    s/PPcollectionidPP/$inCollectionID/;
+#    s/PPadditionalalgorithmattributesPP/$inAdditionalAlgorithmAttributes/;
+#    $self->{mSocket}->print($_);
+#    print "Sent: $_" if $self->{vDEBUG}->{configureSession};
+#  }
+  $_= qq(<?xml version="1.0" standalone="no" ?>
+	 <!DOCTYPE mrml SYSTEM "http://isrpc85.epfl.ch/Charmer/code/mrml.dtd">
+ 	 <mrml session-id="$inSessionID">
+ 	 <configure-session  session-id="$inSessionID" >
+ 	 <algorithm  
+ 	 algorithm-id="$inAlgorithmID"  
+ 	 algorithm-type="adefault"  
+	 collection-id="$inCollectionID"  
+	 cui-block-color-histogram="$inColorHistogramBlocked"  
+ 	 cui-block-color-blocks="$inColorBlocksBlocked"  
+	 cui-block-texture-histogram="$inGaborHistogramBlocked"  
+	 cui-block-texture-blocks="$inGaborBlocksBlocked"  
+	 cui-pr-percentage-of-features="$inFeaturePercentage" >
+	 </algorithm>
+	 </configure-session>
+	 <query-step  session-id="$inSessionID" result-size="30" algorithm-id="$inAlgorithmID" collection="$inCollectionID"/>
+	 </mrml>);
+    
+  $self->{mSocket}->print($_);
+  print "Sent: $_" if($vDEBUG{startSession}); 
+
+ 
   $self->readAndParse();
 }
 

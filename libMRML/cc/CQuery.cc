@@ -61,6 +61,9 @@
 
 int gQuery;
 
+#include "CMutex.h"
+extern CMutex* gMutex;//for debugging
+
 /***************************************
 *
 * Constructor
@@ -302,6 +305,7 @@ CXMLElement* CQuery::query(const CXMLElement& inQuery){
   int inCutoff=
     lCutoff.second;
   
+  //gMutex->lock();//debugging
   if(inQuery.child_list_begin()!=inQuery.child_list_end()){
     CSelfDestroyPointer<CIDRelevanceLevelPairList> lFastQueryResult(fastQuery(inQuery,
 									      inNumberOfInterestingImages,
@@ -366,11 +370,14 @@ CXMLElement* CQuery::query(const CXMLElement& inQuery){
 	lReturnValue->moveUp();
 
       }
+      //gMutex->unlock();//debugging
       return lReturnValue;
     }
   }else{
+    //gMutex->unlock();//debugging
     return getRandomImages(inNumberOfInterestingImages);
   }
 
+  //gMutex->unlock();//debugging
   return 0;
 }

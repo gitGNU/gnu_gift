@@ -7854,7 +7854,7 @@ if test "${enable_multi_threading+set}" = set; then
 				echo "$as_me:7854: checking if we can use POSIX threads the way we want" >&5
 echo $ECHO_N "checking if we can use POSIX threads the way we want... $ECHO_C" >&6
 	RESCUE_CXXFLAGS=$CXXFLAGS
-	CXXFLAGS="$CXXFLAGS -DHAVE_LIBPTHREAD"
+	CXXFLAGS="$CXXFLAGS -DHAVE_LIBPTHREAD -D_PHTREADS"
 
 			if($CXX $CXXFLAGS pthread-compile-test-program.cc  -o pthread-compile-test-program  $LDFLAGS -lpthread) ; then
 		if ./pthread-compile-test-program ; then

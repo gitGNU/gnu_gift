@@ -1,3 +1,52 @@
+2001-03-27  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* scripts/perl/CFeedbackClient.pre-pm (addCollection): 
+	Uncommented if $vDEBUG{addCollection};
+	Applied Patch by Henning Müller:
+	He sais:
+	this patch basically changes two things. It adds 
+	a new flag to the debug options, so I can block 
+	any output on the screen in CFeedbackClient. I
+	just called it others, so it does not conflict 
+	with any of yours.
+	The other problem I had when using the benchmark
+	test was an error with an access to an undefined 
+	hash element in getAlgorithm. I check wether this 
+	element is defined and if not, I sent adefault back.
+
+2001-03-26  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* GIFTServer/Server.cc: commented lock/unlock pair
+	in processMessage
+	
+	* configure.in: Added -D_PTHREADS for multithreading
+	
+
+2001-03-23  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CQuery.cc (query): added mutex lock
+
+	* scripts/perl/gift-add-collection.pre-pl: 
+	Collections reference url2fts, however, the file
+	name must be url2fts.xml
+
+2001-03-22  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CCommunicationHandler.cc: 
+	Currently each connection mutex-locks. I.e.
+	multithreading is only used in CQMultiple.cc
+	
+	* libMRML/include/CXMLElement.h: Tracking misterious
+	stuff happening when multithreading. Adding mutex
+	to CXMLElement.
+
+2001-03-21  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CQMultiple.cc (fastQuery): 
+	I seem to have solved a problem regarding a leak
+	of ressources when doing multi threading. You can
+	find further description in the comment EX-LEAK
+
 2001-03-08  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* GIFTServer/Server.cc: Teardown: tries to read
