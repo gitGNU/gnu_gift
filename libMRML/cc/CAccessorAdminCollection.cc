@@ -175,7 +175,7 @@ CAccessorAdminCollection::CAccessorAdminCollection(string inFileName):
 	       << lConfigFileContent
 	       << "]"
 	       << endl;
-	  exit(1);
+	  exit(1);// this happens only in the config file
 	}
       } while (!lDone);
 

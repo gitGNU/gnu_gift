@@ -22,6 +22,8 @@
 #include "libMRML/include/CDynamicQueryFactory.h"
 #include "libMRML/include/CQMultiple.h"
 #include "libGIFTQuPerl/include/CQPerl.h"
+#include "libMRML/include/GIFTExceptions.h"
+#include "libMRML/include/my_throw.h"
 
 CQuery* CDynamicQueryFactory::makeQuery(const string & inBaseType, 
 					   CAccessorAdminCollection & inAccessorAdminCollection,
@@ -44,7 +46,7 @@ CQuery* CDynamicQueryFactory::makeQuery(const string & inBaseType,
 				     inAlgorithm);
   }else{
     cerr << "CDynamicQueryFactory: " << inBaseType << " was not found";
-    exit(20);
+    my_throw(VEConfigurationError(inBaseType.c_str()));
   }
 }
 
@@ -55,7 +57,9 @@ CDynamicQueryFactory::CDynamicQueryFactory(string inDirectoryName){
        << inDirectoryName << endl;
   DIR* lDirectory(opendir(inDirectoryName.c_str()));  
   if(!lDirectory){
+    // this means the library has disappeared.
     cerr << "FATAL ERROR, cannot find " << inDirectoryName << endl;
+    
     exit(20);
   }else{
     dirent* lDirectoryEntry;

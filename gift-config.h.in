@@ -18,6 +18,9 @@
 /* Define if you have the `socket' library (-lsocket). */
 #undef HAVE_LIBSOCKET
 
+/* Define if you have the `uuid' library (-luuid). */
+#undef HAVE_LIBUUID
+
 /* Define if you have the <netinet/tcp.h> header file. */
 #undef HAVE_NETINET_TCP_H
 

@@ -21,7 +21,7 @@ bool CDomainSocket::listenToPath(const string& inPath){
   
   if (( mSocketDescriptor= socket(AF_UNIX, SOCK_STREAM, 0)) == -1) {
     perror("socket");
-    exit(1);
+    return false;//no exit
   }
   
   mSocketStructure.sun_family = AF_UNIX;
@@ -83,7 +83,7 @@ void CDomainSocket::serveStream(int inSocket){
   }
 }
 
-void CDomainSocket::acceptAndServe(){
+bool CDomainSocket::acceptAndServe(){
   struct sockaddr_un lAcceptedSocket;
   /** 
       if we are here, this means there is data for one socket 
@@ -92,7 +92,7 @@ void CDomainSocket::acceptAndServe(){
   int s2(0);
   if ((s2 = accept(this->getSocketDescriptor(), (struct sockaddr *)&lAcceptedSocket, &t)) == -1) {
     perror("accept");
-    exit(1);
+    return false;
   }
   {
     struct ucred lCredentials;
@@ -115,4 +115,5 @@ void CDomainSocket::acceptAndServe(){
   this->serveStream(s2);
 
   close(s2);
+  return true;
 }

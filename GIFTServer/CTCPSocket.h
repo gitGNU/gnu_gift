@@ -79,7 +79,7 @@ public:
   /** get the hostname it's listening to of the socket */
   int getPort()const;
   /** */
-  void acceptAndServe();
+  bool acceptAndServe();
   /** */
   operator bool()const;
 };

@@ -35,6 +35,10 @@ libMRML_HEADERS= directory.h \
 	CIDRelevanceLevelPair.h      CSessionManager.h \
 	CIDRelevanceLevelPairList.h  CStaticQueryFactory.h uses-declarations.h \
  CRPipe.h CReaper.h CReaperDistributor.h safePopen.h\
-	createErrorMessage.h
+	createErrorMessage.h 
+
+install-data-local:
+	$(INSTALL_DATA) $(srcdir)/gift-config $(libMRMLdir)/afile 
+
 
 CLEANFILES= directory.h

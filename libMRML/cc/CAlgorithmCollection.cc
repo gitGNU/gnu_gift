@@ -185,7 +185,7 @@ CAlgorithmCollection::CAlgorithmCollection(string inConfigFileName):
 	     << "]"
 	     << endl;
 
-	exit(1);
+	my_throw(GIFTException("XML Error"));
       }
     } while (!lDone);
 

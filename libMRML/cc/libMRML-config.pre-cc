@@ -28,7 +28,7 @@
 
 int main (int argc, char **argv) {
   int lDigitOptionIndex = 0;
-
+  bool lFirst=true;
   while (1) {
     int this_option_optind = optind ? optind : 1;
     int option_index = 0;
@@ -38,14 +38,19 @@ int main (int argc, char **argv) {
       {"libs", 0, 0, 0},
       {"includes", 0, 0, 0},
       {"gift-mysql-dir", 0, 0, 0},
+      {"gift-plugin-dir", 0, 0, 0},
       {"help", 0, 0, 0},
       {0, 0, 0, 0}
     };
 
-    char lC = getopt_long (argc, argv, "cLlimh",
+    char lC = getopt_long (argc, argv, "cLlimph",
 		     long_options, &option_index);
     if (lC == -1)
       break;
+
+    if(!lFirst){
+      printf(" ");
+    }
 
     switch (lC) {
     case 0: 
@@ -54,6 +59,7 @@ int main (int argc, char **argv) {
       case 1: lC='L'; break;
       case 2: lC='l'; break;
       case 3: lC='i'; break;
+      case 4: lC='p'; break;
       default: lC='h';
       }
       break;
@@ -61,25 +67,30 @@ int main (int argc, char **argv) {
 
     switch (lC) {
     case 'c':
-      printf(" %CXXFLAGS% ");
-      break;
+      printf("%CXXFLAGS%");
+      lFirst=false; break;
     case 'l':
-      printf(" %LIBS% ");
-      break;
+      printf("%LIBS%");
+      lFirst=false; break;
     case 'L':
-      printf(" %LDFLAGS% %libdir% ");
-      break;
+      printf("%LDFLAGS% -L%libdir%");
+      lFirst=false; break;
     case 'i':
-      printf(" %INCLUDES%  ");
-      break;
+      printf("%INCLUDES%");
+      lFirst=false; break;
     case 'm':
-      printf(" %GIFT_MYSQL_DIR%  ");
-      break;
+      printf("%GIFT_MYSQL_DIR%");
+      lFirst=false; break;
+    case 'p':
+      printf("%libdir%");
+      lFirst=false; break;
     default:
-      puts("gift-config [-c] [--cxxflags] [-l] [--ldflags]");
+      puts("gift-config [-c] [--cxxflags] [-l] [--ldflags] [--plugin-dir]");
       puts("Gives back the flags you need to give to your ");
       puts("C++ compiler (--cxxflags or -c, for short) and/or");
       puts("Linker       (--ldflags, or -l for short) ");
+      puts("Where gift expects its plugins \n"\
+	   "             (--plugin-dir, or -p for short) ");
       puts("MySQL directory");
       puts("             (--gift-mysql-dir, or -m for short) for successfully");
       puts("compiling extensions to the GNU Image Finding Tool");

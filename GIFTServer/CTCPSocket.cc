@@ -84,7 +84,7 @@ string CTCPSocket::getHost()const{
 int CTCPSocket::getPort()const{
   return mPort;
 }
-void CTCPSocket::acceptAndServe(){
+bool CTCPSocket::acceptAndServe(){
   struct sockaddr_in lAcceptedSocket;
   /** 
       if we are here, this means there is data for one socket 
@@ -95,12 +95,12 @@ void CTCPSocket::acceptAndServe(){
   int s2(0);
   if(-1 == (s2 = accept(this->getSocketDescriptor(), (struct sockaddr *)&lAcceptedSocket, &lSize))) {
     perror("accept");
-    exit(1);
-    throw("accept");
+    return false;
   }
   cout << "connected: " << (this)->getSocketDescriptor() << "->" << s2 << endl;
 
   (this)->serveStream(s2);
   
   close(s2);
+  return true;
 }

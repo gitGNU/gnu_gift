@@ -75,7 +75,7 @@ public:
   /** Serve from the socket that accepted */
   void setServeFunction(CServeFunction* inServeFunction);
   /** accept this socket and serve */
-  virtual void acceptAndServe()=0;
+  virtual bool acceptAndServe()=0;
   /** serve to this socket */
   virtual void serveStream(int);
   /** */

@@ -41,6 +41,17 @@
 #include "libMRML/include/directory.h" // directorys as determined by ./configure
 #include "libMRML/include/createErrorMessage.h"
 
+#include "libMRML/include/gift-config.h"
+
+#ifdef HAVE_LIBUUID 
+extern "C"{
+  typedef unsigned char* uuid_t ;
+  void uuid_generate(uuid_t); 
+  void uuid_unparse(uuid_t,char*);
+}
+#endif
+
+
 //the "ID administration subsystem"
 TID gID;
 
@@ -184,9 +195,19 @@ void endConfigElement(void *userData, const char *inElementName)
 extern TID gID;
 
 string getNewID(){
+#ifdef HAVE_LIBUUID 
+  char lUUIDString[200];
+  unsigned char lUUIDBinary[16];
+  uuid_t lUUID(lUUIDBinary);
+  uuid_generate(lUUID); 
+  uuid_unparse(lUUID,
+	       lUUIDString);
+  return lUUIDString;
+#else
     char lID[20];
     sprintf(lID,"%ld",++gID);
     return lID;
+#endif
 }
 
 /** */
@@ -413,15 +434,18 @@ CXMLElement* CSession::query(CSessionManager&     inCaller,
     }
   }
   catch(GIFTException* inException){
+    cerr << "We have caught a GIFTException" << endl;
+    cout << "We have caught a GIFTException" << endl;
     return createErrorMessage(inException->getMessage());
   }
   catch(GIFTException& inException){
+    cerr << "We have caught a GIFTException" << endl;
+    cout << "We have caught a GIFTException" << endl;
     return createErrorMessage(inException.getMessage());
   }
   catch(...){
-    cout << "something caught" << endl;
-    cerr << "something caught" << endl;
-    
+    cout << "We have caught a non-GIFTException" << endl;
+    cerr << "We have caught a non-GIFTException" << endl;
     exit(10);
   }
 };
@@ -495,7 +519,7 @@ CSessionManager::CSessionManager(string inSessionFileName,
 	   << " at line "
 	   << XML_GetCurrentLineNumber(lParser)
 	   << endl;
-      exit(1);
+      exit(1);// this happens only when parsing the config file
     }
   } while (!lDone);
 

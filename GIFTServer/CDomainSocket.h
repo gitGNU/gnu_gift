@@ -75,7 +75,7 @@ public:
   /** Serve from the socket that accepted */
   virtual void serveStream(int);
   /** */
-  virtual void acceptAndServe();
+  virtual bool acceptAndServe();
 
   /** */
   operator bool()const;

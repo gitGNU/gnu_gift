@@ -1,4 +1,32 @@
+2002-05-15  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
+
+	* configure.in(AM_CONFIG_HEADER): 
+	added cp gift-config.h libMRML/include
+	in order to install gift-config.h together with the 
+	libMRML includes
+
+	* libMRML/include/Makefile.am (install-data-local): 
+	target to install the autoconf-generated gift-config.h
+	
+	* libMRML/cc/CSessionManager.cc(getNewID): if -luuid is present,
+	session IDs will ge uuids, instead of integers starting at one
+
+2002-05-08  Wolfgang Müller  <wmueller@bn1x1.inf.uni-bayreuth.de>
+
+	* libMRML/cc/Makefile.am (libMRML-config.cc): 
+	* libMRML/cc/libMRML-config.pre-cc (main): 
+	changing the way libdir is treated.
+	adding --plugin-dir flag.
+
+2002-05-03  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libMRML/cc/libMRML-config.pre-cc (main): 
+	get rid of spaces that are "too much"
+
 2002-04-30  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libMRML/cc/CDynamicQueryFactory.cc: 
+	* libMRML/cc/CAFPlugin.cc: exit -> exception
 
 	* scripts/perl/Makefile.am (PERLCONFIG): adding "-e" before
 	sed expression.

@@ -1,6 +1,6 @@
 #include "libMRML/include/CAFPlugin.h"
 #include "libMRML/include/CAccessorFactoryContainer.h"
-
+#include "libMRML/include/GIFTExceptions.h"
 /** makes a CAccessor object*/
 CAccessor* CAFPlugin::makeAccessor(const CXMLElement& inXMLElement)const{
   return (*mMakeAccessor)(inXMLElement);
@@ -29,7 +29,7 @@ CAFPlugin::CAFPlugin(string inLibraryDirName,
   if (!mDlOpenHandle) {
     cerr << "Could not open library: " << endl
 	 << dlerror() << endl;
-    exit(1);
+    throw VEConfigurationError(dlerror());
   }
   
   mGetName = (typeof(mGetName))dlsym(mDlOpenHandle, 

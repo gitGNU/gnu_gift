@@ -28,6 +28,8 @@
 #include <fstream>
 #include "libMRML/include/CXMLElement.h"
 #include "libMRML/include/CAttributeList.h"
+#include "libMRML/include/my_throw.h"
+#include "libMRML/include/GIFTExceptions.h"
 
 void startHierarchyElement(void *userData, 
 				    const char *inElementName, 
@@ -152,7 +154,7 @@ void CAcHierarchy::init(string inFileName){
 	       << " at line "
 	       << XML_GetCurrentLineNumber(lParser)
 	       << endl;
-	  exit(1);
+	  my_throw(VEConfigurationError("could not find requested tree"));
 	}
       } while (!lDone);
 

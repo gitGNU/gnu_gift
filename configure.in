@@ -36,6 +36,7 @@ dnl old position of AC_ARG_ENABLE(interactive)
 AM_INIT_AUTOMAKE(gift,0.1.8)
 
 AM_CONFIG_HEADER(gift-config.h)
+cp gift-config.h libMRML/include
 AC_ISC_POSIX
 dnl Checks for programs.
 
@@ -373,6 +374,8 @@ dnl SUNs need to link the -lsocket to programs using sockets.
 AC_CHECK_LIB(socket,socket)
 #dnl check if we have posix threads
 AC_CHECK_LIB(pthread,pthread_mutexattr_destroy)
+# check if we can have uuids
+AC_CHECK_LIB(uuid,uuid_generate)
 
 
 
