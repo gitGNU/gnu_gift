@@ -93,7 +93,7 @@ GetOptions(\%lOptions,
 	   "no-ps");
 
 
-my($lInEncoding,$lOutEncoding)=($lOptions{"local-encoding"})
+my($lInEncoding,$lOutEncoding)=defined($lOptions{"local-encoding"})
   ? (&main::findOutEncodings())
   : ($lOptions{"local-encoding"},"UTF-8");
 print "I am assuming that the system is using $lInEncoding as encoding. 
