@@ -37,7 +37,8 @@ char* CQueryPlugin::getName(){
     @param inLibraryFileName the file name of the shared object 
     to be treated */
 CQueryPlugin::CQueryPlugin(string inLibraryDirName,
-			   string inLibraryFileName):
+			   string inLibraryFileName,
+			   string inLibraryName):
   mGetName(0),
   mMakeQuery(0),
   mName("no name given"),
@@ -45,28 +46,29 @@ CQueryPlugin::CQueryPlugin(string inLibraryDirName,
 
   char* lError;
   string lLibraryPath=inLibraryDirName+"/"+inLibraryFileName;
-  string lStringGetClassName(inLibraryFileName.substr(0,inLibraryFileName.size()-3)+"_getClassName");
-  string lStringMakeQuery(inLibraryFileName.substr(0,inLibraryFileName.size()-3)+"_makeQuery");
+  string lStringGetClassName(inLibraryName+"_getClassName");
+  string lStringMakeQuery(inLibraryName+"_makeQuery");
 
   mDlOpenHandle = dlopen (lLibraryPath.c_str(), RTLD_LAZY);
   if (!mDlOpenHandle) {
-    cerr << "Could not open library: " << endl
+    cerr << "..Could not open library: " << endl
 	 << dlerror() << endl;
-    exit(1);
-  }
-  
-  mGetName = (typeof(mGetName))dlsym(mDlOpenHandle, 
-				     lStringGetClassName.c_str());
-  if ((lError = dlerror()) != NULL)  {
-    cerr << lError << endl;
+    //exit(1);
+    mIsSane=0;
   }else{
-    mName=(*mGetName)();
-    mMakeQuery=(typeof(mMakeQuery))dlsym(mDlOpenHandle,
-				       lStringMakeQuery.c_str());
+    mGetName = (typeof(mGetName))dlsym(mDlOpenHandle, 
+				       lStringGetClassName.c_str());
     if ((lError = dlerror()) != NULL)  {
       cerr << lError << endl;
     }else{
-      mIsSane=1;
+      mName=(*mGetName)();
+      mMakeQuery=(typeof(mMakeQuery))dlsym(mDlOpenHandle,
+					   lStringMakeQuery.c_str());
+      if ((lError = dlerror()) != NULL)  {
+	cerr << lError << endl;
+      }else{
+	mIsSane=1;
+      }
     }
   }
 }
@@ -78,7 +80,9 @@ CQueryPlugin::CQueryPlugin(CQueryPlugin& inPlugin):
 }
 
 CQueryPlugin::~CQueryPlugin(){
-  dlclose(mDlOpenHandle);
+  if(mDlOpenHandle){
+    dlclose(mDlOpenHandle);
+  }
 }
 
 bool CQueryPlugin::isSane()const{

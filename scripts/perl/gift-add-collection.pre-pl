@@ -37,7 +37,10 @@ use Text::Iconv;
 use POSIX qw(tmpnam);
 use strict;
 use vars qw($self
-	    
+	
+	    $llTemp
+	    $llFullName
+    
 	    $lFullName
 	    $lName
 	    $lExtension
@@ -419,14 +422,6 @@ unless($gDoRemove){
 	}
 	
 	
-	my $lAttributes={
-			 "url-postfix" => $lURL,
-			 "thumbnail-url-postfix" => $lThumbnailURL,
-			 "feature-file-name" => safeConvertString($lFts)
-			};
-	
-	
-	$self->{writer}->emptyTag("image",(%{$lAttributes}));  
 	
 	
 	print "lURLPrefix: $lURLPrefix lNameBase: $lNameBase lExtension: $lExtension\n";
@@ -461,54 +456,83 @@ unless($gDoRemove){
 	}
 	
 	my $lFtsModificationTime=(stat($lFts))[9];
-	if (!-e($lFts)
-	    || $lFtsModificationTime<$main::gModifyingDateOfThis) {
+	if (!(-e($lFts))
+	    || ($lFtsModificationTime<$main::gModifyingDateOfThis)) {
 	  if ($lFtsModificationTime) {
 	    print($lFtsModificationTime," is the modifying date of $lFts file\n") 
 	  }
 	  print("We will make a new feature file\n");
 	  print("Converting $lFullName to $lTemp\n");
+
+	  unlink $lTemp;
+
+	  local $llTemp=$lTemp;
+	  local $llFullName=$lFullName;
+	  eval{
+	      if (system("convert" ,
+			 "-geometry",
+			 "256x256!",
+			 $llFullName,
+			 $llTemp)) {
+		  print "Pre feature extraction convert call returned nonzero: $! \n",join(" ",("convert" ,
+												"-geometry",
+												"256x256!",
+												$llFullName,
+												$llTemp,"\n"));
+	      }
+	  };
 	  
-	  if (system("convert" ,
-		     "-geometry",
-		     "256x256!",
-		     $lFullName,
-		     $lTemp)) {
-	    die "Pre feature extraction convert call failed: $! \n";
+	  unless(-e($lTemp)){
+	      die "Pre feature extraction convert call failed ",join(" ",("convert" ,
+									  "-geometry",
+									  "256x256!",
+									  $llFullName,
+									  $llTemp,"\n")) ;
 	  }
 	  
 	  print("Extracting features from $lTemp\n");
 	  
-	  unless(system("__BINDIR__/gift-extract-features $lTemp")){
-	    $lFts=~m§^(.*/)([^/]*)$§;
-	    print("making the path $1\n");
-	    mkpath([$1],1,0711);
-	    print("...copying from $lTempFts to $lFts\n\n");
-	    copy($lTempFts,$lFts);
-	  } else {
-	    print "warning: more recent version of feature file $lFts found!\n";
-	  }
-	  
-	  if (!$main::lImageCount) {
-	    die "Pre feature extraction convert call failed: $! \n" if system("convert",
-									      "-geometry",
-									      "256x256!",
-									      $lFullName,
-									      $lTemp);
-	    system qq(__BINDIR__/gift-write-feature-descs < $lTemp |perl -e 'print "Writing InvertedFileFeatureDescription...\n";open OF,">$main::lIndexPrefix/InvertedFileFeatureDescription.db" or die "could not open $lIndexPrefix";while(<STDIN>){print OF join(" ",(split(" ",\$_))[0..1]),"\\n";};print "finished.\n";' );
-	    unlink $lTemp;
-	  }
-	  
-	  $main::lImageCount++;
-	  #    print "Number of images: $main::lImageCount\n\n";
-	  unlink($lTemp);
 	  unlink($lTempFts);
+
+	  eval{
+	      system("__BINDIR__/gift-extract-features $lTemp");
+	  };
+	  if(-e $lTempFts){
+	      $lFts=~m§^(.*/)([^/]*)$§;
+	      print("making the path $1\n");
+	      mkpath([$1],1,0711);
+	      print("...copying from $lTempFts to $lFts\n\n");
+	      copy($lTempFts,$lFts) or print STDOUT "\nCopy $lTempFts -> $lFts failed: $!\n";
 	  
-	  $main::lCountVisitedImages++;
-	  print "\nPROGRESS: ".$main::lCountVisitedImages." of ".$main::lCountPotentialImages." done (".POSIX::floor(90*$main::lCountVisitedImages/$main::lCountPotentialImages)."%)\n";
+	      if (!$main::lImageCount) {
+		system qq(__BINDIR__/gift-write-feature-descs < $lTemp |perl -e 'print "Writing InvertedFileFeatureDescription...\n";open OF,">$main::lIndexPrefix/InvertedFileFeatureDescription.db" or die "could not open $lIndexPrefix";while(<STDIN>){print OF join(" ",(split(" ",\$_))[0..1]),"\\n";};print "finished.\n";' );
+		unlink $lTemp;
+	      }
+	      
+	      $main::lImageCount++;
+	      #    print "Number of images: $main::lImageCount\n\n";
+	      unlink($lTemp);
+	      unlink($lTempFts);
+	      
+	      $main::lCountVisitedImages++;
+	      print "\nPROGRESS: ".$main::lCountVisitedImages." of ".$main::lCountPotentialImages." done (".POSIX::floor(90*$main::lCountVisitedImages/$main::lCountPotentialImages)."%)\n";
+	    } else {
+	      print "warning: Feature extraction of $lTemp to $lTempFts failed!\n";
+	    }
 	} else {
 	  die "Feature extraction failed: $! \n" 
 	}
+
+	# 2004-03-18 add attribute line as last thing
+	my $lAttributes={
+			 "url-postfix" => $lURL,
+			 "thumbnail-url-postfix" => $lThumbnailURL,
+			 "feature-file-name" => safeConvertString($lFts)
+			};
+	
+	
+	$self->{writer}->emptyTag("image",(%{$lAttributes}));  
+
       };
       if ($@) {
 	print STDERR "There was an error in extracting features from $File::Find::name\n";

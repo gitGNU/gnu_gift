@@ -52,6 +52,7 @@ AC_PROG_CXX
 AC_PROG_RANLIB
 
 AC_LIBTOOL_DLOPEN
+AC_LIBLTDL_CONVENIENCE
 AC_PROG_LIBTOOL
 AC_SUBST(LIBTOOL_DEPS)
 
@@ -135,7 +136,7 @@ AC_ARG_ENABLE(foreign-urls,
 	],
 	[ echo "Foreign urls enabled"])
 
-
+CXXFLAGS="$CXXFLAGS"
 
 
 dnl MySQL checking if it's there
@@ -171,6 +172,9 @@ AC_TRY_LINK([#include <sqlplus.hh>],[new SQLQuery();],[
 		AC_MSG_RESULT([no! \nThe flags used in the unsuccessful compile were $CFLAGS $CXXFLAGS $LDFLAGS])
 		LDFLAGS=$RESCUE_LDFLAGS
 	])
+
+
+LDFLAGS="$LDFLAGS "
 
 
 dnl an option for suppressing parts of gift which have not yet been
@@ -418,6 +422,10 @@ CXXFLAGS=$RESCUE_CXXFLAGS
 
 adl_FUNC_GETOPT_LONG
 
+
+LDFLAGS="$LDFLAGS "
+
+
 AC_OUTPUT([Makefile 
 
 		libMRML/Makefile
@@ -478,3 +486,4 @@ dnl		expat/gennmtab/Makefile
 dnl		expat/xmlparse/Makefile
 dnl		expat/xmltok/Makefile
 dnl		expat/xmlwf/Makefile
+

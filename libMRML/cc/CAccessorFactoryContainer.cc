@@ -39,6 +39,11 @@
 #include "libMRML/include/CAFPlugin.h"
 #include <string>
 #include <iostream>
+#include <set>
+
+#include "libMRML/include/getLibNameFromFileName.h"
+
+
 CAccessorFactoryContainer::CAccessorFactoryContainer():
   mConfigurationData(0){
   //fill the accessor factory container in a sensible way
@@ -65,6 +70,8 @@ void CAccessorFactoryContainer::configure(CXMLElement* inConfigurationData){
        << "Configuring the CAccessorFactoryContainer:" << endl
        << "I am going to scan the following directorys for plugins "<< endl;
        
+  set<string> lSeenLibs;
+
   if(inConfigurationData){
     for(list<CXMLElement*>::const_iterator i=inConfigurationData->child_list_begin();
 	i!=inConfigurationData->child_list_end();
@@ -91,18 +98,30 @@ void CAccessorFactoryContainer::configure(CXMLElement* inConfigurationData){
 	    while(lDirectoryEntry=readdir(lDirectory)){
 	      string lFileName(lDirectoryEntry->d_name);
 
-	      if(!strncmp(".so",lFileName.c_str()+lFileName.size()-3,3)){
-		if(lFileName.find("libGIFTAc")==0){
-		  CAFPlugin* lPlugin(new CAFPlugin(lDirectoryName.second.c_str(),
-						   lFileName));
-		  if(lPlugin->isSane()){
-		    cout << lFileName << " contains a sane GIFT Accessor plugin: " << lPlugin->getName() << endl;
-		    registerFactory(lPlugin,string(lPlugin->getName()));
-		  }else{
-		    delete lPlugin;
-		  }
+	      pair<bool,string> lIsLibAndLibName(getLibNameFromFileName("libGIFTAc",lFileName));
+	      bool lIsLib(lIsLibAndLibName.first);
+	      string lLibName(lIsLibAndLibName.second);
+
+	      if(lIsLib && (lSeenLibs.find(lLibName)==lSeenLibs.end())){
+		CAFPlugin* lPlugin(new CAFPlugin(lDirectoryName.second.c_str(),
+						 lFileName,
+						 lLibName));
+		if(lPlugin->isSane()){
+		  cout << lFileName << " contains a sane GIFT Accessor plugin: " << lPlugin->getName() << endl;
+		  registerFactory(lPlugin,string(lPlugin->getName()));
+		  lSeenLibs.insert(lLibName);
+		}else{
+		  cout << lFileName << " tested. Test FAILED. " << endl;
+		  delete lPlugin;
 		}
 	      }
+	      else{
+		if(!lIsLib){
+		  cout << "Not testing file:" << lFileName << " (File name does not match plugin name) " << endl;
+		}else{
+		  cout << "Lib:" << lLibName << ", to be linked from " << lFileName << " already registered! " << endl;
+		}
+ 	      }
 	    }
 	  }
 	}
@@ -139,6 +158,11 @@ void CAccessorFactoryContainer::registerFactory(CAccessorFactory* inFactory,
     mContent[inName].mOpenCloseCounter=0;
   }
 };
+
+bool CAccessorFactoryContainer::isPresentFactory(string inName)const{
+  return(mContent.find(inName)!=mContent.end());
+}
+
 /**
      opening an accessor:
      if the accessor is already constructed,

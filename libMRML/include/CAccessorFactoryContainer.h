@@ -103,6 +103,12 @@ protected:
      be delete-d.
   */
   void closeAccessor(string inName);
+  /**
+     Is a given factory present in the factory?
+     Useful for building in order to avoid double registration
+     and double dynamic linking.
+  */
+  bool isPresentFactory(string inName)const;
   
 };
 

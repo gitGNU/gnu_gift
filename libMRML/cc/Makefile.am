@@ -41,6 +41,8 @@ libMRML_la_LDFLAGS=@PRE_INSTALL_LIBDIRS@  -version-info 3:0:3
 
 
 libMRML_la_SOURCES= \
+	 getLibNameFromFileName.cc\
+	\
 	CAccessorElement.cc\
 	\
 	CAccessor.cc\

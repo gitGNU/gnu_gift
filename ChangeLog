@@ -1,4 +1,48 @@
-2004-02-24  Knoppix User  <knoppix@Knoppix>
+2004-03-24  Wolfgang Müller  <muellerw@btn1x5>
+
+	* scripts/perl/gift-add-collection.pre-pl: Changed to
+	react correctly to failing convert calls. Mainly putting
+	evals around system calls. Writing out url2fts.xml tags
+	only if the conversion and feature extraction were successful.
+	[Too?] Verbose error messages.
+
+	* libMRML/cc/CQueryPlugin.cc: don't exit if file not linkable
+
+
+	* libMRML/include/CAccessorFactoryContainer.h(isPresentFactory): 
+	New method
+
+	* libMRML/cc/CAccessorFactoryContainer.cc(configure): 
+	Changes to make finding libraries independent of shared library
+	extensions using getLibNameFromFileName
+
+	* libMRML/cc/CDynamicQueryFactory.cc: 
+	* libMRML/include/CDynamicQueryFactory.cc: 
+	Changes to make finding libraries independent of shared library
+	extensions using getLibNameFromFileName
+
+	* libMRML/include/getLibNameFromFileName.h: 
+	* libMRML/cc/getLibNameFromFileName.cc (getLibNameFromFileName): 
+	New function, new file
+
+	* libMRML/cc/CQueryPlugin.cc: 
+	* libMRML/include/CQueryPlugin.h: 
+	* libMRML/include/CAFPlugin.h: 
+	* libMRML/cc/CAFPlugin.cc: 
+	Changed constructor to accommodate pre-extracted library name
+	Softer reaction on failure.
+
+	
+
+
+2004-03-23  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libMRML/cc/CAccessorFactoryContainer.cc(configure): 
+	* libMRML/cc/CAFPlugin.cc(CAFPlugin): In constructor, 
+		add more verbose error messages
+
+
+2004-02-24  Knoppix User  <Wolfgang.Mueller2@uni-bayreuth.de>
 
 	* FeatureExtraction/extract_features.c (main): 
 	* FeatureExtraction/float_histogram.c (main):

@@ -1,6 +1,7 @@
 #include "libMRML/include/CAFPlugin.h"
 #include "libMRML/include/CAccessorFactoryContainer.h"
 #include "libMRML/include/GIFTExceptions.h"
+
 /** makes a CAccessor object*/
 CAccessor* CAFPlugin::makeAccessor(const CXMLElement& inXMLElement)const{
   return (*mMakeAccessor)(inXMLElement);
@@ -14,7 +15,8 @@ char* CAFPlugin::getName(){
     @param inLibraryFileName the file name of the shared object 
     to be treated */
 CAFPlugin::CAFPlugin(string inLibraryDirName,
-				 string inLibraryFileName):
+		     string inLibraryFileName,
+		     string inLibraryName):
   mGetName(0),
   mMakeAccessor(0),
   mName("no name given"),
@@ -22,28 +24,30 @@ CAFPlugin::CAFPlugin(string inLibraryDirName,
   
   const char* lError;
   string lLibraryPath=inLibraryDirName+"/"+inLibraryFileName;
-  string lStringGetClassName(inLibraryFileName.substr(0,inLibraryFileName.size()-3)+"_getClassName");
-  string lStringMakeAccessor(inLibraryFileName.substr(0,inLibraryFileName.size()-3)+"_makeAccessor");
+  string lStringGetClassName(inLibraryName+"_getClassName");
+  string lStringMakeAccessor(inLibraryName+"_makeAccessor");
 
   mDlOpenHandle = dlopen (lLibraryPath.c_str(), RTLD_LAZY);
   if (!mDlOpenHandle) {
     cerr << "Could not open library: " << endl
 	 << dlerror() << endl;
-    throw VEConfigurationError(dlerror());
-  }
-  
-  mGetName = (typeof(mGetName))dlsym(mDlOpenHandle, 
-				     lStringGetClassName.c_str());
-  if ((lError = dlerror()) != NULL)  {
-    cerr << lError << endl;
+    //throw VEConfigurationError(dlerror());
+    mIsSane=0;
   }else{
-    mName=(*mGetName)();
-    mMakeAccessor=(typeof(mMakeAccessor))dlsym(mDlOpenHandle,
-				       lStringMakeAccessor.c_str());
+  
+    mGetName = (typeof(mGetName))dlsym(mDlOpenHandle, 
+				       lStringGetClassName.c_str());
     if ((lError = dlerror()) != NULL)  {
-      cerr << lError << endl;
+      cerr << "Could not link to symbol " << lStringGetClassName << ":" << lError << endl;
     }else{
-      mIsSane=1;
+      mName=(*mGetName)();
+      mMakeAccessor=(typeof(mMakeAccessor))dlsym(mDlOpenHandle,
+						 lStringMakeAccessor.c_str());
+      if ((lError = dlerror()) != NULL)  {
+	cerr << "Could not link to symbol " << lStringMakeAccessor << ":" << lError << endl;
+      }else{
+	mIsSane=1;
+      }
     }
   }
 }
@@ -55,7 +59,9 @@ CAFPlugin::CAFPlugin(CAFPlugin& inPlugin):
 }
 
 CAFPlugin::~CAFPlugin(){
-  dlclose(mDlOpenHandle);
+  if(mDlOpenHandle){
+    dlclose(mDlOpenHandle);
+  }
 }
 
 bool CAFPlugin::isSane()const{

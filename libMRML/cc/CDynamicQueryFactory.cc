@@ -26,6 +26,10 @@
 #include "libMRML/include/GIFTExceptions.h"
 #include "libMRML/include/my_throw.h"
 
+// for file name treatment
+#include "libMRML/include/getLibNameFromFileName.h"
+#include <set>
+
 CQuery* CDynamicQueryFactory::makeQuery(const string & inBaseType, 
 					   CAccessorAdminCollection & inAccessorAdminCollection,
 					   CAlgorithm & inAlgorithm){
@@ -56,7 +60,8 @@ CDynamicQueryFactory::CDynamicQueryFactory(string inDirectoryName){
   cout << "--" << endl
        << "Configuring CDynamicQueryFactory " << endl
        << "Looking for libGIFTQu*.so in directory " << endl
-       << inDirectoryName << endl;
+       << inDirectoryName << endl; 
+  set<string> lSeenLibs;
   DIR* lDirectory(opendir(inDirectoryName.c_str()));  
   if(!lDirectory){
     // this means the library has disappeared.
@@ -68,17 +73,27 @@ CDynamicQueryFactory::CDynamicQueryFactory(string inDirectoryName){
     while(lDirectoryEntry=readdir(lDirectory)){
       string lFileName(lDirectoryEntry->d_name);
 
-      if(!strncmp(".so",lFileName.c_str()+lFileName.size()-3,3)){
-	if(lFileName.find("libGIFTQu")==0){
-	  CQueryPlugin* lPlugin(new CQueryPlugin(inDirectoryName,
-						 lFileName));
-	  if(lPlugin->isSane()){
-	    cout << lFileName << " contains a sane GIFT Query plugin: " << lPlugin->getName() << endl;
-	    insert(make_pair(string(lPlugin->getName()),
-			     lPlugin));
-	  }else{
-	    delete lPlugin;
-	  }
+      pair<bool,string> lIsLibAndLibName(getLibNameFromFileName("libGIFTQu",lFileName));
+      bool lIsLib(lIsLibAndLibName.first);
+      string lLibName(lIsLibAndLibName.second);
+
+      if(lIsLib && (lSeenLibs.find(lLibName)==lSeenLibs.end())){
+	CQueryPlugin* lPlugin(new CQueryPlugin(inDirectoryName,
+					       lFileName,
+					       lLibName));
+	if(lPlugin->isSane()){
+	  cout << lFileName << " contains a sane GIFT Query plugin: " << lPlugin->getName() << endl;
+	  insert(make_pair(string(lPlugin->getName()),
+			   lPlugin));
+	  lSeenLibs.insert(lLibName);
+	}else{
+	  delete lPlugin;
+	}
+      }else{
+	if(!lIsLib){
+	  cout << "Not testing file:" << lFileName << " (File name does not match plugin name) " << endl;
+	}else{
+	  cout << "Lib:" << lLibName << ", to be linked from " << lFileName << " already registered! " << endl;
 	}
       }
     }

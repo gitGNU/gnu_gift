@@ -63,7 +63,7 @@ public:
   /** gets the name of the plugin */
   char* getName();
   /** opens the library and sets the make query etc. functions */
-  CAFPlugin(string,string);
+  CAFPlugin(string,string,string);
   /** copy all the content */
   CAFPlugin(CAFPlugin&);
   /** close the DlOpenHandle of the library*/

@@ -30,6 +30,8 @@ echo `autoconf --version`
 echo `libtool --version`
 echo "---------------------------------------"
 
+echo "running libtoolize"
+libtoolize --ltdl  || { echo "Libtoolize failed. THIS MIGHT CAUSE PROBLEMS LATER, continuing "  }
 echo "running aclocal" 
 aclocal -I . || { echo "bootstrap failed, because aclocal failed. exiting. " , exit 100; }
 echo "...done"

@@ -57,7 +57,7 @@ public:
   /** gets the name of the plugin */
   char* getName();
   /** opens the library and sets the make query etc. functions */
-  CQueryPlugin(string,string);
+  CQueryPlugin(string,string,string);
   /** copy all the content */
   CQueryPlugin(CQueryPlugin&);
   /** close the DlOpenHandle of the library*/
