@@ -32,10 +32,27 @@ bool CQueryParadigmMatcher::matches(const CXMLElement& inQuery,const CXMLElement
     swap(lQuery,lResult);
   }
 
-  //still something to be done here
-  assert(0);
-  
-  return true;
+  list<pair<string,string> >* lQueryAttributes(lQuery->createNamedValueList());
+
+  bool lMatches(true);
+
+  for(list<pair<string,string> >::const_iterator i=lQueryAttributes->begin();
+      lMatches && (i!=lQueryAttributes->end());
+      i++){
+    // get the query attribute in the result element
+    pair<bool,string> lAttribute(lResult->stringReadAttribute(i->first));
+    // they match, unless
+    // the query attribute exsists in the result element
+    // and the attribute values differ between query and result
+    if(lAttribute.first 
+       && (lAttribute.second != i->second)){
+      lMatches=false;
+    }
+  }
+
+  delete lQueryAttributes;
+
+  return lMatches;
 }
 
 bool CQueryParadigmMatcher::operator()(const CXMLElement& inQuery,const CXMLElement& inResult)const{

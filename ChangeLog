@@ -1,3 +1,8 @@
+2002-02-26  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CQueryParadigmMatcher.cc(matches): 
+	implemented matcher function
+
 2002-02-18  MUELLER Wolfgang  <Wolfgang.Mueller@cui.unige.ch>
 
 	* README: removed first line as requested by RMS
