@@ -1,3 +1,51 @@
+2004-12-03    <wolfgang.mueller@wiai.uni-bamberg.de>
+
+	* configure.in:
+	fixing hardcoded bits in Robert Jordens' patch.
+	Use --enable-debian-config in order to use Robert's stuff.
+
+2004-08-05    <Wolfgang.Mueller2@uni-bayreuth.de> for <robertjo@phys.ethz.ch>
+
+	* libGIFTAcDistanceMatrix/include/CPersistentVector.h:
+	* libMRML/include/CSelfDestroyPointer.h: 
+	this-> before method calls for keeping gcc 3.4 happy.
+	Patch supplied by Robert Jordens <robertjo@phys.ethz.ch>
+
+	* ./configure.in:
+	* ./libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc:
+	* ./scripts/perl/gift-add-collection.pre-pl:
+	* ./scripts/perl/gift-remove-collection.pre-pl:
+	* ./scripts/perl/gift-start.pre-pl:
+	* ./scripts/perl/gift-url-to-fts.pre-pl:
+	* ./libGIFTAcInvertedFile/cc/Makefile.am:
+	* ./scripts/perl/Makefile.am:
+	* ./libMRML/cc/Makefile.am:
+	* ./libMRML/include/Makefile.am:
+	* ./libGIFTAcHierarchy/cc/Makefile.am:
+	* ./Doc/Makefile.am:
+	* ./GIFTServer/gift-config/Makefile.am:
+	* ./GIFTServer/gift-mrml-messages/Makefile.am:
+	* ./libGIFTQuHierarchy/cc/Makefile.am:
+	* ./PluginMaker/libGIFTQu@PLUGIN_NAME@/cc/Makefile.am.in:
+	* ./PluginMaker/libGIFTAc@PLUGIN_NAME@/cc/Makefile.am.in:
+	fixed improper (debian incompatible) use of BINDIR.
+	Patch supplied by Robert Jordens <robertjo@phys.ethz.ch>
+	
+	* Doc/HTML/DoxygenFooter.html:
+	* Doc/HTML/DoxygenHeader.html:
+
+	Contact information
+	Patch supplied by Robert Jordens <robertjo@phys.ethz.ch>
+
+	* Doc/configuring-and-hacking-the-gift.sgml:
+	dtd
+	Patch supplied by Robert Jordens <robertjo@phys.ethz.ch>
+	
+	* Doc/gift-guide.sgml:
+	dtd
+	export statement
+	Patch supplied by Robert Jordens <robertjo@phys.ethz.ch>
+
 2004-06-18    <Wolfgang.Mueller2@uni-bayreuth.de>
 
 	* scripts/perl/gift-add-collection.pre-pl (setDefaultCollection): 

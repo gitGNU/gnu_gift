@@ -74,16 +74,16 @@ void CPersistentVector<T>::init(T const& inDefaultValue){
 #ifdef V295
   constant_void_fun<T> f(inDefaultValue);
 
-  clear();
-  reserve(mLength);
+  this->clear();
+  this->reserve(mLength);
   for(long i=0;
       i<mLength;
       i++){
     push_back(f());
   }
 #else
-  clear();
-  resize(mLength);
+  this->clear();
+  this->resize(mLength);
   fill(this->begin(),this->end(),inDefaultValue);
 #endif
 }
@@ -97,8 +97,8 @@ bool CPersistentVector<T>::read(istream& inStream){
 template<class T>
 bool CPersistentVector<T>::read(istream& inStream,
 				long inLength){
-  reserve(inLength);
-  clear();
+  this->reserve(inLength);
+  this->clear();
   for(long i=0;
       i<inLength;
       i++){

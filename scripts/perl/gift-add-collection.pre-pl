@@ -72,6 +72,7 @@ use vars qw($self
 	    $lThumbnailFile
 	    $gStringConverter
 	    $gDoRemove
+	    $gDoFixConfig
 	   );
 
 
@@ -111,6 +112,7 @@ $gStringConverter = Text::Iconv->new($lInEncoding,$lOutEncoding);
 # second: read the options from the .gift-add-collection file
 # we look for this file in the GIFT_HOME directory
 #
+local $gDoFixConfig="";
 local $lImageDirectory="";
 local $lCollectionName="";
 local $lFeaturePrefix="";
@@ -121,6 +123,7 @@ local $lThumbnailURLPrefix="";
 local $gGiftHome= $lOptions{'gift-home'} || $gGiftHome || $ENV{GIFT_HOME} || $ENV{HOME};
 local $gDoRemove="";
 local $lOptionList={
+		    "fix-config"           => \$gDoFixConfig,
 		    "remove"               => \$gDoRemove,
 		    "gift-home"            => \$gGiftHome,
 		    "image-directory"      => \$lImageDirectory,
@@ -154,6 +157,11 @@ unless(open DOT_FILE,"$ENV{HOME}/.gift-add-collection"){
 # do we want to remove a collection
 if($lOptions{'remove-collection'}){
   $gDoRemove=1;
+}
+# do we want to remove a collection
+if($lOptions{'fix-config'}){
+  $gDoFixConfig=1;
+  die "Currently not supported!";
 }
 
 #
@@ -495,7 +503,7 @@ unless($gDoRemove){
 	  unlink($lTempFts);
 
 	  eval{
-	      system("__BINDIR__/gift-extract-features $lTemp");
+	      system("__EXECBINDIR__/gift-extract-features $lTemp");
 	  };
 	  if(-e $lTempFts){
 	      $lFts=~m§^(.*/)([^/]*)$§;
@@ -505,7 +513,7 @@ unless($gDoRemove){
 	      copy($lTempFts,$lFts) or print STDOUT "\nCopy $lTempFts -> $lFts failed: $!\n";
 	  
 	      if (!$main::lImageCount) {
-		system qq(__BINDIR__/gift-write-feature-descs < $lTemp |perl -e 'print "Writing InvertedFileFeatureDescription...\n";open OF,">$main::lIndexPrefix/InvertedFileFeatureDescription.db" or die "could not open $lIndexPrefix";while(<STDIN>){print OF join(" ",(split(" ",\$_))[0..1]),"\\n";};print "finished.\n";' );
+		system qq(__EXECBINDIR__/gift-write-feature-descs < $lTemp |perl -e 'print "Writing InvertedFileFeatureDescription...\n";open OF,">$main::lIndexPrefix/InvertedFileFeatureDescription.db" or die "could not open $lIndexPrefix";while(<STDIN>){print OF join(" ",(split(" ",\$_))[0..1]),"\\n";};print "finished.\n";' );
 		unlink $lTemp;
 	      }
 	      
@@ -549,7 +557,7 @@ unless($gDoRemove){
 
   close URL2FTS;
   
-  system("__BINDIR__/gift-generate-inverted-file $lIndexPrefix/");
+  system("__EXECBINDIR__/gift-generate-inverted-file $lIndexPrefix/");
   
   print "\nPROGRESS: 99%\n";
   

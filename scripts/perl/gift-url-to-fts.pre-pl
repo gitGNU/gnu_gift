@@ -116,7 +116,7 @@ sub convertURLToFeatureFile( $ ){
     system("convert -geometry 256x256! $lTempFileName $lConvertedFileName");
     
     print("Extracting features from $lConvertedFileName\n");
-    system("__BINDIR__/gift-extract-features $lConvertedFileName");
+    system("__EXECBINDIR__/gift-extract-features $lConvertedFileName");
     unlink($lConvertedFileName);
 
     if (defined($inFinalFeatureDestination)){

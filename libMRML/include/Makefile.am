@@ -1,7 +1,12 @@
 
 directory.h:
 	echo "Making directory.h"
-	@rm -f directory.h;echo '#define __LIBDIR__ "@libdir@"' > directory.h ; echo '#define __PERL_LOCATION__ "@PERL@"' >> directory.h; echo '#define __BINDIR__ "@bindir@"' >> directory.h ; echo '#define __DATADIR__ "@datadir@"'    >> directory.h; echo '#define __LIBDIR__  "@libdir@"'     >> directory.h
+	@rm -f directory.h; \
+	echo '#define __LIBDIR__ "@DEBSHAREDIR@"' > directory.h;\
+	echo '#define __PERL_LOCATION__ "@PERL@"' >> directory.h;\
+	echo '#define __BINDIR__ "@DEBPERLLIBDIR@"' >> directory.h;\
+	echo '#define __EXECBINDIR__ "@DEBEXECBINDIR@"' >> directory.h;\
+	echo '#define __DATADIR__ "@DEBDATADIR@"' >> directory.h
 
 all: directory.h
 

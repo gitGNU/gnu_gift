@@ -37,7 +37,7 @@ AC_INIT(libMRML/cc/CAccessorFactory.cc)
 
 dnl old position of AC_ARG_ENABLE(interactive)
 
-AM_INIT_AUTOMAKE(gift,0.1.11)
+AM_INIT_AUTOMAKE(gift,0.1.13)
 
 AM_CONFIG_HEADER(gift-config.h)
 AC_ISC_POSIX
@@ -329,6 +329,37 @@ dnl PERL_LD_ADDITIONS=`echo \`perl -MExtUtils::Embed -e ldopts  \`|sed 's:-Dbool
 dnl AC_SUBST(PERL_LD_ADDITIONS)
 dnl PERL_CC_ADDITIONS=`echo \`perl -MExtUtils::Embed -e ccopts  \`|sed 's:-Dbool=char::'`
 dnl AC_SUBST(PERL_CC_ADDITIONS)
+
+
+AC_ARG_ENABLE(debian-config,
+	[  --enable-debian-config the service tag for debian package builders],
+	[
+	AC_MSG_WARN([Using debian packagers config. 
+	Don't use this unless you want to prepare a Debian 
+	package for use in the Debian project])
+ DEBEXECBINDIR=/usr/bin
+ DEBPERLLIBDIR=/usr/share/perl5/GIFT
+ DEBSHAREDIR=/usr/lib
+ DEBDATADIR=/usr/share/libmrml0
+	],
+	[
+	dnl normal config
+	DEBEXECBINDIR=$bindir
+	DEBPERLLIBDIR=$bindir
+	DEBSHAREDIR=$libdir
+	DEBDATADIR=$datadir
+	]
+)
+
+
+
+
+
+
+AC_SUBST(DEBEXECBINDIR)
+AC_SUBST(DEBPERLLIBDIR)
+AC_SUBST(DEBSHAREDIR)
+AC_SUBST(DEBDATADIR)
 
 AC_ARG_ENABLE(tracking,
 	[  --enable-bayesian TrackingGIFT Bayesian extensions],

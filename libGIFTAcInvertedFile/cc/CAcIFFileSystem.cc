@@ -1519,7 +1519,7 @@ CAcIFFileSystem::URLToFeatureList(string inURL)const
     char lFeatureFileName[30];
     sprintf(lFeatureFileName,"/tmp/testFTS-%d.fts",int(lPID));
 
-    system(string(string(__PERL_LOCATION__)+" "+string(__BINDIR__)+"/gift-url-to-fts.pl "+inURL+" "+lFeatureFileName).c_str());
+    system(string(string(__PERL_LOCATION__)+" "+string(__EXECBINDIR__)+"/gift-url-to-fts.pl "+inURL+" "+lFeatureFileName).c_str());
     
     CDocumentFrequencyList* lReturnValue(this->getFeatureFile(lFeatureFileName));
  

@@ -1,4 +1,4 @@
-<!doctype linuxdoc system "//usr/lib/sgml-tools/dtd/linuxdoc.dtd">
+<!doctype linuxdoc system "/usr/share/sgml/dtd/linuxdoc.dtd">
 
   <article>
       <title>Configuring and hacking the GIFT </title>

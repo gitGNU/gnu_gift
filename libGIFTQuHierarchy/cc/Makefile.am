@@ -21,7 +21,8 @@
 #Makefile for the QuHierarchy library
 #
 
-CCCONFIG=sed "s:__PERL_LOCATION__:@PERL@:g;s:__BINDIR__:@bindir@:g;s:__DATADIR__:@datadir@:g" < $< > $@
+CCCONFIG=sed -e "s:__EXECBINDIR__:@DEBEXECBINDIR@:g;s:__PERL_LOCATION__:@PERL@:g;s:__BINDIR__:@DEBPERLLIBDIR@:g;s:__DATADIR__:@DEBDATADIR@:g;s:__LIBDIR__:@DEBSHAREDIR@:g;s:__HOME__:${HOME}:g;s:__WEB_PUBLISHING_DIRECTORY__:@WEB_PUBLISHING_DIRECTORY@:g;s=__WEB_PUBLISHING_LOCATION__=@WEB_PUBLISHING_LOCATION@=g;" < $< > $@
+#CCCONFIG=sed "s:__PERL_LOCATION__:@PERL@:g;s:__BINDIR__:@bindir@:g;s:__DATADIR__:@datadir@:g" < $< > $@
 
 lib_LTLIBRARIES = libGIFTQuHierarchy.la
 

@@ -23,10 +23,9 @@
 #ifndef _CSELFDESTROYPOINTER
 #define _CSELFDESTROYPOINTER
 #include "libMRML/include/uses-declarations.h"
-/*
-  destroys the element it points to or not.
+/**
+  destroys the element it points to or not (depending on user's choice). 
 */
-
 template<class T>
 class CSelfDestroyPointer{
   ///
@@ -201,7 +200,7 @@ CSelfClonePointer<T>& CSelfClonePointer<T>::operator=(T* in){
 template<class T>
 CSelfClonePointer<T>& CSelfClonePointer<T>::operator= (const CSelfClonePointer<T>& in){
 
-  mPointer=in.mPointer;
+  this->mPointer=in.mPointer;
   setIsSelfDestroyer(in.isSelfDestroyer());
   return *this;
 };
@@ -223,9 +222,9 @@ CSelfClonePointer<T>::CSelfClonePointer(const CSelfClonePointer<T>& in):
   CSelfDestroyPointer<T>(in)
 {
   if(in.mPointer && in.isSelfDestroyer()){
-    mPointer=in.mPointer->clone();
+    this->mPointer=in.mPointer->clone();
   }else{
-    mPointer=in.mPointer;
+    this->mPointer=in.mPointer;
   }  
 }
 

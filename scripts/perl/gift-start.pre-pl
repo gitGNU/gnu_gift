@@ -131,7 +131,7 @@ while(1){
       die "Sendit dies";
     }else{
 
-      my $lCallstring="__BINDIR__/gift $lPort $lDirectory > /dev/null";
+      my $lCallstring="__EXECBINDIR__/gift $lPort $lDirectory > /dev/null";
       
       system("$lCallstring");
       print STDERR "gift DIED!\nCalled: $lCallstring\n";

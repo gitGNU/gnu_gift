@@ -1,4 +1,4 @@
-<!doctype linuxdoc system "//usr/lib/sgml-tools/dtd/linuxdoc.dtd">
+<!doctype linuxdoc system "/usr/share/sgml/dtd/linuxdoc.dtd">
 
   <article>
       <title>GIFT user's guide</title>
@@ -184,7 +184,8 @@ To change this default, set the environment variable
 GIFT_HOME the to absolute path of the directory where you want
 your gift-indexing-data etc. to reside and put the line:
 </p>
-      <code>export GIFT_HOME=/absolute/path/to/my_gift_home</code>
+      <code>export
+ GIFT_HOME=/absolute/path/to/my_gift_home</code>
       <p>into your .bashrc</p>
       <p>
 Now you are ready to index a collection.
@@ -240,7 +241,7 @@ and to read the "Digging in the indexing files" section of this document.
 </p>
 	  </sect2>
       </sect1>
-      
+      <sect1><heading>Starting the server</heading>
 	<p>When the indexing is done, you can start the GIFT server:
       <code>gift</code>.
 At the time of writing, gift will output tons of debugging output on
@@ -260,6 +261,7 @@ addition to that you can override GIFT_HOME by giving it as parameter
 to the GIFT, for example:
 <code>gift 12888 /usr/local/share/shared-gift-collections/</code>
 </p>
+</sect1>
     </sect>
     <sect>
       <heading>Getting started with the Charmer interface</heading>
@@ -295,7 +297,7 @@ of images from the collection you chose.
 multiple of these images (they will get a green frame when clicked), 
 and send a query for them by clicking on the <em>binoculars</em> 
 button.</item>
-</item>
+
 	  <item>Getting back your query result, you are able to
 improve it. You can either click on some of the query results (thus
 adding "positive" images to your query) or click the right mouse
