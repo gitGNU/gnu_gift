@@ -447,7 +447,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-<!ELEMENT query-step   ((cui-text-query|user-relevance-element-list|cui-hierarchy-up)*)
+<!ELEMENT query-step   ((user-relevance-element-list|cui-text-query|cui-hierarchy-up)*)
 >
 <!ATTLIST query-step   query-step-id        CDATA #IMPLIED
 
@@ -497,7 +497,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-    <!ELEMENT query-result  ((query-resultelement-list?,query-result*)|error)>
+    <!ELEMENT query-result  ((query-resultelement-list*,query-result*)|error)>
 
     <!ELEMENT query-result-element-list ((query-result-element|error)+)>
     <!ELEMENT query-result-element (error?)>

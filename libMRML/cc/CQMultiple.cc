@@ -20,7 +20,7 @@
 
 */
 #include "CQMultiple.h"
-
+#include "mrml_const.h"
 #ifdef  __GIFT_CQMULTIPLE_THREADS__ 
 #define  __GIFT_USES_THREADS__ 
 #endif
@@ -68,12 +68,15 @@ CQMultiple::CQMultiple(CAccessorAdminCollection& inAccessorAdminCollection,
   CQuery(inAccessorAdminCollection,
 	 inAlgorithm){
   {
+
+    pair<bool,bool> lUsesURLs(inAlgorithm.boolReadAttribute("cui-uses-result-urls"));
+
+    mUsesResultURLs=(lUsesURLs.first && lUsesURLs.second);
+
     // mproxy has been filled in a reasonable way 
     // by CQuery::CQuery
     mAccessor=mAccessorAdmin->openAccessor("url2fts");
     assert(mAccessor);
-
-
   }
 };
     
@@ -251,7 +254,9 @@ public:
   /** the cutoff */
   double mDifferenceToBest;
   /** the result of the query*/
-  CIDRelevanceLevelPairList* mResult;
+  CXMLElement* mResult;
+  /** the result of the fastQuery*/
+  CIDRelevanceLevelPairList* mFastResult;
   /** destructor */
   ~CQMThread(){
     delete mQuery;
@@ -267,6 +272,7 @@ public:
     mWeight(inWeight),
     mResultSize(inResultSize),
     mDifferenceToBest(inDifferenceToBest),
+    mFastResult(0),
     mResult(0){
   };
   /** copy constructor */
@@ -277,6 +283,7 @@ public:
     mResultSize(in.mResultSize),
     mDifferenceToBest(in.mDifferenceToBest),
     mResult(0),
+    mFastResult(0),
     mIsThreaded(0){
   };
   /** running the thread */
@@ -291,10 +298,17 @@ public:
     CQMultiple::doQueryThread(this);
 #endif
   }
-  /** running the function which would be called by the thread */
-  void callFunction(void){
-    mResult=0;
-    CQMultiple::doQueryThread(this);
+  /** running the thread */
+  void runFastThread(void){
+    mFastResult=0;
+#ifdef __GIFT_USES_THREADS__
+#warning treading active
+    mIsThreaded=true;
+    pthread_create(&mThread,0,CQMultiple::doFastQueryThread,this);
+#else
+#warning treading blocked
+    CQMultiple::doFastQueryThread(this);
+#endif
   }
   /** joining this thread with the caller */
   void join(void){
@@ -325,11 +339,19 @@ public:
 
 };
 
-void* CQMultiple::doQueryThread(void* inParameter){
+void CQMultiple::doFastQueryThread(void* inParameter){
   class CQMThread* lParam((CQMThread*) inParameter);
-  lParam->mResult=lParam->mQueryProcessor.fastQuery(*(lParam->mQuery),
+  lParam->mFastResult=lParam->mQueryProcessor.fastQuery(*(lParam->mQuery),
 						    lParam->mResultSize,
 						    lParam->mDifferenceToBest);
+  cout << "I AM FINISHED HERE " << lParam << "result" << lParam->mResult << endl;
+}
+/**
+   do the query thread, but starting query
+ */
+void CQMultiple::doQueryThread(void* inParameter){
+  class CQMThread* lParam((CQMThread*) inParameter);
+  lParam->mResult=lParam->mQueryProcessor.query(*(lParam->mQuery));
   cout << "I AM FINISHED HERE " << lParam << "result" << lParam->mResult << endl;
 }
 
@@ -399,7 +421,7 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
     {
       cout << "Running thread" 
 	   << endl;
-      lListOfThreads.back().runThread();//run the thread
+      lListOfThreads.back().runFastThread();//run the thread
       cout << "loop" 
 	   << endl;
     }
@@ -418,13 +440,13 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
 
     cout << "before merging " << endl;
 
-    if(!lThread->mResult){
+    if(!lThread->mFastResult){
       cout << "THE THE RESULT OF THIS THREAD WAS NIL " 
 	   << endl;
     }
-    if(lThread->mResult){
-      for(CIDRelevanceLevelPairList::iterator i=lThread->mResult->begin();
-	  i!=lThread->mResult->end();
+    if(lThread->mFastResult){
+      for(CIDRelevanceLevelPairList::iterator i=lThread->mFastResult->begin();
+	  i!=lThread->mFastResult->end();
 	  i++){
 	
 	hash_map<TID,CIDRelevanceLevelPair>::const_iterator lFound=lResultMap.find(i->getID());
@@ -442,7 +464,7 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
 						   );
 	}
       }
-      delete lThread->mResult;
+      delete lThread->mFastResult;
     }
 
     
@@ -485,6 +507,156 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
   }
   cout << "</cutting>"
        << endl;
+  return lReturnValue;
+};
+
+/**
+   A list of triplets to be merged
+*/
+class CMergeTriplet{
+  /** */
+  string mImageLocation;
+  /** */
+  string mThumbnailLocation;
+  /** */
+  float mRelevanceLevel;
+public:
+  /** */
+  CMergeTriplet(const string& inImageLocation,
+		const string& inThumbnailLocation
+		):
+    mImageLocation(inImageLocation),
+    mThumbnailLocation(inThumbnailLocation),
+    mRelevanceLevel(0){};
+  /** 
+   */
+  void addToRelevance(float inToBeAdded){
+    mRelevanceLevel+=inToBeAdded;
+  }
+  /**
+     Return the accumulated Relevance
+   */
+  float getRelevance()const{
+    return mRelevanceLevel;
+  }
+};
+/**
+ *
+ * calls fastQuery for every child, merges the results
+ * and translates them back into URLs
+ *
+ * NEW, MORE EFFICIENT VERSION
+ */
+CXMLElement* CQMultiple::query(const CXMLElement& inQuery){
+
+  float inDifferenceToBest(0);
+  cout << "CMultiple Number of children:"
+       << mChildren.size()
+       << endl;
+
+
+  //list<CWeightedResult> lTemporary;
+  double lWeightSum(0);
+
+  hash_map<TID,CMergeTriplet> lResultMap;
+  
+  
+  // no mutex protection needed as this is not called except by main thread
+
+  //
+  // rip this into two parts
+  // in order to 
+  // make it possible to run the querying in one thread
+  // and do the merging after having waited for each thread
+  //
+
+  list<CQMThread> lListOfThreads;
+
+  lCChildren::const_iterator lLast=mChildren.end();
+  lLast--;
+  for(lCChildren::const_iterator i=mChildren.begin();
+      i!=mChildren.end();
+      i++){
+    lWeightSum+=i->mWeight;
+    
+    //lTemporary.push_back(CWeightedResult());
+    
+    cout << "this CMultiple QUERY:" << this 
+	 << ", i->mQuery:" << i->mQuery 
+	 << ", i->mWeight:" << i->mWeight 
+	 << endl;
+    
+    
+    lListOfThreads.push_back(CQMThread(*(i->mQuery),          // The Query processor to choose
+				       inQuery,            // the query to be processed
+				       i->mWeight,         // the weight the result will receive
+				       mAccessor->size(),  // the size of the accessor (to get all potential results)
+				       inDifferenceToBest));// the difference to the best which is allowed for a result
+    /* EX-LEAK
+       the following was a special branch for reducing the
+       number of spawned threads by one. Apparently this did 
+       not work and caused a memory leak. Now it seems to work.
+       
+	   if(1==0 
+	   && (i==lLast)){
+	   lListOfThreads.back().callFunction();//something to do for the main thread
+	   }else*/
+      
+    {
+      cout << "Running thread" 
+	   << endl;
+      lListOfThreads.back().runThread();//run the thread
+      cout << "loop" 
+	   << endl;
+    }
+    cout << "endloop" 
+	 << endl;
+  }
+  // here we would join all threads
+
+  for(list<CQMThread>::iterator lThread=lListOfThreads.begin();
+      lThread!=lListOfThreads.end();
+      lThread++){
+
+    cout << "joining..." << endl;
+
+    lThread->join();
+
+    cout << "before merging " << endl;
+
+    if(!lThread->mFastResult){
+      cout << "THE THE RESULT OF THIS THREAD WAS NIL " 
+	   << endl;
+    }
+    if(lThread->mResult){
+      for(CXMLElement::lCChildren::const_iterator i=lThread->mResult->child_list_begin();
+	  i!=lThread->mResult->child_list_end();
+	  i++){
+	
+// 	hash_map<TID,CIDRelevanceLevelPair>::const_iterator lFound=lResultMap.find(i->getID());
+
+// 	i->setRelevanceLevel(i->getRelevanceLevel()*lThread->getWeight());
+	
+// 	if(lFound==lResultMap.end()){
+
+// 	  lResultMap.insert(make_pair(i->getID(),
+// 				      *i));
+// 	}else{
+	  
+// 	  lResultMap[i->getID()].setRelevanceLevel(lResultMap[i->getID()].getRelevanceLevel()
+// 						   +i->getRelevanceLevel()
+// 						   );
+// 	}
+      }
+      delete lThread->mFastResult;
+    }
+
+    
+    cout << "after merging " << endl;
+  }
+  
+  CXMLElement* lReturnValue=new CXMLElement(mrml_const::query_result);
+  // missing sort and output
   return lReturnValue;
 };
 

@@ -119,7 +119,8 @@ protected:
 
   /** */
   void init();
-
+  /** do we merge result URLs or result IDs? */
+  bool mUsesResultURLs;
  public:
   /**
    *
@@ -155,6 +156,19 @@ protected:
 					       int inNumberOfInterestingImages,
 					       double inDifferenceToBest);
 
+  /** This function processes is in the inner loop of
+      query. If multithreading is possible on the system
+      on which GIFT was compiled, then this function will
+      run in a thread, and fastQuery will wait for it
+  */
+  static void doQueryThread(void *);
+  /**
+   *
+   * calls query for every child, merges the results by URLs
+   *
+   */
+  virtual CXMLElement* query(const CXMLElement& inQuery);
+
   /**
    *
    * set the Algorithm.
@@ -162,8 +176,6 @@ protected:
    *
    */
   virtual bool setAlgorithm(CAlgorithm& inAlgorithm);
-  /** does what should be done in a query thread */
-  static void * doQueryThread(void* inParameter);
 }; /* end of class */
 
 #endif

@@ -1,3 +1,17 @@
+2001-12-03  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libMRML/include/CQMultiple.h(mUsesFastQuery): 
+	new attribute which checks if fastQuery is used 
+	or not. This means either result merging by 
+	URL (query) by ID (fastQuery). 
+
+2001-11-23  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* dtd/mrml.dtd(query-result): can contain
+	multiple query-result-element lists
+	(query-step): changing the sequence in the model
+	for working around bug in dtd-to-tex
+
 2001-11-21  Wolfgang Müller  <muellerw@cui.unige.ch>
 
 	* 

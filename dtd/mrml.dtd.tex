@@ -1,10 +1,5 @@
-\documentclass{article}
- \newcommand{\requesttitle}[1]{\textbf{Request: }{\texttt{#1}}\\}
- \newcommand{\responsetitle}[1]{\textbf{Response: }{\texttt{#1}}\\}
- \newcommand{\tagtitle}[1]{\textbf{Tag: }{\texttt{#1}}\\}
- \newcommand{\MRML}{\textrm{MRML}}
- \newcommand{\tag}[1]{\texttt{#1}}
- \begin{document}
+
+%TESTBEGIN
 \begin{verbatim}<!--\end{verbatim}
   
        \paragraph{Basic structure:}
@@ -26,39 +21,7 @@
 
 
 \begin{verbatim}
-<!ELEMENT mrml (begin-transaction?,(
-
-                get-configuration
-                |configuration-description
-
-                |get-sessions
-                |session-list
-
-                |open-session
-                |rename-session
-                |close-session
-                |delete-session
-
-                |get-collections
-                |collection-list
-
-                |get-algorithms
-                |algorithm-list
-
-                |get-property-sheet
-                |property-sheet
-
-                |configure-session
-
-                |query-step
-                |query-result
-
-                |user-data
-
-                |error
-
-                )?,
-               end-transaction?) 
+<!ELEMENT mrml (begin-transaction?,(get-configuration|configuration-description|get-sessions|session-list|open-session|rename-session|close-session|delete-session|get-collections|collection-list|get-algorithms|algorithm-list|get-property-sheet|property-sheet|configure-session|query-step|query-result|user-data|error)?,end-transaction?) 
 >\end{verbatim}
 
 \begin{verbatim}
@@ -75,7 +38,7 @@
 \requesttitle{get-configuration}
 
 This is the message an MRML client sends to the server on connection.
-The message \tag{get-configuration} gives information about the basic server configuration.
+The message \mrmltag{get-configuration} gives information about the basic server configuration.
 
        
  \begin{verbatim}-->\end{verbatim}
@@ -92,7 +55,7 @@ The message \tag{get-configuration} gives information about the basic server con
 
 \responsetitle{configuration-description}
 
-The \tag{get-configuration} message is anwered by  a  message which
+The \mrmltag{get-configuration} message is anwered by  a  message which
 is supposed to hold a description about anything which is nonstandard \MRML.
 
 
@@ -102,7 +65,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
 
 \begin{verbatim}
-<!ELEMENT configuration-description EMPTY 
+<!ELEMENT configuration-description (error?) 
 >\end{verbatim}
 
 \begin{verbatim}<!--\end{verbatim}
@@ -110,9 +73,9 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
      \requesttitle{get-sessions}
 
-     The \tag{get-sessions} message permits the user to request
+     The \mrmltag{get-sessions} message permits the user to request
      exsisting sessions for a given user. It is sent by the client
-     directly after after the \tag{configuration-description} has
+     directly after after the \mrmltag{configuration-description} has
      been delivered, and prior to any other activity. 
 
      Authentification happens before any other activity to give the 
@@ -133,7 +96,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 \begin{verbatim}
 <!ATTLIST get-sessions 
                          user-name CDATA #REQUIRED
-                         password CDATA "guest"
+                         password CDATA 'guest'
 >\end{verbatim}
 
 \begin{verbatim}<!--\end{verbatim}
@@ -141,7 +104,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
      \responsetitle{session-list}
      
-     A session is described by its \tag{session-id}. 
+     A session is described by its \mrmltag{session-id}. 
      We also send over a more human-readable name
 
 
@@ -151,17 +114,17 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
 
 \begin{verbatim}
-<!ELEMENT session-list (session+) 
+<!ELEMENT session-list (session+|error) 
 >\end{verbatim}
 
 \begin{verbatim}
-<!ELEMENT session EMPTY 
+<!ELEMENT session (error?) 
 >\end{verbatim}
 
 \begin{verbatim}
 <!ATTLIST session 
                     session-id CDATA #REQUIRED
-                    session-name CDATA "Default session"
+                    session-name CDATA 'Default session'
 >\end{verbatim}
 
 \begin{verbatim}<!--\end{verbatim}
@@ -201,11 +164,11 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
 
 \begin{verbatim}
-<!ELEMENT collection-list (collection*) 
+<!ELEMENT collection-list (collection*|error) 
 >\end{verbatim}
 
 \begin{verbatim}
-<!ELEMENT collection (query-paradigm-list?) 
+<!ELEMENT collection (query-paradigm-list?|error) 
 >\end{verbatim}
 
 \begin{verbatim}
@@ -228,11 +191,11 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
 
 \begin{verbatim}
-<!ELEMENT query-paradigm-list (query-paradigm*) 
+<!ELEMENT query-paradigm-list (query-paradigm*|error) 
 >\end{verbatim}
 
 \begin{verbatim}
-<!ELEMENT query-paradigm EMPTY 
+<!ELEMENT query-paradigm (error?) 
 >\end{verbatim}
 
 \begin{verbatim}
@@ -275,11 +238,26 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
 
 \begin{verbatim}
-<!ELEMENT algorithm-list (algorithm*) 
+<!ELEMENT algorithm-list (algorithm*|error) 
 >\end{verbatim}
 
+\begin{verbatim}<!--\end{verbatim}
+   
+
+     \tagtitle{algorithm}
+     An algorithm can contain 
+     other algorithms,
+     optionally a property sheet,
+     optionally a query paradigm list
+     optionally an "allows-children" specification
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
 \begin{verbatim}
-<!ELEMENT algorithm (query-paradigm-list?) 
+<!ELEMENT algorithm ((algorithm*,property-sheet?,query-paradigm-list?,allows-children?)|error) 
 >\end{verbatim}
 
 \begin{verbatim}
@@ -288,8 +266,25 @@ is supposed to hold a description about anything which is nonstandard \MRML.
                       collectiom-id CDATA #REQUIRED
                       algorithm-name CDATA #REQUIRED
                       algorithm-id ID #REQUIRED
-                      algorithm-type CDATA "adefault"
-                      collection-id CDATA "cdefault"
+                      algorithm-type CDATA 'adefault'
+                      collection-id CDATA 'cdefault'
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+   
+
+     \tagtitle{allows-children}
+     This tag specifies for an algorithm what kind of algorithms
+     can be children of this algorithm. no specification $\Rightarrow$ allows no
+     children.
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT allows-children ((query-paradigm-list?)|error) 
 >\end{verbatim}
 
 \begin{verbatim}<!--\end{verbatim}
@@ -364,7 +359,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
        \tagtitle{property-sheet}
 
-       \textbf{Basic idea}: \parbox{5cm}[t]{send a property sheet together with a specification
+       \textbf{Basic idea}: \parbox[t]{5cm}{send a property sheet together with a specification
                                             what should be the XML output coming back.
                                             Useful for configuring your database.}
        
@@ -373,31 +368,16 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
 
 \begin{verbatim}
-<!ELEMENT property-sheet (property-sheet)* 
+<!ELEMENT property-sheet ((property-sheet)*|error) 
 >\end{verbatim}
 
 \begin{verbatim}
 <!ATTLIST property-sheet 
                            property-sheet-id ID #REQUIRED
-                           property-sheet-type (multiset
-
-                          |subset
-                          |set-element 
-                          |boolean
-                          |numeric
-                          |textual
-                          |invisible
-
-                          |clone
-                          |reference) #REQUIRED
+                           property-sheet-type (multi-set|subset|set-element|boolean|numeric|textual|panel|clone|reference) #REQUIRED
                            caption CDATA #IMPLIED
-                           visibility (popup|visible) "visible"
-                           send-type (element
-                               | attribute
-                               | value
-                               | attribute-text
-                               | children
-                               | none) #REQUIRED
+                           visibility (popup|visible|invisible) 'visible'
+                           send-type (element|attribute|attribute-name|attribute-value|children|none) #REQUIRED
                            send-name CDATA #IMPLIED
                            send-value CDATA #IMPLIED
                            min-subset-size CDATA #IMPLIED
@@ -406,7 +386,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
                            step CDATA #IMPLIED
                            to CDATA #IMPLIED
                            auto-id (yes|no) #IMPLIED
-                           auto-id-name CDATA "id"
+                           auto-id-name CDATA 'id'
                            defaultstate CDATA #IMPLIED
 >\end{verbatim}
 
@@ -429,13 +409,13 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
 
 \begin{verbatim}
-<!ELEMENT algorithm (algorithm*) 
+<!ELEMENT algorithm ((algorithm*)|error) 
 >\end{verbatim}
 
 \begin{verbatim}<!--\end{verbatim}
   
 
-     Beginning and renaming sessions
+     \textbf{Beginning and renaming sessions}
 
      We want to give the user the possibility to save the current
      state into "sessions". This might be useful in the case that 
@@ -519,7 +499,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 \begin{verbatim}<!--\end{verbatim}
   
 
-     Simple user commands (for logging purposes)
+     \textbf{Simple user commands (for logging purposes)}
 
      (like e.g. back or forward 
          in the command history)
@@ -535,7 +515,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
 \begin{verbatim}
 <!ATTLIST user-data 
-                      command (history-backward|history-forward) "backward"
+                      command (history-backward|history-forward) 'backward'
                       steps CDATA #IMPLIED
 >\end{verbatim}
 
@@ -545,7 +525,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
      \requesttitle{query-step}
 
      At present we provide only query by example, and search for random
-     images (done, if one sends an empty \tag{query-step} tag)
+     images (done, if one sends an empty \mrmltag{query-step} tag)
 
 
        
@@ -554,20 +534,22 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
 
 \begin{verbatim}
-<!ELEMENT query-step (user-relevance-element-list?) 
+<!ELEMENT query-step ((user-relevance-element-list|)*) 
 >\end{verbatim}
 
 \begin{verbatim}
 <!ATTLIST query-step 
-                       query-step-id CDATA #REQUIRED
+                       query-step-id CDATA #IMPLIED
                        result-size CDATA #IMPLIED
                        result-cutoff CDATA #IMPLIED
-                       query-type (query|at-random) "query"
+                       query-type (query|at-random) 'query'
                        algorithm-id CDATA #IMPLIED
 >\end{verbatim}
 
 \begin{verbatim}<!--\end{verbatim}
-  List of URLs with user given relevances 
+  \tagtitle{user-relevance-element-list}
+
+     List of URLs with user given relevances 
      Our way of specifying a QBE for images.
 
      relevances vary from 0 to 1
@@ -607,15 +589,15 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
 
 \begin{verbatim}
-<!ELEMENT query-result (query-resultelement-list?,query-result*) 
+<!ELEMENT query-result ((query-resultelement-list*,query-result*)|error) 
 >\end{verbatim}
 
 \begin{verbatim}
-<!ELEMENT query-result-element-list (query-resultelement+) 
+<!ELEMENT query-result-element-list ((query-result-element|error)+) 
 >\end{verbatim}
 
 \begin{verbatim}
-<!ELEMENT query-result-element EMPTY 
+<!ELEMENT query-result-element (error?) 
 >\end{verbatim}
 
 \begin{verbatim}
@@ -644,4 +626,23 @@ is supposed to hold a description about anything which is nonstandard \MRML.
                   message CDATA #REQUIRED
 >\end{verbatim}
 
-\end{document}
+\begin{verbatim}
+<!ATTLIST cui-time-stamp 
+                           calendar-time CDATA #REQUIRED
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+  \tagtitle{cui-text-query}
+        query using a number of keywords in a string
+      
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ATTLIST cui-text-query 
+                           query-string CDATA #IMPLIED
+>\end{verbatim}
+
+
+%TESTEND
