@@ -141,6 +141,9 @@ void operator delete[](void* inToBeDeleted){
 #undef  __GIFT_USES_THREADS__
 #endif
 
+#include "processMessage.h"
+#include "CProcessMessageParameters.h"
+
 //#undef  __GIFT_USES_THREADS__ // for debugging
 long PORT = 12789; /* port number: this line, for example, is by J. Raki ;-)*/
 
@@ -161,7 +164,6 @@ extern string dtoa (double val) ;//..maybe this line is also by J. Raki ;-)
 
 
 extern string gGIFTHome;
-
 //waiting that everything has arrived
 extern void waitWriteStream(int inWritingSocket);
 extern void waitReadStream(int inReadingSocket);
@@ -433,93 +435,8 @@ void generateDistanceMatrix(const string& inBaseDir,
 }
 #endif
 
-/** 
-    the function started by a new thread 
-    does not take any parameters except 
-    a pointer to void. We want to make that point
-    to something richer.
-*/
-class CProcessMessageParameters{
-public:
-  /** the file descriptor of the socket */
-  int mSocket;
-  /** The log file for the communication */
-  ofstream& mLogFile;
-  /** The sessionManager of the communication */
-  CSessionManager& mSessionManager;
-  /** 
-      The socket address of the peer
-   */
-  string mPeerAddress;
-  /** makes this structure (needed because of the
-      use of references [ofstream& mLogFile]). */  
-  CProcessMessageParameters(CSessionManager& inSessionManager,
-			    string& inPeerAddress,
-			    ofstream& inLogFile,
-			    int inSocket):
-    mLogFile(inLogFile),
-    mPeerAddress(inPeerAddress),
-    mSessionManager(inSessionManager),
-    mSocket(inSocket){
-  };
-};
 
-/**
-
-   This function takes a socket and uses it for one message
-
- */
-void* processMessage(void* inProcessMessageParameters){
-  //gMutex->lock();//for debugging only
-  CProcessMessageParameters* lParameters((CProcessMessageParameters*) inProcessMessageParameters);
-  
-  assert(lParameters);
-  
-  CCommunicationHandler* lCommunicationHandler(new CCommunicationHandler(lParameters->mSessionManager,
-									 lParameters->mLogFile));
-  lCommunicationHandler->setPeerAddressString(lParameters->mPeerAddress);
-  lCommunicationHandler->setSocket(lParameters->mSocket);
-  // this is the line which processes
-  if (!lCommunicationHandler->readAndParse()) {
-    printf("can't read from socket %s\n",strerror(errno)) ;
-  }
-
-  // and now comes the long and painful process of closing the socket
-  // here we need something else!
-  cout << "flushing everything!"
-       << endl;
-  fflush(0);
-  
-  cout << "shutting down the socket!"
-       << endl;
-  //this is really embarassing
-  if(shutdown(lParameters->mSocket,1)){
-    cerr << "Shutdown 1 failed: " << strerror(errno) << endl;
-  }
-  //new for better tear down??
-  cout << "waitreadstream (I)" << endl;
-  waitReadStream(lParameters->mSocket);
-  {
-    char lBuf;
-    while(recv(lParameters->mSocket,&lBuf,1,MSG_WAITALL)>0){
-      cout << "." << flush;
-    }
-  }
-  cout << "waitreadstream (II)" << endl;
-  //sleep(1);
-  close(lParameters->mSocket);
-  cout << "Deleting thread parameters"
-       << endl;
-  delete lParameters;
-  delete lCommunicationHandler;
-  cout << "DONE"
-       << endl;
-  //gMutex->unlock();//for debugging only
-
-  return((void*)0);
-}
-
-
+#ifdef single
 /***********************************************************************
   main								
   
@@ -736,11 +653,178 @@ int main(int argc, char **argv){
   //return 0;
   delete gMutex;
   return 0;
-} 
+}
+#else 
+#include "CMultiServer.h"
+#include "CTCPSocket.h"
+
+class CSFGift:public CSocket::CServeFunction{
+  /** */
+  ofstream& mLogFile;
+  /** */
+  CSessionManager& mSessionManager;
+public:
+  /** */
+  CSFGift(CSessionManager& inSessionManager,
+	  ofstream& inLogFile):
+    mSessionManager(inSessionManager),
+    mLogFile(inLogFile){
+  };
+  /** */  
+  bool operator()(int inSocketDescriptor){
+    cout << "Accepted Connection!" << endl << flush;
+
+    
+    string lAddress;
+    {
+      struct sockaddr  lName;
+      socklen_t lNameLen(sizeof(lName));
+      if(!getpeername(inSocketDescriptor, 
+		      &lName, 
+		      &lNameLen)){
+	lAddress="Peer INET Address: " + string(inet_ntoa(((sockaddr_in*)(&lName))->sin_addr));
+	cout << "Accepted from adress [" << lAddress << "]" << endl;
+      } 
+    }
+
+    CProcessMessageParameters* 
+      lProcessMessageParameters(new 
+				CProcessMessageParameters(mSessionManager,
+							  lAddress,
+							  mLogFile,
+							  inSocketDescriptor));
+#ifdef  __GIFT_USES_THREADS__
+#warning "threading used"
+    pthread_t lThread;
+    int lErrorNumber(0);
+    if(lErrorNumber=pthread_create(&lThread, NULL, &processMessage,lProcessMessageParameters)){
+      cerr << "Error in creating new thread: "
+	   << strerror(lErrorNumber) << endl
+	   << "Doing normal function call instead"
+	   << endl;
+      processMessage(lProcessMessageParameters);
+    }else{
+      cout << "Successfully created new message processing thread"
+	   << endl;
+      if(lErrorNumber=pthread_detach(lThread)){
+	cerr << "Error in detaching thread: "
+	     << strerror(lErrorNumber) << endl;
+      }else{
+	cout << "Successfully detached thread"
+	     << endl;
+      }
+    }
+#else
+#warning "threading blocked"
+    cout << "calling processMessage (no thread)" << endl;
+    processMessage(lProcessMessageParameters);
+    cout << "returned processMessage (no thread)" << endl;
+#endif
+  }
+};
+/***********************************************************************
+  main								
+  
+  Function : waits for and accepts a connection from a Java Applet. 
+  Receives the request from the client and according the 
+  request, sends the answer to the client.	
+
+  Socket opening code snipped from J.Raki
+
+  ***********************************************************************/	       
+int main(int argc, char **argv){
+  gMutex=0;
+  gMutex=new CMutex();
+
+  gGIFTHome=string(getenv("GIFT_HOME")?getenv("GIFT_HOME"):getenv("HOME")?getenv("HOME"):".");
+
+  cout << PACKAGE << "-" << VERSION << endl
+       << "Usage (server):              gift [<Port> [<Configuration-Directory>] [<SeedRandom? 1 or 0>]]" << endl
+       << "making distance matrices:    gift <Port(ignored)> <Configuration-Directory> <Algorithm> <Colection> <from> <to>" << endl
+       << endl
+       << endl;
+
+  if(argc>1){
+    PORT=atoi(argv[1]);
+  }
+  if(argc>2 && argv[2]){
+    gGIFTHome=string(argv[2])+string("/");
+  }
+  if(argc==4 && !strcmp("1",argv[3])){
+    cerr << "Warning: the random generator stays unseeded" << endl;
+  }else{    
+    cerr << "Random number generator has been seeded with " 
+	 << getpid() << endl;
+    srand(getpid());
+  }
 
 
+  // the communication handler for this application
+  // class definition is just above in this file
+  CSessionManager gSessionManager(gGIFTHome+"/gift-sessions.mrml",
+				  gGIFTHome+"/gift-config.mrml");
+  ofstream gLogFile(string(gGIFTHome+"/gift-log.mrml").c_str(),
+		    ios::app);
+
+  {
+    time_t lNow(time(0));
+    gLogFile << endl
+	     << "<!-- This instance of the GIFT was started on -->" << endl
+	     << "<!-- " <<  string(ctime(&lNow)) << " -->" << endl
+	     << "<!-- PID " << long(getpid()) << " -->" << endl
+	     << endl;
+  }
+  
+#ifdef WITH_GENERATE_DISTANCE_MATRIX
+  if(argc==7){
+    generateDistanceMatrix(gGIFTHome,
+			   string("DistanceMatrix"),
+			   string(argv[3]),
+			   string(argv[4]),
+			   atoi(argv[5]),
+			   atoi(argv[6]));
+    exit(0);
+  }
+#endif
+
+  cout << "----------------------------------------"
+       << endl
+       << "The current configuration directory is: "
+       << gGIFTHome
+       << endl;
+
+  cout << "----------------------------------------"
+       << endl
+       << "Opening port " << PORT
+       << endl
+       << "----------------------------------------"
+       << endl;
 
 
-
- 
+  try{
+    CMultiServer lServer;
+    CTCPSocket lSocket1("",PORT);
+    CTCPSocket lSocket2("",PORT+1);
+    CSFGift    lServeFunction(gSessionManager,gLogFile);
+    lSocket1.setServeFunction((&lServeFunction));
+    lSocket2.setServeFunction((&lServeFunction));
+    lServer.addSocket(&lSocket1);
+    lServer.addSocket(&lSocket2);
+    lServer.serve();
+  }
+  catch(GIFTException& inCaught){
+    cout << "Caught inServer Main:"
+	 << inCaught
+	 << endl
+	 << flush;
+  }
+  catch(...){
+    cout << "there was an unknown exception" <<endl
+	 << flush;
+  }
+  //return 0;
+  delete gMutex;
+  return 0;
+}
+#endif 
 

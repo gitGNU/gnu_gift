@@ -18,6 +18,8 @@ bin_PROGRAMS = gift gift-endianize gift-generate-inverted-file gift-modify-dista
 
 INCLUDES = -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTAcURL2FTS/include -I$(srcdir) -I../expat/xmlparse -I../expat/xmltok -I.
 
+#-------------------------------------------------
+
 # the gift server
 
 #
@@ -46,7 +48,10 @@ gift_LDADD = ../expat/xmlparse/*.o ../expat/xmltok/*.o  \
 #`echo $LDFLAGS \`perl -MExtUtils::Embed -e ldopts  \`|sed 's:-Dbool=char::'` 
 
 
-gift_SOURCES = Server.cc
+gift_SOURCES =  Server.cc CSocket.cc CDomainSocket.cc CTCPSocket.cc processMessage.cc CProcessMessageParameters.cc CMultiServer.cc
+
+
+#-------------------------------------------------
 
 # generate inverted file
 
@@ -98,4 +103,4 @@ gift_one_minus_SOURCES = oneMinus.cc
 #	@PERL_LD_ADD@ 
 
 
-# DO NOT DELETE THIS LINE -- make depend depends on it.
+noinst_HEADERS =  CSocket.h CDomainSocket.h CTCPSocket.h CMultiServer.h processMessage.h CProcessMessageParameters.h 
