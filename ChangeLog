@@ -2,7 +2,8 @@
 
 	* libMRML/include/CQMultiple.h: 
 	* libMRML/cc/CQMultiple.cc:
-	changed from voi
+	Changes to accomodate merging by URL (instead of merging by ID).
+	
 
 	* Doc/Doxyfile.in (PROJECT_NAME): create ini file with
 	@PACKAGE@ and @VERSION@ that will be substituted.
