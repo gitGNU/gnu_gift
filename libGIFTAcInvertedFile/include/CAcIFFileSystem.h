@@ -66,8 +66,9 @@ class CXMLElement;
 #include <vector>
 #ifdef HAS_HASH_MAP
 #include <hash_map>
+#define HASH_MAP hash_map
 #else
-#define hash_map map
+#define HASH_MAP map
 #endif
 #include <functional>
 #include <algorithm>
@@ -122,17 +123,17 @@ protected:
   string mFeatureDescriptionFileName;
 
   /** map from feature id to the offset for this feature */
-  typedef hash_map<TID,unsigned int> CIDToOffset;//new hash
+  typedef HASH_MAP<TID,unsigned int> CIDToOffset;//new hash
   /** map from feature id to the offset for this feature */
   CIDToOffset mIDToOffset;
 
   /** map from feature to the collection frequency */
-  mutable hash_map<TID,double> mFeatureToCollectionFrequency;//new hash
+  mutable HASH_MAP<TID,double> mFeatureToCollectionFrequency;//new hash
 
   /**@name for fast access...*/
   //@{
   /**  map from the feature ID to the feature description */
-  hash_map<TID,unsigned int> mFeatureDescription;//new hash_
+  HASH_MAP<TID,unsigned int> mFeatureDescription;//new hash_
 
   /**  additional information about the document like, e.g.
        the euclidean length of the feature list.

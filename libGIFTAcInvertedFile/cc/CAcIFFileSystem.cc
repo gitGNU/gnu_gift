@@ -53,6 +53,8 @@
 ****************************************/
 
 
+#include <string.h>
+#include <errno.h> //show which error makes reads fail!
 
 #include <unistd.h>     // for getpid
 #include "libMRML/include/mrml_const.h" // for parsing
@@ -847,8 +849,8 @@ bool CAcIFFileSystem::init(bool inMemory)
   }
 
   mInvertedFile=new ifstream(mInvertedFileName.c_str());
-  if(!*mInvertedFile){
-    cout << " ...FAILED!" << endl;
+  if(!(*mInvertedFile)){
+    cout << " ...FAILED:" << strerror(errno) << endl;
   }else{
     cout << " ...success. " << endl;
   }
@@ -857,9 +859,10 @@ bool CAcIFFileSystem::init(bool inMemory)
        << mOffsetFileName 
        << "_";
   mOffsetFile.close();
+  mOffsetFile.clear();
   mOffsetFile.open(mOffsetFileName.c_str());
   if(!mOffsetFile){
-    cout << " FAILED!" << endl;
+    cout << " FAILED!" << strerror(errno) << endl;
   }else{
     cout << " ...success. " << endl;
   }
@@ -869,9 +872,10 @@ bool CAcIFFileSystem::init(bool inMemory)
        << mFeatureDescriptionFileName
        << "_";
   mFeatureDescriptionFile.close();
+  mFeatureDescriptionFile.clear();
   mFeatureDescriptionFile.open(mFeatureDescriptionFileName.c_str());
   if(!mFeatureDescriptionFile){
-    cout << " ...FAILED!" << endl;
+    cout << " ...FAILED!" << strerror(errno) << endl;
   }else{
     cout << " ...success. " << endl;
   }
@@ -1630,6 +1634,11 @@ unsigned int CAcIFFileSystem::getFeatureDescription(TID inID)const{
 	 << inID
 	 << "]"
 	 << flush;
+
+    /** debugging code */
+    cout << mFeatureDescription.size() << flush;
+    /** /debugging code */
+
     /**/gMutex->unlock();
     return 0;
   }

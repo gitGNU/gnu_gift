@@ -1,5 +1,9 @@
 2002-01-23  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
 
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc (init): 
+	show errno
+	(init): have to clear file flags after close
+
 	* GIFTServer/oneMinus.cc: 
 	* GIFTServer/modifyDistanceMatrix.cc: using namespace std
 
@@ -8,6 +12,9 @@
 	* GIFTServer/Server.cc (main): return int
 	change fstream::in+fstream::out to fstream::in|fstream::out
 	
+	* libGIFTAcInvertedFile/include/merge_sort_streams.h: 
+	streampos becomes STREAMPOS which is defined as 
+	long long int => ++ is defined
 	
 	* libGIFTAcInvertedFile/cc/CInvertedFileChunk.cc: 
 	(writeBinary): 
