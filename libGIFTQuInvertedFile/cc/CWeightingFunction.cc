@@ -15,13 +15,13 @@
 * $Header:
 * $Log:
 ***************************************************/
-#include <math.h>
+#include <cmath>
 #include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
 #include "iostream.h"
 #include "FeatureExtraction/gift_features.h"
 
 #include <algorithm>
-#include <math.h>
+#include <cmath>
 
 /***************************************
 *

@@ -22,6 +22,7 @@
 #include "libMRML/include/mrml_const.h" // for parsing
 #include "libGIFTQuHierarchy/include/CQHierarchy.h"
 #include "libGIFTAcHierarchy/include/CAcHierarchy.h"
+#include <iterator>
 /** 
 
     There is no special initialisation to do,

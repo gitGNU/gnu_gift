@@ -125,7 +125,7 @@ CXMLElement* CXMLElement::clone(bool inDeep)const{
     Convert this into an XML string
 */
 void CXMLElement::toXML(string& outString,
-			const int inNiveau=0)const{
+			const int inNiveau)const{
 #ifdef _MOVEDEBUG
     cout << "THIS" << this << endl;
 #endif
@@ -207,7 +207,7 @@ list<CXMLElement*>::iterator CXMLElement::child_list_end(){
    THIS CHILD THE NEW CURRENT NODE.
 */
 void CXMLElement::addChild(const string& inName,
-			   const char* const* const inAttributeList=0){
+			   const char* const* const inAttributeList){
     //initialize new child
     addChild(new CXMLElement(inName,
 			     inAttributeList));

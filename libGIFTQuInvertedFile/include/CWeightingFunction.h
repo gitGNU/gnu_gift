@@ -40,7 +40,7 @@
 #ifndef _CWEIGHTINGFUNCTION
 #define _CWEIGHTINGFUNCTION
 #include "libGIFTQuInvertedFile/include/uses-declarations.h"
-#include <math.h>
+#include <cmath>
 #include "libMRML/include/TID.h"
 #include "libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h"
 #include "libGIFTAcInvertedFile/include/CAcInvertedFile.h"

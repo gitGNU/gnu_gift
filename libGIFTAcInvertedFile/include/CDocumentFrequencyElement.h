@@ -39,7 +39,7 @@
 #ifndef _CDOCUMENTFREQUENCYELEMENT
 #define _CDOCUMENTFREQUENCYELEMENT
 #include "libGIFTAcInvertedFile/include/uses-declarations.h"
-#include <iostream.h>
+#include <iostream>
 #include <functional>
 #include "libMRML/include/TID.h"
 

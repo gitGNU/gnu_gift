@@ -1,4 +1,35 @@
-2002-05-24  Wolfgang Müller  <kde3@btn1n6.inf.uni-bayreuth.de>
+2002-05-29  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
+
+	* configure.in: moving cp statement to very end of the file
+	makes sure that this is executed at the right moment
+
+2002-05-28  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
+
+	* libGIFTAcDistanceMatrix/include/CPersistentVector.h(init): 
+	using fill for filling vector with intial value
+	
+	* libGIFTQuHierarchy/cc/CQHierarchy.cc: include <iterator>
+
+	* libGIFTQuInvertedFile/cc/CQInvertedFile.cc: cast to int in call
+	of limitNumberTo
+
+	* libGIFTAcInvertedFile/include/CAcIFFileSystem.h: changes for v31
+
+2002-05-26  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
+
+	* libGIFTAcDistanceMatrix/include/CDrawer.h: 
+	* CDrawer.h:
+	* libGIFTAcInvertedFile/cc/CAdditionalDocumentInformation.cc: 
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc: 
+	* libMRML/include/CMagic.h: 
+	* libMRML/include/CIDRelevanceLevelPair.h: 
+	* libMRML/include/CAccessorImplementation.h: 
+	remove .h from standard include file names
+	assert.h becomes cassert
+
+	* libMRML/cc/CSessionManager.cc: include <iterator>
+	
+2002-05-24  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
 
 	* libMRML/cc/CSessionManager.cc(setAlgorithm): 
 	bracket notation in maps creates new empty element.

@@ -47,7 +47,7 @@ CAlgorithm::CAlgorithm(const CXMLElement& inAlgorithm):
    THIS CHILD THE NEW CURRENT NODE.
 */
 void CAlgorithm::addChild(const string& inName,
-			   const char* const* const inAttributeList=0){
+			   const char* const* const inAttributeList){
   //initialize new child
   CXMLElement::addChild(static_cast
 			<CXMLElement*>(new CAlgorithm(inName.c_str(),
@@ -65,7 +65,7 @@ void CAlgorithm::addChild(CXMLElement* inChild){
 /**
 */
 CAlgorithm::CAlgorithm(const char* inName,
-		       const char* const* const inAttributeList=0):
+		       const char* const* const inAttributeList):
   CXMLElement(inName,inAttributeList){
 };
 /**

@@ -36,7 +36,6 @@ dnl old position of AC_ARG_ENABLE(interactive)
 AM_INIT_AUTOMAKE(gift,0.1.8)
 
 AM_CONFIG_HEADER(gift-config.h)
-cp gift-config.h libMRML/include
 AC_ISC_POSIX
 dnl Checks for programs.
 
@@ -450,3 +449,5 @@ AC_OUTPUT([Makefile
 		GIFTServer/Makefile
 		GIFTServer/gift-mrml-messages/Makefile
 		GIFTServer/gift-config/Makefile])
+
+cp gift-config.h libMRML/include

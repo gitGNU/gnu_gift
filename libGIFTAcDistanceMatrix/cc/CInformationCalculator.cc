@@ -22,8 +22,8 @@
 #include "libGIFTAcDistanceMatrix/include/CInformationCalculator.h"
 #include <algorithm>
 #include <functional>
-#include <math.h>
-#include <assert.h>
+#include <cmath>
+#include <cassert>
 
 CInformationCalculator* CInformationCalculator::clone()const{
   if(this)

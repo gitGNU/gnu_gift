@@ -17,8 +17,8 @@
 
 #include <functional>
  
-#include <strstream.h>
-#include <iostream.h>
+#include <sstream>
+#include <iostream>
 
 #include "libMRML/include/CRelevanceLevelList.h"
 #include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"
@@ -29,7 +29,7 @@
 
 #include <algorithm>
 #include <stdlib.h>
-#include <math.h>
+#include <cmath>
 
 
 #include <strstream>

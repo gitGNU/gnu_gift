@@ -22,7 +22,7 @@
 #include "libMRML/include/mrml_const.h"
 #include "libMRML/include/my_throw.h"
 #include "libGIFTAcHierarchy/include/CAcHierarchy.h"
-#include <assert.h>
+#include <cassert>
 #include "libMRML/include/GIFTExceptions.h"
 #include "expat/xmlparse/xmlparse.h"
 #include <fstream>

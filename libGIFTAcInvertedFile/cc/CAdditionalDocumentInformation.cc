@@ -42,7 +42,7 @@
 #include <functional>
 #include "libGIFTAcInvertedFile/include/CAdditionalDocumentInformation.h"
 #include <algorithm>
-#include <assert.h>
+#include <cassert>
 
 /***************************************
 *

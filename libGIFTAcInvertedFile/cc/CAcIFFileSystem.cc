@@ -53,14 +53,14 @@
 ****************************************/
 
 
-#include <string.h>
-#include <errno.h> //show which error makes reads fail!
+#include <cstring>
+#include <cerrno> //show which error makes reads fail!
 
 #include <unistd.h>     // for getpid
 #include "libMRML/include/mrml_const.h" // for parsing
 #include <unistd.h>
 #include <cstdio>       // for sprintf
-#include <strstream>
+#include <sstream>
 #include <string>
 #include <set> 
 #include <algorithm>
@@ -75,8 +75,8 @@
 #include "libGIFTAcInvertedFile/include/CInvertedFileChunk.h"
 #include <iostream>
 #include <fstream>
-#include <assert.h>
-#include <math.h>
+#include <cassert>
+#include <cmath>
 #include "libGIFTAcInvertedFile/include/CIFListStart.h"
 #include "libMRML/include/CXMLElement.h" // constructor
 #include "libMRML/include/directory.h"   // the install locations etc. as determined by ./configure
@@ -737,7 +737,11 @@ CAcIFFileSystem::CAcIFFileSystem(const CXMLElement& inCollectionElement):
   mFeatureDescriptionFileName(inCollectionElement.stringReadAttribute(mrml_const::cui_base_dir).second
 			      +inCollectionElement.stringReadAttribute(mrml_const::cui_feature_description_location).second),
   mInvertedFile(0),
+#ifdef V295
   mInvertedFileBuffer(0),
+#else
+  mInvertedFileBuffer(""),
+#endif
   mMaximumFeatureID(0){
   /**/gMutex->lock();
 
@@ -819,34 +823,49 @@ CAcIFFileSystem::CAcIFFileSystem(const CXMLElement& inCollectionElement):
 bool CAcIFFileSystem::init(bool inMemory)
 {
   /**/gMutex->lock();
-
-  mMaximumFeatureID=0;
-  cout << "Opening _"
-       << mInvertedFileName        
-       << "_";
-  if(inMemory){
-    ifstream lInvertedFile(mInvertedFileName.c_str());
-    if(lInvertedFile){
-
-      cout << endl 
-	   << "(TRYING TO READ THE WHOLE FILE INTO MEMORY"
-	   << endl;
-      
-      lInvertedFile.seekg(0,ios::end);
-      size_t lFileSize=lInvertedFile.tellg();
-      mInvertedFileBuffer=new char[lFileSize];
-      lInvertedFile.seekg(0,ios::beg);
-      lInvertedFile.read(mInvertedFileBuffer,
-			 lFileSize);
-
-      mInvertedFile=new istrstream(mInvertedFileBuffer,
-				   lFileSize);
-      cout << "DONE)"
-	   << endl;
-    }else{
-      mInvertedFile=0;
+  try{
+    mMaximumFeatureID=0;
+    cout << "Opening _"
+	 << mInvertedFileName        
+	 << "_";
+    if(inMemory){
+      ifstream lInvertedFile(mInvertedFileName.c_str());
+      if(lInvertedFile){
+	
+	cout << endl 
+	     << "(TRYING TO READ THE WHOLE FILE INTO MEMORY"
+	     << endl;
+	
+	lInvertedFile.seekg(0,ios::end);
+	size_t lFileSize=lInvertedFile.tellg();
+	
+#ifdef V295
+	mInvertedFileBuffer=new char[lFileSize];
+#else
+	mInvertedFileBuffer="x";
+	mInvertedFileBuffer.resize(lFileSize);
+#endif
+	lInvertedFile.seekg(0,ios::beg);
+#ifdef V295
+	lInvertedFile.read(mInvertedFileBuffer,
+			   lFileSize);
+#else
+	// this is a kludge but speed does not matter here
+	for(int i=0;i<lFileSize && lInvertedFile;i++){
+	  char lChar;
+	  lInvertedFile.get(lChar);
+	  mInvertedFileBuffer[i]=lChar;
+	}
+#endif
+	
+	mInvertedFile=new istringstream(mInvertedFileBuffer);
+	// lFileSize does not need to be given
+	cout << "DONE)"
+	     << endl;
+      }else{
+	mInvertedFile=0;
+      }
     }
-  }
 
   mInvertedFile=new ifstream(mInvertedFileName.c_str());
   if(!(*mInvertedFile)){
@@ -1039,6 +1058,10 @@ bool CAcIFFileSystem::init(bool inMemory)
 #endif
   /**/gMutex->unlock();
   return lRetVal;
+  }catch(...){
+    cerr << "caught here " << endl;
+  }
+
 };
 
 

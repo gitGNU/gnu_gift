@@ -24,18 +24,18 @@
 #ifndef _CSOCKET
 #define _CSOCKET
 
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
 #include <stdlib.h>
-#include <errno.h>
-#include <string.h>
+#include <cerrno>
+#include <cstring>
 #include <functional>
-#include <assert.h>
-#include <stdio.h>
+#include <cassert>
+#include <cstdio>
 #include <unistd.h>
 #include <stdlib.h>
-#include <errno.h>
-#include <string.h>
+#include <cerrno>
+#include <cstring>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -44,7 +44,7 @@
 #include <sys/stat.h>
 #include <iostream>
 #include <string>
-#include <assert.h>
+#include <cassert>
 using namespace std;
 /** 
     This class takes a unary function

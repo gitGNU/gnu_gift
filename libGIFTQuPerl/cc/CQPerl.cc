@@ -53,7 +53,7 @@
 
 #include "libMRML/include/GIFTExceptions.h"
 
-#include <time.h>
+#include <ctime>
 
 #include "libMRML/include/CAlgorithm.h"
 #include "libMRML/include/CAccessorAdminCollection.h"

@@ -39,7 +39,7 @@
 ****************************************/
 #include "libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h"
 #include "FeatureExtraction/gift_features.h"
-#include <assert.h>
+#include <cassert>
 #include <fstream>
 
 #define _IS_FLOAT_FEATURE_

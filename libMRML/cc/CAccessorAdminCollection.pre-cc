@@ -23,7 +23,7 @@
 #include "mrml_const.h"
 #include "my_throw.h"
 #include "my_assert.h"
-#include <assert.h>
+#include <cassert>
 #include "GIFTExceptions.h"
 #include "CAccessorCollection.h"
 #include "CAttributeList.h"

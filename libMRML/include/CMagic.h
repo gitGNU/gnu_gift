@@ -2,7 +2,7 @@
 #ifndef _CMAGIC
 #define _CMAGIC
 #include "libMRML/include/uses-declarations.h"
-#include <assert.h>
+#include <cassert>
 /** This is a simple class for debugging.
     It checks if it has been properly initialised
     or if it has been destroyed twice. The method is simple:

@@ -1,18 +1,18 @@
 //configuration files for sessions and algorithms/collections
 
 //Sockets
-#include <time.h>
+#include <ctime>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <errno.h>
+#include <cerrno>
 //
 #include "libMRML/include/CXEVCommunication.h" // the visitor analyzing the document trees built
 #include "libMRML/include/CCommunicationHandler.h"
 #include <string>
-#include <stdio.h>
+#include <cstdio>
 #include <stdlib.h>
 #include "libMRML/include/mrml_const.h" //mrml string constants newStart/EndMRMLElement
 #include "../include/CTimeStampGenerator.h" // for time stamps

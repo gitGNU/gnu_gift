@@ -51,9 +51,9 @@ public:
 *
 ***************************************/
   ///
-  CWFBestFullyWeighted(const CAcInvertedFile* inAccessor=0,
-		       CQueryNormalizer* inQueryNormalizer=0,
-		       CQueryNormalizer* inThisNormalizer=0);
+  CWFBestFullyWeighted(const CAcInvertedFile* inAccessor,
+		       CQueryNormalizer* inQueryNormalizer,
+		       CQueryNormalizer* inThisNormalizer);
 
 /***************************************
 *

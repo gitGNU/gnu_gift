@@ -28,9 +28,9 @@
 #include <cstdio>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <string.h>
-#include <errno.h>
-#include <signal.h>
+#include <cstring>
+#include <cerrno>
+#include <csignal>
 
 #include <map>
 #include <vector>

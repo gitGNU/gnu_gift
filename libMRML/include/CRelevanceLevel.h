@@ -40,7 +40,7 @@
 #ifndef _CRELEVANCELEVEL
 #define _CRELEVANCELEVEL
 #include "libMRML/include/uses-declarations.h"
-#include <iostream.h>
+#include <iostream>
 #include <string>
 #include "libMRML/include/TID.h"
 #include <functional>

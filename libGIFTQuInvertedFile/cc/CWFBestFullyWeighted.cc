@@ -36,7 +36,7 @@
 *
 ****************************************/
 #include "libGIFTQuInvertedFile/include/CWFBestFullyWeighted.h"
-#include <math.h>
+#include <cmath>
 #include "FeatureExtraction/gift_features.h"
 
 /***************************************
@@ -51,9 +51,9 @@
 *
 ****************************************/
 CWFBestFullyWeighted::
-CWFBestFullyWeighted(const CAcInvertedFile* inAccessor=0,
-		     CQueryNormalizer* inQueryNormalizer=0,
-		     CQueryNormalizer* inThisNormalizer=0):
+CWFBestFullyWeighted(const CAcInvertedFile* inAccessor,
+		     CQueryNormalizer* inQueryNormalizer,
+		     CQueryNormalizer* inThisNormalizer):
   CWeightingFunction(inAccessor,
 		     inQueryNormalizer,
 		     inThisNormalizer)

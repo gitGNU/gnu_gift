@@ -41,7 +41,7 @@ uses Unicode. */
 #define XML_UNICODE
 #endif
 
-#include <stddef.h>
+#include <cstddef>
 typedef wchar_t XML_Char;
 typedef wchar_t XML_LChar;
 

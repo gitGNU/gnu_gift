@@ -20,7 +20,7 @@
 
 */
 #include "libGIFTAcDistanceMatrix/include/CSquasher.h"
-#include <math.h>
+#include <cmath>
 #include <iostream>
 double CStandardSquasher::operator()(double inCloser,
 				     double inFarther)const{

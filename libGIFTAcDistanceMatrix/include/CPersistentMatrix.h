@@ -178,8 +178,8 @@ bool CPersistentMatrix<T>::putLineVector(long inY,
 					 CLineVector const& 
 					 inVector){
   CPersistentLineVector lVector(mXSize);
-  CPersistentLineVector::iterator i=lVector.begin();
-  CLineVector::const_iterator j=inVector.begin();
+  typename CPersistentLineVector::iterator i=lVector.begin();
+  typename CLineVector::const_iterator j=inVector.begin();
   while(i!=lVector.end() && j!=inVector.end()){
     *i++=*j++;
   }

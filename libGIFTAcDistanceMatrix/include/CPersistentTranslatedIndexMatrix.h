@@ -98,7 +98,7 @@ bool CPersistentTranslatedIndexMatrix<TTID,TTContent>
   sort(lIndexList.begin(),lIndexList.end());
 
   long lCount=0;
-  for(CIndexList::const_iterator i=lIndexList.begin();
+  for(typename CIndexList::const_iterator i=lIndexList.begin();
       i!=lIndexList.end();
       i++,lCount++){
     mTranslator.insert(make_pair(*i,lCount));
@@ -108,7 +108,7 @@ bool CPersistentTranslatedIndexMatrix<TTID,TTContent>
     string lStreamName=string(inFileName)+string(".trans");
     ofstream lStream(lStreamName.c_str());
     if(lStream){
-      for(CTranslator::const_iterator i=mTranslator.begin();
+      for(typename CTranslator::const_iterator i=mTranslator.begin();
 	  i!=mTranslator.end();
 	  i++){
 	lStream << i->first 
@@ -187,7 +187,7 @@ bool CPersistentTranslatedIndexMatrix<TTID,TTContent>
     return mContent->getLineVector(lLocalLine,outVector);
   }else{
     cout <<"<<dumping"<<endl;
-    for(CTranslator::const_iterator i=mTranslator.begin();
+    for(typename CTranslator::const_iterator i=mTranslator.begin();
 	i!=mTranslator.end();
 	i++){
       cout << i->first << "," << i->second << endl;
@@ -209,7 +209,7 @@ bool CPersistentTranslatedIndexMatrix<TTID,TTContent>
 				  lVector);
   outList.clear();
   try{
-    for(CTranslator::const_iterator i=mTranslator.begin();
+    for(typename CTranslator::const_iterator i=mTranslator.begin();
 	i!=mTranslator.end();
 	i++){
       outList.insert(make_pair(i->first,
@@ -246,10 +246,10 @@ bool CPersistentTranslatedIndexMatrix<TTID,TTContent>
   cout << "inID" << inID << endl;
   assert(lReturnValue);
 
-  for(CIDContentPairList::const_iterator i=inList.begin();
+  for(typename CIDContentPairList::const_iterator i=inList.begin();
       i!=inList.end();
       i++){
-    CTranslator::const_iterator lXPosition=mTranslator.find(i->first);
+    typename CTranslator::const_iterator lXPosition=mTranslator.find(i->first);
     if(lXPosition!=mTranslator.end()){
       lVector[lXPosition->second]=i->second;
     }

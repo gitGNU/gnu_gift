@@ -37,7 +37,7 @@
 ****************************************/
 #include <iostream>
 #include "libGIFTAcInvertedFile/include/CIFListStart.h"
-#include <assert.h>
+#include <cassert>
 
 
 /***************************************

@@ -50,7 +50,7 @@ void CQueryTreeNode::configure(CXMLElement& inAttributes,
 };
 /** add a child to this */
 void CQueryTreeNode::addChild(CQueryTreeNode* inChild,
-			      double inWeight=1){
+			      double inWeight){
 
   cout << "this " << flush ;checkNPrint();
   cout << " CQueryTreeNode::addChild(inChild,1) " << inChild << flush ; inChild->checkNPrint();

@@ -24,11 +24,11 @@
 #ifndef _CDOMAINSOCKET
 #define _CDOMAINSOCKET
 
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
 #include <stdlib.h>
-#include <errno.h>
-#include <string.h>
+#include <cerrno>
+#include <cstring>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -37,7 +37,7 @@
 #include <sys/stat.h>
 #include <iostream>
 #include <string>
-#include <assert.h>
+#include <cassert>
 #include "CSocket.h"
 using namespace std;
 

@@ -24,11 +24,11 @@
 #ifndef _CTCPSOCKET
 #define _CTCPSOCKET
 #include "CSocket.h"
-#include <stdio.h>
+#include <cstdio>
 #include <unistd.h>
 #include <stdlib.h>
-#include <errno.h>
-#include <string.h>
+#include <cerrno>
+#include <cstring>
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/un.h>
@@ -40,7 +40,7 @@
 #include <netinet/tcp.h>
 
 #include <string>
-#include <assert.h>
+#include <cassert>
 using namespace std;
 /** 
     A structure that opens/closes a TCP socket 

@@ -25,7 +25,8 @@
 #include "libMRML/include/my_assert.h"
 #include "libMRML/include/my_diagnose.h"
 #include "libMRML/include/GIFTExceptions.h"
-#include <stdio.h>
+#include <cstdio>
+#include <iterator>
 #include "expat/xmlparse/xmlparse.h"
 #include "libGIFTQuInvertedFile/include/CQInvertedFile.h"
 #include "libMRML/include/CSessionManager.h"
@@ -188,7 +189,7 @@ void endConfigElement(void *userData, const char *inElementName)
 #endif
 }
 
-#include <time.h>
+#include <ctime>
 #include "libMRML/include/CSessionManager.h"
 #include "libMRML/include/TID.h"
 #include <iostream>

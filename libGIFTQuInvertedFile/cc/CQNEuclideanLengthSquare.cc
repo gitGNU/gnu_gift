@@ -36,7 +36,7 @@
 *
 ****************************************/
 #include "libGIFTQuInvertedFile/include/CQNEuclideanLengthSquare.h"
-#include <math.h>
+#include <cmath>
 
 /***************************************
 *

@@ -18,8 +18,12 @@ James Clark. All Rights Reserved.
 Contributor(s):
 */
 
-
+#ifdef __cplusplus
+#include <cstddef>
+#else
 #include <stddef.h>
+#endif
+
 
 #ifdef XML_UNICODE
 int filemap(const wchar_t *name,

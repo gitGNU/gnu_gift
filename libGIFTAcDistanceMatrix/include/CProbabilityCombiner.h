@@ -24,7 +24,7 @@
 #define _CPROBABILITYCOMBINER
 #include "libGIFTAcDistanceMatrix/include/uses-declarations.h"
 #include <functional>
-#include <assert.h>
+#include <cassert>
 
 class CProbabilityCombiner:public binary_function<double,double,double>{
   double mBelief;

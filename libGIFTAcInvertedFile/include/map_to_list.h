@@ -27,8 +27,8 @@
  *
  */
 template<class key,class element>
-list<element>* map_to_list(const map<key,element>::const_iterator inBegin,
-			   const map<key,element>::const_iterator inEnd){
+list<element>* map_to_list(const typename map<key,element>::const_iterator inBegin,
+			   const typename map<key,element>::const_iterator inEnd){
   list<element> lNewList=new list<element>;
   
   while(inBegin!=inEnd){

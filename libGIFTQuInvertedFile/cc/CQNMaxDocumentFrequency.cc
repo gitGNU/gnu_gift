@@ -36,7 +36,7 @@
 *
 ****************************************/
 #include "libGIFTQuInvertedFile/include/CQNMaxDocumentFrequency.h"
-#include <math.h>
+#include <cmath>
 
 /***************************************
 *

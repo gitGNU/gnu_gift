@@ -57,5 +57,8 @@ enum {
   BT_COMMA,
   BT_VERBAR
 };
-
+#ifdef __cplusplus
+#include <cstddef>
+#else
 #include <stddef.h>
+#endif

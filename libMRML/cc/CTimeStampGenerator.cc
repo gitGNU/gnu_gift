@@ -24,7 +24,7 @@
 #include "../include/CXMLElement.h"
 #include "../include/mrml_const.h"
 #include "libMRML/include/CMutex.h"
-#include <time.h>
+#include <ctime>
 #include <string>
 /** */
 

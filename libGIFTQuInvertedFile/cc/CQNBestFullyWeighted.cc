@@ -36,7 +36,7 @@
 *
 */
 #include "libGIFTQuInvertedFile/include/CQNBestFullyWeighted.h"
-#include <math.h>
+#include <cmath>
 
 /**
 *

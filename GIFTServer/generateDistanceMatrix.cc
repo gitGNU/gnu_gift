@@ -20,7 +20,7 @@
 
 
 #include "libMRML/include/TID.h"
-#include <iostream.h>
+#include <iostream>
 #include "libMRML/include/CRelevanceLevelList.h"
 #include "CInvertedFileAccessor.h"
 #include "CInvertedFileQuery.h"
@@ -44,7 +44,7 @@
 #include "CWFTextureBlockOnly.h"
 
 #include <algorithm>
-#include <stdio.h>
+#include <cstdio>
 #include <stdlib.h>
 #include <string>
 

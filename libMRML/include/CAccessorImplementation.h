@@ -26,8 +26,8 @@
 #include "libMRML/include/CMagic.h"
 #include <string>
 #include "libMRML/include/TID.h"
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <map>
 
 #ifdef HAS_HASH_MAP

@@ -36,7 +36,7 @@
 *
 ****************************************/
 #include "libGIFTQuInvertedFile/include/CWFCoordinationLevel.h"
-#include <math.h>
+#include <cmath>
 
 /***************************************
 *
@@ -50,9 +50,9 @@
 *
 ****************************************/
 CWFCoordinationLevel::
-CWFCoordinationLevel(const CAcInvertedFile* inAccessor=0,
+CWFCoordinationLevel(const CAcInvertedFile* inAccessor,
 		     CQueryNormalizer*,
-		     CQueryNormalizer* inThisNormalizer=0):
+		     CQueryNormalizer* inThisNormalizer):
   CWeightingFunction(inAccessor,
 		     0,
 		     inThisNormalizer)

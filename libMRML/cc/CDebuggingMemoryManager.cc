@@ -1,6 +1,6 @@
 #include <iostream>
 #include "libMRML/include/CDebuggingMemoryManager.h"
-#include <assert.h>
+#include <cassert>
 #include <cstdlib>
 
 

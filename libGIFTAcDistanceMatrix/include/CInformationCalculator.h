@@ -23,7 +23,7 @@
 #ifndef _CINFORMATIONCALCULATOR
 #define _CINFORMATIONCALCULATOR
 #include "libGIFTAcDistanceMatrix/include/uses-declarations.h"
-#include <math.h>
+#include <cmath>
 #include <functional>
 
 class CInformationCalculator:public unary_function<double,double>{

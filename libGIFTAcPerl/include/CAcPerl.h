@@ -44,8 +44,8 @@
 
 #include <string>
 #include "libMRML/include/TID.h"
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <list>
 #include <map>
 #ifdef HAS_HASH_MAP

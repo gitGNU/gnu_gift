@@ -25,7 +25,7 @@
 #include "libGIFTAcDistanceMatrix/include/uses-declarations.h"
 #include <functional>
 #include "libGIFTAcDistanceMatrix/include/CPersistentTranslatedIndexMatrix.h"
-#include <math.h>
+#include <cmath>
 #include "libMRML/include/CMagic.h"
 
 template<class TTIterator,

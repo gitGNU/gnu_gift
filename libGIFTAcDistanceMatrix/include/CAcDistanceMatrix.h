@@ -44,8 +44,8 @@
 #include <string>
 #include "libMRML/include/TID.h"
 #include "libGIFTAcURL2FTS/include/CAcURL2FTS.h"
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <map>
 //#include <hash_map>
 

@@ -103,7 +103,11 @@ protected:
   TID mMaximumFeatureID;
   /** A buffer, if the inverted file is to be 
       held in ram */
+#ifndef V295
+  string mInvertedFileBuffer;
+#else
   CArraySelfDestroyPointer<char> mInvertedFileBuffer;
+#endif
   /** The inverted file */
   mutable CSelfDestroyPointer<istream> mInvertedFile;
 

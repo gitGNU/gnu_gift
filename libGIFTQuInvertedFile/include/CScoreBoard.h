@@ -30,7 +30,7 @@
 #else
 #define hash_map map
 #endif
-#include <iostream.h>
+#include <iostream>
 #include "libMRML/include/CRelevanceLevel.h"
 #include "libMRML/include/CRelevanceLevelList.h"
 #include "libGIFTQuInvertedFile/include/CWeightingFunction.h"

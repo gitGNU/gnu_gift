@@ -23,8 +23,8 @@
 #ifndef _CDRAWER
 #define _CDRAWER
 #include "libGIFTAcDistanceMatrix/include/uses-declarations.h"
-#include <assert.h>
-#include <math.h>
+#include <cassert>
+#include <cmath>
 #include <functional>
 
 /***************************************

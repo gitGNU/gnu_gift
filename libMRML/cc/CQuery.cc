@@ -48,15 +48,15 @@
 #include <functional>
 #include <string>
 
-#include <math.h>
-#include <assert.h>
+#include <cmath>
+#include <cassert>
 
 #include "libGIFTAcInvertedFile/include/map_to_list.h"
 
 #include "libMRML/include/CQuery.h"
 #include "libMRML/include/GIFTExceptions.h"
 
-#include <time.h>
+#include <ctime>
 #define _NO_FIDPRINT    
 
 int gQuery;

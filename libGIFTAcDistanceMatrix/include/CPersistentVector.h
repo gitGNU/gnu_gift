@@ -26,8 +26,8 @@
 #include <vector>
 #include <algorithm>
 #include <functional>
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 
 template<class T>
 void binary_writer(ostream& outStream,
@@ -71,7 +71,7 @@ CPersistentVector<T>::CPersistentVector(long inLength):
 
 template<class T>
 void CPersistentVector<T>::init(T const& inDefaultValue){
-  
+#ifdef V295
   constant_void_fun<T> f(inDefaultValue);
 
   clear();
@@ -81,6 +81,11 @@ void CPersistentVector<T>::init(T const& inDefaultValue){
       i++){
     push_back(f());
   }
+#else
+  clear();
+  resize(mLength);
+  fill(this->begin(),this->end(),inDefaultValue);
+#endif
 }
 
 template<class T>
@@ -111,7 +116,7 @@ bool CPersistentVector<T>::read(istream& inStream,
 
 template<class T>
 bool CPersistentVector<T>::write(ostream& outStream)const{
-  for(const_iterator i=begin();
+  for(typename CPersistentVector<T>::const_iterator i=begin();
       i!=end();
       i++){
     binary_writer(outStream,

@@ -23,7 +23,7 @@
 #include "libMRML/include/mrml_const.h"
 #include "libMRML/include/my_throw.h"
 #include "libMRML/include/my_assert.h"
-#include <assert.h>
+#include <cassert>
 #include "libMRML/include/GIFTExceptions.h"
 #include "libMRML/include/CAccessorAdminCollection.h"
 #include "libMRML/include/CAttributeList.h"

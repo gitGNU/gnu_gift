@@ -17,8 +17,11 @@ James Clark. All Rights Reserved.
 
 Contributor(s):
 */
-
+#ifdef __cplusplus
+#include <cstring>
+#else
 #include <string.h>
+#endif
 
 #ifdef XML_WINLIB
 

@@ -24,7 +24,7 @@
 
 */
 #include <iostream>
-#include <malloc.h>
+#include <cstdlib>
 #include "libMRML/include/CDebuggingMemoryManager.h"
 
 //#define __memdebug

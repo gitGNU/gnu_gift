@@ -1,7 +1,7 @@
 #define   _GNU_SOURCE
 
-#include <string.h>
-#include <assert.h>
+#include <cstring>
+#include <cassert>
 #include <iostream>
 #include <unistd.h>
 #include <list>

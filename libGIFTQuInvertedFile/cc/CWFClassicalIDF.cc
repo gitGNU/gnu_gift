@@ -37,7 +37,7 @@
 ****************************************/
 #include "libGIFTQuInvertedFile/include/CWFClassicalIDF.h"
 #include "FeatureExtraction/gift_features.h"
-#include <math.h>
+#include <cmath>
 
 /***************************************
 *
@@ -51,9 +51,9 @@
 *
 ****************************************/
 CWFClassicalIDF::
-CWFClassicalIDF(const CAcInvertedFile* inAccessor=0,
-		CQueryNormalizer* inQueryNormalizer=0,
-		CQueryNormalizer* inThisNormalizer=0):
+CWFClassicalIDF(const CAcInvertedFile* inAccessor,
+		CQueryNormalizer* inQueryNormalizer,
+		CQueryNormalizer* inThisNormalizer):
   CWeightingFunction(inAccessor,
 		     inQueryNormalizer,
 		     inThisNormalizer)

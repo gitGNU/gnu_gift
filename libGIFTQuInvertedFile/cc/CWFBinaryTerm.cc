@@ -37,7 +37,7 @@
 ****************************************/
 
 #include "libGIFTQuInvertedFile/include/CWFBinaryTerm.h"
-#include <math.h>
+#include <cmath>
 #include "FeatureExtraction/gift_features.h"
 
 
@@ -53,9 +53,9 @@
 *
 ****************************************/
 CWFBinaryTerm::
-CWFBinaryTerm(const CAcInvertedFile* inAccessor=0,
-	      CQueryNormalizer* inQueryNormalizer=0,
-	      CQueryNormalizer* inThisNormalizer=0):
+CWFBinaryTerm(const CAcInvertedFile* inAccessor,
+	      CQueryNormalizer* inQueryNormalizer,
+	      CQueryNormalizer* inThisNormalizer):
   CWeightingFunction(inAccessor,
 		     inQueryNormalizer,
 		     inThisNormalizer)

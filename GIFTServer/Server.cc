@@ -23,7 +23,7 @@
 
 //use stuff by Wolfgang which has not yet been "released" to the group
 #define WOLFGANG_DEVELOPER
-
+#include <exception> // standard exceptions
 using namespace std;
 
 #ifdef __GIFT_NEW_OPERATOR_NEW
@@ -35,7 +35,7 @@ CDebuggingMemoryManager gMemManager(MEMSIZE);
 #endif
 
 #include <stdlib.h>
-#include <assert.h>
+#include <cassert>
 #include <iostream>
 #include <fstream>
 
@@ -101,13 +101,13 @@ void operator delete[](void* inToBeDeleted){
 #include <cmath>
 
 //Sockets
-#include <time.h>
+#include <ctime>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <errno.h>
+#include <cerrno>
 //to be more specific: internet sockets
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
@@ -646,6 +646,11 @@ int main(int argc, char **argv){
 	 << endl
 	 << flush;
   }
+  catch(exception& inCaught){
+    cout << "there was a standard exception" <<endl
+	 << inCaught.what()
+	 << flush;
+  }
   catch(...){
     cout << "there was an unknown exception" <<endl
 	 << flush;
@@ -821,6 +826,12 @@ int main(int argc, char **argv){
   catch(GIFTException* inCaught){
     cout << "Caught inServer Main:"
 	 << *inCaught
+	 << endl
+	 << flush;
+  }
+  catch(exception& inCaught){
+    cout << "Caught inServer Main:"
+	 << inCaught.what()
 	 << endl
 	 << flush;
   }

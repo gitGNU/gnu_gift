@@ -85,8 +85,8 @@
 #include <functional>
 #include <string>
 
-#include <math.h>
-#include <assert.h>
+#include <cmath>
+#include <cassert>
 
 #include "libGIFTAcInvertedFile/include/map_to_list.h"
 
@@ -106,7 +106,7 @@
 
 #include "libMRML/include/CXMLElement.h"
 
-#include <time.h>
+#include <ctime>
 
 #define _NO_FIDPRINT    
 #define _NO_PRINT_QFW
@@ -1139,10 +1139,10 @@ double CQInvertedFile::keepScorePruning(CScoreBoard& inoutScoreBoard,
 		  cout<<"\n";
 #endif
 		  inoutScoreBoard
-		    .limitNumberTo(mScoreBoardPruningArray
-				   [lNextScoreBoardNumber]
-				   .reduceTo
-				   *inElementsToRetrieve);
+		    .limitNumberTo(int(mScoreBoardPruningArray
+				       [lNextScoreBoardNumber]
+				       .reduceTo
+				       *inElementsToRetrieve));
 		  inoutScoreBoard.setIgnore();
 		  lNextScoreBoardNumber++;
 		}

@@ -36,13 +36,13 @@
 #include <cmath>
 
 //Sockets
-#include <time.h>
+#include <ctime>
 #include <unistd.h>
 #include <fcntl.h>
 #include <sys/time.h>
 #include <sys/types.h>
 #include <sys/socket.h>
-#include <errno.h>
+#include <cerrno>
 //to be more specific: internet sockets
 #include <arpa/inet.h>
 #include <netinet/tcp.h>
