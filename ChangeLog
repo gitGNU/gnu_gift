@@ -1,5 +1,8 @@
 2002-06-17  Wolfgang Müller  <kde3@btn1n6.inf.uni-bayreuth.de>
 
+	* gift-check-perl-config.pl: this script checks if perl
+	modules needed are there
+	
 	* scripts/perl/gift-start.pre-pl: making this script
 	ready for public use.
 
