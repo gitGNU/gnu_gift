@@ -1,5 +1,8 @@
 2001-03-27  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
+	* libMRML/cc/CCommunicationHandler.cc(readAndParse): 
+	adding expressive debugging printouts to cerr<<
+
 	* scripts/perl/CFeedbackClient.pre-pm (addCollection): 
 	Uncommented if $vDEBUG{addCollection};
 	Applied Patch by Henning Müller:

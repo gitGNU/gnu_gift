@@ -630,7 +630,8 @@ bool CCommunicationHandler::readAndParse(){
 
   string lLogString;
 
-  cerr << "repa" << endl;
+  cerr << __FILE__ << ":" 
+       << __Line__ << ":readAndParse before parse" << endl;
 
   do {
       
@@ -704,7 +705,11 @@ bool CCommunicationHandler::readAndParse(){
 
   gMutex->unlock();
 
+  cerr << __FILE__ << ":" 
+       << __Line__ << ":readAndParse before visit" << endl;
   mDocumentRoot->traverse(lVisitor);
+  cerr << __FILE__ << ":" 
+       << __Line__ << ":readAndParse after visit" << endl;
 
   return lSuccess;
 }

@@ -285,7 +285,7 @@ sub wanted{
   my $lExtension=$1;
 
   
-  if($lExtension && $lExtension=~m/^((tif)|(tiff)|(ppm)|(gif)|(jpg)|(jpeg)|(eps)|(png))$/i){
+  if($lExtension && $lExtension=~m/^((tif)|(tiff)|(ppm)|(gif)|(jpg)|(jpeg)|(eps)|(png)|(ras))$/i){
 
     my $lNameBase=$lName;
     $lNameBase=~s§\.$lExtension$§§;
