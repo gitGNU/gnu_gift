@@ -30,4 +30,4 @@ noinst_DATA =  system-doc configuring-and-hacking-the-gift.info configuring-and-
 
 CLEANFILES= gift-guide.info gift-guide.dvi configuring-and-hacking-the-gift.info configuring-and-hacking-the-gift.dvi autoDoc/HTML/* autoDoc/rtf/* autoDoc/man/*/* autoDoc/latex/*
 
-EXTRA_DIST= Doxyfile.am HTML TeX CodingRules GIFTClassGraph configuring-and-hacking-the-gift.sgml gift-guide.sgml
+EXTRA_DIST= Doxyfile.in TeX CodingRules GIFTClassGraph configuring-and-hacking-the-gift.sgml gift-guide.sgml

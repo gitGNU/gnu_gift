@@ -629,24 +629,33 @@ CXMLElement* CQMultiple::query(const CXMLElement& inQuery){
 	   << endl;
     }
     if(lThread->mResult){
+      /*
+	OK. At this point we got back a query-result XML element.
+	now we want the result-element-list
+      */
       for(CXMLElement::lCChildren::const_iterator i=lThread->mResult->child_list_begin();
 	  i!=lThread->mResult->child_list_end();
 	  i++){
-	
-// 	hash_map<TID,CIDRelevanceLevelPair>::const_iterator lFound=lResultMap.find(i->getID());
-
-// 	i->setRelevanceLevel(i->getRelevanceLevel()*lThread->getWeight());
-	
-// 	if(lFound==lResultMap.end()){
-
-// 	  lResultMap.insert(make_pair(i->getID(),
-// 				      *i));
-// 	}else{
-	  
-// 	  lResultMap[i->getID()].setRelevanceLevel(lResultMap[i->getID()].getRelevanceLevel()
-// 						   +i->getRelevanceLevel()
-// 						   );
-// 	}
+	if((*i)->getName() == mrml_const::query_result_element_list){
+	  for(CXMLElement::lCChildren::const_iterator j=(*i)->child_list_begin();
+	      j!=(*i)->child_list_end();
+	      j++){
+	    if((*j)->getName() == mrml_const::query_result_element){
+	      /* 
+		 inside this, *j points now to an XML element which
+		 is a query-result-element. from this we will read now
+		 the calculated-relevance,
+		 as well as the image and thumbnail location.
+	      */
+	      pair<bool,double> lCalculatedRelevance=
+		(*j)->doubleReadAttribute(mrml_const::calculated_similarity);
+	      pair<bool,string> lImageLocation=
+		(*j)->stringReadAttribute(mrml_const::image_location);
+	      pair<bool,string> lThumbnailLocation=
+		(*j)->stringReadAttribute(mrml_const::thumbnail_location);
+	    }
+	  }
+	}
       }
       delete lThread->mFastResult;
     }
