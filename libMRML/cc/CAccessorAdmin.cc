@@ -37,7 +37,8 @@ const CXMLElement* CAccessorAdmin::getCollectionElement()const{
 };
 ///
 CAccessorAdmin::CAccessorAdmin(CAccessorFactoryContainer& inFactoryContainer):
-  mFactoryContainer(inFactoryContainer)
+  mFactoryContainer(inFactoryContainer),
+  mContent()
 {
 };
 ///
@@ -49,9 +50,9 @@ CAccessor* CAccessorAdmin::openAccessor(string inName){
   }
   {
     if(!(mContent[inName].mOpenCloseCounter)){
-      mContent[inName].mOpenCloseCounter++;
       mContent[inName].mAccessor=mFactoryContainer.openAccessor(inName,
 								*mCollectionElement);
+      mContent[inName].mOpenCloseCounter++;
       cerr << endl
 	   << "CAccessorAdmin::openAccessor:"
 	   << inName << endl
@@ -61,7 +62,7 @@ CAccessor* CAccessorAdmin::openAccessor(string inName){
       cerr << endl
 	   << "CAccessorAdmin::openAccessor:"
 	   << inName << endl
-	   << " REUSED." << endl;
+	   << " REUSED. (" << mContent[inName].mOpenCloseCounter++ << " times in use)"<< endl;
     }
     return mContent[inName].mAccessor;
   }
