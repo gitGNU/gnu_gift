@@ -38,7 +38,7 @@ libMRML_HEADERS= directory.h \
 	createErrorMessage.h 
 
 install-data-local:
-	$(INSTALL_DATA) $(srcdir)/gift-config $(libMRMLdir)/afile 
+	$(INSTALL_DATA) $(srcdir)/gift-config.h $(libMRMLdir)/afile 
 
 
 CLEANFILES= directory.h

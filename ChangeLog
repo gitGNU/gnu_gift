@@ -1,3 +1,11 @@
+2002-05-24  Wolfgang Müller  <kde3@btn1n6.inf.uni-bayreuth.de>
+
+	* libMRML/cc/CSessionManager.cc(setAlgorithm): 
+	bracket notation in maps creates new empty element.
+	this was a reason for some crashes. fixed.
+	
+	* libMRML/cc/CXEVCommunication.cc: removed try/catch exception handling
+
 2002-05-15  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
 
 	* configure.in(AM_CONFIG_HEADER): 

@@ -24,7 +24,7 @@
 #include "libMRML/include/my_throw.h"
 #include "libMRML/include/my_assert.h"
 #include "libMRML/include/my_diagnose.h"
-
+#include "libMRML/include/GIFTExceptions.h"
 #include <stdio.h>
 #include "expat/xmlparse/xmlparse.h"
 #include "libGIFTQuInvertedFile/include/CQInvertedFile.h"
@@ -994,22 +994,36 @@ bool CSessionManager::setAlgorithm(const string& inSessionID,
        << flush
        << endl;
 
-  CSession* lSession=mIDToSession[inSessionID];
-
+  CIDToSession::const_iterator lFound(mIDToSession.find(inSessionID));
   
   //  assert(lSession);
-  if(!lSession){
-    //create a session with the required sessionID
-    this->newSession(inSessionID,
-		     "I-dunno",
-		     "I-know-even-less");
-		     
-  }
+  if(lFound==mIDToSession.end()){
 
-  bool lResult=lSession->setActiveAlgorithm(mAccessorAdminCollection,
- 					    *this,
- 					    inAlgorithm,
- 					    *mBaseTypeFactory);
+    my_throw(VENotFound("Could not find Session "));
+
+    //
+    // the following code has been deleted, as it would
+    // generate a security problem: you could flood the GIFT
+    // by querying with a host of unknown session IDs
+    //
+    //     //create a session with the required sessionID
+    //     lSession=mIDToSession[this->newSession(inSessionID,
+    // 					   "I-dunno",
+    // 					   "I-know-even-less")];
+    //     // if this fails this is a real programming mistake
+    //     // it should never happen
+    //     // please don't delete
+    //     assert(lSession);
+  }
+  // if this fails this is a real bug
+  // it should never happen
+  // please don't delete
+  assert(lFound->second);
+    
+  bool lResult=lFound->second->setActiveAlgorithm(mAccessorAdminCollection,
+						  *this,
+						  inAlgorithm,
+						  *mBaseTypeFactory);
   mMutexSessionManager.unlock();
   return lResult;
 };
@@ -1019,35 +1033,44 @@ CXMLElement* CSessionManager::query(const string& inSessionID,
   // this is function not completely locked, because the functions called do not neccessarily 
   // need a lock. LOCKING THIS FUNCTION COMPLETELY WOULD MEAN LOSING CONCURRENCY.
   //mMutexSessionManager.lock();//debugging
-  CIDToSession::const_iterator lFound=mIDToSession.find(inSessionID);
+
+  CIDToSession::const_iterator lFound(mIDToSession.find(inSessionID));
   //mMutexSessionManager.unlock();
   //
-  if(lFound==mIDToSession.end()){
-#ifdef GIFT_THROW_UNKNOWN_SESSION
-    cout << "throwing: "
- 	 <<(VEUnknownSession(inSessionID.c_str()))
- 	 << endl
- 	 << flush;
-#else
-    //     my_throw(VEUnknownSession(inSessionID.c_str()));
-    //     cerr << "this line should not be reached" 
-    // 	 << endl;
-    //     assert(0);
-    CXMLElement* lError(new CXMLElement(mrml_const::error,0));
-    lError->addAttribute(mrml_const::message,"Could not process query: unknown session (ID:"+inSessionID+").");
-    return lError;
-#endif
-  }
   try{
-    CXMLElement* lReturnValue(lFound->second->query(*this,
-						    inRelevanceLevelList));
-    //mMutexSessionManager.unlock();//debugging
-    return lReturnValue;
+
+    if(lFound==mIDToSession.end()){
+#ifdef GIFT_THROW_UNKNOWN_SESSION
+//       cout << "throwing: "
+// 	   <<(VEUnknownSession(inSessionID.c_str()))
+// 	   << endl
+// 	   << flush;
+      my_throw(VEUnknownSession((string(Could not process query: unknown session)
+				 +inSessionID).c_str()));
+#else
+      //cout << "NOT throwing: " << endl;
+      //     my_throw(VEUnknownSession(inSessionID.c_str()));
+      //     cerr << "this line should not be reached" 
+      // 	 << endl;
+      //     assert(0);
+      CXMLElement* lError(new CXMLElement(mrml_const::error,0));
+      lError->addAttribute(mrml_const::message,"Could not process query: unknown session (ID:"+inSessionID+").");
+      return lError;
+#endif
+    }else{
+      //cout << "querying: " << endl;
+      CXMLElement* lReturnValue(lFound->second->query(*this,
+						      inRelevanceLevelList));
+      //mMutexSessionManager.unlock();//debugging
+      return lReturnValue;
+    }
   }  
   catch(GIFTException& inCaught){
+    //cout << "CAUGHT3" << endl;
     return createErrorMessage(inCaught); 
   }
   catch(GIFTException* inCaught){
+    //cout << "CAUGHT4" << endl;
     return createErrorMessage(inCaught); 
   }
 };
