@@ -339,20 +339,22 @@ public:
 
 };
 
-void CQMultiple::doFastQueryThread(void* inParameter){
+void* CQMultiple::doFastQueryThread(void* inParameter){
   class CQMThread* lParam((CQMThread*) inParameter);
   lParam->mFastResult=lParam->mQueryProcessor.fastQuery(*(lParam->mQuery),
 						    lParam->mResultSize,
 						    lParam->mDifferenceToBest);
   cout << "I AM FINISHED HERE " << lParam << "result" << lParam->mResult << endl;
+  return 0;
 }
 /**
    do the query thread, but starting query
  */
-void CQMultiple::doQueryThread(void* inParameter){
+void* CQMultiple::doQueryThread(void* inParameter){
   class CQMThread* lParam((CQMThread*) inParameter);
   lParam->mResult=lParam->mQueryProcessor.query(*(lParam->mQuery));
   cout << "I AM FINISHED HERE " << lParam << "result" << lParam->mResult << endl;
+  return 0;
 }
 
 /**
@@ -374,7 +376,7 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
   //list<CWeightedResult> lTemporary;
   double lWeightSum(0);
 
-  hash_map<TID,CIDRelevanceLevelPair> lResultMap;
+  map<TID,CIDRelevanceLevelPair> lResultMap;
 
 
   // no mutex protection needed as this is not called except by main thread
@@ -397,7 +399,7 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
     
     //lTemporary.push_back(CWeightedResult());
     
-    cout << "this CMultiple:" << this 
+    cout << "çç---------------------this CMultiple:fastQuery" << this 
 	 << ", i->mQuery:" << i->mQuery 
 	 << ", i->mWeight:" << i->mWeight 
 	 << endl;
@@ -416,7 +418,7 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
 	   if(1==0 
 	   && (i==lLast)){
 	   lListOfThreads.back().callFunction();//something to do for the main thread
-§	   }else*/
+	   }else*/
       
     {
       cout << "Running thread" 
@@ -449,7 +451,7 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
 	  i!=lThread->mFastResult->end();
 	  i++){
 	
-	hash_map<TID,CIDRelevanceLevelPair>::const_iterator lFound=lResultMap.find(i->getID());
+	map<TID,CIDRelevanceLevelPair>::const_iterator lFound=lResultMap.find(i->getID());
 
 	i->setRelevanceLevel(i->getRelevanceLevel()*lThread->getWeight());
 	
@@ -476,7 +478,7 @@ CIDRelevanceLevelPairList* CQMultiple::fastQuery(const CXMLElement& inQuery,
   cout << "<pushing>"
        << endl;
 
-  for(hash_map<TID,CIDRelevanceLevelPair>::const_iterator i=lResultMap.begin();
+  for(map<TID,CIDRelevanceLevelPair>::const_iterator i=lResultMap.begin();
       i!=lResultMap.end();
       i++){
     lReturnValue->push_back(i->second);
@@ -528,18 +530,56 @@ public:
     mImageLocation(inImageLocation),
     mThumbnailLocation(inThumbnailLocation),
     mRelevanceLevel(0){};
+  /** */
+  CMergeTriplet(const CMergeTriplet& in):
+    mImageLocation(in.mImageLocation),
+    mThumbnailLocation(in.mThumbnailLocation),
+    mRelevanceLevel(in.mRelevanceLevel){};
+  /** */
+  CMergeTriplet():
+    mImageLocation(""),
+    mThumbnailLocation(""),
+    mRelevanceLevel(0){};
   /** 
    */
   void addToRelevance(float inToBeAdded){
     mRelevanceLevel+=inToBeAdded;
   }
-  /**
-     Return the accumulated Relevance
+  /** 
    */
-  float getRelevance()const{
+  void setSimilarity(float inValue){
+    mRelevanceLevel=inValue;
+  }
+  /**
+     Return the accumulated similarity
+   */
+  float getCalculatedSimilarity()const{
     return mRelevanceLevel;
   }
+  /**
+     Return the thumbnail location
+   */
+  string getThumbnailLocation()const{
+    return mThumbnailLocation;
+  }
+  /**
+     Return the image location
+   */
+  string getImageLocation()const{
+    return mImageLocation;
+  }
 };
+/**
+   Sort MergeTriplets by relevance in descending order
+ */
+class CSortDescendingByRelevance_MT:binary_function<bool,double,double>{
+public:
+  bool operator() (CMergeTriplet& l, 
+		   CMergeTriplet& t){
+    return l.getCalculatedSimilarity()>t.getCalculatedSimilarity();
+  }
+};
+
 /**
  *
  * calls fastQuery for every child, merges the results
@@ -549,123 +589,281 @@ public:
  */
 CXMLElement* CQMultiple::query(const CXMLElement& inQuery){
 
-  float inDifferenceToBest(0);
-  cout << "CMultiple Number of children:"
-       << mChildren.size()
-       << endl;
-
-
-  //list<CWeightedResult> lTemporary;
-  double lWeightSum(0);
-
-  hash_map<TID,CMergeTriplet> lResultMap;
-  
-  
-  // no mutex protection needed as this is not called except by main thread
-
-  //
-  // rip this into two parts
-  // in order to 
-  // make it possible to run the querying in one thread
-  // and do the merging after having waited for each thread
-  //
-
-  list<CQMThread> lListOfThreads;
-
-  lCChildren::const_iterator lLast=mChildren.end();
-  lLast--;
-  for(lCChildren::const_iterator i=mChildren.begin();
-      i!=mChildren.end();
-      i++){
-    lWeightSum+=i->mWeight;
-    
-    //lTemporary.push_back(CWeightedResult());
-    
-    cout << "this CMultiple QUERY:" << this 
-	 << ", i->mQuery:" << i->mQuery 
-	 << ", i->mWeight:" << i->mWeight 
-	 << endl;
-    
-    
-    lListOfThreads.push_back(CQMThread(*(i->mQuery),          // The Query processor to choose
-				       inQuery,            // the query to be processed
-				       i->mWeight,         // the weight the result will receive
-				       mAccessor->size(),  // the size of the accessor (to get all potential results)
-				       inDifferenceToBest));// the difference to the best which is allowed for a result
-    /* EX-LEAK
-       the following was a special branch for reducing the
-       number of spawned threads by one. Apparently this did 
-       not work and caused a memory leak. Now it seems to work.
-       
-	   if(1==0 
-	   && (i==lLast)){
-	   lListOfThreads.back().callFunction();//something to do for the main thread
-	   }else*/
-      
-    {
-      cout << "Running thread" 
-	   << endl;
-      lListOfThreads.back().runThread();//run the thread
-      cout << "loop" 
-	   << endl;
-    }
-    cout << "endloop" 
-	 << endl;
+  if(!mUsesResultURLs){
+    // if the mUsesReusltURLs is not set,
+    // just call fastquery, and assemble from that a result,
+    // as CQuery does.
+    return CQuery::query(inQuery);
   }
-  // here we would join all threads
+  
+  pair<bool,long> lNumberOfInterestingImages=
+    inQuery.longReadAttribute(mrml_const::result_size);
+  
+  int inNumberOfInterestingImages=
+    lNumberOfInterestingImages.second;
 
-  for(list<CQMThread>::iterator lThread=lListOfThreads.begin();
-      lThread!=lListOfThreads.end();
-      lThread++){
+  pair<bool,long> lCutoff=
+    inQuery.longReadAttribute(mrml_const::result_cutoff);
+  
+  int inCutoff=
+    lCutoff.second;
 
-    cout << "joining..." << endl;
+  // do a deep clone of the query (for const cast)
+  CXMLElement* lQuery=inQuery.clone(1);
 
-    lThread->join();
+  if(lQuery->child_list_begin()!=lQuery->child_list_end()){
 
-    cout << "before merging " << endl;
+    //
+    // set the result size to a multiple of the 
+    // number of the images requested 
+    // to get a higher probability that
+    // the combination reflects the real score
+    // you want more explanation?
+    // you get it at help-gift@gnu.org
+    //
+    lQuery->addAttribute(mrml_const::result_size,
+			 long(inNumberOfInterestingImages*5));
+    
+    cout << "CMultiple::query Number of children:"
+	 << mChildren.size()
+	 << endl;
+    
+    
+    //list<CWeightedResult> lTemporary;
+    double lWeightSum(0);
+    
+    map<string,CMergeTriplet> lResultMap;
+    
+    // no mutex protection needed as this is not called except by main thread
+    
+    //
+    // rip this into two parts
+    // in order to 
+    // make it possible to run the querying in one thread
+    // and do the merging after having waited for each thread
+    //
+    
+    list<CQMThread> lListOfThreads;
 
-    if(!lThread->mFastResult){
-      cout << "THE THE RESULT OF THIS THREAD WAS NIL " 
+    lCChildren::const_iterator lLast=mChildren.end();
+    lLast--;
+    for(lCChildren::const_iterator i=mChildren.begin();
+	i!=mChildren.end();
+	i++){
+      lWeightSum+=i->mWeight;
+    
+      //lTemporary.push_back(CWeightedResult());
+    
+      cout << "**-------------------------------this CMultiple QUERY:" << this 
+	   << ", i->mQuery:" << i->mQuery 
+	   << ", i->mWeight:" << i->mWeight 
+	   << endl;
+    
+    
+      lListOfThreads.push_back(CQMThread(*(i->mQuery),          // The Query processor to choose
+					 *lQuery,            // the query to be processed
+					 i->mWeight,         // the weight the result will receive
+					 mAccessor->size(),  // the size of the accessor (to get all potential results)
+					 inCutoff));// the difference to the best which is allowed for a result
+      /* EX-LEAK
+	 the following was a special branch for reducing the
+	 number of spawned threads by one. Apparently this did 
+	 not work and caused a memory leak. Now it seems to work.
+       
+	 if(1==0 
+	 && (i==lLast)){
+	 lListOfThreads.back().callFunction();//something to do for the main thread
+	 }else*/
+      
+      {
+	cout << "Running thread" 
+	     << endl;
+	lListOfThreads.back().runThread();//run the thread
+	cout << "loop" 
+	     << endl;
+      }
+      cout << "endloop" 
 	   << endl;
     }
-    if(lThread->mResult){
-      /*
-	OK. At this point we got back a query-result XML element.
-	now we want the result-element-list
-      */
-      for(CXMLElement::lCChildren::const_iterator i=lThread->mResult->child_list_begin();
-	  i!=lThread->mResult->child_list_end();
-	  i++){
-	if((*i)->getName() == mrml_const::query_result_element_list){
-	  for(CXMLElement::lCChildren::const_iterator j=(*i)->child_list_begin();
-	      j!=(*i)->child_list_end();
-	      j++){
-	    if((*j)->getName() == mrml_const::query_result_element){
-	      /* 
-		 inside this, *j points now to an XML element which
-		 is a query-result-element. from this we will read now
-		 the calculated-relevance,
-		 as well as the image and thumbnail location.
-	      */
-	      pair<bool,double> lCalculatedRelevance=
-		(*j)->doubleReadAttribute(mrml_const::calculated_similarity);
-	      pair<bool,string> lImageLocation=
-		(*j)->stringReadAttribute(mrml_const::image_location);
-	      pair<bool,string> lThumbnailLocation=
-		(*j)->stringReadAttribute(mrml_const::thumbnail_location);
+    // here we would join all threads
+
+    for(list<CQMThread>::iterator lThread=lListOfThreads.begin();
+	lThread!=lListOfThreads.end();
+	lThread++){
+
+      cout << "joining..." << endl;
+
+      lThread->join();
+
+      cout << "before merging " << endl;
+
+      if(!lThread->mResult){
+	cout << "THE THE RESULT OF THIS THREAD WAS NIL " 
+	     << endl;
+      }
+      if(lThread->mResult){
+	/*
+	  OK. At this point we got back a query-result XML element.
+	  now we want the result-element-list
+	*/
+	cout << "H" << flush;
+	for(CXMLElement::lCChildren::const_iterator i=lThread->mResult->child_list_begin();
+	    i!=lThread->mResult->child_list_end();
+	    i++){
+	  cout << "I" << flush;
+	  if((*i)->getName() == mrml_const::query_result_element_list){
+	    for(CXMLElement::lCChildren::const_iterator j=(*i)->child_list_begin();
+		j!=(*i)->child_list_end();
+		j++){
+	      cout << "J" << flush;
+	      if((*j)->getName() == mrml_const::query_result_element){
+		cout << "K" << flush;
+		/* 
+		   inside this, *j points now to an XML element which
+		   is a query-result-element. from this we will read now
+		   the calculated-relevance,
+		   as well as the image and thumbnail location.
+		*/
+		pair<bool,double> lCalculatedRelevance=
+		  (*j)->doubleReadAttribute(mrml_const::calculated_similarity);
+		pair<bool,string> lImageLocation=
+		  (*j)->stringReadAttribute(mrml_const::image_location);
+		pair<bool,string> lThumbnailLocation=
+		  (*j)->stringReadAttribute(mrml_const::thumbnail_location);
+
+		cout << "L" << flush;
+
+		// no relevance corresponds to relevance 0
+		if(! lCalculatedRelevance.first){
+		  lCalculatedRelevance=make_pair(bool(0),
+						 double(0));
+		}
+
+		cout << "L" << flush;
+		// if there is a thumbnail and no image,
+		// we take the thumbnail location as image location
+		if((lThumbnailLocation.first)
+		   && (!lImageLocation.first)){
+		  lImageLocation=lThumbnailLocation;
+		}
+		cout << "L" << flush;
+		// if there is an image and no thumbnail,
+		// we take the image location as thumbnail location
+		if((!lThumbnailLocation.first)
+		   && (lImageLocation.first)){
+		  lThumbnailLocation=lImageLocation;
+		}
+		cout << "L" << flush;
+	      
+		// now we are guaranteed to have a well-initialised
+		// image location
+		if(lImageLocation.first){
+		  map<string,CMergeTriplet>::iterator lFound(lResultMap.find(lImageLocation.second));
+		  
+		  if(lFound!=lResultMap.end()){
+		    cout << "A" << flush;
+		    lFound->second.addToRelevance(lCalculatedRelevance.second);
+		    cout << "[" << lFound->second.getCalculatedSimilarity() << "]" << flush;
+		  }else{
+		    // this result is not yet in the result map
+		    lFound=lResultMap.insert(make_pair(lImageLocation.second,CMergeTriplet(lImageLocation.second,
+										    lThumbnailLocation.second))).first;
+		    lFound->second.addToRelevance(lCalculatedRelevance.second);
+		  }
+		cout << "M" << flush;
+
+		}
+	      }
 	    }
 	  }
 	}
+	delete lThread->mFastResult;
       }
-      delete lThread->mFastResult;
-    }
 
     
-    cout << "after merging " << endl;
-  }
+    
+      cout << "after thread " << endl;
+    }
+    cout << "ALL THREADS FINISHED " << endl;
   
-  CXMLElement* lReturnValue=new CXMLElement(mrml_const::query_result);
+    {
+      // now we build a list of merge triplets
+      // that is sorted by score in descending order
+      list<CMergeTriplet> lResultList;
+      for(map<string,CMergeTriplet>::const_iterator i=lResultMap.begin();
+	  i!=lResultMap.end();
+	  i++){
+	lResultList.push_back(i->second);
+      }
+      cout << "DELETING " << endl;
+      lResultList.sort(CSortDescendingByRelevance_MT());
+      cout << "DELETING " << endl;
+    
+      {
+	list<CMergeTriplet>::iterator iSkip=lResultList.begin();
+	for(int i=0;
+	    i<inNumberOfInterestingImages && i<lResultList.size();
+	    i++){
+	  iSkip->setSimilarity(iSkip->getCalculatedSimilarity()/lWeightSum);
+	  iSkip++;
+	}
+	lResultList.erase(iSkip,lResultList.end());
+      }
+
+      // now let's build a result element tree
+      CXMLElement* lReturnValue(new CXMLElement(mrml_const::query_result,0));
+      CXMLElement* lReturnList(new CXMLElement(mrml_const::query_result_element_list,0));
+      lReturnValue->addChild(lReturnList);
+    
+      assert(mAccessor);
+    
+      for(list<CMergeTriplet>::const_iterator i=lResultList.begin();
+	  i!=lResultList.end();
+	  i++){
+      
+	CXMLElement* lReturnElement(new CXMLElement(mrml_const::query_result_element,
+						    0));
+	{
+	  double lRelevanceLevel(i->getCalculatedSimilarity());
+	  string lString(mrml_const::calculated_similarity);
+	  lReturnElement->addAttribute(lString,
+				       lRelevanceLevel);
+	}
+      
+      
+      
+	{
+	  string lURL(i->getImageLocation());
+	  string lString(mrml_const::image_location);
+	  lReturnElement->addAttribute(lString,
+				       lURL);
+	}
+
+	{
+	  string lURL(i->getThumbnailLocation());
+	  string lString(mrml_const::thumbnail_location);
+	  lReturnElement->addAttribute(lString,
+				       lURL);
+	}
+      
+	lReturnValue->addChild(lReturnElement);
+      
+	lReturnValue->moveUp();
+      
+      }
+      //gMutex->unlock();//debugging
+      return lReturnValue;
+    }
+  }else{
+    //gMutex->unlock();//debugging
+    return getRandomImages(inNumberOfInterestingImages);
+  }
+
+  //gMutex->unlock();//debugging
   // missing sort and output
-  return lReturnValue;
+  list<pair<string,string> > lAttributes;
+  lAttributes.push_back(make_pair(mrml_const::message,
+				  string("empty query result, i seem to have missed all ifs and elses!")));
+  return new CXMLElement(mrml_const::error,lAttributes);
 };
 

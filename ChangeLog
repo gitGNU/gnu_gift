@@ -1,5 +1,9 @@
 2001-12-11  MUELLER Wolfgang  <Wolfgang.Mueller@cui.unige.ch>
 
+	* libMRML/include/CQMultiple.h: 
+	* libMRML/cc/CQMultiple.cc:
+	changed from voi
+
 	* Doc/Doxyfile.in (PROJECT_NAME): create ini file with
 	@PACKAGE@ and @VERSION@ that will be substituted.
 

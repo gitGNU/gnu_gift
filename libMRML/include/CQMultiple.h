@@ -146,7 +146,7 @@ protected:
       on which GIFT was compiled, then this function will
       run in a thread, and fastQuery will wait for it
   */
-  static void doFastQueryThread(void *);
+  static void* doFastQueryThread(void *);
   /**
    *
    * calls fastQuery for every child, merges the results
@@ -161,7 +161,7 @@ protected:
       on which GIFT was compiled, then this function will
       run in a thread, and fastQuery will wait for it
   */
-  static void doQueryThread(void *);
+  static void* doQueryThread(void *);
   /**
    *
    * calls query for every child, merges the results by URLs
