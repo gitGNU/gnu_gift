@@ -1,3 +1,14 @@
+2001-03-02  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libMRML/include/CXMLElementBuilder.h: 
+	* libMRML/cc/CXMLElementBuilder.cc: Added this class
+	it builds an XML tree from a string. This currently is
+	done within CCommunicationHandler, but I found I am using
+	this about everywhere, so I put it into a special class.
+
+	* libMRML/include/CCommunicationHandler.h: 
+	small changes in the comments
+
 2001-02-21  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* scripts/perl/gift-add-collection.pre-pl (wanted): adding

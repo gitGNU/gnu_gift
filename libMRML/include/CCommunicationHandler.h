@@ -53,30 +53,30 @@ class CCommunicationHandler{
 
   CMutex mMutex;
   
-    /** 
-	the root of the Document tree which we are making.
-	It is destroyed automatically when overwritten.
-     */
-    CSelfDestroyPointer<CXMLElement> mDocumentRoot;
-
-    /** the xml parser which is used for all this
-     */
-    XML_Parser mParser;  
-
-    /**  <SEQUENCE MATTERS HERE> 
-    /** session manager */
-    CSessionManager& mSessionManager;
-    /**  </SEQUENCE MATTERS HERE> 
-
-	 An xml subtree, containing
-	 all configured algorithms 
-    */
-    CAlgorithm* mAlgorithmTree;
-    /**
-       A DOM-alike tree built from this text
+  /** 
+      the root of the Document tree which we are making.
+      It is destroyed automatically when overwritten.
+  */
+  CSelfDestroyPointer<CXMLElement> mDocumentRoot;
+  
+  /** the xml parser which is used for all this
+   */
+  XML_Parser mParser;  
+  
+  /**  <SEQUENCE MATTERS HERE> */
+  /** session manager */
+  CSessionManager& mSessionManager;
+  /**  </SEQUENCE MATTERS HERE> 
+       
+       An xml subtree, containing
+       all configured algorithms 
+  */
+  CAlgorithm* mAlgorithmTree;
+  /**
+     A DOM-alike tree built from this text
      
-    */
-    CSelfDestroyPointer<CXMLElement> mCurrentTree;
+  */
+  CSelfDestroyPointer<CXMLElement> mCurrentTree;
   
     public:
     /**

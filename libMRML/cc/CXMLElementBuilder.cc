@@ -1,0 +1,98 @@
+
+#include "CXMLElementBuilder.h"
+
+void newStartXMLElement(void *inUserData, 
+			 const char *inElementName, 
+			 const char **inAttributes){
+
+  cout << "STARTING:" << inElementName << endl;
+
+  CXMLElement** lDocumentTree=(CXMLElement**)inUserData;
+  if(!(*lDocumentTree)){
+    *lDocumentTree=new CXMLElement(inElementName,
+				   inAttributes);
+  }else{
+    (*lDocumentTree)->addChild(inElementName,
+			       inAttributes);
+  }
+}
+void newXMLTextElement(void *inUserData, 
+			const XML_Char *inText,
+			const int inSize){
+
+  CSelfDestroyPointer<char> lBuffer((char*)operator new(inSize+1));
+  
+  strncpy(lBuffer,inText,inSize);
+  lBuffer[inSize]=(char)0;
+
+  string lText(lBuffer);
+
+  cout << inSize << ":--------------------TEXT_" << lText << "_" << endl;
+  
+
+//   bool lWhitespaceOnly(true);
+//   for(char* i(lBuffer);
+//       i!=((char*)lBuffer)+inSize;
+//       i++){
+//     if((*i!=' ')
+//        && (*i!='\n')
+//        && (*i!='\t')){
+//       lWhitespaceOnly=false;
+//     }
+//   }
+
+
+  //  if(!lWhitespaceOnly){
+  CXMLElement** lDocumentTree=(CXMLElement**)inUserData;
+  if(*lDocumentTree){
+    (*lDocumentTree)->addChild(new CXMLElement(CXMLElement::cTextNode,
+					       (char*)lBuffer));
+    (*lDocumentTree)->moveUp();
+  }
+  //}else{
+  //cout << "rejected: WHITESPACE ONLY"
+  //     << endl;
+  //}
+}
+void newEndXMLElement(void *inUserData, 
+		       const char *inElementName){
+  cout << "ENDING:" << inElementName << endl;
+  CXMLElement** lDocumentTree=(CXMLElement**)inUserData;
+
+  (*lDocumentTree)->moveUp();
+}
+
+CXMLElement* CXMLElementBuilder::stringToElement(const string& inString){
+  XML_Parser lParser = XML_ParserCreate(NULL);//default encoding
+  CXMLElement** lDocumentRoot=new CXMLElement*;
+  *lDocumentRoot=0;
+  XML_SetUserData(lParser,
+		  lDocumentRoot);//ex this
+  XML_SetElementHandler(lParser, 
+			newStartXMLElement,//ex startMRMLElement
+			newEndXMLElement);//ex  endMRMLElement
+  XML_SetCharacterDataHandler(lParser,
+ 			      newXMLTextElement);
+
+  bool lDone=false;
+  if (!XML_Parse(lParser, 
+		 inString.c_str(), 
+		 inString.size(), 
+		 lDone)) {
+    cerr << "CCommunicationHandler.cc: __LINE__ XML ERROR: "
+	 << XML_ErrorString(XML_GetErrorCode(lParser))
+	 << " at line "
+	 << XML_GetCurrentLineNumber(lParser)
+	 << endl;
+    
+    delete *lDocumentRoot;
+    delete lDocumentRoot;
+    return 0;// instead of exit
+  }
+  XML_ParserFree(lParser);
+  CXMLElement* lReturnValue(*lDocumentRoot);
+  delete lDocumentRoot;
+  return lReturnValue;
+}
+
+

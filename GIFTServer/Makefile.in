@@ -1,7 +1,6 @@
-# Makefile.in generated automatically by automake 1.4c from Makefile.am
+# Makefile.in generated automatically by automake 1.4 from Makefile.am
 
-# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000
-# Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -10,6 +9,9 @@
 # but WITHOUT ANY WARRANTY, to the extent permitted by law; without
 # even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 # PARTICULAR PURPOSE.
+
+# the bin programs to be made in this directory
+
 
 SHELL = @SHELL@
 
@@ -32,6 +34,8 @@ mandir = @mandir@
 includedir = @includedir@
 oldincludedir = /usr/include
 
+DESTDIR =
+
 pkgdatadir = $(datadir)/@PACKAGE@
 pkglibdir = $(libdir)/@PACKAGE@
 pkgincludedir = $(includedir)/@PACKAGE@
@@ -44,10 +48,9 @@ AUTOMAKE = @AUTOMAKE@
 AUTOHEADER = @AUTOHEADER@
 
 INSTALL = @INSTALL@
-INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@ $(AM_INSTALL_PROGRAM_FLAGS)
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
-INSTALL_STRIP_FLAG =
 transform = @program_transform_name@
 
 NORMAL_INSTALL = :
@@ -56,8 +59,6 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-
-@SET_MAKE@
 host_alias = @host_alias@
 host_triplet = @host@
 AMDEP = @AMDEP@
@@ -121,9 +122,6 @@ lispdir = @lispdir@
 multi_basedir = @multi_basedir@
 pythondir = @pythondir@
 
-# the bin programs to be made in this directory
-
-
 SUBDIRS = gift-config gift-mrml-messages
 
 # data_DATA= gift-config gift-mrml-messages
@@ -150,12 +148,7 @@ INCLUDES = -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile
 # 1.3.5 does needs them
 #
 #
-gift_LDADD = ../expat/xmlparse/*.o ../expat/xmltok/*.o  \
-	@PRE_INSTALL_LIBDIRS@ @PRE_INSTALL_LIBDIRS@\
-	@UNPUBLISHED_DIR@ @UNPUBLISHED@ @BAYESIAN@ \
-        -lGIFTQuPerl -lGIFTAcPerl -lMRML\
-	@BAYESIAN_LD_ADD@\
-	@PERL_LD_ADD@ 
+gift_LDADD = ../expat/xmlparse/*.o ../expat/xmltok/*.o  	@PRE_INSTALL_LIBDIRS@ @PRE_INSTALL_LIBDIRS@ 	@UNPUBLISHED_DIR@ @UNPUBLISHED@ @BAYESIAN@         -lGIFTQuPerl -lGIFTAcPerl -lMRML 	@BAYESIAN_LD_ADD@ 	@PERL_LD_ADD@ 
 
 
 # -lGIFTAcURL2FTS -lGIFTAcInvertedFile \
@@ -204,7 +197,6 @@ gift_modify_distance_matrix_SOURCES = modifyDistanceMatrix.cc
 # (1-x) for each float x read
 # YESSIR, this is a HACK. 
 gift_one_minus_SOURCES = oneMinus.cc
-subdir = GIFTServer
 mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
 CONFIG_HEADER = ../gift-config.h
 CONFIG_CLEAN_FILES = 
@@ -218,59 +210,48 @@ DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-am_gift_OBJECTS =  Server.$(OBJEXT)
-gift_OBJECTS =  $(am_gift_OBJECTS)
+gift_OBJECTS =  Server.$(OBJEXT)
 gift_DEPENDENCIES =  ../expat/xmlparse/*.o ../expat/xmltok/*.o
 gift_LDFLAGS = 
-am_gift_endianize_OBJECTS =  endianize.$(OBJEXT)
-gift_endianize_OBJECTS =  $(am_gift_endianize_OBJECTS)
+gift_endianize_OBJECTS =  endianize.$(OBJEXT)
 gift_endianize_LDADD = $(LDADD)
 gift_endianize_DEPENDENCIES = 
 gift_endianize_LDFLAGS = 
-am_gift_generate_inverted_file_OBJECTS =  generateInvertedFile.$(OBJEXT)
-gift_generate_inverted_file_OBJECTS =  \
-$(am_gift_generate_inverted_file_OBJECTS)
+gift_generate_inverted_file_OBJECTS =  generateInvertedFile.$(OBJEXT)
 gift_generate_inverted_file_DEPENDENCIES = 
-am_gift_modify_distance_matrix_OBJECTS =  modifyDistanceMatrix.$(OBJEXT)
-gift_modify_distance_matrix_OBJECTS =  \
-$(am_gift_modify_distance_matrix_OBJECTS)
+gift_modify_distance_matrix_OBJECTS =  modifyDistanceMatrix.$(OBJEXT)
 gift_modify_distance_matrix_LDADD = $(LDADD)
 gift_modify_distance_matrix_DEPENDENCIES = 
 gift_modify_distance_matrix_LDFLAGS = 
-am_gift_one_minus_OBJECTS =  oneMinus.$(OBJEXT)
-gift_one_minus_OBJECTS =  $(am_gift_one_minus_OBJECTS)
+gift_one_minus_OBJECTS =  oneMinus.$(OBJEXT)
 gift_one_minus_LDADD = $(LDADD)
 gift_one_minus_DEPENDENCIES = 
 gift_one_minus_LDFLAGS = 
+CXXFLAGS = @CXXFLAGS@
 CXXCOMPILE = $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
 LTCXXCOMPILE = $(LIBTOOL) --mode=compile $(CXX) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS)
-CXXFLAGS = @CXXFLAGS@
 CXXLD = $(CXX)
-CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@
-DIST_SOURCES =  $(gift_SOURCES) $(gift_endianize_SOURCES) \
-$(gift_generate_inverted_file_SOURCES) \
-$(gift_modify_distance_matrix_SOURCES) $(gift_one_minus_SOURCES)
-depcomp = $(SHELL) $(top_srcdir)/depcomp
-DEP_FILES =  @AMDEP@ $(DEPDIR)/Server.Po $(DEPDIR)/endianize.Po \
-$(DEPDIR)/generateInvertedFile.Po $(DEPDIR)/modifyDistanceMatrix.Po \
-$(DEPDIR)/oneMinus.Po
+CXXLINK = $(LIBTOOL) --mode=link $(CXXLD) $(AM_CXXFLAGS) $(CXXFLAGS) $(LDFLAGS) -o $@
 DIST_COMMON =  Makefile.am Makefile.in
 
 
-DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
+TAR = tar
 GZIP_ENV = --best
-DIST_SUBDIRS =  $(SUBDIRS)
+DEP_FILES =  .deps/Server.P .deps/endianize.P \
+.deps/generateInvertedFile.P .deps/modifyDistanceMatrix.P \
+.deps/oneMinus.P
 SOURCES = $(gift_SOURCES) $(gift_endianize_SOURCES) $(gift_generate_inverted_file_SOURCES) $(gift_modify_distance_matrix_SOURCES) $(gift_one_minus_SOURCES)
-OBJECTS = $(am_gift_OBJECTS) $(am_gift_endianize_OBJECTS) $(am_gift_generate_inverted_file_OBJECTS) $(am_gift_modify_distance_matrix_OBJECTS) $(am_gift_one_minus_OBJECTS)
+OBJECTS = $(gift_OBJECTS) $(gift_endianize_OBJECTS) $(gift_generate_inverted_file_OBJECTS) $(gift_modify_distance_matrix_OBJECTS) $(gift_one_minus_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .c .cc .lo .o .obj
+.SUFFIXES: .S .c .cc .lo .o .obj .s
 $(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnu GIFTServer/Makefile
 
-Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status $(BUILT_SOURCES)
 	cd $(top_builddir) \
 	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
 
@@ -289,19 +270,27 @@ install-binPROGRAMS: $(bin_PROGRAMS)
 	$(mkinstalldirs) $(DESTDIR)$(bindir)
 	@list='$(bin_PROGRAMS)'; for p in $$list; do \
 	  if test -f $$p; then \
-	    f="`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
-	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(bindir)/$$f"; \
-	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $(INSTALL_STRIP_FLAG) $$p $(DESTDIR)$(bindir)/$$f; \
+	    echo " $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
+	    $(LIBTOOL)  --mode=install $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
 	  else :; fi; \
 	done
 
 uninstall-binPROGRAMS:
 	@$(NORMAL_UNINSTALL)
-	@list='$(bin_PROGRAMS)'; for p in $$list; do \
-	  f="`echo $$p|sed -e 's/$(EXEEXT)$$//' -e '$(transform)' -e 's/$$/$(EXEEXT)/'`"; \
-	  echo " rm -f $(DESTDIR)$(bindir)/$$f"; \
-	  rm -f $(DESTDIR)$(bindir)/$$f; \
+	list='$(bin_PROGRAMS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
 	done
+
+# FIXME: We should only use cygpath when building on Windows,
+# and only if it is available.
+.c.obj:
+	$(COMPILE) -c `cygpath -w $<`
+
+.s.o:
+	$(COMPILE) -c $<
+
+.S.o:
+	$(COMPILE) -c $<
 
 mostlyclean-compile:
 	-rm -f *.o core *.core
@@ -313,6 +302,12 @@ distclean-compile:
 	-rm -f *.tab.c
 
 maintainer-clean-compile:
+
+.s.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
+
+.S.lo:
+	$(LIBTOOL) --mode=compile $(COMPILE) -c $<
 
 mostlyclean-libtool:
 	-rm -f *.lo
@@ -343,6 +338,12 @@ gift-modify-distance-matrix$(EXEEXT): $(gift_modify_distance_matrix_OBJECTS) $(g
 gift-one-minus$(EXEEXT): $(gift_one_minus_OBJECTS) $(gift_one_minus_DEPENDENCIES)
 	@rm -f gift-one-minus$(EXEEXT)
 	$(CXXLINK) $(gift_one_minus_LDFLAGS) $(gift_one_minus_OBJECTS) $(gift_one_minus_LDADD) $(LIBS)
+.cc.o:
+	$(CXXCOMPILE) -c $<
+.cc.obj:
+	$(CXXCOMPILE) -c `cygpath -w $<`
+.cc.lo:
+	$(LTCXXCOMPILE) -c $<
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -350,6 +351,8 @@ gift-one-minus$(EXEEXT): $(gift_one_minus_OBJECTS) $(gift_one_minus_DEPENDENCIES
 # (1) if the variable is set in `config.status', edit `config.status'
 #     (which will cause the Makefiles to be regenerated when you run `make');
 # (2) otherwise, pass the desired values on the `make' command line.
+
+@SET_MAKE@
 
 all-recursive install-data-recursive install-exec-recursive \
 installdirs-recursive install-recursive uninstall-recursive  \
@@ -376,16 +379,11 @@ mostlyclean-recursive clean-recursive distclean-recursive \
 maintainer-clean-recursive:
 	@set fnord $(MAKEFLAGS); amf=$$2; \
 	dot_seen=no; \
-	case "$@" in \
-	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
-	  *) list='$(SUBDIRS)' ;; \
-	esac; \
-	rev=''; for subdir in $$list; do \
-	  if test "$$subdir" = "."; then :; else \
-	    rev="$$subdir $$rev"; \
-	  fi; \
+	rev=''; list='$(SUBDIRS)'; for subdir in $$list; do \
+	  rev="$$subdir $$rev"; \
+	  test "$$subdir" = "." && dot_seen=yes; \
 	done; \
-	rev="$$rev ."; \
+	test "$$dot_seen" = "no" && rev=". $$rev"; \
 	target=`echo $@ | sed s/-recursive//`; \
 	for subdir in $$rev; do \
 	  echo "Making $$target in $$subdir"; \
@@ -404,17 +402,15 @@ tags-recursive:
 
 tags: TAGS
 
-ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
-	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
-	unique=`for i in $$list; do \
-	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
-	  done | \
-	  $(AWK) '    { files[$$0] = 1; } \
+ID: $(HEADERS) $(SOURCES) $(LISP)
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
-	mkid -fID $$unique $(LISP)
+	here=`pwd` && cd $(srcdir) \
+	  && mkid -f$$here/ID $$unique $(LISP)
 
-TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
-		$(TAGS_FILES) $(LISP)
+TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
 	tags=; \
 	here=`pwd`; \
 	list='$(SUBDIRS)'; for subdir in $$list; do \
@@ -422,19 +418,12 @@ TAGS: tags-recursive $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) \
 	    test -f $$subdir/TAGS && tags="$$tags -i $$here/$$subdir/TAGS"; \
    fi; \
 	done; \
-	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
-	unique=`for i in $$list; do \
-	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
-	  done | \
-	  $(AWK) '    { files[$$0] = 1; } \
+	list='$(SOURCES) $(HEADERS)'; \
+	unique=`for i in $$list; do echo $$i; done | \
+	  awk '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
 	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
-	  || etags $(ETAGS_ARGS) $$tags  $$unique $(LISP)
-
-GTAGS:
-	here=`CDPATH=: && cd $(top_builddir) && pwd` \
-	  && cd $(top_srcdir) \
-	  && gtags -i $$here
+	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
 
 mostlyclean-tags:
 
@@ -445,54 +434,24 @@ distclean-tags:
 
 maintainer-clean-tags:
 
-@AMDEP@include $(DEPDIR)/Server.Po
-@AMDEP@include $(DEPDIR)/endianize.Po
-@AMDEP@include $(DEPDIR)/generateInvertedFile.Po
-@AMDEP@include $(DEPDIR)/modifyDistanceMatrix.Po
-@AMDEP@include $(DEPDIR)/oneMinus.Po
-
-mostlyclean-depend:
-
-clean-depend:
-
-distclean-depend:
-	-rm -rf $(DEPDIR)
-
-maintainer-clean-depend:
-
-@AMDEP@CXXDEPMODE = @CXXDEPMODE@
-
-.cc.o:
-@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-@AMDEP@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
-
-.cc.lo:
-@AMDEP@	source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
-@AMDEP@	depfile='$(DEPDIR)/$*.Plo' tmpdepfile='$(DEPDIR)/$*.TPlo' @AMDEPBACKSLASH@
-@AMDEP@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(LTCXXCOMPILE) -c -o $@ `test -f $< || echo '$(srcdir)/'`$<
-
-.cc.obj:
-@AMDEP@	source='$<' object='$@' libtool=no @AMDEPBACKSLASH@
-@AMDEP@	depfile='$(DEPDIR)/$*.Po' tmpdepfile='$(DEPDIR)/$*.TPo' @AMDEPBACKSLASH@
-@AMDEP@	$(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-	$(CXXCOMPILE) -c -o $@ `cygpath -w $<`
-
-
 distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
 
+subdir = GIFTServer
+
 distdir: $(DISTFILES)
+	here=`cd $(top_builddir) && pwd`; \
+	top_distdir=`cd $(top_distdir) && pwd`; \
+	distdir=`cd $(distdir) && pwd`; \
+	cd $(top_srcdir) \
+	  && $(AUTOMAKE) --include-deps --build-dir=$$here --srcdir-name=$(top_srcdir) --output-dir=$$top_distdir --gnu GIFTServer/Makefile
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pR $$d/$$file $(distdir) \
-	    || exit 1; \
+	    cp -pr $$/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
-	    || cp -p $$d/$$file $(distdir)/$$file \
-	    || exit 1; \
+	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
+	    || cp -p $$d/$$file $(distdir)/$$file || :; \
 	  fi; \
 	done
 	for subdir in $(SUBDIRS); do \
@@ -500,10 +459,62 @@ distdir: $(DISTFILES)
 	    test -d $(distdir)/$$subdir \
 	    || mkdir $(distdir)/$$subdir \
 	    || exit 1; \
+	    chmod 777 $(distdir)/$$subdir; \
 	    (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) top_distdir=../$(top_distdir) distdir=../$(distdir)/$$subdir distdir) \
 	      || exit 1; \
 	  fi; \
 	done
+
+DEPS_MAGIC := $(shell mkdir .deps > /dev/null 2>&1 || :)
+
+-include $(DEP_FILES)
+
+mostlyclean-depend:
+
+clean-depend:
+
+distclean-depend:
+	-rm -rf .deps
+
+maintainer-clean-depend:
+
+%.o: %.c
+	@echo '$(COMPILE) -c $<'; \
+	$(COMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+	tr ' ' '\012' < .deps/$(*F).pp \
+	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+	    >> .deps/$(*F).P; \
+	rm .deps/$(*F).pp
+
+%.lo: %.c
+	@echo '$(LTCOMPILE) -c $<'; \
+	$(LTCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
+	  < .deps/$(*F).pp > .deps/$(*F).P; \
+	tr ' ' '\012' < .deps/$(*F).pp \
+	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+	    >> .deps/$(*F).P; \
+	rm -f .deps/$(*F).pp
+
+%.o: %.cc
+	@echo '$(CXXCOMPILE) -c $<'; \
+	$(CXXCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+	@-cp .deps/$(*F).pp .deps/$(*F).P; \
+	tr ' ' '\012' < .deps/$(*F).pp \
+	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+	    >> .deps/$(*F).P; \
+	rm .deps/$(*F).pp
+
+%.lo: %.cc
+	@echo '$(LTCXXCOMPILE) -c $<'; \
+	$(LTCXXCOMPILE) -Wp,-MD,.deps/$(*F).pp -c $<
+	@-sed -e 's/^\([^:]*\)\.o[ 	]*:/\1.lo \1.o :/' \
+	  < .deps/$(*F).pp > .deps/$(*F).P; \
+	tr ' ' '\012' < .deps/$(*F).pp \
+	  | sed -e 's/^\\$$//' -e '/^$$/ d' -e '/:$$/ d' -e 's/$$/ :/' \
+	    >> .deps/$(*F).P; \
+	rm -f .deps/$(*F).pp
 info-am:
 info: info-recursive
 dvi-am:
@@ -526,7 +537,7 @@ uninstall: uninstall-recursive
 all-am: Makefile $(PROGRAMS)
 all-redirect: all-recursive
 install-strip:
-	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
+	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
 installdirs: installdirs-recursive
 installdirs-am:
 	$(mkinstalldirs)  $(DESTDIR)$(bindir)
@@ -541,7 +552,6 @@ distclean-generic:
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
-	-rm -f Makefile.in
 mostlyclean-am:  mostlyclean-binPROGRAMS mostlyclean-compile \
 		mostlyclean-libtool mostlyclean-tags mostlyclean-depend \
 		mostlyclean-generic
@@ -569,25 +579,24 @@ maintainer-clean-am:  maintainer-clean-binPROGRAMS \
 
 maintainer-clean: maintainer-clean-recursive
 
-.PHONY: all all-am all-recursive all-redirect check check-am \
-check-recursive clean clean-binPROGRAMS clean-compile clean-depend \
-clean-generic clean-libtool clean-recursive clean-tags distclean \
-distclean-binPROGRAMS distclean-compile distclean-depend \
-distclean-generic distclean-libtool distclean-recursive distclean-tags \
-distdir dvi dvi-am dvi-recursive info info-am info-recursive install \
-install-am install-binPROGRAMS install-data install-data-am \
-install-data-recursive install-exec install-exec-am \
-install-exec-recursive install-recursive install-strip installcheck \
-installcheck-am installcheck-recursive installdirs installdirs-am \
-installdirs-recursive maintainer-clean maintainer-clean-binPROGRAMS \
-maintainer-clean-compile maintainer-clean-depend \
-maintainer-clean-generic maintainer-clean-libtool \
-maintainer-clean-recursive maintainer-clean-tags mostlyclean \
-mostlyclean-binPROGRAMS mostlyclean-compile mostlyclean-depend \
-mostlyclean-generic mostlyclean-libtool mostlyclean-recursive \
-mostlyclean-tags tags tags-recursive uninstall uninstall-am \
-uninstall-binPROGRAMS uninstall-data-recursive uninstall-exec-recursive \
-uninstall-recursive uninstalldirs-recursive
+.PHONY: mostlyclean-binPROGRAMS distclean-binPROGRAMS clean-binPROGRAMS \
+maintainer-clean-binPROGRAMS uninstall-binPROGRAMS install-binPROGRAMS \
+mostlyclean-compile distclean-compile clean-compile \
+maintainer-clean-compile mostlyclean-libtool distclean-libtool \
+clean-libtool maintainer-clean-libtool install-data-recursive \
+uninstall-data-recursive install-exec-recursive \
+uninstall-exec-recursive installdirs-recursive uninstalldirs-recursive \
+all-recursive check-recursive installcheck-recursive info-recursive \
+dvi-recursive mostlyclean-recursive distclean-recursive clean-recursive \
+maintainer-clean-recursive tags tags-recursive mostlyclean-tags \
+distclean-tags clean-tags maintainer-clean-tags distdir \
+mostlyclean-depend distclean-depend clean-depend \
+maintainer-clean-depend info-am info dvi-am dvi check check-am \
+installcheck-am installcheck install-exec-am install-exec \
+install-data-am install-data install-am install uninstall-am uninstall \
+all-redirect all-am all installdirs-am installdirs mostlyclean-generic \
+distclean-generic clean-generic maintainer-clean-generic clean \
+mostlyclean distclean maintainer-clean
 
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
