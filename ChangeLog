@@ -1,3 +1,8 @@
+2002-06-17  Wolfgang Müller  <kde3@btn1n6.inf.uni-bayreuth.de>
+
+	* scripts/perl/gift-start.pre-pl: making this script
+	ready for public use.
+
 2002-06-04  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
 
 	* libMRML/cc/CQuery.cc (query): reading cutoff attribute
