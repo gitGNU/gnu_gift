@@ -103,5 +103,7 @@ libMRML_la_SOURCES= \
 	CCommunicationHandler.cc\
 	\
 	CTimeStampGenerator.cc
+	\
+	CDebuggingMemoryManager.cc
 
 #CLEANFILES=CAccessorAdminCollection.cc
