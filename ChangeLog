@@ -1,3 +1,8 @@
+2002-01-22  MUELLER Wolfgang  <Wolfgang.Mueller@cui.unige.ch>
+
+	* GIFTServer/Server.cc (main): adding seeding by pid
+	third parameter has to be "0" to block seeding
+
 2002-01-20  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
 
 	* libMRML/cc/Makefile.am (libMRML-config.cc): 

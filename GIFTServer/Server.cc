@@ -535,7 +535,7 @@ void main(int argc, char **argv){
   gGIFTHome=string(getenv("GIFT_HOME")?getenv("GIFT_HOME"):getenv("HOME")?getenv("HOME"):".");
 
   cout << PACKAGE << "-" << VERSION << endl
-       << "Usage (server):              gift [<Port> [<Configuration-Directory>]]" << endl
+       << "Usage (server):              gift [<Port> [<Configuration-Directory>] [<SeedRandom? 1 or 0>]]" << endl
        << "making distance matrices:    gift <Port(ignored)> <Configuration-Directory> <Algorithm> <Colection> <from> <to>" << endl
        << endl
        << endl;
@@ -546,6 +546,14 @@ void main(int argc, char **argv){
   if(argc>2 && argv[2]){
     gGIFTHome=string(argv[2])+string("/");
   }
+  if(argc==4 && !strcmp("1",argv[3])){
+    cerr << "Warning: the random generator stays unseeded" << endl;
+  }else{    
+    cerr << "Random number generator has been seeded with " 
+	 << getpid() << endl;
+    srand(getpid());
+  }
+
 
   // the communication handler for this application
   // class definition is just above in this file
