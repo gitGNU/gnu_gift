@@ -15,8 +15,8 @@
 #endif
 
 typedef unsigned char byte;
-#define MAXBYTE 255
-#define MINBYTE 0
+#define MAX_BYTE 255
+#define MIN_BYTE 0
 
 #define PGM_ASC_MAGIC '2'
 #define PGM_RAW_MAGIC '5'

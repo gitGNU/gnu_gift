@@ -1,5 +1,15 @@
 2002-09-09  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
 
+	* libSquirePPM/normaliseContrast.c: 
+	removed old copyright notice from rewritten code (apparently
+	when rewriting, I forgot the notice in the file within which I
+	changed the procedure)
+	
+	* libSquirePPM/ppm.h (MIN_BYTE): 
+	* libSquirePPM/ppm_noproto.h (MIN_BYTE): 
+	* libSquirePPM/typedefs.h (bool): renamed maxbyte and minbyte
+	for (c) sake
+
 	* libMRML/cc/libMRML-config.pre-cc: should compile now
 	with systems that don't have getopt_long
 

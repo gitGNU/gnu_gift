@@ -20,30 +20,12 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
-/***************************************************
-* Copyright: JJK O'Ruanaidh 1998 All Rights Reserved
-*
-* This source code is for Laboratory use only and may
-* not distributed outside CUI, University of Geneva for
-* any purpose whatsoever without my express prior
-* consent. This code is provided 'as is' and no
-* liability is accepted for damage or loss caused
-* by using this code.
-*
-****************************************************/
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "typedefs.h"
 
-/* takes an image as a 1-dimensional array of pixels, which are
-   coded as floating point numbers. 
-
-   After applying this functionto inoutImage
-   it contains the same image but with values
-   between MAXBYTE and MINBYTE
-*/
 int normaliseContrast(float *inoutImage, 
 		      int NumPixels){
   float           lMinimalPixel, lMaximalPixel, lNormalisingFactor;
@@ -59,18 +41,17 @@ int normaliseContrast(float *inoutImage,
   }
 
   if (fabs(lMinimalPixel - lMaximalPixel) < 1e-10) {
-    fprintf(stderr, "Can't normalise this inoutImage\n");
+    fprintf(stderr, "Can't normalise this Image\n");
     return 1;
   }
 
   lNormalisingFactor = 
-    (float) (MAXBYTE - MINBYTE) 
+    (float) (MAX_BYTE - MIN_BYTE) 
     /(lMaximalPixel - lMinimalPixel);
 
   for (i = 0; i < NumPixels; i++) {
-    inoutImage[i] -= lMinimalPixel;
-    inoutImage[i] *= lNormalisingFactor;
-    inoutImage[i] += MINBYTE;
+    inoutImage[i] -= lMinimalPixel * lNormalisingFactor;
+    inoutImage[i] += MIN_BYTE;
   }
 
   return 0;

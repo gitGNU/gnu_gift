@@ -22,8 +22,8 @@
 */
 /* some typedefs */
 /* ======================= */
-#define MAXBYTE 255
-#define MINBYTE 0
+#define MAX_BYTE 255
+#define MIN_BYTE 0
 typedef unsigned char byte;
 enum bool {
 	False, True
