@@ -29,6 +29,41 @@ use CXMLTreeBuilder;
 use CXMLTreeVisitor;
 use Net::SMTP;
 use POSIX ":sys_wait_h";
+use Getopt::Long;
+use strict;
+use vars qw($lHost 
+	    $lPort
+	    $gMailTo
+	    $gMailFromUser
+	    $gSMTPHost
+	    $lDirectory
+	   );
+
+
+print "
+
+gift-start.pl [--gift-host host] [--gift-port port] [--gift-home gift-home] \\
+              [--smtp-host host] [--mail-from-user user(s)] [--mail-to user(s)]
+
+
+This program starts one instance of the GIFT. If this instance dies,
+it will send out a message to a list of addresses, saying that the
+GIFT has died. It will then automatically restart the GIFT.
+
+STDOUT from the GIFT will be redirected to /dev/null
+
+--gift-host   this is the host the GIFT will listen to
+              (currently NOT USED)
+--gift-port   this is the port the GIFT will listen to
+--gift-home   this is the directory where the GIFT will expect its
+              configuration data.
+--smtp-host   this is the smtp host which will be used for sending out mail
+--mail-to     a mail will be sent to this user. 
+              THIS CAN BE A COMMA-SEPARATED LIST OF EMAIL ADDRESSES
+--mail-from-user
+              This program will contact the SMTP server as the following user
+";
+
 
 # Begin:
 #  this code is taken from the perlipc manpage
@@ -45,10 +80,25 @@ sub REAPER {
 #  this code is taken from the perlipc manpage
 #
 
-print "I just installed the REAPER\n";
+print "$0: Diagnose: I just installed the REAPER\n";
 
-my($lHost,$lPort)=split(":",shift);
-my $lDirectory=shift or die "something wrong, no directory given";
+
+
+($lHost,$lPort)=split(":","localhost:12789");
+ $lDirectory=$ENV{GIFT_HOME} || $ENV{HOME};
+
+$gSMTPHost="localhost";
+$gMailTo="root\@localhost";
+$gMailFromUser=$ENV{USER};
+
+GetOptions('gift-home=s'=>\$lDirectory,
+	   'gift-host=s'=>\$lHost,
+	   'gift-port=s'=>\$lPort,
+	   'smtp-host=s'=>\$gSMTPHost,
+	   'mail-from-user=s'=>\$gMailFromUser,
+	   'mail-to=s'=>\$gMailTo);
+
+ die "something wrong, no gift-home directory given" unless $lDirectory;
 
 
 while(1){
@@ -81,32 +131,31 @@ while(1){
       die "Sendit dies";
     }else{
 
-      my $lCallstring="/home/wolfgang/GIFTInstall/bin/gift $lPort $lDirectory > /tmp/gift$$.tmplog";
+      my $lCallstring="__BINDIR__/gift $lPort $lDirectory > /dev/null";
       
       system("$lCallstring");
-      print STDERR "gift DIED!\n";
-      print STDERR "trying to send mail\n";
+      print STDERR "gift DIED!\nCalled: $lCallstring\n";
+      print STDERR "trying to send mail to $gMailTo, using $gSMTPHost, user $gMailFromUser\n";
 
-      my $smtp = Net::SMTP->new('cuismtp.unige.ch') or die "NO MAILHOST";
-      $smtp->mail("muellerw");
-      $smtp->to('muellerw@cui.unige.ch',
-		'stephane.marchand-maillet@cui.unige.ch');
+      my $smtp = Net::SMTP->new($gSMTPHost) or die "NO MAILHOST $gSMTPHost";
+      $smtp->mail($gMailFromUser) or die "Sending mail failed:  $!";
+      $smtp->to((split(",",$gMailTo))) or die "Sending mail failed:  $!";
       
-      $smtp->data();
-      $smtp->datasend('To: muellerw@cui.unige.ch , stephane.marchand-maillet@cui.unige.ch\n');
-      $smtp->datasend("Subject: DEAD: $lCallstring\n");
-      $smtp->datasend("\n");
+      $smtp->data() or die "Sending mail failed:  $!";
+      $smtp->datasend("To: $gMailTo\n") or die "Sending mail failed:  $!";
+      $smtp->datasend("Subject: [dead-GIFT] $lHost:$lPort Reviving: $lCallstring\n") or die "Sending mail failed:  $!";
+      $smtp->datasend("\n") or die "Sending mail failed:  $!";
       $smtp->datasend("$lCallstring\n
 just died
 It has been restarted automatically.
 
 this message has been generated automatically by
 $0
-");
-      $smtp->dataend();
+") or die "Sending mail failed:  $!";
+      $smtp->dataend() or die "Sending mail failed:  $!";
       
-      $smtp->quit;
-      print "Mail successfully sent\n";
+      $smtp->quit or die "Sending mail failed:  $!";
+      print "Mail successfully sent to $gMailTo\n";
       sleep 10;
       
     }
@@ -129,8 +178,8 @@ sub sendIt( $$ ){
 			{
 			 element=>"open-session",
 			 attributes=>{
-				      "user-name"=>"suchsuch",
-				      "session-name"=>"bildbild",
+				      "user-name"=>"giftstart",
+				      "session-name"=>"something",
 				     },
 			 children=>[]
 			}
@@ -174,6 +223,6 @@ sub sendIt( $$ ){
   
   print "The sessionID is : $lParsed->{attributes}->{'session-id'}\n";
   
-  system("find /usr/local/httpd/htdocs/tutorial/ -name \"*.html.in\" -exec perl /home/wolfgang/configure-tutorial.pl $lParsed->{attributes}->{'session-id'} \{\} \\;");
+  # very GENEVA SPECIFIC:  system("find /usr/local/httpd/htdocs/tutorial/ -name \"*.html.in\" -exec perl /home/wolfgang/configure-tutorial.pl $lParsed->{attributes}->{'session-id'} \{\} \\;");
   
 }
