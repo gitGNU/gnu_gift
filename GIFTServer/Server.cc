@@ -424,6 +424,12 @@ void* processMessage(void* inProcessMessageParameters){
   //new for better tear down??
   cout << "waitreadstream (I)" << endl;
   waitReadStream(lParameters->mSocket);
+  {
+    char lBuf;
+    while(recv(lParameters->mSocket,&lBuf,1,MSG_WAITALL)>0){
+      cout << "." << flush;
+    }
+  }
   cout << "waitreadstream (II)" << endl;
   //sleep(1);
   close(lParameters->mSocket);

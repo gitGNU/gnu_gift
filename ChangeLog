@@ -1,7 +1,22 @@
+2001-03-08  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* GIFTServer/Server.cc: Teardown: tries to read
+	all characters (includin junk) from the other side 
+	before finally closing the socket.
+
+	* scripts/perl/gift-start.pre-pl: a log of the 
+	PRINTOUT of each gift instance goes now to a
+	temporary file of the type gift$PID.tmplog
+	$PID being the proces id of the instance of 
+	gift-start.pre-pl (NOT the instance of the GIFT)
+
 2001-03-07  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
 
 	* dtd/mrml.dtd: added cui-time-stamp tag with 
 	calendar-time attribute
+
+	* libMRML/cc/Makefile.am: corresponding changes
 
 	* libMRML/include/CTimeStampGenerator.h: 
 	* libMRML/cc/CTimeStampGenerator.cc: 

@@ -81,7 +81,7 @@ while(1){
       die "Sendit dies";
     }else{
 
-      my $lCallstring="/home/wolfgang/GIFTInstall/bin/gift $lPort $lDirectory > /dev/null";
+      my $lCallstring="/home/wolfgang/GIFTInstall/bin/gift $lPort $lDirectory > /tmp/gift$$.tmplog";
       
       system("$lCallstring");
       print STDERR "gift DIED!\n";
@@ -93,7 +93,7 @@ while(1){
 		'stephane.marchand-maillet@cui.unige.ch');
       
       $smtp->data();
-      $smtp->datasend('To: muellerw@cui.unige.ch,stephane.marchand-mailled@cui.unige.ch\n');
+      $smtp->datasend('To: muellerw@cui.unige.ch , stephane.marchand-maillet@cui.unige.ch\n');
       $smtp->datasend("Subject: DEAD: $lCallstring\n");
       $smtp->datasend("\n");
       $smtp->datasend("$lCallstring\n
