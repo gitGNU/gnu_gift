@@ -482,12 +482,11 @@ is supposed to hold a description about anything which is nonstandard \MRML.
                                        (user-relevance-element+)
 >
 
-<!ELEMENT user-relevance-element EMPTY
+<!ELEMENT user-relevance-element (user-segmented-element-list?)
 >
 <!ATTLIST user-relevance-element 
                                  user-relevance CDATA #REQUIRED
                                  image-location CDATA #REQUIRED
-								 (user-segmented-element-list?)
 >
 
 <!ELEMENT user-segmented-element-list (user-segment-element+)>
@@ -511,11 +510,12 @@ is supposed to hold a description about anything which is nonstandard \MRML.
     <!ELEMENT query-result  ((query-resultelement-list*,query-result*)|error)>
 
     <!ELEMENT query-result-element-list ((query-result-element|error)+)>
-    <!ELEMENT query-result-element (error?)>
+    <!ELEMENT query-result-element ((error?)|
+							 (query-result-element-segment-list?))>
     <!ATTLIST query-result-element calculated-similarity      CDATA #REQUIRED
                              thumbnail-location              CDATA #REQUIRED
                              image-location                  CDATA #REQUIRED
-							 (query-result-element-segment-list?)>
+							 >
 
 	<!ELEMENT query-result-element-segment-list (query-result-element-segment+)>
 	<!ELEMENT query-result-element-segment (box|poly)*>

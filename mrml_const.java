@@ -6,7 +6,8 @@ package charmer.mrml;
 import java.lang.String;
 
 public class mrml_const { 
-    public final static String acknowledge_session_op = new String("acknowledge-session-op");
+    public final static String coords = new String("Coords");
+     public final static String acknowledge_session_op = new String("acknowledge-session-op");
      public final static String algorithm = new String("algorithm");
      public final static String algorithm_id = new String("algorithm-id");
      public final static String algorithm_list = new String("algorithm-list");
@@ -15,6 +16,7 @@ public class mrml_const {
      public final static String allows_children = new String("allows-children");
      public final static String auto_id = new String("auto-id");
      public final static String auto_id_name = new String("auto-id-name");
+     public final static String box = new String("box");
      public final static String calculated_similarity = new String("calculated-similarity");
      public final static String calendar_time = new String("calendar-time");
      public final static String caption = new String("caption");
@@ -70,12 +72,15 @@ public class mrml_const {
      public final static String cui_weighting_function = new String("cui-weighting-function");
      public final static String defaultstate = new String("defaultstate");
      public final static String delete_session = new String("delete-session");
+     public final static String dim = new String("dim");
      public final static String error = new String("error");
      public final static String from = new String("from");
      public final static String get_algorithms = new String("get-algorithms");
      public final static String get_collections = new String("get-collections");
      public final static String get_configuration = new String("get-configuration");
      public final static String get_property_sheet = new String("get-property-sheet");
+     public final static String get_segment_by_url = new String("get-segment-by-url");
+     public final static String get_segment_by_url_list = new String("get-segment-by-url-list");
      public final static String get_sessions = new String("get-sessions");
      public final static String image_location = new String("image-location");
      public final static String max_subset_size = new String("max-subset-size");
@@ -84,6 +89,7 @@ public class mrml_const {
      public final static String mrml = new String("mrml");
      public final static String open_session = new String("open-session");
      public final static String password = new String("password");
+     public final static String poly = new String("poly");
      public final static String property_sheet = new String("property-sheet");
      public final static String property_sheet_id = new String("property-sheet-id");
      public final static String property_sheet_type = new String("property-sheet-type");
@@ -93,6 +99,8 @@ public class mrml_const {
      public final static String query_result = new String("query-result");
      public final static String query_result_element = new String("query-result-element");
      public final static String query_result_element_list = new String("query-result-element-list");
+     public final static String query_result_element_segment = new String("query-result-element-segment");
+     public final static String query_result_element_segment_list = new String("query-result-element-segment-list");
      public final static String query_step = new String("query-step");
      public final static String query_step_id = new String("query-step-id");
      public final static String query_string = new String("query-string");
@@ -100,6 +108,8 @@ public class mrml_const {
      public final static String rename_session = new String("rename-session");
      public final static String result_cutoff = new String("result-cutoff");
      public final static String result_size = new String("result-size");
+     public final static String segmenet_id = new String("segmenet-id");
+     public final static String segment_id = new String("segment-id");
      public final static String send_name = new String("send-name");
      public final static String send_type = new String("send-type");
      public final static String send_value = new String("send-value");
@@ -117,5 +127,8 @@ public class mrml_const {
      public final static String user_relevance = new String("user-relevance");
      public final static String user_relevance_element = new String("user-relevance-element");
      public final static String user_relevance_element_list = new String("user-relevance-element-list");
+     public final static String user_relevence = new String("user-relevence");
+     public final static String user_segmented_element = new String("user-segmented-element");
+     public final static String user_segmented_element_list = new String("user-segmented-element-list");
      public final static String visibility = new String("visibility");
  }; 

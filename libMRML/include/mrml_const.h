@@ -4,7 +4,8 @@
 #include <string>
 using namespace std;
 class mrml_const { public: 
-    static const string acknowledge_session_op;
+    static const string coords;
+     static const string acknowledge_session_op;
      static const string algorithm;
      static const string algorithm_id;
      static const string algorithm_list;
@@ -13,6 +14,7 @@ class mrml_const { public:
      static const string allows_children;
      static const string auto_id;
      static const string auto_id_name;
+     static const string box;
      static const string calculated_similarity;
      static const string calendar_time;
      static const string caption;
@@ -68,12 +70,15 @@ class mrml_const { public:
      static const string cui_weighting_function;
      static const string defaultstate;
      static const string delete_session;
+     static const string dim;
      static const string error;
      static const string from;
      static const string get_algorithms;
      static const string get_collections;
      static const string get_configuration;
      static const string get_property_sheet;
+     static const string get_segment_by_url;
+     static const string get_segment_by_url_list;
      static const string get_sessions;
      static const string image_location;
      static const string max_subset_size;
@@ -82,6 +87,7 @@ class mrml_const { public:
      static const string mrml;
      static const string open_session;
      static const string password;
+     static const string poly;
      static const string property_sheet;
      static const string property_sheet_id;
      static const string property_sheet_type;
@@ -91,6 +97,8 @@ class mrml_const { public:
      static const string query_result;
      static const string query_result_element;
      static const string query_result_element_list;
+     static const string query_result_element_segment;
+     static const string query_result_element_segment_list;
      static const string query_step;
      static const string query_step_id;
      static const string query_string;
@@ -98,6 +106,8 @@ class mrml_const { public:
      static const string rename_session;
      static const string result_cutoff;
      static const string result_size;
+     static const string segmenet_id;
+     static const string segment_id;
      static const string send_name;
      static const string send_type;
      static const string send_value;
@@ -115,5 +125,8 @@ class mrml_const { public:
      static const string user_relevance;
      static const string user_relevance_element;
      static const string user_relevance_element_list;
+     static const string user_relevence;
+     static const string user_segmented_element;
+     static const string user_segmented_element_list;
      static const string visibility;
  }; 
