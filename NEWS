@@ -1,3 +1,7 @@
+0.1.8   fixed some bugs with the make dist target. Same as last version,
+	but *should* compile now without any tweaking on 
+	gcc v3.0.2 (and hopefully later?) and gcc v2.95.
+
 0.1.7   some exception cleanup, some steps towards user authentification
 	(server using multiple sockets).
 

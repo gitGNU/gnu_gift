@@ -33,6 +33,7 @@
 
 #include "libMRML/include/CMutex.h"
 #include "libMRML/include/CAccessorElement.h"
+class CXMLElement;
 
 /**
 *
@@ -116,6 +117,27 @@ public:
 					 list<CAccessorElement>::size_type inSize)const=0;
   /** The number of images in this accessor */
   virtual int size()const=0;
+  //@}
+  /** @name Database Construction */
+  //@{
+  /** 
+      If a new collection is created during runtime, this function prepares 
+      the indexing structures such that they are able to accept new objects.
+
+      The collection id and name must be given when constructing 
+      <code>*this</code>. All other data are added to the configuration
+      tag in this. The resulting configuration tag is output as result
+      of prepareDatabase.
+
+      @returns configuration element that contains new configuration data
+               as result of prepareDatabase
+  */
+  virtual CXMLElement* prepareDatabase();
+  /** 
+      Is the database accessed by this accessor prepared?
+      In other words: is there an index structure to access?
+   */
+  virtual bool isPreparedDatabase()const;
   //@}
   /** virtual accessor for clean destruction */
   virtual ~CAccessor();

@@ -92,6 +92,8 @@ public:
   void setCollectionElement(CXMLElement*);
   /**  */
   const CXMLElement* getCollectionElement()const;
+  /**  */
+  const CXMLElement* getQueryParadigmList()const;
   /** */
   list<string>* getAvailableIndices()const;
   //----------------------------------------

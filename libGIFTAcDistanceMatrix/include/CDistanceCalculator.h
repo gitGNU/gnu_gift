@@ -27,9 +27,6 @@
 #include "libGIFTAcDistanceMatrix/include/CPersistentTranslatedIndexMatrix.h"
 #include <math.h>
 #include "libMRML/include/CMagic.h"
-#include "CProbabilisticSet.h"
-
-#include "libGIFTAcDistanceMatrix/include/CSquasher.h"
 
 template<class TTIterator,
   class TTInserter,
@@ -87,12 +84,8 @@ public: // public type definitions
   /** */
   CContent mContent;
 protected:
-  /** squashing function */
-  CSquasher* mSquasher;
   /** the ID type within this class */
   typedef int CID;
-  /** a probabilistic set of IDs */
-  typedef CProbabilisticSet<CID> CSet;
   /** Delete the pivot from a probabilistic set when digesting feedback? 
       See my thesis for an explanation
    */
@@ -101,41 +94,11 @@ public:
   ///
   void setDeletePivot(bool inDeletePivot);
   ///
-  void setSquasher(CSquasher* inSquasher);
-  ///
-  CSquasher* getSquasher();
-  ///
   CDistanceCalculator(const char* inFileName);
   ///
   bool calculateDistances(const CID& inID,
 			  CIDtoDistanceList& outDistances,
 			  bool inDeletePivot)const;
-  ///
-  bool calculateRelativeAndSquash(const CID& inPlus,
-				  const CID& inMinus,
-				  CIDtoDistanceList& outDistances,
-				  bool inDeletePivot)const;
-  ///
-  bool calculateRelativeAndSquash(const CSquasher& inSquasher,
-				  const CID& inPlus,
-				  const CID& inMinus,
-				  CIDtoDistanceList& outDistances,
-				  bool inDeletePivot)const;
-  ///
-  bool calculateRelativeAndSquash(const CID& inPositiveFeedback,
-				  const CID& inNegativeFeedback,
-				  CSet& outProbabilities,
-				  bool inDeletePivot)const;
-  ///
-  bool calculateRelativeAndSquash(const CSquasher& inSquasher,
-				  const CID& inPositiveFeedback,
-				  const CID& inNegativeFeedback,
-				  CSet& outProbabilities,
-				  bool inDeletePivot)const;
-
-  bool digestFeedback(CIDList const& inPositiveList,
-		      CIDList const& inNegativeList,
-		      CSet& );
   ///
   operator bool()const;
 };

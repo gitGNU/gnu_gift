@@ -57,6 +57,10 @@ bool CQueryParadigmMatcher::matches(const CXMLElement& inQuery,const CXMLElement
 
 bool CQueryParadigmMatcher::operator()(const CXMLElement& inQuery,const CXMLElement& inResult)const{
   
+  // nothing matches everything
+  if(!(&inQuery) || !(&inResult)){
+    return true;
+  }
   if((inQuery.getName()==mrml_const::query_paradigm_list)
      &&
      (inQuery.getName()==mrml_const::query_paradigm_list)){
@@ -71,8 +75,7 @@ bool CQueryParadigmMatcher::operator()(const CXMLElement& inQuery,const CXMLElem
 	}
       }
     };
-  }else{
-    return false;
   }
+  return false;
 };
 

@@ -5,6 +5,9 @@ directory.h:
 
 all: directory.h
 
+dist-hook: 
+	rm $(distdir)/directory.h
+
 #install-data-local:
 #		echo "ca marche"
 

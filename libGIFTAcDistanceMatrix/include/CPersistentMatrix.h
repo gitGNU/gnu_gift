@@ -90,7 +90,7 @@ bool CPersistentMatrix<T>::create(char const* inFileName)const{
 template<class T>
 bool CPersistentMatrix<T>::open(char const* inFileName){
   mContent=new fstream(inFileName,
-		       fstream::in+fstream::out);
+		       fstream::in | fstream::out);
 
   if(mContent && *mContent){
     cout << "PersistentMatrix: Opened File "
@@ -133,7 +133,7 @@ bool CPersistentMatrix<T>::getLineVector(long inY,
 #ifdef CPM_debug
   cout << "returning"
        << flush;
-#endif CPM_debug
+#endif 
   return lReturnValue;
 }
 
@@ -143,7 +143,7 @@ bool CPersistentMatrix<T>::getLineVector(long inY,
   assert(mContent);
 #ifdef CPM_debug
   cout << "getLineVector"<<flush;
-#endif CPM_debug
+#endif 
 
   CPersistentLineVector lVector(mXSize);
   bool lReturnValue;

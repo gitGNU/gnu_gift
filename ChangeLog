@@ -1,3 +1,42 @@
+2002-03-03  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+
+	* libMRML/cc/CQueryParadigmMatcher.cc: 
+	bugfix in operator(). one branch did not always
+	return a defined value
+	
+	* libMRML/cc/Makefile.am (libMRML_la_LDFLAGS): 
+	incrementing version info
+
+	* libMRML/include/CAccessorAdmin.h: 
+	* libMRML/cc/CAccessorAdmin.cc: 
+	Added: getQueryParadigmList
+	
+	* libMRML/include/CAccessorAdminCollection.h: 
+	* libMRML/cc/CAccessorAdminCollection.cc: 
+	New member functions: getCollectionElement,
+  	getQueryParadigmList. They makes it easier
+	to find configuration errors without constructing
+	an CQuery element (not yet used)
+
+
+2002-03-02  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+
+	Release gift-0.1.8.
+
+2002-03-02  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+
+	* libMRML/include/Makefile.am (dist-hook): 
+	* libMRML/cc/Makefile.am (dist-hook): remove
+	files that contain configuration data
+	
+
+2002-02-28  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+
+	* libGIFTAcDistanceMatrix/include/CPersistentVector.h: 
+	* libGIFTAcDistanceMatrix/include/CPersistentMatrix.h: make
+	it compile with gcc v3. mainly more picky for implicit type 
+	casting as well as local classes
+
 2002-02-26  Wolfgang Müller  <muellerw@cui.unige.ch>
 
 	* libMRML/cc/CQueryParadigmMatcher.cc(matches): 

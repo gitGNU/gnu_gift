@@ -31,7 +31,7 @@ INCLUDES= -DHAS_BOOL \
 	-DLINK_DYNAMICALLY\
 	-I$(top_srcdir)
 
-libMRML_la_LDFLAGS=@PRE_INSTALL_LIBDIRS@  -version-info 2:0:2
+libMRML_la_LDFLAGS=@PRE_INSTALL_LIBDIRS@  -version-info 3:0:3
 
 #CAccessorAdminCollection.cc: CAccessorAdminCollection.pre-cc
 #	$(CCCONFIG)
@@ -118,3 +118,5 @@ libMRML_config_SOURCES= libMRML-config.cc
 
 EXTRA_DIST=libMRML-config.pre-cc
 
+dist-hook:
+	rm $(distdir)/libMRML-config.cc

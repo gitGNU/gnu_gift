@@ -47,7 +47,7 @@
 #include <iostream.h>
 #include <fstream.h>
 #include <map>
-#include <hash_map>
+//#include <hash_map>
 
 class CXMLElement;
 #include "libGIFTAcDistanceMatrix/include/CDistanceCalculator.h"

@@ -305,3 +305,25 @@ CAccessorAdminCollection::CContent::~CContent(){
     delete i->second;
   }
 };
+/**
+   get a collection configuration element by its ID
+*/
+const CXMLElement* CAccessorAdminCollection::getCollectionElement(string inID)const{
+  CContent::const_iterator lFound(mIDToProxy.find(inID));
+
+  if(lFound!=mIDToProxy.end()){
+    return lFound->second->getCollectionElement();
+  }
+  return 0;
+}
+/**  
+     get a query paradigm element by the ID of its collection
+*/
+const CXMLElement* CAccessorAdminCollection::getQueryParadimList(string inID)const{
+  CContent::const_iterator lFound(mIDToProxy.find(inID));
+
+  if(lFound!=mIDToProxy.end()){
+    return lFound->second->getQueryParadigmList();
+  }
+  return 0;
+}

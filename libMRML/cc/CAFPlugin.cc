@@ -20,7 +20,7 @@ CAFPlugin::CAFPlugin(string inLibraryDirName,
   mName("no name given"),
   mIsSane(0){
   
-  char* lError;
+  const char* lError;
   string lLibraryPath=inLibraryDirName+"/"+inLibraryFileName;
   string lStringGetClassName(inLibraryFileName.substr(0,inLibraryFileName.size()-3)+"_getClassName");
   string lStringMakeAccessor(inLibraryFileName.substr(0,inLibraryFileName.size()-3)+"_makeAccessor");

@@ -36,14 +36,16 @@
 
 template<class TTID,class TTContent>
 class CPersistentTranslatedIndexMatrix{
-  ///
-  typedef vector<TTContent> CLineVector;
+public:
   ///
   typedef map<TTID,TTContent> CIDContentPairList;
-  ///FIXME: taking a map here is a performance flaw
-  typedef map<TTID,long> CTranslator;
   ///
   typedef vector<TTID> CIndexList;
+protected:
+  ///
+  typedef vector<TTContent> CLineVector;
+  ///FIXME: taking a map here is a performance flaw
+  typedef map<TTID,long> CTranslator;
   ///
   typedef CPersistentMatrix<TTContent> CMatrix;
   ///

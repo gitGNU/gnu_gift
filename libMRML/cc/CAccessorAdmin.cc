@@ -133,6 +133,18 @@ string CAccessorAdmin::getID()const{
   return mCollectionElement->stringReadAttribute(mrml_const::collection_id).second;
 }
 
+const CXMLElement* CAccessorAdmin::getQueryParadigmList()const{
+  for(list<CXMLElement*>::const_iterator i(mCollectionElement->child_list_begin());
+      i!=mCollectionElement->child_list_end();
+      i++){
+    if((*i)->getName()=="query-paradigm-list"){
+      return *i;
+    }
+  }
+  return 0;
+};
+
+
 /** */
 list<string>* CAccessorAdmin::getAvailableIndices()const{
   list<string>* lReturnValue=new list<string>();

@@ -27,6 +27,7 @@ SUBDIRS=  Doc scripts dtd expat\
 	libGIFTAcHierarchy libGIFTQuHierarchy\
 	libGIFTAcInvertedFile libGIFTQuInvertedFile\
 	libGIFTAcPerl libGIFTQuPerl \
+	libGIFTAcDistanceMatrix\
         @GIFT_BAYESIAN_DIR@ libSquirePPM GIFTServer FeatureExtraction 
 
 
@@ -38,8 +39,7 @@ SUBDIRS=  Doc scripts dtd expat\
 
 
 
-EXTRA_DIST=	libGIFTAcDistanceMatrix \
-		PluginMaker \
+EXTRA_DIST=PluginMaker \
 		bootstrap-cvs.sh \
 		notice.am \
 		notice.c\

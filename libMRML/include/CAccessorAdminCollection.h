@@ -76,6 +76,14 @@ public:
        add an accessor to a collection to our list of proxies.
   */
   void addCollection(CXMLElement* inCollectionElement);
+  /**  
+       get a collection configuration element by its ID
+  */
+  const CXMLElement* getCollectionElement(string inID)const;
+  /**  
+       get a collection configuration element by its ID
+  */
+  const CXMLElement* getQueryParadimList(string inID)const;
   /**  get the proxy on which is presently worked on
    */
   CAccessorAdmin& getCurrentProxy();

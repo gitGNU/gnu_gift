@@ -39,7 +39,7 @@ void binary_writer(ostream& outStream,
 template<class T>
 void binary_reader(istream& inStream,
 		   T& inToBeRead){
-  inStream.read(&inToBeRead,
+  inStream.read((char*)&inToBeRead,
 		sizeof(inToBeRead));
 }
 

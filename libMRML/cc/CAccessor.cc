@@ -27,3 +27,26 @@ CAccessor::~CAccessor(){
   cout << __FILE__ << "calling destructor" << endl;
 };
 
+/** 
+    If a new collection is created during runtime, this function prepares 
+    the indexing structures such that they are able to accept new objects.
+    
+    The collection id and name must be given when constructing 
+    <code>*this</code>. All other data are added to the configuration
+    tag in this. The resulting configuration tag is output as result
+    of prepareDatabase.
+    
+    @returns configuration element that contains new configuration data
+    as result of prepareDatabase
+*/
+CXMLElement* CAccessor::prepareDatabase(){
+  return 0;
+};
+/** 
+    Here: do plain nothing. Return false, so
+    the default is to initialise rather than not.
+*/
+bool CAccessor::isPreparedDatabase()const{
+  return false;
+};
+//@}
