@@ -1457,10 +1457,10 @@ CAcIFFileSystem::URLToFeatureList(string inURL)const
     
     CDocumentFrequencyList* lReturnValue(this->getFeatureFile(lFeatureFileName));
  
+#endif
     if(!lReturnValue){
       lReturnValue=new CDocumentFrequencyList();
     }
-#endif
     /**/gMutex->unlock();
     return lReturnValue;
     // {

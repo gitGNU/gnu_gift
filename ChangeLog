@@ -1,7 +1,12 @@
 2002-03-30  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
 
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc (URLToFeatureList): 
+	Bugfix: deplaced endif to avoid returning NULL pointers.
+	(Bug report Dr. Stéphane Marchand-Maillet)
+	
 	* scripts/perl/gift-dtd-to-keywords.pre-pl (translateToCC): 
-	giving location where mrml_const.h will be installed.
+	generating include statement with correct location where mrml_const.h 
+	will be installed. (Bug report Pruet Boonma).
 
 2002-03-30  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
 
