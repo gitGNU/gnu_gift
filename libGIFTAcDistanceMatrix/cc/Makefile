@@ -15,7 +15,7 @@ SHELL = /bin/sh
 
 srcdir = .
 top_srcdir = ../..
-prefix = /home/wolfgang/gift-0.1.6pre/../GIFTInstall
+prefix = /home/wolfgang/gift/../GIFTInstall
 exec_prefix = ${prefix}
 
 bindir = ${exec_prefix}/bin
@@ -37,10 +37,10 @@ pkgincludedir = $(includedir)/gift
 
 top_builddir = ../..
 
-ACLOCAL = ${SHELL} /home/wolfgang/gift-0.1.6pre/missing --run aclocal
-AUTOCONF = ${SHELL} /home/wolfgang/gift-0.1.6pre/missing --run autoconf
-AUTOMAKE = ${SHELL} /home/wolfgang/gift-0.1.6pre/missing --run automake
-AUTOHEADER = ${SHELL} /home/wolfgang/gift-0.1.6pre/missing --run autoheader
+ACLOCAL = ${SHELL} /home/wolfgang/gift/missing --run aclocal
+AUTOCONF = ${SHELL} /home/wolfgang/gift/missing --run autoconf
+AUTOMAKE = ${SHELL} /home/wolfgang/gift/missing --run automake
+AUTOHEADER = ${SHELL} /home/wolfgang/gift/missing --run autoheader
 
 INSTALL = /usr/bin//ginstall -c
 INSTALL_PROGRAM = ${INSTALL}
@@ -60,7 +60,7 @@ POST_UNINSTALL = :
 host_alias = @host_alias@
 host_triplet = i686-pc-linux-gnu
 AMDEP = #
-AMTAR = ${SHELL} /home/wolfgang/gift-0.1.6pre/missing --run tar
+AMTAR = ${SHELL} /home/wolfgang/gift/missing --run tar
 AS = @AS@
 AWK = gawk
 BAYESIAN = 
@@ -88,14 +88,14 @@ LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIBTOOL_DEPS = ./ltmain.sh
 LN_S = ln -s
 MAINT = @MAINT@
-MAKEINFO = ${SHELL} /home/wolfgang/gift-0.1.6pre/missing --run makeinfo
+MAKEINFO = ${SHELL} /home/wolfgang/gift/missing --run makeinfo
 OBJDUMP = @OBJDUMP@
 OBJEXT = o
 PACKAGE = gift
 PERL = /usr/local/bin/perl
 PERL_LD_ADD = -rdynamic  -L/usr/local/lib /usr/local/lib/perl5/5.6.0/i686-linux/auto/DynaLoader/DynaLoader.a -L/usr/local/lib/perl5/5.6.0/i686-linux/CORE -lperl -lnsl -lndbm -lgdbm -ldbm -ldb -ldl -lm -lc -lposix -lcrypt
-PRE_INSTALL_LIBDIRS = -L/home/wolfgang/gift-0.1.6pre/libMRML/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTAcPerl/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTQuPerl/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTAcInvertedFile/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTAcHierarchy/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTAcDistanceMatrix/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTQuInvertedFile/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTQuBayesian/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTQuHierarchy/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTAcURL2FTS/cc/
-PRE_INSTALL_LINKDIRS = --rpath/home/wolfgang/gift-0.1.6pre/libMRML/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTAcPerl/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTQuPerl/cc/ --rpath/home/wolfgang/gift-0.1.6pre/libGIFTAcInvertedFile/cc/ --rpath/home/wolfgang/gift-0.1.6pre/libGIFTAcHierarchy/cc/ --rpath/home/wolfgang/gift-0.1.6pre/libGIFTAcDistanceMatrix/cc/ --rpath/home/wolfgang/gift-0.1.6pre/libGIFTQuInvertedFile/cc/ --rpath/home/wolfgang/gift-0.1.6pre/libGIFTQuBayesian/cc/ --rpath/home/wolfgang/gift-0.1.6pre/libGIFTQuHierarchy/cc/ --rpath/home/wolfgang/gift-0.1.6pre/libGIFTAcURL2FTS/cc/
+PRE_INSTALL_LIBDIRS = -L/home/wolfgang/gift/libMRML/cc/ -L/home/wolfgang/gift/libGIFTAcPerl/cc/ -L/home/wolfgang/gift/libGIFTQuPerl/cc/ -L/home/wolfgang/gift/libGIFTAcInvertedFile/cc/ -L/home/wolfgang/gift/libGIFTAcHierarchy/cc/ -L/home/wolfgang/gift/libGIFTAcDistanceMatrix/cc/ -L/home/wolfgang/gift/libGIFTQuInvertedFile/cc/ -L/home/wolfgang/gift/libGIFTQuBayesian/cc/ -L/home/wolfgang/gift/libGIFTQuHierarchy/cc/ -L/home/wolfgang/gift/libGIFTAcURL2FTS/cc/
+PRE_INSTALL_LINKDIRS = --rpath/home/wolfgang/gift/libMRML/cc/ -L/home/wolfgang/gift/libGIFTAcPerl/cc/ -L/home/wolfgang/gift/libGIFTQuPerl/cc/ --rpath/home/wolfgang/gift/libGIFTAcInvertedFile/cc/ --rpath/home/wolfgang/gift/libGIFTAcHierarchy/cc/ --rpath/home/wolfgang/gift/libGIFTAcDistanceMatrix/cc/ --rpath/home/wolfgang/gift/libGIFTQuInvertedFile/cc/ --rpath/home/wolfgang/gift/libGIFTQuBayesian/cc/ --rpath/home/wolfgang/gift/libGIFTQuHierarchy/cc/ --rpath/home/wolfgang/gift/libGIFTAcURL2FTS/cc/
 PYTHON = @PYTHON@
 PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
 PYTHON_PLATFORM = @PYTHON_PLATFORM@
@@ -146,7 +146,7 @@ pythondir = @pythondir@
 
 lib_LTLIBRARIES = libGIFTAcDistanceMatrix.la
 
-libGIFTAcDistanceMatrix_la_LDFLAGS = "-L/home/wolfgang/gift-0.1.6pre/libMRML/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTAcPerl/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTQuPerl/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTAcInvertedFile/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTAcHierarchy/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTAcDistanceMatrix/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTQuInvertedFile/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTQuBayesian/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTQuHierarchy/cc/ -L/home/wolfgang/gift-0.1.6pre/libGIFTAcURL2FTS/cc/" -lMRML -lGIFTAcInvertedFile -lGIFTAcURL2FTS
+libGIFTAcDistanceMatrix_la_LDFLAGS = "-L/home/wolfgang/gift/libMRML/cc/ -L/home/wolfgang/gift/libGIFTAcPerl/cc/ -L/home/wolfgang/gift/libGIFTQuPerl/cc/ -L/home/wolfgang/gift/libGIFTAcInvertedFile/cc/ -L/home/wolfgang/gift/libGIFTAcHierarchy/cc/ -L/home/wolfgang/gift/libGIFTAcDistanceMatrix/cc/ -L/home/wolfgang/gift/libGIFTQuInvertedFile/cc/ -L/home/wolfgang/gift/libGIFTQuBayesian/cc/ -L/home/wolfgang/gift/libGIFTQuHierarchy/cc/ -L/home/wolfgang/gift/libGIFTAcURL2FTS/cc/" -lMRML -lGIFTAcInvertedFile -lGIFTAcURL2FTS
 
 INCLUDES = -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTAcDistanceMatrix/include -I$(top_srcdir)/libGIFTAcURL2FTS/include -I$(top_srcdir)/libGIFTQuBayesian/include
 

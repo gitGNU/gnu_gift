@@ -174,7 +174,7 @@ CAlgorithmCollection::CAlgorithmCollection(string inConfigFileName):
 		     lConfigFileContent, 
 		     lSize, 
 		     lDone)) {
-	cerr << "XML ERROR: "
+	cerr << "CAlgorithmCollection.cc: XML ERROR: "
 	     << XML_ErrorString(XML_GetErrorCode(lParser))
 	     << " at line "
 	     << XML_GetCurrentLineNumber(lParser)

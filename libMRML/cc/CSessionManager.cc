@@ -471,7 +471,7 @@ CSessionManager::CSessionManager(string inSessionFileName,
 		   lConfigFileContent, 
 		   lSize, 
 		   lDone)) {
-      cerr << "XML ERROR: "
+      cerr << "CSessionManager: XML ERROR: "
 	   << XML_ErrorString(XML_GetErrorCode(lParser))
 	   << " at line "
 	   << XML_GetCurrentLineNumber(lParser)

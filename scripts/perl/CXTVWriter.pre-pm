@@ -22,6 +22,7 @@
 require 5.002;
 
 use lib '__BINDIR__'; # for including CFeedbackClient
+use CXMLTreeVisitor;
 
 package CXTVWriter;
 require Exporter;
@@ -31,7 +32,6 @@ require Exporter;
 	       startVisit
 	       endVisit
 	      );
-
 use XML::Writer;
 
 sub new(){

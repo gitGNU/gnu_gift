@@ -334,7 +334,12 @@ sub wanted{
       print("making the path $1\n");
       mkpath([$1],1,0711);
       print("Converting $lFullName to $lThumbnailFile\n");
-      print STDERR "Warning: Thumbnail generation failed for $lThumbnailFile $!\n" if system("convert -geometry 128x128 $lFullName $lThumbnailFile");
+      print STDERR "Warning: Thumbnail generation failed for $lThumbnailFile $!\n" 
+	if system("convert",
+		  "-geometry",
+		  "128x128",
+		  $lFullName,
+		  $lThumbnailFile);
     }else{
       print "Warning: more recent version of thumbnail file $lThumbnailFile  found!\n";
     }
@@ -346,7 +351,12 @@ sub wanted{
 	if $lFtsModificationTime;
       print("We will make a new feature file\n");
       print("Converting $lFullName to $lTemp\n");
-      die "Pre feature extraction convert call failed: $! \n" if system("convert -geometry 256x256! $lFullName $lTemp");
+      die "Pre feature extraction convert call failed: $! \n" 
+	if system("convert" ,
+		  "-geometry",
+		  "256x256!",
+		  $lFullName,
+		  $lTemp);
       print("Extracting features from $lTemp\n");
       die "Feature extraction failed: $! \n" if system("__BINDIR__/gift-extract-features $lTemp");
       $lFts=~m§^(.*/)([^/]*)$§;
@@ -359,7 +369,11 @@ sub wanted{
     }
     
     if(!$main::lImageCount){
-      die "Pre feature extraction convert call failed: $! \n" if system("convert -geometry 256x256! $lFullName $lTemp");
+      die "Pre feature extraction convert call failed: $! \n" if system("convert",
+									"-geometry",
+									"256x256!",
+									$lFullName,
+									$lTemp);
       system qq(__BINDIR__/gift-write-feature-descs < $lTemp |perl -e 'print "Writing InvertedFileFeatureDescription...\n";open OF,">$main::lIndexPrefix/InvertedFileFeatureDescription.db" or die "could not open $lIndexPrefix";while(<STDIN>){print OF join(" ",(split(" ",\$_))[0..1]),"\\n";};print "finished.\n";' );
       unlink $lTemp;
     }

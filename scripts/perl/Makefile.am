@@ -20,7 +20,7 @@
 # this is also necessary for installing several versions of GIFT at the same time
 #
 
-EXTRA_SCRIPTS = gift-url-to-fts.pl gift-browser-benchmark.pl gift-extract-text-features.pl gift-annotation-to-html.pl gift-ranking-comparison.pl CFCRankingComparison.pm CGraphCollection.pm CQueryParadigmMatcher.pm CXTVTripletList.pm CTripleTransfer.pl CGLDAudreyMTam.pl CGLStructuredAnnotation.pm CGIFTLink.pm CGIFTLinkDemo.pl CGLDistanceMatrix.pm CXMLTreeBuilder.pm CXMLTreeWriter.pm CXMLTreeVisitor.pm CXTVWriter.pm CXTVTripletList.pm CXTVTripletList.pm 
+EXTRA_SCRIPTS = gift-url-to-fts.pl gift-browser-benchmark.pl gift-extract-text-features.pl gift-annotation-to-html.pl gift-ranking-comparison.pl CFCRankingComparison.pm CGraphCollection.pm CQueryParadigmMatcher.pm CXTVTripletList.pm CTripleTransfer.pl CGLDAudreyMTam.pl CGLStructuredAnnotation.pm CGIFTLink.pm CGIFTLinkDemo.pl CGLDistanceMatrix.pm CXMLTreeBuilder.pm CXMLTreeWriter.pm CXMLTreeVisitor.pm CXTVWriter.pm CXTVTripletList.pm CXTVTripletList.pm  gift-start.pl
 
 
 PERLCONFIG=sed "s:__PERL_LOCATION__:@PERL@:g;s:__BINDIR__:@bindir@:g;s:__DATADIR__:@datadir@:g;s:__WEB_PUBLISHING_DIRECTORY__:@WEB_PUBLISHING_DIRECTORY@:g;s§__WEB_PUBLISHING_LOCATION__§@WEB_PUBLISHING_LOCATION@§g" < $< > $@
@@ -110,8 +110,11 @@ gift-annotation-to-html.pl: gift-annotation-to-html.pre-pl
 gift-old-to-new-url2fts.pl: gift-old-to-new-url2fts.pre-pl
 	$(PERLCONFIG)
 
+gift-start.pl: gift-start.pre-pl
+	$(PERLCONFIG)
 
-bin_SCRIPTS= @GIFT_INTERNAL_PERLS@ gift-url-to-fts.pl gift-diagnose-print-all-ADI.pl gift-mrml-client.pl CFeedbackClient.pm CFCMovingTarget.pm gift-perl-example-server.pl gift-add-collection.pl gift-dtd-to-tex.pl gift-dtd-to-keywords.pl CQueryParadigmMatcher.pm CTripleTransfer.pl CGLDAudreyMTam.pl CGLStructuredAnnotation.pm CGIFTLink.pm CGLDistanceMatrix.pm CGIFTLinkDemo.pl CXMLTreeBuilder.pm CXMLTreeWriter.pm CXMLTreeVisitor.pm CXTVTripletList.pm CXTVWriter.pm CGraphCollection.pm gift-old-to-new-url2fts.pl
+
+bin_SCRIPTS= @GIFT_INTERNAL_PERLS@ gift-url-to-fts.pl gift-diagnose-print-all-ADI.pl gift-mrml-client.pl CFeedbackClient.pm CFCMovingTarget.pm gift-perl-example-server.pl gift-add-collection.pl gift-dtd-to-tex.pl gift-dtd-to-keywords.pl CQueryParadigmMatcher.pm CTripleTransfer.pl CGLDAudreyMTam.pl CGLStructuredAnnotation.pm CGIFTLink.pm CGLDistanceMatrix.pm CGIFTLinkDemo.pl CXMLTreeBuilder.pm CXMLTreeWriter.pm CXMLTreeVisitor.pm CXTVTripletList.pm CXTVWriter.pm CGraphCollection.pm gift-old-to-new-url2fts.pl gift-start.pl
 
 
 clean: 

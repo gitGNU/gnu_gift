@@ -19,11 +19,11 @@
 
 
 
-use lib '__BINDIR__'; # for including CFeedbackClient
-use CXMLTreeBuilder;
 
 
 package CXMLTreeWriter;
+use lib '__BINDIR__'; # for including CFeedbackClient
+use CXMLTreeBuilder;
 use CXTVWriter;
 
 @ISA=qw(Exporter);

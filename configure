@@ -7825,8 +7825,8 @@ echo "$as_me:7824: result: `eval echo '${'$ac_ac_File'}'`" >&5
 echo "${ECHO_T}`eval echo '${'$ac_ac_File'}'`" >&6
 if test `eval echo '${'$ac_ac_File'}'` = yes; then
 
-  echo "$as_me:7828: checking \"if we can embed a Perl interpreter into GIFT\"" >&5
-echo $ECHO_N "checking \"if we can embed a Perl interpreter into GIFT\"... $ECHO_C" >&6
+  echo "$as_me:7828: checking if we can embed a Perl interpreter into GIFT" >&5
+echo $ECHO_N "checking if we can embed a Perl interpreter into GIFT... $ECHO_C" >&6
   #RESCUE_LDFLAGS=$LDFLAGS
   #LDFLAGS=`echo $LDFLAGS \`perl -MExtUtils::Embed -e ldopts  \`|sed 's:-Dbool=char::'`
   RESCUE_CXXFLAGS=$CXXFLAGS
@@ -7862,16 +7862,16 @@ echo $ECHO_N "checking if we can use POSIX threads the way we want... $ECHO_C" >
 echo "${ECHO_T}yes (will use pthread)" >&6
 			LDFLAGS="$LDFLAGS -lpthread"
 		else
-			echo "$as_me:7865: result: \"no: testprogram compiled but failed to run\"" >&5
-echo "${ECHO_T}\"no: testprogram compiled but failed to run\"" >&6;
+			echo "$as_me:7865: result: no: testprogram compiled but failed to run" >&5
+echo "${ECHO_T}no: testprogram compiled but failed to run" >&6;
 			CXXFLAGS=$RESCUE_CXXFLAGS
 		fi
 		rm pthread-compile-test-program
 else
 		CXXFLAGS=$RESCUE_CXXFLAGS
 		LDFLAGS=$RESCUE_LDFLAGS
-		echo "$as_me:7873: result: \"no: failed: $CXX CXXFLAGS:($CXXFLAGS) pthread-compile-test-program.cc  -o pthread-compile-test-program  LDFLAGS:($LDFLAGS -lpthread\")" >&5
-echo "${ECHO_T}\"no: failed: $CXX CXXFLAGS:($CXXFLAGS) pthread-compile-test-program.cc  -o pthread-compile-test-program  LDFLAGS:($LDFLAGS -lpthread\")" >&6;
+		echo "$as_me:7873: result: no: failed: $CXX CXXFLAGS:($CXXFLAGS) pthread-compile-test-program.cc  -o pthread-compile-test-program  LDFLAGS:($LDFLAGS -lpthread)" >&5
+echo "${ECHO_T}no: failed: $CXX CXXFLAGS:($CXXFLAGS) pthread-compile-test-program.cc  -o pthread-compile-test-program  LDFLAGS:($LDFLAGS -lpthread)" >&6;
 	fi
 
 else

@@ -1,3 +1,23 @@
+2001-02-06  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* scripts/perl/gift-add-collection.pre-pl (wanted): 
+	changing the argument list in the "system" calls to
+	avoid shell escapes and misinterpretation of 
+	spaces.
+
+	* scripts/perl/gift-start.pre-pl:
+	new file. This script starts up the GIFT, and sends out
+	mails if the gift goes down.
+
+2001-02-05  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libGIFTAcURL2FTS/cc/CAcURL2FTS.cc: changed XML Error
+	message to give information in which file the error 
+	occured.
+
+	* scripts/perl/CXTVWriter.pre-pm: 
+	use CXMLTreeVisitor;
+
 2001-01-31  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc (_NO_CONSISTENCYPRINT):

@@ -168,7 +168,7 @@ CAcURL2FTS::CAcURL2FTS(const CXMLElement& inCollectionElement):
 		   lFileSize,
 		   lDone)
 	) {
-      cerr << "XML ERROR: "
+      cerr << "CAcURL2FTS:__LINE__: XML ERROR: "
 	   << XML_ErrorString(XML_GetErrorCode(lParser))
 	     << " at line "
 	   << XML_GetCurrentLineNumber(lParser)

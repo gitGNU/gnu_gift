@@ -590,7 +590,7 @@ void CCommunicationHandler::parseString(const string& inMessage){
 		   inMessage.c_str(), 
 		   inMessage.size(), 
 		   lDone)) {
-      cerr << "XML ERROR: "
+      cerr << "CCommunicationHandler.cc: __LINE__ XML ERROR: "
 	   << XML_ErrorString(XML_GetErrorCode(mParser))
 	   << " at line "
 	   << XML_GetCurrentLineNumber(mParser)
@@ -627,6 +627,8 @@ bool CCommunicationHandler::readAndParse(){
 
   string lLogString;
 
+  cerr << "repa" << endl;
+
   do {
       
 
@@ -652,7 +654,7 @@ bool CCommunicationHandler::readAndParse(){
 		     lBuffer, 
 		     1, 
 		     false)) {
-	cerr << "XML ERROR: "
+	cerr << "CCommunicationHandler.cc __LINE__: XML ERROR "
 	     << XML_ErrorString(XML_GetErrorCode(mParser))
 	     << " at line "
 	     << XML_GetCurrentLineNumber(mParser)

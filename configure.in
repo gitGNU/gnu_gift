@@ -183,7 +183,7 @@ dnl this yields us a conflict
 dnl solution: we compile a test program in an external file
 dnl
 AC_CHECK_FILE($PERL,[
-  AC_MSG_CHECKING("if we can embed a Perl interpreter into GIFT")
+  AC_MSG_CHECKING([if we can embed a Perl interpreter into GIFT])
   #RESCUE_LDFLAGS=$LDFLAGS
   #LDFLAGS=`echo $LDFLAGS \`perl -MExtUtils::Embed -e ldopts  \`|sed 's:-Dbool=char::'` 
   RESCUE_CXXFLAGS=$CXXFLAGS
@@ -218,14 +218,14 @@ AC_ARG_ENABLE(multi-threading,
 			AC_MSG_RESULT([yes (will use pthread)])
 			LDFLAGS="$LDFLAGS -lpthread"
 		else
-			AC_MSG_RESULT("no: testprogram compiled but failed to run");
+			AC_MSG_RESULT([no: testprogram compiled but failed to run]);
 			CXXFLAGS=$RESCUE_CXXFLAGS
 		fi
 		rm pthread-compile-test-program
 else
 		CXXFLAGS=$RESCUE_CXXFLAGS
 		LDFLAGS=$RESCUE_LDFLAGS
-		AC_MSG_RESULT("no: failed: $CXX CXXFLAGS:($CXXFLAGS) pthread-compile-test-program.cc  -o pthread-compile-test-program  LDFLAGS:($LDFLAGS -lpthread"));
+		AC_MSG_RESULT([no: failed: $CXX CXXFLAGS:($CXXFLAGS) pthread-compile-test-program.cc  -o pthread-compile-test-program  LDFLAGS:($LDFLAGS -lpthread)]);
 	fi
 	],
 	[
