@@ -35,7 +35,7 @@
 #include <map>
 #include <vector>
 class CReaper;
-
+using namespace std;
 /**
    This is a structure for administering
    reapers that come into action on reception 
