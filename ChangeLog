@@ -1,5 +1,10 @@
 2002-05-29  Wolfgang Müller  <wolfgang.mueller2@uni-bayreuth.de>
 
+	* libGIFTAcInvertedFile/include/merge_sort_streams.h: 
+	Quite massive changes to make it work with the full 
+	file lenght allowed by the system. The problem is that
+	stream_pos does not have incrementation operators etc...
+
 	* configure.in: moving cp statement to very end of the file
 	makes sure that this is executed at the right moment
 

@@ -26,8 +26,65 @@
 #include <algorithm> // using swap
 #include <fstream>   // file access
 
+using namespace std;
 
+//#define STREAMPOS_T fstream::pos_type
+
+/** a wrapper for streampos,
+    so we can do increments on it */
+template<typename T>
+class CStreamPos{
+  /** the content */
+  T mContent;
+public:
+  CStreamPos(T inContent):mContent(inContent){
+    
+  }
+
+  CStreamPos(long int inContent):mContent(inContent){
+    
+  }
+
+  operator T()const{
+    return mContent;
+  }
+  operator bool()const{
+    return mContent;
+  }
+
+  CStreamPos<T>& operator++ (){
+    mContent=mContent+static_cast<T>(1);
+    return *this;
+  }
+  CStreamPos<T> operator++ (int){
+    CStreamPos<T> lReturnValue=*this;
+    mContent=mContent+static_cast<T>(1);
+    return lReturnValue;
+  }
+
+  CStreamPos<T> operator% (int inMod)const{
+    return mContent % inMod;
+  }
+  CStreamPos<T> operator/ (int inMod)const{
+    return mContent / inMod;
+  }
+  bool operator< (CStreamPos<T>& inThan)const{
+    return this->mContent < inThan.mContent;
+  }
+  bool operator! ()const{
+    return this->mContent;
+  }
+  CStreamPos<T> operator+ (CStreamPos<T>& inSummand){
+    return CStreamPos<T>(mContent + inSummand.mContent);
+  }
+};
+
+#if __GNUC__==2
 #define STREAMPOS_T long long int
+#else
+#define STREAMPOS_T CStreamPos<fstream::pos_type>
+#endif
+// ex long long int
 
 /**
    A template for merging streams in the sense of mergesort
@@ -53,7 +110,7 @@ void merge_streams(istream& in1, const STREAMPOS_T inCount1,
 
 
 
-    if(!inCount1){// if there is nothing to merge
+    if(!(inCount1)){// if there is nothing to merge
       for(STREAMPOS_T i=0;//...copy
 	  i<inCount2;
 	  i++){
@@ -179,14 +236,14 @@ void merge_sort_streams(const char* inFileToBeSortedName,
   ifstream lToBeSorted2;
     
   STREAMPOS_T lCount(0);
-  for(STREAMPOS_T iMergeSize=sizeof(T);
+  for(STREAMPOS_T iMergeSize(sizeof(T));
       (iMergeSize < lFileSize)
 	|| (lCount%2)
 	// ||(lCount%2) makes sure that we will get 
 	// the result in inFileToBeSorted
 	;
       (iMergeSize = long(iMergeSize) << 1),
-	(lCount++)){
+	(lCount=lCount+static_cast<STREAMPOS_T>(1))){
     
     cout << "MERGESORT MergeSize " 
 	 << iMergeSize 
@@ -203,9 +260,9 @@ void merge_sort_streams(const char* inFileToBeSortedName,
     lTemporary.clear();
     
     
-    for(STREAMPOS_T i=0;
+    for(STREAMPOS_T i(0);
 	i<lFileSize;
-	i += iMergeSize*2){
+	i = i + iMergeSize*2){
       lToBeSorted1.seekg(i);
 
       if(!lToBeSorted1){
@@ -234,18 +291,27 @@ void merge_sort_streams(const char* inFileToBeSortedName,
       if(lMergeSize2>iMergeSize){
 	lMergeSize2=iMergeSize;
       }
-      if(lMergeSize1<0){
-	lMergeSize1=0;
-      }
+//       if(lMergeSize1<0){
+// 	lMergeSize1=0;
+//       }
 
-      if(lMergeSize2<0){
-	lMergeSize2=0;
-      }
+//       if(lMergeSize2<0){
+// 	lMergeSize2=0;
+//       }
+
+#if __GNUC__==2
       merge_streams<T>(lToBeSorted1,
 		       lMergeSize1/sizeof(T),
 		       lToBeSorted2,
 		       lMergeSize2/sizeof(T),
 		       lTemporary);
+#else
+      merge_streams<T>(lToBeSorted1,
+		       lMergeSize1.operator/(sizeof(T)),
+		       lToBeSorted2,
+		       lMergeSize2.operator/(sizeof(T)),
+		       lTemporary);
+#endif
     }
     
     lTemporary.close();
