@@ -167,7 +167,7 @@ void gabor_filter(double *I, int block_size, int filter_scale, int n_theta, doub
 	free(conv);
 }
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 	
 	double *impulse = NULL;
 	double *impulse_response = NULL;

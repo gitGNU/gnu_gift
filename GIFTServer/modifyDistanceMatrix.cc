@@ -11,6 +11,7 @@
 #include <fstream>
 #include <iostream>
 #include <cmath>
+#include <cassert>
 #include <string>
 #include <map>
 #include <functional>

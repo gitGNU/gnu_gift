@@ -30,6 +30,7 @@
 #include <memory> // auto_ptr
 #include <algorithm> // using swap
 #include <fstream>   // file access
+#include <cassert>
 
 using namespace std;
 

@@ -8,7 +8,7 @@
 
 #include "hsv_quantize_median_filter.proto"
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 	
 	FILE *ppm_file;
 	PPM *im_hsv, *im_quant, *im_filtered, *im_output;

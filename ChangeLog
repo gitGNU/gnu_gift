@@ -1,3 +1,26 @@
+2004-02-24  Knoppix User  <knoppix@Knoppix>
+
+	* FeatureExtraction/extract_features.c (main): 
+	* FeatureExtraction/float_histogram.c (main):
+	* FeatureExtraction/fts2blocks.c (main):
+	* FeatureExtraction/gabor981029.c (main):
+	* FeatureExtraction/gabor_old.c (main):
+	* FeatureExtraction/hsv2rgb.c (main):
+	* FeatureExtraction/hsv_quantize.c (main):
+	* FeatureExtraction/hsv_quantize_median_filter.c (main):
+	* FeatureExtraction/hsv_test.c (main):
+	* FeatureExtraction/print_float_histogram.c (main):
+	* FeatureExtraction/quantize_mean.c (main):
+	* FeatureExtraction/quantize_median.c (main):
+	* FeatureExtraction/quantize_mode.c (main):
+	* FeatureExtraction/rgb2hsv.c (main):
+	* FeatureExtraction/write_feature_descs.c (main):
+	changed return type to int
+
+	* GIFTServer/modifyDistanceMatrix.cc: 
+	* libGIFTAcInvertedFile/cc/CInvertedFileChunk.cc: 
+	#include <cassert>
+
 2003-11-12  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
 
 	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc: changed UF to Unknown Feature in debug printout

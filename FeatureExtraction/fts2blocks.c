@@ -13,7 +13,7 @@
 #define numV 3
 #define numGrey 4
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 
 	char *in_fname, *out_fname;
 	char *point_pos;

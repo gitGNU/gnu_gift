@@ -165,7 +165,7 @@ void gabor_filter(double *image, int width, int height, int filter_scale, int n_
 	free(conv);
 }
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 	
 	char *in_fname, *out_fname, *out_fname_prefix, buffer[80];
 	char *point_pos;

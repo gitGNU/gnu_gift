@@ -8,7 +8,7 @@
 
 #include "hsv_test.proto"
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 	
 	PPM *im_hsv;
 	enum file_types ppm_type;

@@ -4,7 +4,7 @@
 #define MAX_VALUE 2000.0
 #define STEP 0.1
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 
 	char *histogram_filename = argv[1];
 	FILE *histogram_file, *infile;

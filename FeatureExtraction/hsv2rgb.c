@@ -8,7 +8,7 @@
 
 #include "hsv2rgb.proto"
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 	
 	FILE *ppm_file;
 	PPM *im1, *im_rgb;

@@ -196,65 +196,65 @@ void CAcIFMySQL::initialiseGIFTTables ( bool replaceExistingTables,
   list<string> tableList;
     
     // define description table
-  tableList.push_back ( "CREATE TABLE databaseDescription (
-name         varchar(30) NOT NULL,
-description  varchar(255),
-nbrIndexedImages int UNSIGNED DEFAULT '0' NOT NULL,
-nbrImagesInDB    int UNSIGNED DEFAULT '0' NOT NULL, 
-nbrFeatures  int UNSIGNED DEFAULT '0' NOT NULL,
-PRIMARY KEY (name),
-INDEX nameIndex (name) )" );
+  tableList.push_back ( "CREATE TABLE databaseDescription ("
+			"name         varchar(30) NOT NULL,"
+			"description  varchar(255),"
+			"nbrIndexedImages int UNSIGNED DEFAULT '0' NOT NULL,"
+			"nbrImagesInDB    int UNSIGNED DEFAULT '0' NOT NULL, "
+			"nbrFeatures  int UNSIGNED DEFAULT '0' NOT NULL,"
+			"PRIMARY KEY (name),"
+			"INDEX nameIndex (name) )" );
 
   // define documentTable
-  tableList.push_back ( "CREATE TABLE documentTable (
-documentID      int UNSIGNED NOT NULL,
-nbrFeatures     int UNSIGNED,
-url             varchar(100) NOT NULL,
-urlThumbnail    varchar(100),
-urlFeatureFile  varchar(100),
-FeaturesAndDocFreq  blob,
-XMLdocumentDesc    blob,
-keywords        varchar(255),
-PRIMARY KEY    (documentID),
-INDEX documentIDindex (documentID),
-INDEX urlIndex (url) )" );
+  tableList.push_back ( "CREATE TABLE documentTable ("
+			"documentID      int UNSIGNED NOT NULL,"
+			"nbrFeatures     int UNSIGNED,"
+			"url             varchar(100) NOT NULL,"
+			"urlThumbnail    varchar(100),"
+			"urlFeatureFile  varchar(100),"
+			"FeaturesAndDocFreq  blob,"
+			"XMLdocumentDesc    blob,"
+			"keywords        varchar(255),"
+			"PRIMARY KEY    (documentID),"
+			"INDEX documentIDindex (documentID),"
+			"INDEX urlIndex (url) )" );
   
   // define featureTable
-  tableList.push_back ( "CREATE TABLE featureTable (
-featureID        int UNSIGNED NOT NULL,
-featureDescr     varchar(100),
-collectionFreq   real,
-minimumDocFreq   real,
-maximumDocFreq   real,
-documentID_DocFreq  blob,
-nbrDocumentsWithFeature  int,
-XMLfeatureDesc   blob,
-PRIMARY KEY     (featureID),
-INDEX featureIDindex (featureID) )" );
+  tableList.push_back ( "CREATE TABLE featureTable ("
+			"featureID        int UNSIGNED NOT NULL,"
+			"featureDescr     varchar(100),"
+			"collectionFreq   real,"
+			"minimumDocFreq   real,"
+			"maximumDocFreq   real,"
+			"documentID_DocFreq  blob,"
+			"nbrDocumentsWithFeature  int,"
+			"XMLfeatureDesc   blob,"
+			"PRIMARY KEY     (featureID),"
+			"INDEX featureIDindex (featureID) )" );
 
   // define documentFeatureConnection table
-  tableList.push_back ( "CREATE TABLE documentFeatureConnection (
-documentID   int UNSIGNED NOT NULL,
-featureID    int UNSIGNED NOT NULL,
-docFreq      real NOT NULL,
-PRIMARY KEY (documentID, featureID),
-INDEX documentIDindex (documentID),
-INDEX featureIDindex (featureID) )" );
+  tableList.push_back ( "CREATE TABLE documentFeatureConnection ("
+"documentID   int UNSIGNED NOT NULL,"
+"featureID    int UNSIGNED NOT NULL,"
+"docFreq      real NOT NULL,"
+"PRIMARY KEY (documentID, featureID),"
+"INDEX documentIDindex (documentID),"
+"INDEX featureIDindex (featureID) )" );
 
   // define annotationTable_1
-  tableList.push_back ( "CREATE TABLE annotationTable_1 (
-documentID   int UNSIGNED NOT NULL,
-text         varchar(127) NOT NULL,
-docFreq      real,
-PRIMARY KEY (documentID),
-INDEX documentIDindex (documentID) )" );
+  tableList.push_back ( "CREATE TABLE annotationTable_1 ("
+"documentID   int UNSIGNED NOT NULL,"
+"text         varchar(127) NOT NULL,"
+"docFreq      real,"
+"PRIMARY KEY (documentID),"
+"INDEX documentIDindex (documentID) )" );
 
   // define annotationTable_2
-  tableList.push_back ( "CREATE TABLE annotationTable_2 (
-featureID    int UNSIGNED NOT NULL,
-text         varchar(127) NOT NULL,
-PRIMARY KEY (featureID),
-INDEX featureIDindex (featureID) )" );
+  tableList.push_back ( "CREATE TABLE annotationTable_2 ("
+"featureID    int UNSIGNED NOT NULL,"
+"text         varchar(127) NOT NULL,"
+"PRIMARY KEY (featureID),"
+"INDEX featureIDindex (featureID) )" );
    
 
   // execute creation of the tableList and load corresponding inFile if existing

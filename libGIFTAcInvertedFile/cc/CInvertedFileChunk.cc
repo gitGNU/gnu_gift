@@ -36,7 +36,7 @@
 *
 *
 ****************************************/
-
+#include <cassert>
 #include "FeatureExtraction/gift_features.h"
 #include "libGIFTAcInvertedFile/include/CInvertedFileChunk.h"
 #include <algorithm>

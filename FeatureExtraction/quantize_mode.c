@@ -8,7 +8,7 @@
 
 #include "quantize_mode.proto"
 
-void main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) {
 	
 	FILE *ppm_file;
 	PPM *im_rgb, *im_hsv, *im_quant, *im_filtered, *im_output;
