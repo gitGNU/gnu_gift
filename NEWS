@@ -1,3 +1,13 @@
+0.1.9   more bugfixes. Internationalization is on the way, there should
+	be no problem any more regaring umlauts in files that are indexed.
+	
+	We kicked out the expat from the current release, so you have to
+	have one preinstalled to run the GIFT. The perl parts need now
+	the modules XML::XQL and Text::Iconv. Check out the 
+	gift-install-prerequisites.pl script if you have more questions.
+
+	WARNING: Not yet BSD ready.
+
 0.1.8   fixed some bugs with the make dist target. Same as last version,
 	but *should* compile now without any tweaking on 
 	gcc v3.0.2 (and hopefully later?) and gcc v2.95.
