@@ -1,0 +1,647 @@
+\documentclass{article}
+ \newcommand{\requesttitle}[1]{\textbf{Request: }{\texttt{#1}}\\}
+ \newcommand{\responsetitle}[1]{\textbf{Response: }{\texttt{#1}}\\}
+ \newcommand{\tagtitle}[1]{\textbf{Tag: }{\texttt{#1}}\\}
+ \newcommand{\MRML}{\textrm{MRML}}
+ \newcommand{\tag}[1]{\texttt{#1}}
+ \begin{document}
+\begin{verbatim}<!--\end{verbatim}
+  
+       \paragraph{Basic structure:}
+       {\em
+       Messages are sent as MRML texts.
+       In  order to make it easy for the server to know who connects,
+       each message is assigned the id of its session as an attribute.
+       }
+
+     \begin{center}
+      Author of this file: 
+      Wolfgang Mueller with lots of suggestions and \\
+                                   corrections from \\
+      David Squire, Arjen P. de Vries and Christoph Giess \\
+     \end{center}
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT mrml (begin-transaction?,(
+
+                get-configuration
+                |configuration-description
+
+                |get-sessions
+                |session-list
+
+                |open-session
+                |rename-session
+                |close-session
+                |delete-session
+
+                |get-collections
+                |collection-list
+
+                |get-algorithms
+                |algorithm-list
+
+                |get-property-sheet
+                |property-sheet
+
+                |configure-session
+
+                |query-step
+                |query-result
+
+                |user-data
+
+                |error
+
+                )?,
+               end-transaction?) 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST mrml 
+                 session-id ID #IMPLIED
+                 transaction-id ID #IMPLIED
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+  
+
+
+
+\requesttitle{get-configuration}
+
+This is the message an MRML client sends to the server on connection.
+The message \tag{get-configuration} gives information about the basic server configuration.
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT get-configuration EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+  
+
+
+\responsetitle{configuration-description}
+
+The \tag{get-configuration} message is anwered by  a  message which
+is supposed to hold a description about anything which is nonstandard \MRML.
+
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT configuration-description EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+   
+
+     \requesttitle{get-sessions}
+
+     The \tag{get-sessions} message permits the user to request
+     exsisting sessions for a given user. It is sent by the client
+     directly after after the \tag{configuration-description} has
+     been delivered, and prior to any other activity. 
+
+     Authentification happens before any other activity to give the 
+     server the possibility to customise any other information sent
+     to the user. For example, it might be sensible to send different
+     property sheets to different classes of users, or to render some
+     parts of the database only visible to the own work group.
+     
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT get-sessions EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST get-sessions 
+                         user-name CDATA #REQUIRED
+                         password CDATA "guest"
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+  
+
+     \responsetitle{session-list}
+     
+     A session is described by its \tag{session-id}. 
+     We also send over a more human-readable name
+
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT session-list (session+) 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ELEMENT session EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST session 
+                    session-id CDATA #REQUIRED
+                    session-name CDATA "Default session"
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+   
+
+     \requesttitle{get-collections}
+
+     gets a list of collections on the server.
+
+        
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT get-collections EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+    
+  
+     \requesttitle{collection-list}
+
+     a list of collections on the server.
+
+     a collection is described by a list of the
+     of the query paradigms which can be used
+     for querying it, as well as an ID and its
+     human-readable name.
+
+     This means, you do not have to index all collections using all
+     the methods you want to propose to the server.
+
+        
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT collection-list (collection*) 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ELEMENT collection (query-paradigm-list?) 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST collection 
+                       collection-id CDATA #REQUIRED
+                       collection-name CDATA #REQUIRED
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+  
+
+     \tagtitle{query-paradigm}
+     arises both in algorithms and collections:
+     this describes the kind of query which can
+     be performed with this algorithm/collection 
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT query-paradigm-list (query-paradigm*) 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ELEMENT query-paradigm EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST query-paradigm 
+                           query-paradigm-id CDATA #REQUIRED
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+  
+
+     \requesttitle{get-algorithms}
+
+     gets a list of algorithms usable for one collection  
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT get-algorithms EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST get-algorithms 
+                           collection-id CDATA #IMPLIED
+                           query-paradigm-id CDATA #IMPLIED
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+   
+
+     \responsetitle{algorithm-list}
+
+     returns a list of algorithms for a given collection on the server 
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT algorithm-list (algorithm*) 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ELEMENT algorithm (query-paradigm-list?) 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST algorithm 
+                      algorithm-id CDATA #REQUIRED
+                      collectiom-id CDATA #REQUIRED
+                      algorithm-name CDATA #REQUIRED
+                      algorithm-id ID #REQUIRED
+                      algorithm-type CDATA "adefault"
+                      collection-id CDATA "cdefault"
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+   
+
+     \requesttitle{get-property-sheet}
+     get the property sheet for an algorithm
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT get-property-sheet EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST get-property-sheet 
+                               algorithm-id ID #REQUIRED
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+   
+
+     \requesttitle{begin-transaction}
+     begins a transaction 
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ATTLIST begin-transaction 
+                              transaction-id ID #REQUIRED
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+   
+
+     \requesttitle{end-transaction}
+     ends a transaction 
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ATTLIST end-transaction 
+                            transaction-id ID #REQUIRED
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+  
+
+     \requesttitle{configure-session}
+     configures the session by giving an algorithm     
+
+      
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT configure-session (algorithm) 
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+  
+
+       \tagtitle{property-sheet}
+
+       \textbf{Basic idea}: \parbox{5cm}[t]{send a property sheet together with a specification
+                                            what should be the XML output coming back.
+                                            Useful for configuring your database.}
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT property-sheet (property-sheet)* 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST property-sheet 
+                           property-sheet-id ID #REQUIRED
+                           property-sheet-type (multiset
+
+                          |subset
+                          |set-element 
+                          |boolean
+                          |numeric
+                          |textual
+                          |invisible
+
+                          |clone
+                          |reference) #REQUIRED
+                           caption CDATA #IMPLIED
+                           visibility (popup|visible) "visible"
+                           send-type (element
+                               | attribute
+                               | value
+                               | attribute-text
+                               | children
+                               | none) #REQUIRED
+                           send-name CDATA #IMPLIED
+                           send-value CDATA #IMPLIED
+                           min-subset-size CDATA #IMPLIED
+                           max-subset-size CDATA #IMPLIED
+                           from CDATA #IMPLIED
+                           step CDATA #IMPLIED
+                           to CDATA #IMPLIED
+                           auto-id (yes|no) #IMPLIED
+                           auto-id-name CDATA "id"
+                           defaultstate CDATA #IMPLIED
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+  
+
+     \tagtitle{algorithm}
+     An algorithm will be either an empty element with 
+     attributes (add some at your will, it will talk with your 
+     server anyway, and this is the server which sent the property 
+     sheet), or a tree of algorithms.
+
+     What is the use of this?
+     Think of configuring meta queries. Together with properties
+     you get a powerful tool.
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT algorithm (algorithm*) 
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+  
+
+     Beginning and renaming sessions
+
+     We want to give the user the possibility to save the current
+     state into "sessions". This might be useful in the case that 
+     a user has several classes of goals which s/he knows in advance.
+
+     The user can request a new session.
+     S/he can also request a name change for a session.
+     
+     Ending sessions is implicit:
+     we cannot afford being dependent on the user ending
+     his/her session in a "nice" way, so we do not 
+     tempt programmers to do so 
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}<!--\end{verbatim}
+  Interface side  
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}<!--\end{verbatim}
+  send the desired feedback method together with 
+       a name for the session  
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT open-session EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST open-session 
+                         user-name CDATA #REQUIRED
+                         password CDATA #IMPLIED
+                         session-id CDATA #IMPLIED
+                         session-name CDATA #IMPLIED
+>\end{verbatim}
+
+\begin{verbatim}
+<!ELEMENT rename-session EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST rename-session 
+                           session-id CDATA #IMPLIED
+                           session-name CDATA #IMPLIED
+>\end{verbatim}
+
+\begin{verbatim}
+<!ELEMENT delete-session EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST delete-session 
+                           session-id CDATA #REQUIRED
+>\end{verbatim}
+
+\begin{verbatim}
+<!ELEMENT close-session EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST close-session 
+                          session-id CDATA #REQUIRED
+>\end{verbatim}
+
+\begin{verbatim}
+<!ELEMENT acknowledge-session-op EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST acknowledge-session-op 
+                                   session-id CDATA #REQUIRED
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+  
+
+     Simple user commands (for logging purposes)
+
+     (like e.g. back or forward 
+         in the command history)
+     (at present the only commands)
+      
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT user-data EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST user-data 
+                      command (history-backward|history-forward) "backward"
+                      steps CDATA #IMPLIED
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+  
+
+     \requesttitle{query-step}
+
+     At present we provide only query by example, and search for random
+     images (done, if one sends an empty \tag{query-step} tag)
+
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT query-step (user-relevance-element-list?) 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST query-step 
+                       query-step-id CDATA #REQUIRED
+                       result-size CDATA #IMPLIED
+                       result-cutoff CDATA #IMPLIED
+                       query-type (query|at-random) "query"
+                       algorithm-id CDATA #IMPLIED
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+  List of URLs with user given relevances 
+     Our way of specifying a QBE for images.
+
+     relevances vary from 0 to 1
+      
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT user-relevance-element-list (user-relevance-element+) 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ELEMENT user-relevance-element EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST user-relevance-element 
+                                   user-relevance CDATA #REQUIRED
+                                   image-location CDATA #REQUIRED
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+  
+
+     \responsetitle{query-result}
+
+     each result image can be accompanied by the user given relevance,
+     as well as the similarity calculated by the program, based on the
+     feature space.
+
+     calculated similarities vary from 0 to 1
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT query-result (query-resultelement-list?,query-result*) 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ELEMENT query-result-element-list (query-resultelement+) 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ELEMENT query-result-element EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST query-result-element 
+                                 calculated-similarity CDATA #REQUIRED
+                                 thumbnail-location CDATA #REQUIRED
+                                 image-location CDATA #REQUIRED
+>\end{verbatim}
+
+\begin{verbatim}<!--\end{verbatim}
+  
+
+     Error messages.
+
+       
+ \begin{verbatim}-->\end{verbatim}
+
+
+
+\begin{verbatim}
+<!ELEMENT error EMPTY 
+>\end{verbatim}
+
+\begin{verbatim}
+<!ATTLIST error 
+                  message CDATA #REQUIRED
+>\end{verbatim}
+
+\end{document}

@@ -1,0 +1,278 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+#
+# gift-dtd-to-tex.pl 
+#
+# This program turns a simple sgml dtd (with does not contain external
+# entities) into a class, which contains all keywords as string constants
+#
+# The use of this is to improve type safety when extendint MRML or changing
+# things in the program
+#
+use Getopt::Long;
+use XML::Parser;
+
+
+
+require 5.002;
+#use strict;
+use Socket;
+use FileHandle;
+use English;
+use IO::File;
+use XML::Parser;
+
+########################################
+#
+# slurps in some DTD and translates all te
+# keywords of the DTD into constant strings of
+# the language wanted
+#
+########################################
+package CDTDToLanguage;
+require Exporter;
+
+@ISA= qw(Exporter);
+@EXPORT= qw(new
+	    slurpDTD
+	    translateToLanguage
+	   );
+
+sub new {
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize();
+  return $self;
+}
+
+sub initialize(){
+  my$self=shift;
+
+  $self->{parser} = new XML::Parser(Handlers => {Element => \&handleElement,
+						 Attlist => \&handleAttlist,
+						});
+
+  # Make the parser know who is this structure 
+  $self->{parser}->{mCaller}=$self;
+  $self->{parser}->{mMagic}=42;
+  ###############################
+  #§
+  # for quick changes what to look at when debugging/testing
+  #
+  #
+  $self->{vDEBUG}={
+		   handleElement =>       1,
+		   handleAttlist =>       1,
+		   processDTD    =>       1,
+		  };
+  print "Printing debugging info for the functions:\n";
+  {
+    my $i;
+    foreach $i (keys(%{$self->{vDEBUG}})){
+      if($self->{vDEBUG}->{$i}){
+	print "$i\n";
+      }
+    }
+  }
+  ###############################
+  #
+  # Parameters for the query. Here some set/get/functions would be nice
+  #
+}
+
+##############################
+#
+# Expat parser handlers
+#
+sub handleElement( $$$ ){
+  my $self=shift;
+
+  die "BLACK MAGIC!" if ($self->{mMagic}!=42);
+  $self=$self->{mCaller};
+
+  my $lElementName=shift;
+
+  print "Element: $lElementName\n" if($self->{vDEBUG}->{handleElement});
+
+  $self->{used}->{$lElementName}=1;
+}
+
+sub handleAttlist( $$$$$$ ){
+  my $self=shift;
+
+  die "BLACK MAGIC!" if ($self->{mMagic}!=42);
+  $self=$self->{mCaller};
+  
+  my($inElement)=shift;
+  my $lAttributeName=shift;
+
+  print "Attribute: $lAttributeName\n" if($self->{vDEBUG}->{handleAttlist});
+
+  $self->{used}->{$lAttributeName}=1;
+}
+
+sub processDTD( $$ ){
+  my$self=shift;
+  my $lDTDHandle=shift;
+  my $lEmptyText=shift;
+  print "\nNow I will try to read...\n" if($self->{vDEBUG}->{processDTD});
+  
+  #we read, and then we parse
+  #for this reason, we can return the
+  #string read
+  {
+    my $lRead=join("",$lDTDHandle->getlines());
+    
+    if($lRead){
+      
+      if($self->{vDEBUG}->{processDTD}){
+	print "Parsing: $lRead";
+	open OF,">mrml-parsing-log";
+	print OF $lRead;
+      }
+      $self->{parser}->parse("$lRead $lEmptyText");
+    }
+    $lRead;
+  }
+}
+
+
+sub translateToJava( $;$ ){
+
+
+  my$self=shift;
+  my $lClassname=shift;
+  my $inPackage=shift || $lClassname;
+
+  my $lFH=new IO::File;
+  $lFH->open("> $lClassname.java") or die "could not generate $lClassname.java $!\n";
+
+  print $lFH "
+
+//Automatically generated from the dtd by gift-dtd-to-keywords
+
+package $inPackage;
+import java.lang.String;
+
+public class $lClassname \{ \n";
+  foreach $i (sort keys(%{$self->{used}})){
+    $_=$i;
+
+    tr[-][_];
+    tr[A-Z][a-z];
+
+    print $lFH "    public final static String $_ = new String(\"$i\");\n "
+  }
+  print $lFH "\}; \n";
+}
+
+sub translateToH( $ ){
+
+
+  my$self=shift;
+  my $lClassname=shift;
+
+  my $lFH=new IO::File;
+  $lFH->open("> $lClassname.h") or die "could not generate $lClassname.h $!\n";
+
+  print $lFH "
+
+//Automatically generated from the dtd by gift-dtd-to-keywords
+#include <string>
+class $lClassname \{ public: \n";
+  foreach $i (sort keys(%{$self->{used}})){
+    $_=$i;
+
+    tr[-][_];
+    tr[A-Z][a-z];
+
+    print $lFH "    static const string $_;\n "
+  }
+  print $lFH "\}; \n";
+}
+
+sub translateToCC( $ ){
+
+
+  my$self=shift;
+  my $lClassname=shift;
+
+  my $lFH=new IO::File;
+  $lFH->open("> $lClassname.cc") or die "could not generate $lClassname.cc $!\n";
+
+  print $lFH "
+
+//Automatically generated from the dtd by gift-dtd-to-keywords
+#include <string>
+
+#include \"$lClassname.h\"
+
+";
+  foreach $i (sort keys(%{$self->{used}})){
+    $_=$i;
+
+    tr[-][_];
+    tr[A-Z][a-z];
+
+    print $lFH "const string ${lClassname}::$_(\"$i\");\n "
+  }
+  print $lFH "\n";
+}
+
+package main;
+
+%lOptions=();
+
+GetOptions(\%lOptions,
+	   "cc",
+	   "include",
+	   "java"
+	  );
+
+my $inDTDFile=shift;
+my $inTag=shift;
+my $inClassname=shift;
+my $inPackagename=shift;
+
+if(!$inDTDFile){
+  print "
+Usage: gift-dtd-to-keywords.pl infile doctype classname packagename
+    
+This program turns a simple sgml dtd (with does not contain external
+entities) into LaTeX.
+
+";
+}
+
+
+my $lDTDToLanguage=new CDTDToLanguage();
+
+{
+  my $lFH=new IO::File;
+  $lFH->open("< $inDTDFile") or die "there is no $inDTDFile $!\n";
+    
+  $lDTDToLanguage->processDTD($lFH,"<$inTag></$inTag>");
+
+  $lDTDToLanguage->translateToJava($inClassname,
+				   $inPackagename);
+  $lDTDToLanguage->translateToH($inClassname);
+  $lDTDToLanguage->translateToCC($inClassname);
+}

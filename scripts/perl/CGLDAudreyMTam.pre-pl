@@ -1,0 +1,139 @@
+#!/usr/bin/perl -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+################################################################################
+#
+#
+# This is a viPerl demo especially handcrafted for 
+#  Dr. Audrey M. Tam
+# by
+#  Wolfgang Müller
+#
+#################################################################################
+
+############################################################
+#
+# main
+#
+# It would be cleanest to construct all objects from C++
+# however, it is fastest for me to do things by using the
+# main package.
+#
+# Take this as some kind of skeleton for your code.
+#
+require Exporter;
+
+use lib '__BINDIR__'; # for including CFeedbackClient
+use CGIFTLink qw(processGIFTQueryCall processGIFTRandomQueryCall traverseTree configure);
+use CXMLTreeBuilder;
+use XML::Parser;# YOU HAVE TO INSTALL XML::PARSER you get it at www.cpan.org
+
+package main;
+use CVLStructuredAnnotation;
+######################################################################
+#
+# <you-should-keep-all-this>
+#
+########################################
+#
+# THE FOLLOWING FUNCTIONS JUST PASS THINGS
+# THROUGH TO THE CGIFTLink OBJECT CONSTRUCTED
+# IN construct(). PLEAST DON'T CHANGE
+#
+sub processGIFTQueryCall( ; ){
+  $gQueryProcessor->processGIFTQueryCall(@_);
+}
+sub processGIFTRandomQueryCall( ; ){
+  $gQueryProcessor->processGIFTRandomQueryCall(@_);
+}
+sub setAlgorithm( ; ){
+  $gQueryProcessor->setAlgorithm(@_);
+}
+sub setCollection( ; ){
+  $gQueryProcessor->setCollection(@_);
+}
+sub configure(){
+  $gQueryProcessor->configure(@_);
+}
+############################################################
+#
+# </you-should-keep-all-this>
+#
+######################################################################
+
+
+########################################
+#
+# construct
+#
+# This function constructs the object which
+# will process our queries 
+#
+# CHANGE HERE TO GET YOUR TYPE CONSTRUCTED
+#
+sub construct(){
+  $gQueryProcessor=new CVLStructuredAnnotation();
+
+}
+
+
+############################################################
+#
+# Testing code to be deleted in final version
+#
+
+print "constructing\n";
+construct();
+
+print "configuring\n";
+$gQueryProcessor->configure();#puts a nice XML tree in memory
+
+my $lVisitor=new CXMLTreeVisitor();
+
+# "ugly-prints" the result of the query.
+$gQueryProcessor->traverseTree(
+			       $gQueryProcessor->query(	#
+							# this is an XML tree containing an EMPTY QUERY for 2 images
+							# ADD CHILDREN TO "query-step" PRODUCING YOUR OWN QUERY
+							#
+						       
+						       #the {} design an anonymous reference to hash,
+						       # our XML element node
+						       {
+							# the element "element" of the hash has the value "query-step"
+							element => "query-step", 
+							# the element "attributes" of the hash is again an anonymous hash 
+							# containing the value 2 for the element "result-size"
+							attributes => {
+								       "result-size" => 2
+								      },
+							# this XML element contains two nodes
+							children => [
+								     {
+								      text=>"hello, there",
+								      children=>[]
+								     },
+								     {
+								      element => "demo-element-without-a-meaning",
+								      attributes=>{}, #no attributes
+								      children=>[] #no children
+								     }
+								    ]
+						       })
+			       ,$lVisitor);

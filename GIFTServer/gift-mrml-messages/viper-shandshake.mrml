@@ -1,0 +1,58 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE mrml SYSTEM "http://cui.unige.ch/~muellerw/mrml.dtd">
+<mrml sessionid="33">
+  <shandshake>
+    <ssessionlist listid="1">
+      <ssession id="1" name="Present session"/>
+    </ssessionlist>
+    <salgorithmnamelist listid="1">
+      <salgorithmname id="0" name="Split"/>
+      <salgorithmname id="1" name="Random (not implemented)"/>
+      <salgorithmname id="2" name="PicHunter Test 1"/>
+      <salgorithmname id="3" name="PicHunter Test 2"/>
+      <salgorithmname id="4" name="PicHunter Test 3"/>
+      <salgorithmname id="5" name="PicHunter Test 4"/>
+      <salgorithmname id="5" name="PicHunter Test 5"/>
+      <salgorithmname id="8" name="Classic IDF"/>
+      <salgorithmname id="9" name="Binary Term"/>
+      <salgorithmname id="10" name="Standard TF"/>
+      <salgorithmname id="11" name="Best fully Weighted"/>
+      <salgorithmname id="12" name="Best probabilistic"/>
+      <salgorithmname id="13" name="Coordination"/>
+      <salgorithmname id="14" name="Color Histogram"/>
+      <salgorithmname id="15" name="Texture Histogram"/>
+      <salgorithmname id="16" name="Block Features"/>
+      <salgorithmname id="17" name="Color Block"/>
+      <salgorithmname id="18" name="Texture Block"/>
+    </salgorithmnamelist>
+    <salgorithmidlistlist>	
+      <salgorithmidlist listid="1">
+	<salgorithmid id="8"/>
+	<salgorithmid id="9"/>
+	<salgorithmid id="10"/>
+	<salgorithmid id="11"/>
+	<salgorithmid id="12"/>
+	<salgorithmid id="13"/>
+	<salgorithmid id="14"/>
+	<salgorithmid id="15"/>
+	<salgorithmid id="16"/>
+	<salgorithmid id="17"/>
+	<salgorithmid id="18"/>
+      </salgorithmidlist>
+      <salgorithmidlist listid="2">
+	<salgorithmid id="1"/>
+	<salgorithmid id="2"/>
+	<salgorithmid id="3"/>
+	<salgorithmid id="4"/>
+	<salgorithmid id="5"/>
+	<salgorithmid id="6"/>
+	<salgorithmid id="8"/>
+      </salgorithmidlist>
+    <scollectionlist listid="1">
+      <scollection id="1" name="TSR    2500" algorithmidlist="2"/>
+      <scollection id="2" name="TSR     500" algorithmidlist="1"/>
+      <scollection id="3" name="VisTex 1670" algorithmidlist="1"/>
+    </scollectionlist>
+  </salgorithmidlistlist>
+  </shandshake>
+</mrml>

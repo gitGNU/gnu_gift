@@ -1,0 +1,58 @@
+# C compiler
+CC		=	cc
+
+# archiver
+AR		=	ar
+ARFLAGS	=	-r
+
+# directories
+HOME = /user/u7/squire
+LIBDIR = -L$(HOME)/lib
+INCDIR = -I$(HOME)/include
+
+# libraries
+LIBS	=  -lmalloc -lm
+
+CFLAGS = -xO3 $(INCDIR) $(LIBDIR)
+
+LIBNAME = ppm
+
+LIBFAMILY = sq
+
+TARGET = lib$(LIBFAMILY)$(LIBNAME).a
+
+INSTALLINCDIR = $(HOME)/include
+INSTALLLIBDIR = $(HOME)/lib
+
+# objects
+OBJS =	ppm_comment.o\
+		ppm_error.o\
+		ppm_io.o\
+		ppm_memory.o\
+		ppm_normalize.o\
+		ppm_plane.o\
+		ppm_subimage.o
+
+# sources
+SRCS = $(OBJS:%.o=%.c)
+
+# headers
+HEADS = $(LIBNAME).h
+
+$(TARGET): $(HEADS) $(OBJS)
+	rm -f $(TARGET)
+	$(AR) $(ARFLAGS) $(TARGET) $(OBJS)
+	cp $(TARGET) $(INSTALLLIBDIR)
+
+$(HEADS): $(SRCS)
+	makeproto $(SRCS) > $(LIBNAME).proto
+	cat $(LIBNAME)_noproto.h $(LIBNAME).proto > $(LIBNAME).h
+	cp $(LIBNAME).h $(INSTALLINCDIR)
+
+install: $(TARGET)
+
+new_executable: new_executable.c $(TARGET)
+	$(CC) $(CFLAGS) -o new_executable new_executable.c -lsqppm $(LIBS)
+
+clean:
+	rm -f $(OBJS) $(TARGET)

@@ -1,0 +1,434 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+
+#
+# This script makes GIFT index all images in a directory
+# afterwards it creates an entry in the gift config file.
+# 
+
+
+use Getopt::Long;
+use IO::File;
+use XML::Writer;
+use File::Find;
+use File::Path;
+use File::Copy;
+
+#
+# reading .gift-add-collection file
+#
+open DOT_FILE,"$ENV{HOME}/.gift-add-collection" || print STDERR "File $ENV{HOME}/.gift-add-collection could not be opened ($!)\n";
+local $lImageDirectory="";
+local $lCollectionName="";
+local $lFeaturePrefix="";
+local $lIndexPrefix="";
+local $lThumbnailDirectory="";
+local $lURLPrefix="";
+local $lThumbnailURLPrefix="";
+local $gGiftHome="";
+{
+  $lOptionList={
+		"gift-home"            => \$gGiftHome,
+		"image-directory"      => \$lImageDirectory,
+		"collection-name"      => \$lCollectionName,
+		"feature-prefix"       => \$lFeaturePrefix,
+		"index-prefix"         => \$lIndexPrefix,
+		"thumbnail-dir"        => \$lThumbnailDirectory,
+		"url-prefix"           => \$lURLPrefix,
+		"thumbnail-url-prefix" => \$lThumbnailURLPrefix
+	       };
+  
+  while(<DOT_FILE>){
+    chomp;
+    print "[$_]\n";
+    foreach $i (keys %$lOptionList){
+      next if m/^\#/;#skip comments
+      eval("if(m/^$i=\\\"(.*)\\\"/){\${\$lOptionList->{\$i}}=\$1;}");
+      print ${$lOptionList->{$i}} if ${$lOptionList->{$i}};
+    }
+  }
+}
+%lOptions=();
+
+GetOptions(\%lOptions,
+	   "help",
+	   "gift-home=s",
+	   "image-directory=s",
+	   "collection-name:s",
+	   "feature-prefix:s",
+	   "index-prefix:s",
+	   "url-prefix:s",
+	   "thumbnail-dir:s",
+	   "thumbnail-url-prefix:s",
+	   "no-png",
+	   "no-gif",
+	   "no-jpg",
+	   "no-nps",
+	   "no-ps");
+
+#
+#
+#
+$gGiftHome= $lOptions{'gift-home'} || $gGiftHome || $ENV{GIFT_HOME} || $ENV{HOME};
+
+
+#
+# old position of copy gift-config.mrml and write gift-embed-perl-modules
+#
+
+$lImageDirectory= $lOptions{'image-directory'} || $ARGV[0] || $lImageDirectory || $ENV{PWD} ;
+
+$lImageDirectory=$ENV{PWD}.$lImageDirectory unless $lImageDirectory=~m[^/];
+
+$lImageDirectory=$lImageDirectory."/";
+
+$lImageDirectory=~s[ /+ ][/]gx;               #removing double backslashes in the end
+$lImageDirectory=~s[^([^/])][$ENV{PWD}/$1]x;   #making path absolute
+
+#take the last bit of the directory as database name
+$lCollectionName= $lOptions{'collection-name'} || $lCollectionName || (split("/",$lImageDirectory))[-1];
+
+#$lCollectionName=~s§$gGiftHome§§;
+
+$lFeaturePrefix=      $lOptions{'feature-prefix'} || $lFeaturePrefix || "$gGiftHome/gift-indexing-data/$lCollectionName/";
+$lURLPrefix=          $lOptions{'url-prefix'}     || $lURLPrefix     || "file:$lImageDirectory";
+
+# is the urlprefix in ~/public_html? create a http-url!
+$lURLPrefix=~s[^file:__WEB_PUBLISHING_DIRECTORY__][__WEB_PUBLISHING_LOCATION__/];
+
+if($lOptions{'thumbnail-dir'}){
+  $lThumbnailDirectory= $lOptions{'thumbnail-dir'} || $lThumbnailDirectory;
+  $lThumbnailDirectory=~s[ /+$ ][/]x;               #removing double backslashes in the end
+  $lThumbnailDirectory=~s[^([^/])][$ENV{PWD}/$1]x;   #making path absolute
+}else{
+  unless($lThumbnailDirectory){
+    $lThumbnailDirectory= $lImageDirectory ;
+    $lThumbnailDirectory=~s[ /+$ ][_thumbnails]x;#strip trailing slashes and ad thumbnails
+  }
+}
+
+$lThumbnailURLPrefix= $lOptions{'thumbnail-url-prefix'} || $lOptions{'url-prefix'} || "file:$lThumbnailDirectory";
+
+# is the thumbnail-urlprefix in ~/public_html? create a http-url!
+$lThumbnailURLPrefix=~s[^file:__WEB_PUBLISHING_DIRECTORY__][__WEB_PUBLISHING_LOCATION__/];
+
+$lIndexPrefix= $lOptions{'index-prefix'} || $lIndexPrefix || $lFeaturePrefix;
+
+# we asume that the lIndexPrefix ends with 
+# a "/" throughout the program
+$lIndexPrefix.="/" unless($lIndexPefix=~m[/$]);
+
+#
+# replace variables:
+#
+foreach $i (values %$lOptionList){
+  $$i=~s/\@collection-name\@/$lCollectionName/g;
+}
+
+
+if($lOptions{help}){
+print "
+gift-add-collection [options] [image-directory]: Add an image collection to your gift database.
+
+THE FOLLOWING LIST OF OPTIONS ALSO SHOWS THE CURRENT VALUES AND TAKES 
+OPTIONS BESIDES --help INTO ACCOUNT. IT IS A USEFUL TOOL FOR FINDING OUT HOW 
+gift-add-collection WORKS.
+
+Options (options override .gift-add-collection entries):
+
+--gift-home                   Specify the directory which contains the configuration
+                              to which you are adding a collection. By default either
+                              GIFT_HOME (current value \"$ENV{GIFT_HOME}\") or 
+                              HOME (current value \"$ENV{HOME}\"). 
+                              The current value is \"$gGiftHome\"
+
+--image-directory             All images in this directory will be indexed.
+                              Same as giving image-directory after the options
+                              Default:  \$PWD, 
+                              Current value:  $lImageDirectory
+
+
+--collection-name             Name of the new collection to be generated. Default
+                              is full path of the image directory. 
+                              Current value:  $lCollectionName
+
+--feature-prefix              Feature data will be written into this directory.
+                              Current value:  $lFeaturePrefix
+
+--index-prefix                Indexing data will be written into this directory
+                              Default: $lIndexPrefix 
+                              (in general:same as given by --feature-prefix)
+
+--thumbnail-dir               Thumbnails will be put into this directory: 
+                              Current value:  $lThumbnailDirectory
+                              (in general:same as given by the name 
+                              'image-directory'_thumbnails)
+                              Current value: $lThumbnailDirectory 
+
+
+
+Change here, if you want to make a database accessible from the WWW
+
+--url-prefix                  This URL-trunc will be prepended
+                              to the file names generated. Default:
+                              file:-URL to images
+                              Current value: $lURLPrefix
+                              
+--thumbnail-url-prefix        This URL-trunc will be prepended
+                              to the thumbnail file names generated.
+                              file:-URL to thumbnails
+                              Current value: $lThumbnailURLPrefix
+
+
+If this script recognizes that you are indexing files in public_html,
+it will automatically generate http://localhost/~$ENV{HOME} URLs.
+
+Options override the contents of 
+$ENV{HOME}/.gift-add-collection
+";
+  exit 0;
+}
+
+unless(-e "$gGiftHome/gift-config.mrml"){
+  copy("__DATADIR__/gift-config.mrml",
+       "$gGiftHome/gift-config.mrml");
+}
+unless(-e "$gGiftHome/gift-embed-perl-modules.pl"){
+  open PM_OUTFILE,">$gGiftHome/gift-embed-perl-modules.pl" 
+    or die "Could not write file $gGiftHome/gift-embed-perl-modules.pl";
+
+  print PM_OUTFILE "
+#
+# This file was automatically generated
+# by the GNU Image-Finding Tool (GIFT).
+#
+# It should contain 'use' instructions for ALL modules
+# you want to use from within the GIFT.
+#
+# You also have to add 'use lib' instructions where 
+# necessary
+#
+use lib '__BINDIR__';
+
+use CGIFTLink;
+";
+}
+
+mkpath([$lThumbnailDirectory],1,0755);
+mkpath([$lIndexPrefix,$lFeaturePrefix],1,0711);
+			  
+print 
+"
+
+ I will read the images in:
+ $lImageDirectory
+
+ I will generate feature files which I put into:
+ $lFeaturePrefix
+
+ The index files will be stored in:
+ $lIndexPrefix
+
+ The URLs I will generate will have the prefix:
+ $lURLPrefix
+
+";
+			  
+			  
+$url2fts_name=">${lIndexPrefix}/url2fts.xml";
+$URL2FTS=new IO::File($url2fts_name) or die "Could not open database $url2fts_name for output!";
+			  
+local $self={};
+			  			  
+$self->{writer}=new XML::Writer( OUTPUT => $URL2FTS,
+				 DATA_MODE => 1,
+				 DATA_INDENT => 2 );
+$self->{writer}->xmlDecl("UTF-8","yes");
+  
+$self->{writer}->startTag("image-list");  
+
+$main::lImageCount=0;
+
+$main::gModifyingDateOfThis=(stat($0))[9];
+print "This file was last modified $main::gModifyingDateOfThis after the epoch\n";
+
+find(\&wanted,$lImageDirectory);
+
+$self->{writer}->endTag("image-list");  
+$URL2FTS=0;#close the file
+
+sub wanted{
+  my $lFullName=$File::Find::name;
+
+  my $lName=$lFullName;
+
+  $lName=~s[^${lImageDirectory}][];
+
+  $lName=~m§\.([^\.]*)$§;
+  my $lExtension=$1;
+
+  
+  if($lExtension && $lExtension=~m/^((tif)|(tiff)|(ppm)|(gif)|(jpg)|(jpeg)|(eps)|(png))$/i){
+
+    my $lNameBase=$lName;
+    $lNameBase=~s§\.$lExtension$§§;
+
+  
+    $lURL="$lURLPrefix/$lName";
+    $lFts="$lFeaturePrefix/${lNameBase}_$lExtension.fts";
+    #the actual location of the thumbnail
+    $lThumbnailFile="$lThumbnailDirectory/${lNameBase}_thumbnail_$lExtension.jpg";
+    $lThumbnailURL ="$lThumbnailURLPrefix/${lNameBase}_thumbnail_$lExtension.jpg";
+    
+    print         "$lURL $lFts\n";
+
+    my $lURL2FTSLine="$lURL $lThumbnailURL $lFts\n";
+    $lURL2FTSLine=~s§/+§/§g;
+    $lURL2FTSLine=~s§http:/§http://§g;
+
+    my $lAttributes={
+		     "url-postfix" => $lURL,
+		     "thumbnail-url-postfix" => $lThumbnailURL,
+		     "feature-file-name" => $lFts
+		    };
+    
+    
+    $self->{writer}->emptyTag("image",(%{$lAttributes}));  
+
+
+    print "$lURLPrefix--$lNameBase--$lExtension\n";
+    
+    # uniqueness of names given by process id 
+    # the variable containing the process id of this script 
+    # is $$
+    my $lTemp="/tmp/gift_tmp$$.ppm";
+    my $lTempFts="/tmp/gift_tmp$$.fts";
+
+    print "This script was last modified on $main::gModifyingDateOfThis\n";
+
+    my $lThumbnailModificationTime=(stat($lThumbnailFile))[9];
+
+    if(!-e($lThumbnailFile)
+       || $lThumbnailModificationTime<$main::gModifyingDateOfThis){
+      $lThumbnailFile=~m§^(.*/)([^/]*)$§;
+      print($lThumbnailModificationTime," is the modifying date of $lThumbnailFile\n") 
+	if $lThumbnailModificationTime;
+      print("We will make a new thumbnail file\n");
+      print("making the path $1\n");
+      mkpath([$1],1,0711);
+      print("Converting $lFullName to $lThumbnailFile\n");
+      print STDERR "Warning: Thumbnail generation failed for $lThumbnailFile $!\n" if system("convert -geometry 128x128 $lFullName $lThumbnailFile");
+    }else{
+      print "Warning: more recent version of thumbnail file $lThumbnailFile  found!\n";
+    }
+
+    my $lFtsModificationTime=(stat($lFts))[9];
+    if(!-e($lFts)
+       || $lFtsModificationTime<$main::gModifyingDateOfThis){
+      print($lFtsModificationTime," is the modifying date of $lFts file\n") 
+	if $lFtsModificationTime;
+      print("We will make a new feature file\n");
+      print("Converting $lFullName to $lTemp\n");
+      die "Pre feature extraction convert call failed: $! \n" if system("convert -geometry 256x256! $lFullName $lTemp");
+      print("Extracting features from $lTemp\n");
+      die "Feature extraction failed: $! \n" if system("__BINDIR__/gift-extract-features $lTemp");
+      $lFts=~m§^(.*/)([^/]*)$§;
+      print("making the path $1\n");
+      mkpath([$1],1,0711);
+      print("...copying from $lTempFts to $lFts\n\n");
+      copy($lTempFts,$lFts);
+    }else{
+      print "warning: more recent version of feature file $lFts found!\n";
+    }
+    
+    if(!$main::lImageCount){
+      die "Pre feature extraction convert call failed: $! \n" if system("convert -geometry 256x256! $lFullName $lTemp");
+      system qq(__BINDIR__/gift-write-feature-descs < $lTemp |perl -e 'print "Writing InvertedFileFeatureDescription...\n";open OF,">$main::lIndexPrefix/InvertedFileFeatureDescription.db" or die "could not open $lIndexPrefix";while(<STDIN>){print OF join(" ",(split(" ",\$_))[0..1]),"\\n";};print "finished.\n";' );
+      unlink $lTemp;
+    }
+
+    $main::lImageCount++;
+    print "Number of images: $main::lImageCount\n\n";
+    unlink($lTemp);
+    unlink($lTempFts);
+  }
+}
+
+#i am looking for a match of this to place the newly made data	  
+my $lTheLine='<!-- xxyx gift-add-collection xyxx DEPENDS ON THIS LINE -->';
+
+
+close URL2FTS;
+
+system("__BINDIR__/gift-generate-inverted-file $lIndexPrefix/");
+
+my $lUniqueCollectionID="c-".join("-",gmtime());
+
+{
+  #rescue the old config
+  $CONFIG="$gGiftHome/gift-config.mrml";
+  $OLDCONFIG="${CONFIG}-old";
+  copy($CONFIG,$OLDCONFIG);
+
+  print "
+
+Copying $CONFIG to $OLDCONFIG
+
+";
+
+  #before overwriting it with the new config
+  $CONFIG=">$CONFIG";
+
+
+  open OLDCONFIG or die "COULD NOT OPEN $OLDCONFIG";
+  open CONFIG or die "COULD NOT OPEN $CONFIG";
+
+  while(<OLDCONFIG>){
+    
+    if(m/$lTheLine/){
+      print CONFIG qq(<!-- automatically added by v_add_collection.pl -->
+		      <collection 
+		      collection-id="$lUniqueCollectionID" 
+		      collection-name="$lCollectionName" 
+		      
+		      cui-algorithm-id-list-id="ail-inverted-file"
+		      
+		      cui-number-of-images="$main::lImageCount" 
+		      cui-base-dir="${lIndexPrefix}"
+		      cui-inverted-file-location="InvertedFile.db" 
+		      cui-offset-file-location="InvertedFileOffset.db"
+		      cui-feature-description-location=
+		      "InvertedFileFeatureDescription.db"
+		      cui-feature-file-location="url2fts"
+		      >
+		      <query-paradigm-list>
+                             <query-paradigm type="inverted-file"/>
+                             <query-paradigm type="perl-demo"/>
+                      </query-paradigm-list>
+		      </collection>
+		      \n\n);
+    }
+
+    s/__COLLECTION__/$lUniqueCollectionID/g;
+    print CONFIG $_;
+
+  }
+}
+print "The image count: ",$main::lImageCount,"\n";

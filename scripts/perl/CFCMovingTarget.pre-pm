@@ -1,0 +1,493 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+# Author of this file: Wolfgang Müller
+
+require 5.002;
+#use strict;
+use Socket;
+use FileHandle;
+use English;
+use IO::File;
+use IO::Socket;
+use XML::Parser;
+require Exporter;
+use CFeedbackClient;
+
+############################################################
+#
+# This package performs a moving target test.
+#
+#
+package CFCMovingTargetTest;
+require Exporter;
+@ISA= qw(Exporter
+	 CFeedbackClient);
+@EXPORT= qw(doQueryGroup);
+
+sub new {
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize();
+  return $self;
+}
+
+sub initialize(){
+  my$self=shift;
+
+  $self->SUPER::initialize();
+
+}
+
+
+##############################
+#
+# What to do when the search starts
+#
+sub onSearchStart( ){
+  my$self=shift;
+  $self->clearHierarchyPath();
+  $self->clearImageClicked();
+}
+
+##############################
+#
+# What to do when one target is found
+#
+sub onTargetFound( ){
+  my$self=shift;
+  $self->clearHierarchyPath();
+  $self->clearImageClicked();
+  return ("query-step",[]);
+}
+
+##############################
+#
+# this compares two lists
+# this is a service to 
+#
+sub isEqualList( $$ ){
+  my$self=shift;
+  my $inList1=shift;
+  my $inList2=shift;
+  
+  if(scalar(@$inList1)
+     !=
+     scalar(@$inList2)){
+    print "lengths: ",scalar(@$inList1),";",scalar(@$inList2),"\n";
+    return 0;
+  }
+
+  my @lSorted1=sort {$a->[0] cmp $b->[0]} @{$inList1};
+  my @lSorted2=sort {$a->[0] cmp $b->[0]} @{$inList2};
+
+  my $i;
+  for($i=0;
+      $i < scalar(@$inList2);
+      $i++){
+    print "COMPARING: $lSorted1[$i]->[0] , \n           $lSorted2[$i]->[0]\n";
+    return 0 unless ($lSorted1[$i]->[0] eq $lSorted2[$i]->[0]) ;
+  }
+  return 1;
+}
+
+
+##############################
+#
+# The first step of separation
+#
+sub hierarchyCreateFeedback( ){
+  my$self=shift;
+  
+  my @lResultList=@{$self->getResultList()};
+  my $lPositiveImage={ 
+		      name=> "__up__",
+		      rank=> 999_999_999
+		     };
+  # 	print "------------------------------",
+  # 	join ("--\n",keys (%{$self->{mRanks}->{$iTarget}})),
+  # 	"\n";
+  
+  my @lUntouchedResultList=@{$self->getResultList()};
+
+  ##############################
+  #
+  # Assume that if the display does not change
+  # you have not moved.
+  #
+  {
+    if($self->isEqualList(
+			  \@lUntouchedResultList,
+			  $self->{"untouched-result-list"}
+			 )){
+      $self->moveUpClicked();
+    }
+    $self->{"untouched-result-list"}=\@lUntouchedResultList;
+  }
+
+  foreach $j (@lResultList){
+    
+    print "Looking at ",$j->[0],", Rank:";
+    print $self->{mRanks}->{$iTarget}->{$j->[0]} if(defined ($self->{mRanks}->{$iTarget}->{$j->[0]}));
+    print "\n";
+    if((!$self->isImageClicked($j->[0]))
+       && ($self->{mRanks}->{$iTarget}->{$j->[0]})
+       && ($self->{mRanks}->{$iTarget}->{$j->[0]} < $lPositiveImage->{rank})){
+      $lPositiveImage={
+		       name=>$j->[0],
+		       rank=>$self->{mRanks}->{$iTarget}->{$j->[0]}
+		      };
+    }
+  }
+  foreach $j (@lResultList){
+    if(($lPositiveImage->{name} eq "__up__")
+       && (!$self->isImageClicked($j->[0]))){
+      $lPositiveImage={
+		       name=>$j->[0],
+		       rank=> 0
+		      };
+    }
+  }
+  if(!($lPositiveImage->{name} eq "__up__")){
+    $self->addImageClicked($lPositiveImage->{name});
+    $lFeedbackList=[[$lPositiveImage->{name},1],
+		   ];
+    return ("query-step",
+	    $lFeedbackList);
+  }else{
+    print "WE GO UP\n";
+    $self->moveUpClicked();
+    return ("cui-hierarchy-up",
+	    []);
+  }
+}
+
+##############################
+#
+# The first step of separation
+#
+sub createFeedback(){
+  my$self=shift;
+
+  
+
+  my @lResultList=@{$self->getResultList()};
+  my $lPositiveImage={ 
+		      name=> "__up__",
+		      rank=> 999_999_999
+		     };
+  my $lNegativeImage={
+		      name=> "__up__",
+		      rank=> 0
+		     };
+  
+  # 	print "------------------------------",
+  # 	join ("--\n",keys (%{$self->{mRanks}->{$iTarget}})),
+  # 	"\n";
+  
+  foreach $j (@lResultList){
+    print "Looking at ",$j->[0],",";
+    print $self->{mRanks}->{$iTarget}->{$j->[0]};
+    print "\n";
+    if((!$self->isImageSeen($j->[0]))
+       && ($self->{mRanks}->{$iTarget}->{$j->[0]})
+       && ($self->{mRanks}->{$iTarget}->{$j->[0]} < $lPositiveImage->{rank})){
+      $lPositiveImage={
+		       name=>$j->[0],
+		       rank=>$self->{mRanks}->{$iTarget}->{$j->[0]}
+		      };
+    }
+  }
+  
+  foreach $j (@lResultList){
+    print "Looking at ",$j->[0],",";
+    print $self->{mRanks}->{$iTarget}->{$j->[0]};
+    print "\n";
+    if((!$self->isImageSeen($j->[0]))
+       && ($self->{mRanks}->{$iTarget}->{$j->[0]})
+       && ($self->{mRanks}->{$iTarget}->{$j->[0]} > $lNegativeImage->{rank})){
+      $lNegativeImage={
+		       name=>$j->[0],
+		       rank=>$self->{mRanks}->{$iTarget}->{$j->[0]}
+		      };
+    }
+  }
+
+  #
+  # note which images we have seen
+  #
+  foreach $j (@lResultList){
+    $self->addImageClicked($j->[0])
+  }
+
+  
+  $lFeedbackList=[[$lPositiveImage->{name},1],
+		  [$lNegativeImage->{name},-1]];
+
+  return (0,
+	  $lFeedbackList);
+}
+
+sub clearHierarchyPath(){
+  my$self=shift;
+
+  $self->{path}=[];
+}
+sub clearImageClicked(){
+  my$self=shift;
+  $self->{clicked}={};
+}
+sub isImageClicked( $ ){
+  my$self=shift;
+  my$lImage=shift;
+
+  return $self->{clicked}->{join(":",@{$self->{path}},$lImage)};
+}
+sub moveUpClicked( $ ){
+  my$self=shift;
+  my$lImage=shift;
+
+  pop @{$self->{path}};
+}
+sub addImageClicked( $ ){
+  my$self=shift;
+  my$inImage=shift;
+  push @{$self->{path}},$inImage;
+
+  print "Current Path:",join("\n",@{$self->{path}}),"\n";
+
+  $self->{clicked}->{join(":",@{$self->{path}})}=1;
+}
+
+
+###############################
+#
+# This function creates a CFeedback client
+# to perform a 
+#
+sub createDistanceMeasure( $$ ){
+  my$self=shift;
+  my $inImages=shift;
+  my $inCollection1=shift;
+  my $inCollection2=shift;
+
+  my $lDistanceMeasureCreator=new CFeedbackClient();
+  
+  ###############################
+  #
+  # First we need a distance measure for each target
+  #
+  $self->{mRanks}={};
+  $lDistanceMeasureCreator->setAddress($inCollection1->{address});
+  $lDistanceMeasureCreator->startSession("--making-distance-measure--");
+
+  #
+  # is this
+  #
+  my $lCollection=$lDistanceMeasureCreator->getCollection($inCollection1->{"collection-id"});
+  #
+  # get all algorithms that fit our requirements (i.e. they should be queried by QBE)
+  #§
+
+  my $lInteractionType={"interaction-type"=>"qbe"};
+
+  my(@lAlgorithms)=$lDistanceMeasureCreator->getAlgorithmsByParadigmAndCollection([$lInteractionType],$lCollection);
+
+
+  print "-------------------- using $lQBEAlgorithmCollectionPair->[0] and $lQBEAlgorithmCollectionPair->[1] for creating the distance measure\n ";
+
+  $lDistanceMeasureCreator->configureSession($self->getSessionID(),
+					     $self->algorithmToID( $lAlgorithms[0] ),
+					     $inCollection1->{"collection-id"});
+
+  print "Session configured\n";
+  
+  foreach $i (@$inImages){
+    #
+    # Retrieve, if possible, all images from the database.
+    #
+    $lDistanceMeasureCreator->setResultSize( 1_000_000_000 );
+    print "Result size set, querying for $i\n";
+    $lDistanceMeasureCreator->doFirstQueryStep("query-step",
+					       [[$i,1]],
+					       $lDistanceMeasureCreator->getSessionID(),
+					       $self->algorithmToID( $lAlgorithms[0] ),
+					       $inCollection2->{"collection-id"});
+
+    #
+    # This means, for all that the URL in $i 
+    # (which is an URL incollection c1) has
+    # been translated in an URL for the collection c2
+    $i=~s/^$inCollection1->{"url-prefix"}/$inCollection2->{"url-prefix"}/;
+    print "\nIn the following we operate on the URL $i\n\n";
+
+    #
+    # make a hash 
+    # (URL->Rank)
+    #
+    my $lRank=0;
+    $self->{mRanks}->{$i}={};
+    foreach $j (@{$lDistanceMeasureCreator->getResultList()}){
+      $j->[0]=~s/^$inCollection1->{"url-prefix"}/$inCollection2->{"url-prefix"}/;
+
+      print "Rank for $j->[0]: $lRank\n";
+      
+      $self->{mRanks}->{$i}->{$j->[0]}=$lRank++;
+    }
+  }
+  $lDistanceMeasureCreator->saveSession();
+  $lDistanceMeasureCreator->closeSession();
+}
+
+##############################################################
+#
+# This function performs a complete moving target test
+#
+# It calls two servers:
+# One server provides a distance measure.
+# The only requirement is that it has to be queried by example. ("qbe");
+#
+# The other server is the server to be benchmarked.
+# It has to be queried using the "browsing" query paradigm
+#
+sub doQueryGroup( $$$ ){
+  my$self=shift;
+  my $inImages=shift;
+  my $inCollection1=shift;
+  my $inCollection2=shift;
+  
+  $self->onSearchStart();
+
+  $self->createDistanceMeasure($inImages,
+			       $inCollection1,
+			       $inCollection2);
+
+  
+
+  ###############################
+  #
+  # Then we perform a target test for each target given
+  #
+
+  # here was $lDistanceMeasureCreator instead of "self"
+  $self->setAddress($inCollection2->{address});
+  $self->startSession("--browsing-user--");
+
+  #
+  # is this
+  #§
+  my $lCollection=$self->getCollection($inCollection2->{"collection-id"});
+
+  my($lBrowserAlgorithm)=$self->getAlgorithmsByParadigmAndCollection([{"interaction-type"=>"browsing"}],
+								     $lCollection);
+  
+
+
+  print "THERE $lBrowserAlgorithm->{'algorithm-id'}";
+  
+
+  unless(defined($lBrowserAlgorithm->{'algorithm-id'})){
+    print STDERR "I was looking for $inCollection2->{collection} and browsing as characteristics";
+    die "FATAL ERROR: There is no browser which I could benchmark!\n" ;
+  }
+  
+
+  print "-------------------- using $lBrowserAlgorithmCollectionPair->[0] and $lBrowserAlgorithmCollectionPair->[1] for browsing\n ";
+  $self->configureSession($self->getSessionID(),
+			  $lBrowserAlgorithmCollectionPair->[0],
+			  $lBrowserAlgorithmCollectionPair->[1]);
+  $self->setResultSize( 10 );
+  
+  my $lCount=0;
+  my $lInstruction="query-step";
+
+  ##############################
+  #
+  # Initialisation of the variables which will contain the statistics in the end
+  #
+  my($lRetrievedCounter)=0;
+  my($lClickedCounter)=0;
+
+  my @lUntouchedResultList=@{$self->getResultList()};
+
+
+  foreach $iTarget (@$inImages){
+    print "\nWe are now tryingto find the image URL $iTarget\n\n";
+
+
+
+    my $lFeedbackList=[];
+    
+    $lOldCount=$lCount;
+    
+    while(($lOldQuery=$self->doFirstQueryStep($lInstruction,
+					      $lFeedbackList,
+					      $self->getSessionID(),
+					      $lBrowserAlgorithmCollectionPair->[0],
+					      $lBrowserAlgorithmCollectionPair->[1]))
+	  && 
+	  ($lCount-$lOldCount<200)){
+      ++$lCount;
+      # in the 
+      my $lRetrieved=$self->getResultHash();
+
+
+      my @lUntouchedResultList=@{$self->getResultList()};
+      ##############################
+      #
+      # count the images retrieved after display changes
+      #
+      {
+	if($self->isEqualList(
+			      \@lUntouchedResultList,
+			      \@lOldUntouchedResultList,
+			     )){
+	  $lRetrievedCounter+=scalar(@lUntouchedResultList);
+	}
+	@lOldUntouchedResultList=@lUntouchedResultList;
+      }
+
+      
+      if(defined $lRetrieved->{$iTarget}){
+	print "Target $iTarget found after $lCount tries\n"; 
+	goto TARGET_FOUND;
+      }
+      
+      # now create some feedback
+      # find the maximum and the minimum image.
+      # these two will make up the query
+      ($lInstruction,$lFeedbackList)=$self->hierarchyCreateFeedback();
+    
+      
+      $lClickedCounter+=scalar(@$lFeedbackList) if(defined(@$lFeedbackList));
+  
+    }
+  TARGET_FOUND:
+    #
+    # this is overloaded by the classes which inherit from this benchmark base class
+    #
+    $lClickedCounter-=scalar(@$lFeedbackList) if(defined(@$lFeedbackList));
+    ($lInstruction,$lFeedbackList)=$self->onTargetFound();
+  }
+  print "Looking for images:\n",join("\n",
+				     @$inImages);
+  print "\n\n$lClickedCounter relevance judgements ('clicks').\n";
+  print "$lRetrievedCounter images were loaded changing the display \n"; 
+}

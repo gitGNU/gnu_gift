@@ -1,0 +1,81 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+#!/usr/bin/perl -w
+require 5.002;
+
+BEGIN {$ENV{PATH}='';}
+
+use Socket;
+use Carp;
+
+sub logmsg {print "$0 $$: @_ at ", scalar localtime, "\n"}
+
+my $lHandshake   = shift;
+my $lResult   = shift;
+my $port   = shift || 12789;
+my $proto  = getprotobyname('tcp');
+
+socket(Server,PF_INET,SOCK_STREAM,$proto) or die "socket:  $!";
+setsockopt(Server,SOL_SOCKET,SO_REUSEADDR,pack("l",1))
+  or die "setsockopt: $!";
+bind(Server,sockaddr_in($port,INADDR_ANY)) or die "bind: $!";#
+listen(Server,SOMAXCONN)                   or die "listen: $!";
+
+logmsg "server started on port $port";
+my $paddr;
+
+$SIG{CHLD}=\&REAPER;
+
+my $lCount=0;
+
+for(;$paddr=accept(Client,Server);close Client){
+  my($port,$iaddr)=sockaddr_in($paddr);
+  my($name)=gethostbyaddr($iaddr,AF_INET);
+
+  logmsg "connection from $name [",inet_ntoa($iaddr),"] at port $port";
+
+  for($i=0;$i<1000000;$i++){};
+
+  my(@lSent);
+
+  while(<Client>){
+    print;
+    push @lSent,$_;
+    last if(m/<\/mrml>/);
+  }
+
+  if(!$lCount){
+    open INFILE,$lHandshake or die "couldd'nt open $file";
+    #
+    while(<INFILE>){
+      print Client $_;
+    }
+  }else{
+    open INFILE,$lResult or die "couldd'nt open $file";
+    #
+    while(<INFILE>){
+      print Client $_;
+    }
+  }
+
+  $lCount++;
+
+  "you sent me ",@lSent;
+}

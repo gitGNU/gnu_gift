@@ -1,0 +1,70 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+
+#
+# This script turns our internal format for annotations
+# into html
+#
+
+$/="";#slurp whole paragraphs
+
+print "<html><head><title>The annotated collection</title></head>
+<body>
+<h1> TSR 100 </h1>
+<table><tr>
+";
+my $lCount=0;
+
+my $lPrefix="http://gift.unige.ch/images/TSR500/";
+
+while(<STDIN>){
+  if(!(($lCount++)%4)){
+    print "
+</tr><tr>
+
+";
+
+  }
+
+  if(m/:\n/){
+    s/:\n//;
+    chomp;
+    print "\n<td>";
+    print "<p><img src=\"$lPrefix/$_\"></p>\n";
+    $_=<STDIN>;
+    chomp;chomp;
+    print "<p><strong>$lCount)One word:</strong></p><p><center>$_</center></p>\n";
+    $_=<STDIN>;
+    chomp;chomp;
+    print "<p><strong>Free:</strong></p><p><center>$_</center></p>\n";
+    $_=<STDIN>;
+    chomp;chomp;
+    print "<p><strong>Background:</strong></p><p><center>$_</center></p>\n";
+    $_=<STDIN>;
+    chomp;chomp;
+    print "<p><strong>Foreground:</strong></p><p><center>$_</center></p>\n";
+    print "</td>\n";
+  }
+}
+
+print "</tr></table>
+</body></html>
+
+";

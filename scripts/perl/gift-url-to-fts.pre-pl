@@ -1,0 +1,132 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+#
+# This script gets an URL and creates a corresponding thumbnail and *.fts file
+# it also adds something to a corresponding URL2FTS file
+#
+
+
+use Getopt::Long;
+use File::Find;
+use File::Path;
+use File::Copy;
+use HTTP::Request;
+use LWP::UserAgent;
+use English;
+
+print &convertURLToFeatureFile(@ARGV);
+
+sub convertURLToFeatureFile( $ ){
+
+  my $inUserAgent=LWP::UserAgent->new;
+  my $inURL=shift;
+
+  my $inFinalFeatureDestination=shift;
+
+  #
+  # note that there I am shifting an optional parameter FAR BELOW
+  #
+
+
+  #
+  # Finding out the path names (where to write things)
+  #
+  my $lDestination= $ENV{GIFT_HOME} || $ENV{HOME} || "/tmp";
+  my $lImageDestination=  "$lDestination/new-images";
+  my $lFeatureDestination="$lDestination/new-features";
+
+  #
+  # get the image using HTTP
+  #
+  my $lRequest = HTTP::Request->new(GET => $inURL);
+
+  $lResponse = $inUserAgent->request($lRequest);
+
+  #
+  # further processing if the document downloaded 
+  # was an image
+  #
+  if($lResponse->content_type()=~m[^image]){  
+    #
+    # tell the user which type the image has
+    # 
+    my $lType=(split("/",$lResponse->content_type()))[-1];
+    print "Image found: The type is $lType\n";
+
+    my $lTempFileName="$inFinalFeatureDestination.ppm";
+
+    # note that the feature file name is an optional parameter
+    my $lFeatureFileName= "$lFeatureDestination/request-${PID}_${lType}_convert.fts";
+    
+    my $lConvertedFileName="$lFeatureDestination/request-${PID}_${lType}_convert.ppm";
+    my $lThumbnailFileName="$lImageDestination/request-${PID}_${lType}_thumbnail.jpg";  
+
+    #
+    # making the path (where to write things)
+    #
+    print("making the path $lImageDestination\n");
+    mkpath([$lImageDestination],1,0711);
+    mkpath([$lFeatureDestination],1,0711);    
+    
+    #
+    # write the content of the request
+    #
+    {
+      open IMAGEFILE,">$lTempFileName" or die "Could not open $lTempFileName for writing";
+      
+      print IMAGEFILE $lResponse->content();
+      
+      close IMAGEFILE;
+    }
+
+
+    #
+    # convert the images and extract the features
+    #
+    print("Converting $lTempFileName to $lConvertedFileName\n");
+    system("convert -geometry 256x256! $lTempFileName $lConvertedFileName");
+    
+    print("Extracting features from $lConvertedFileName\n");
+    system("__BINDIR__/gift-extract-features $lConvertedFileName");
+    unlink($lConvertedFileName);
+
+    if (defined($inFinalFeatureDestination)){
+      #copy this feature file at a place where viper expects it....
+      system("cp $lFeatureFileName $inFinalFeatureDestination");
+      #....instead of moving move($lFeatureFileName,$inFinalFeatureDestination);
+      $lFeatureFileName=$inFinalFeatureDestination;
+    }
+    
+    print("Converting $lTempFileName to $lThumbnailFileName\n");
+    system("convert -geometry 256x256 $lTempFileName $lThumbnailFileName");
+    
+    #
+    # append the new image to the URL2FTS
+    #
+    open URL2FTS,">>$lFeatureDestination/url2fts" or die "could not open >>$lFeatureDestination/url2fts";
+    print URL2FTS "$inURL $lThumbnailFileName $lFeatureFileName\n";
+
+   
+
+    return $lFeatureFileName;
+  }
+}
+
+

@@ -1,0 +1,204 @@
+package CListFor;
+require Exporter;
+
+@ISA =   qw(Exporter);
+@EXPORT = qw(toZero
+	     increment
+	     toList
+	     setEndHandler
+	     setBeginHandler);
+
+sub new( $;){
+  my $class=shift;
+  my $self={};
+  
+  bless $self,$class;
+
+  $self->init(@_);
+  return $self;
+}
+
+sub init{
+  my$self=shift;
+
+  $self->{State}=[];
+  $self->{BeginHandler}={};
+  $self->{EndHandler}={};
+
+  my $lCount;
+  my $i;
+  foreach $i (@_){
+    my $lCountlevel=$ {$i}[0];
+    my $lRange=$ {$i}[1];
+    my $lTo=scalar(@ {$lRange});
+    my $lPosition=$lCount++;
+    
+    my $lState=0;
+
+    push @{$self->{State}},[$lState,
+			    $lTo,
+			    $lCountlevel,
+			    $lPosition,
+			    $lRange];
+
+  }
+
+  
+  @ { $self->{State}} = sort {$$a[2] <=> $$b[2];} @{$self->{State}};
+  
+}
+
+
+sub handle( $$; ){
+  my$self=shift;
+  my $inHandlerType=shift;
+  my $inStateRef=shift;
+  
+  my $lHandler=
+    $self->{$inHandlerType}->{$inStateRef->[2]};
+  if(ref $lHandler){
+    $lHandler->handle(@_);
+  }
+}
+
+sub handleBegin( $; ){
+  my$self=shift;
+  my $inHandlerType="BeginHandler";
+  my $inStateRef=shift;
+  
+  $self->handle($inHandlerType,
+		$inStateRef,
+		@_);
+}
+		
+sub handleEnd( $; ){
+  my$self=shift;
+  my $inHandlerType="EndHandler";
+  my $inStateRef=shift;
+
+  $self->handle($inHandlerType,
+		$inStateRef,
+		@_);
+}
+
+
+sub resetCounter( $ ){
+  my$self=shift;
+  my $inStateRef=shift;
+  #reset the counter
+
+  $inStateRef->[0]=0;
+}
+
+sub toZero( ){
+  my$self=shift;
+  
+  my $i;
+  foreach $i (@{$self->{State}}) {
+    $i->[0]=0;
+  }
+  foreach $i (reverse (@ { $self->{State}})) {
+  
+    $self->handleBegin($i,$self);
+  
+  }
+}
+
+
+sub increment( ){
+  my$self=shift;
+
+  my $i;
+  
+  if($self->{initial}){
+    
+  }
+
+  my @lToBeCalled;
+
+  my $lRetVal=0;
+  foreach $i (@ { $self->{State}}){
+      # call an endhandler, if there is one
+      $self->handleEnd($i,
+		       $self);
+
+      if($i->[0]+1 < $i->[1]){
+	++$i->[0];
+	$self->handleBegin($i,$self);
+	$lRetVal=1;
+	last;
+      }else{
+	push @lToBeCalled,$i;
+      }
+  }
+
+  my $k;
+  if($lRetVal){
+    for $k (reverse @lToBeCalled){
+      $self->handleBegin($k,$self);
+    }
+    for $k (reverse @lToBeCalled){
+      $self->resetCounter($k);
+    }
+  }
+
+  return $lRetVal;
+  #you just witnessed the last increment
+}
+
+sub toList( ){
+  my$self=shift;
+  my $i;
+  my @lResult=();
+
+
+  foreach $i (sort {$$a[3] <=> $$b[3];} @{$self->{State}}){
+    push @lResult,
+      $ {$$i[4]}[$$i[0]];
+  }
+  return @lResult;
+}
+
+sub toListReplace( @ ){
+  my$self=shift;
+  my $i;
+  my %lReplacement=@_;
+  my @lResult=();
+
+
+  foreach $i (sort {$$a[3] <=> $$b[3];} @{$self->{State}}){
+    if($lReplacement{$$i[2]}){
+      push 
+	@lResult,
+	$lReplacement{$$i[2]};
+    }else{
+      push 
+	@lResult,
+	$ {$$i[4]}[$$i[0]];
+    }
+  }
+  return @lResult;
+}
+
+=pod
+
+=cut
+
+sub setBeginHandler( $$ ){
+  my$self=shift;
+  my $lFunction=shift;
+  my $lLevel=shift;
+
+  $self->{BeginHandler}->{$lLevel}=$lFunction;
+}
+
+#
+#
+sub setEndHandler( $$ ){
+  my$self=shift;
+  my $lFunction=shift;
+  my $lLevel=shift;
+
+  $self->{EndHandler}->{$lLevel}=$lFunction;
+}
+

@@ -1,0 +1,564 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+# Author of this file: Wolfgang Müller
+
+#
+# contact people for MRML and MPEG
+#  check things out: would we be at a pre-meeting?
+#
+
+
+
+require 5.002;
+use lib '__BINDIR__'; # for including CFeedbackClient
+use CXMLTreeVisitor;
+use CXTVTripletList;
+use POSIX qw(floor ceil);
+
+
+=pod
+
+=head1 NAME 
+
+CGLDistanceMatrix - simulating content-based queries by table lookup
+
+=head1 SYNOPSIS 
+
+
+
+=head1 DESCRIPTION
+
+This is based on CGIFTLink. It provides the simplest possible way of
+linking a query engine with the GIFT.
+
+=head2 The big picture
+
+This class reads a pre-calculated distance matrix and a list of images
+in order to perform next-neighbour queries with primitive relevance 
+feedback.
+
+Suppose you want to check how well your low-level/semantic-level
+feature set does for a given MRML-based benchmark. Suppose you are not
+Mr. Uberhacker. Suppose you know how to provide a distance matrix for
+your collection. Then this class is what you need.
+
+All you need to do is to provide a matrix which gives the distance 
+between each pair of images from the collection.
+
+Give the file location of the distance matrix as the 
+C<cui-distance-matrix-location> attribute in a collection
+of the config file. As all locations given in config files,
+the location is taken I<relative to> C<cui-base-dir>.
+
+The second parameter you need is a list of image urls. In our case, we
+would like to use the same url2fts file, as an inverted file based
+collection would use. These files have the structure
+
+IMAGE_URL1 THUMBNAIL_URL1 FEATURE_FILE_URL1
+IMAGE_URL2 THUMBNAIL_URL2 FEATURE_FILE_URL2
+IMAGE_URL3 THUMBNAIL_URL3 FEATURE_FILE_URL3
+IMAGE_URL4 THUMBNAIL_URL4 FEATURE_FILE_URL4
+...        ...            ...
+
+for our purpose, we will take the urls, and we will ignore the
+feature file of each line. 
+
+So, if you have a collection which is already indexed using
+C<gift-add-collection.pl> simply use the url2fts file that exsists
+already. If not, simply generate a list of urls of all the images and
+their thumbnails, giving in each line a dummy value, e.g.:
+
+http://localhost/1.jpg http://localhost/thumbnail/1.jpg dummy
+http://localhost/2.jpg http://localhost/thumbnail/2.jpg dummy
+http://localhost/3.jpg http://localhost/thumbnail/3.jpg dummy
+http://localhost/4.jpg http://localhost/thumbnail/4.jpg dummy
+
+and add the location of this file as attribute to the collection
+tag corresponding to your collection.
+
+=head1 EXAMPLES
+
+=head1 ATTRIBUTES
+
+cui-base-dir the basis directory containing the following 
+             files
+cui-feature-file-location    the location of the url2fts file
+cui-distance-matrix-location the location of the distance matrix 
+
+=head1 SEE ALSO
+
+CGIFTLink
+
+=head1 DIAGNOSTICS
+
+=head2 configure
+
+When the function CGLDistanceMatrix::configure is called, the text 
+C<CGLDistanceMatrix.pm::configure called>
+is printed.
+
+configure dies with the following messages if necessary:
+
+C<no url2fts file defined!> this means that the file that contains the
+information which images are present in the collection, and which
+*.fts files belong them was not found.  If it was found C<reading
+$inFileName> is printed instead. Afterwards for each image read a line
+is printed that contains C<NUMBER: IMAGE_LOCATION, THUMBNAIL_LOCATION,
+FEATURE_FILE_LOCATION>. C<NUMBER> being the ID assigned to the image
+inside this perl module, C<IMAGE_LOCATION> being the url of the image,
+C<THUMBNAIL_LOCATION> being the url of the thumbnail, and
+C<FEATURE_FILE_LOCATION> being the location of the feature file (local
+file name). C<FEATURE_FILE_LOCATION> is ignored, as it applies only to
+inverted file indices.
+
+=head1 BUGS
+
+=head1 RESTRICTIONS
+
+There is a couple of big inherent restrictions in this:
+
+
+
+=head1 AUTHOR
+
+Wolfgang Müller for the CUI Geneva
+
+
+=cut
+
+
+
+############################################################ 
+#
+# CGIFTLink
+#
+# A class for Perl-side of the link between
+# GIFT and Perl
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS CLASS
+# THERE IS AN ERROR
+#
+# SUBCLASS THIS FOR CREATING YOUR OWN QUERY PROCESSORS
+#
+use lib '__BINDIR__'; # adding the install directory to the library directory
+
+use CGIFTLink;
+
+package CGLDistanceMatrix;
+require Exporter;
+@ISA= qw(Exporter
+	 CGIFTLink
+	);
+@EXPORT_OK= qw(new
+	       configure
+	      );
+
+sub new(){
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize();
+  return $self;
+}
+
+sub initialize(){
+  my$self=shift;
+}
+
+########################################
+#
+# query
+#
+# Processes the query given by $self->{tree}
+# 
+# PARAMETERS: The tree to be processed
+#
+# RETURNS:    an XML tree containing a "query-result" element
+#
+# THIS FUNCTION IS INTENDED TO BE OVERLOADED
+#
+sub query( $ ){
+  my $self=shift;
+
+  my $inQuery= shift;# this should now contain an XML tree
+  print "CGLDistanceMatrix::query result-size:",$inQuery->{attributes}->{"result-size"}," attributes of \$inQuery",keys(%{$inQuery->{attributes}}),"\n\n";
+
+  #
+  # looking at all user-relevance-element-lists
+  # that are direct children of our query-element
+  #
+  my @lUserRelevanceElements;
+  foreach $i (@{$inQuery->{children}}){
+    print "Looking at child ",$i->{element},"\n";
+    if($i->{element} eq "user-relevance-element-list"){
+      print "pushing\n";
+      print "pushing: The children: ",join(",",@{$i->{children}}),"\n";
+      push @lUserRelevanceElements,(@{$i->{children}});
+    }
+  }
+
+  #
+  # Starting out with a list of all images,
+  # each one is assigned calculated-similarity=0
+  #
+
+  my $lResult=[];
+
+  {
+    @{$lResult}=@{$self->{url2fts}};
+    my $i;
+    foreach $i (@{$lResult}){
+      $i->{attributes}->{'calculated-similarity'}=0;
+      $i->{attributes}->{'_positive'}=0;
+      $i->{attributes}->{'_negative'}=0;
+      $i->{attributes}->{'_positive_count'}=0;
+      $i->{attributes}->{'_negative_count'}=0;
+    }
+  }
+
+  #
+  # averaging over the results for all query elements
+  # weighted by relevance level
+  #
+  my $lUserRelevanceElement;
+  foreach $lUserRelevanceElement (@lUserRelevanceElements){
+
+    print "Looking at user-relevance-element $lUserRelevanceElement->{attributes}->{'image-location'}\n";
+
+    my $lLine=$self->{url_to_id}->{$lUserRelevanceElement->{attributes}->{'image-location'}};
+
+    if(defined $lLine){
+      my $lRelevance= defined($lUserRelevanceElement->{attributes}->{'user-relevance'})?
+	$lUserRelevanceElement->{attributes}->{'user-relevance'} : 10000 ;
+      print "Relevance: $lRelevance\n";
+      my $i;
+      $lCount=0;
+      foreach $i (@{$lResult}){	
+	my $lIncrement=$self->{distance_matrix}->[$lLine]->[$lCount] * $lRelevance;
+	  
+	if($lIncrement>0){
+	  $i->{attributes}->{'_positive_count'}++;
+	  $i->{attributes}->{'_positive'}+=$lIncrement;
+	}
+	if($lIncrement<0){
+	  $i->{attributes}->{'_negative_count'}++;
+	  $i->{attributes}->{'_negative'}+=$lIncrement;
+	}
+	$lCount++;
+      }
+    }
+  }
+  
+  
+  foreach $i (@{$lResult}){
+    $i->{attributes}->{'calculated-similarity'}=0;
+    if($i->{attributes}->{_positive_count}){
+      $i->{attributes}->{'calculated-similarity'}+=$i->{attributes}->{'_positive'}/$i->{attributes}->{'_positive_count'};
+    }
+    if($i->{attributes}->{_negative_count}){
+      $i->{attributes}->{'calculated-similarity'}+=0.5*$i->{attributes}->{'_negative'}/$i->{attributes}->{'_negative_count'};
+    }
+    delete $i->{attributes}->{_negative};
+    delete $i->{attributes}->{_negative_count};
+    delete $i->{attributes}->{_positive};
+    delete $i->{attributes}->{_positive_count};
+  }
+  #
+  # sort in descending order
+  #
+  @{$lResult}=sort {$b->{attributes}->{'calculated-similarity'} <=> $a->{attributes}->{'calculated-similarity'}} @{$lResult};
+
+  #
+  # take the first result-size elements.
+  #
+  @{$lResult}=@{$lResult}[0..$inQuery->{attributes}->{"result-size"}];
+
+  return {
+	  element => "query-result",
+	  attributes => {},
+	  children => [
+		       {
+			element    => "query-result-element-list",
+			attributes => {},
+			children   => $lResult
+		       }
+		      ]
+	 };
+}
+
+
+########################################
+#
+# query
+#
+# Processes the query given by $inQuery
+# give back $inQuery->{attributes}->{"result-size"} random images
+# 
+# PARAMETERS: The "query" tree to be processed
+#
+# RETURNS:    an XML tree containing a "query-result" element
+#
+# THIS FUNCTION IS INTENDED TO BE OVERLOADED
+#
+sub randomQuery( $ ){
+  my $self=shift;
+
+  my $inQuery= shift;# this would now contain an XML tree
+
+  print "CGIFTLink---------->randomQuery:",$inQuery->{element},",",$inQuery->{attributes}->{"result-size"},":",keys(%{$inQuery->{attributes}}),"\n\n";
+
+  my $lResultSize=$inQuery->{attributes}->{"result-size"};
+
+  my $i;
+  my %lUsed;
+  my $lResult=[];
+  if(scalar(@{$self->{url2fts}})<$lResultSize){
+    $lResult=$self->{url2fts};
+  }else{
+    while(scalar(keys %lUsed)<$lResultSize){
+      my $lNew=POSIX::floor(rand()*scalar(@{$self->{url2fts}}));
+      $lUsed{$lNew}=1;
+    }
+    $lResult=[];
+    @{$lResult}=@{$self->{url2fts}}[(keys %lUsed)];
+  }
+
+  
+
+  #returning a constant XML tree
+  return {
+	  element => "query-result",
+	  attributes => {},
+	  children => [
+		       {
+			element    => "query-result-element-list",
+			attributes => {},
+			children   => $lResult
+		       }
+		      ]
+	 };
+}
+
+
+########################################
+#
+# configure
+#
+# processes the configuration data present in
+# $self->{collection} and $self->{algorithm}.
+# possible examples would be the opening of a 
+# connection to an SQL database.
+# 
+# PARAMETERS: expects $self->{collection} and $self->{algorithm}
+#             to be set
+#
+# RETURNS:    nothing
+#
+# THIS FUNCTION IS INTENDED TO BE OVERLOADED
+#
+sub configure( ){
+  my $self=shift;
+
+  print "CGLDistanceMatrix.pm::configure called\n";
+
+  die unless defined($self);
+  die unless defined($self->{collection});
+
+  $self->{selectionSize}=9;
+  $self->{sdev}=5;
+
+  my $inFileName=$self->{collection}->{attributes}->{'cui-base-dir'}
+  ."/"
+    .$self->{collection}->{attributes}->{'cui-feature-file-location'};
+  
+
+  #
+  # the size of the matrix
+  #
+  $self->{size}=$self->{collection}->{attributes}->{'cui-number-of-images'};
+
+  open(IF,$inFileName) 
+    or die "no url2fts file defined!\n";
+  
+  print "reading $inFileName\n";
+
+  $self->{url2fts}=[];
+
+  my $lCount=0;
+
+  $self->{id_to_url}={};
+  $self->{url_to_id}={};
+  
+  while(<IF>){
+    my($lLocation,$lThumb,$lIgnoreFeatures)=split(" ",$_);
+
+    print "$lCount: $lLocation,$lThumb,$lIgnoreFeatures\n";
+
+    $self->{id_to_url}->{$lCount}=$lLocation;
+    $self->{url_to_id}->{$lLocation}=$lCount;
+
+    $lCount++;
+    push @{$self->{url2fts}},{
+			      element    =>'query-result-element',
+			      attributes =>{
+					    'image-location'=>$lLocation,
+					    'thumbnail-location'=>$lThumb,
+					    'calculated-similarity'=>$lCount
+					   },
+			      children=>   []
+			     }
+			      
+  }
+
+  print "finished reading $inFileName\nURL2FTS WAS LOADED SUCCESSFULLY!\n";
+
+
+
+  $|=1;
+  print "CONFIGURE: Reading distance matrix\n";
+
+  my $lDistanceMatrix=$self->{collection}->{attributes}->{'cui-base-dir'}
+  ."/"
+    .$self->{collection}->{attributes}->{'cui-distance-matrix-location'};
+
+
+  open DISTANCE_MATRIX_FILE,"${lDistanceMatrix}.trans" or die "No distance matrix translator";
+
+  close DISTANCE_MATRIX_FILE;
+  open DISTANCE_MATRIX_FILE,"$lDistanceMatrix" or die "No distance matrix file $lDistanceMatrix\n";
+
+  my $i,$j;
+
+
+  $size=$self->{size};
+  $self->{distance_matrix}=[];
+  for($i=0;$i<$size;$i++){
+    print ".";
+    $self->{distance_matrix}->[$i]=[];
+    if(1==0){
+      for($j=0;$j<$size;$j++){
+	$self->{distance_matrix}->[$i]->[$j]=$self->indicesToDistance($i,$j);
+      }
+    }
+    
+    read DISTANCE_MATRIX_FILE,$inChunk,$self->{size}*4;
+
+
+    my $lUnranked=1;
+
+    if($lUnranked){
+      @{$self->{distance_matrix}->[$i]}=(unpack ("f" x $self->{size},$inChunk));
+    }else{
+      my @lUnrankedList=(unpack ("f" x $self->{size},$inChunk));
+      my $k;
+      my @lNamedList;
+      my $lCount=0;
+      foreach $k (@lUnrankedList){
+	push @lNamedList,{ 
+			  id=>$lCount,
+			  distance=>$k
+			 };
+	$lCount++;
+      }
+      my @lSortedNamedList=sort {$a->{distance} <=> $b->{distance};} @lNamedList;
+
+      my $lCount=0;
+      foreach $k (
+		  #reverse (take this out for lists of scores)
+		  @lSortedNamedList){
+	$self->{distance_matrix}->[$i]->[$k->{id}]=$lCount;
+	$lCount++;
+      }
+      #print join(",",sort {$a<=>$b} @{$self->{distance_matrix}->[$i]}),"\n";
+    }
+  }
+  
+  {#symmetrify
+    my $lSize=scalar(@{$self->{distance_matrix}});
+    my $k;
+    foreach $i (0..$lSize){
+      foreach $k ($i+1..$lSize){
+	$self->{distance_matrix}->[$i]->[$k]+=$self->{distance_matrix}->[$k]->[$i];
+	$self->{distance_matrix}->[$i]->[$k]/=2;
+	$self->{distance_matrix}->[$k]->[$i]=$self->{distance_matrix}->[$i]->[$k];
+      }
+    }
+  }
+      
+  
+  bless $self->{distance_matrix},"NoClass";
+  
+  print "\nINITIALIZE: Finished reading distance matrix\n";
+  
+}
+
+########################################
+#
+# setAlgorithm
+#
+# sets $self->{algorithm} to the root of an XML tree
+# containing an "algorithm" element. This can contain
+# useful configuration information, depending on your 
+# algorithm
+#
+# PARAMETERS:   tripletList containing "algorithm" element
+#
+# SIDE EFFECTS: sets $self->{algorithm}
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS FUNCTION UNLESS 
+# THERE IS AN ERROR
+#
+sub setAlgorithm( ; ){
+  my$self=shift;
+
+  print "setAlgorithm was called \n";
+
+  my $lRoot=$self->CGIFTLink::tripletListToTree(@_);
+
+  $self->{algorithm}=$lRoot;
+}
+
+########################################
+#
+# setCollection
+#
+# sets $self->{collection} to the root of an XML tree
+# containing a "collection" element. This can contain
+# useful configuration information, depending on your 
+# algorithm
+#
+# PARAMETERS:   tripletList containing "collection" element
+#
+# SIDE EFFECTS: sets $self->{collection}
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS FUNCTION UNLESS 
+# THERE IS AN ERROR
+#
+
+sub setCollection( ; ){
+  my$self=shift;
+  
+  print "setCollection was called \n";
+
+  my $lRoot=$self->CGIFTLink::tripletListToTree(@_);
+
+  $self->{collection}=$lRoot;
+}
+

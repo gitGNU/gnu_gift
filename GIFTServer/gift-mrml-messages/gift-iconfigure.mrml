@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE mrml SYSTEM "file:/usr/local/share/mrml.dtd">
+<mrml session-id="PPsessionidPP">
+  <configure-session session-id="PPsessionidPP">
+    <algorithm 
+      algorithm-id="PPalgorithmidPP" 
+      algorithm-type="PPalgorithmidPP" 
+      collection-id="PPcollectionidPP" 
+
+	PPadditionalalgorithmattributesPP
+      	>
+    </algorithm>
+  </configure-session>
+</mrml>

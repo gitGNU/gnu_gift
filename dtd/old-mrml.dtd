@@ -1,0 +1,376 @@
+<?xml encoding="US-ASCII" ?>
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+       Basic structure:
+       ______________________________________
+
+       Messages are sent as MRML texts.
+       In  order to make it easy for the server to know who connects,
+       each message is assigned the id of its session as an attribute.
+
+
+       The following 
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!ELEMENT mrml (ihandshake
+                |shandshake
+
+                |iconfiguration
+
+                |inewsession
+                |irenamesession
+
+                |iquerystep
+                |sresult
+
+                |error
+
+
+                |vi-configuration
+                )>
+<!ATTLIST mrml sessionid ID "default">
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+       The GIFT property sheet specification
+       ______________________________________
+
+       Basic idea: send a property sheet together with a specification
+                   what should be the XML output coming back.
+                   Useful for configuring your database.
+       
+       If this seems too complex for your case, please look at the 
+       cheatsheet we prepared for you. (i.e. probably you will be able to do
+       what you want using a small subset of the features offered here)
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!ELEMENT property (property)*>
+<!ATTLIST property id ID                              #REQUIRED
+                    type (multiset
+
+                          |subset
+                          |setelement 
+                          |boolean
+                          |numeric
+                          |textual
+                          |invisible
+
+                          |clone
+                          |reference)                  #REQUIRED
+                       
+                    caption  CDATA                     #IMPLIED
+                     
+                    visibility (popup|visible)         "visible"  
+
+                    sendtype  (element
+                               | attribute
+                               | value
+                               | attributetext
+                               | children
+                               | none)          #REQUIRED
+                    sendname  CDATA                    #IMPLIED
+                    sendvalue CDATA                    #IMPLIED
+
+                    minsubsetsize CDATA                #IMPLIED
+                    maxsubsetsize CDATA                #IMPLIED
+
+                    from CDATA                         #IMPLIED
+                    step CDATA                         #IMPLIED
+                    to   CDATA                         #IMPLIED
+
+                    autoid           (yes|no)          #IMPLIED
+                    autoidname       CDATA             "id"
+
+                    defaultstate  CDATA                #IMPLIED
+>
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+       END: The GIFT property sheet specification
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     iconfiguration
+     ______________
+
+     Sending the configuration from the interface 
+     to the server: at present just the "algorithm"  
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+
+<!ELEMENT iconfiguration (algorithm)>
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     END: iconfiguration
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-->
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     An algorithm will be either an empty element with 
+     attributes (add some at your will, it will talk with your 
+     server anyway, and this is the server which sent the property 
+     sheet), or a tree of algorithms.
+
+     What is the use of this?
+     Think of configuring meta queries. Together with properties
+     you get a powerful tool.
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!ELEMENT algorithm (algorithm*)>
+<!ATTLIST algorithm   id           ID    #REQUIRED
+                      type         CDATA "default"
+                      collectionid CDATA "default">
+
+
+    
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     Handshake between server and interface 
+     ______________________________________
+
+     As a sign, it wants the connection, the interface sends
+     a message first. The server responds, specifying its 
+     capabilities
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+  <!-- ++++++++++++++++++++++++++++++++++++++++
+
+       Interface side: we send our name.
+       which protocol is spoken by the interface is coded in the
+       DTD.
+
+       ++++++++++++++++++++++++++++++++++++++++-->
+
+    <!ELEMENT ihandshake EMPTY>
+    <!ATTLIST ihandshake username CDATA #REQUIRED>
+
+  <!-- ++++++++++++++++++++++++++++++++++++++++
+
+       Server side: the server sends us 
+       one list and a property sheet containing information about
+
+       - the available sessions for the user 
+         (what are sessions? description follows)
+       - the available algorithms and how they can be combined
+       - which algorithm can be applied on which data collections     
+
+       plus, of course, information how to give back this information
+       to the server.
+
+       Note, that the property sheet formalism would be flexible enough
+       to do all this with just one property sheet. However, we regarded
+       it useful to add some structure.
+
+       ++++++++++++++++++++++++++++++++++++++++ -->
+
+    <!ELEMENT shandshake (ssessionlist,
+                          salgorithmproperty)>
+
+    <!ELEMENT ssessionlist   (ssession+)>
+    <!ELEMENT ssession       EMPTY>
+    <!ATTLIST ssession       id          CDATA "default"
+                             displayname CDATA "Default session">
+
+    <!ELEMENT salgorithmproperty (property)>
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     END: Handshake between server and interface 
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     Beginning and renaming sessions
+     _______________________________
+
+     We want to give the user the possibility to save the current
+     state into "sessions". This might be useful in the case that 
+     a user has several classes of goals which s/he knows in advance.
+
+     The user can request a new session.
+     S/he can also request a name change for a session.
+     
+     Ending sessions is implicit:
+     we cannot afford being dependent on the user ending
+     his/her session in a "nice" way, so we do not 
+     tempt programmers to do so 
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+ <!-- Interface side -->
+  <!-- send the desired feedback method together with 
+       a name for the session -->
+
+    <!ELEMENT inewsession     EMPTY>
+    <!ATTLIST inewsession     sessionname CDATA #IMPLIED>
+
+    <!ELEMENT irenamesession     EMPTY>
+    <!ATTLIST irenamesession     id          CDATA #REQUIRED
+                                 sessionname CDATA #REQUIRED>
+
+
+ <!-- -->
+
+ <!-- Server side -->
+  <!-- confirms session operation by sending name and id -->
+    <!ELEMENT ssession     EMPTY>
+    <!ATTLIST ssession     id CDATA   #REQUIRED
+                           name CDATA #REQUIRED>
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     END: Beginning and renaming sessions
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     Simple user commands
+     ____________________
+
+     (like e.g. back or forward 
+         in the command history)
+     (at present the only commands)
+    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <!ELEMENT iusercommand  EMPTY>
+    <!ATTLIST iusercommand  command (backward|forward) "backward"
+                            steps   CDATA              #IMPLIED>
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     END: Simple user commands
+
+    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     A query step
+     ____________
+ 
+     A query is formulated using a tree structure. The semantics
+     of this is:
+
+     A parameter set in the root of a subtree will be passed on
+     to the subtree. Attributes can be overridden.
+
+     Each query has the possibility to say, which panel the result
+     is supposed to belong to.
+
+     We define the panel "P1" being the default panel,
+     thus freeing small programs from the obligation to 
+     specify this.
+
+
+     At present we are only providing definitions for the "query" for
+     random images as well as for a quer by example(s).
+
+     With this construction 
+     one is able to do quite complex
+     things (fun stuff!)
+
+     We require at each query step and each level af the "query tree" 
+     the algorithm and the collection to be defined.
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <!ELEMENT iquerystep   (iuserrelevancelist?,
+                            iquerystep*)
+                           >
+    <!ATTLIST iquerystep   stepid        CDATA #REQUIRED
+                           panel         CDATA "P1"
+
+                           resultsize    CDATA #IMPLIED
+                           resultcutoff  CDATA #IMPLIED
+
+                           querytype     (query|atrandom) "query"
+
+                           algorithmid   CDATA #IMPLIED
+                           collectionid  CDATA #IMPLIED
+                           >
+
+
+
+<!-- List of URLs with user given relevances 
+     Our way of specifying a QBE for images.
+
+     relevances vary from 0 to 1
+     -->
+    <!ELEMENT iuserrelevancelist    (iuserrelevanceelement+)>
+
+    <!ELEMENT iuserrelevanceelement EMPTY>
+    <!ATTLIST iuserrelevanceelement userrelevance CDATA #REQUIRED
+                                    imagelocation CDATA #REQUIRED>
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     END: A query step.
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     Results for queries
+     ___________________
+
+     each result image can be accompanied by the user given relevance,
+     as well as the similarity calculated by the program, based on the
+     feature space.
+
+     calculated similarities vary from 0 to 1
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+    <!ELEMENT sresult  (sresultelementlist?,sresult*)>
+    <!ATTLIST sresult  panel CDATA "P1">
+
+    <!ELEMENT sresultelementlist (sresultelement+)>
+    <!ELEMENT sresultelement EMPTY>
+    <!ATTLIST sresultelement userrelevance        CDATA #REQUIRED
+                             calculatedsimilarity CDATA #REQUIRED
+                             imagelocation        CDATA #REQUIRED>
+
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     END: Results for queries
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     Error messages
+     ______________
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!ELEMENT error EMPTY>
+    <!ATTLIST error message CDATA #REQUIRED>
+
+
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+     GIFT itnternal additions:
+     __________________________
+
+
+     DELETE STARTING FROM HERE FOR PUBLISHING MRML
+
+
+     VI- stands for "gift internal"
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!ELEMENT vi-configuration       (vi-property-list,vi-algorithmlist,vi-collectionlist)>
+<!ELEMENT vi-algorithmlist       (algorithm*)>
+<!ELEMENT vi-collectionlist      (collection*)>
+<!ELEMENT vi-algorithmidlistlist (vi-algorithmidlist*)>
+<!ELEMENT vi-algorithmidlist     (vi-algorithmid*)>
+<!ELEMENT vi-algorithmid         EMPTY>
+<!ELEMENT vi-property-list       (vi-property-item*)>
+<!ELEMENT vi-property-item       (property)>
+<!ATTLIST vi-property-item       id CDATA #REQUIRED>

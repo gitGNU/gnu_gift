@@ -1,0 +1,406 @@
+#!/usr/bin/perl -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+require Exporter;
+
+use lib '__BINDIR__'; # for including CFeedbackClient
+use CGIFTLink qw(processGIFTQueryCall processGIFTRandomQueryCall traverseTree configure);
+use CXMLTreeBuilder;
+use XML::Parser;# YOU HAVE TO INSTALL XML::PARSER you get it at www.cpan.org
+
+############################################################
+#
+# An example for subclassing CGIFTLink for your needs
+#
+############################################################
+package CVLStructuredAnnotation;
+@ISA= qw(Exporter
+	 CGIFTLink);
+@EXPORT_OK= qw(new
+	       processGIFTQueryCall
+	       processGIFTRandomQueryCall
+	       setCollectionTree
+	       configure
+	      );
+
+sub new(){
+  my $class = shift;
+  my $self = new CGIFTLink();
+  bless $self, $class;
+  $self->initialize();
+  return $self;
+}
+
+sub initialize(){
+  my$self=shift;
+}
+
+sub processGIFTQueryCall{
+  my$self=shift;
+  return $self->CGIFTLink::processGIFTQueryCall(@_);
+}
+
+########################################
+#
+# configure (OVERLOADED FROM CGIFTLink)
+#
+# processes the configuration data present in
+# $self->{collection} and $self->{algorithm}.
+# possible examples would be the opening of a 
+# connection to an SQL database.
+# 
+# PARAMETERS:   expects $self->{collection} and $self->{algorithm}
+#               to be set
+#
+# SIDE EFFECTS: sets "collection tree" to an XML tree containing
+#               your annotation. Getting the URLs in there is 
+#               left to the interested reader.
+#               prints the resulting tree in an ugly fashion
+#
+# RETURNS:      nothing
+#
+# THIS FUNCTION IS INTENDED TO BE OVERLOADED
+#
+sub configure(){
+  my $self=shift;
+
+  $self->{"collection-file"} = $self->{algorithm}->{attributes}->{"cwi-annotation-ds-collection-file"};
+  $self->{urls} = {};
+
+
+  my $lTreeBuilder=new CXMLTreeBuilder();
+
+  print "XML COLLECTION: I will load the file $self->{'collection-file'}\n";
+  $self->{"collection-tree"} =
+    $lTreeBuilder->fileToTree($self->{"collection-file"});
+
+  my $allImg = $self->{"collection-tree"}->{children};
+  print "#img = ", $#{$allImg}, "\n";
+
+  # initialize urls and thumbnail-urls from the collection
+  my $img;
+  foreach $img ( @$allImg ) {
+    if($img->{element}){
+      my $id =  $img->{attributes}->{"ID"};
+      print "Image: ",$img->{element}, ":", $id, "\n";
+      $self->{urls}->{$id} = "http://gift.unige.ch/images/PolarBears/$id.jpg";
+    }
+  }
+
+}
+########################################
+#
+# query HERE GOES YOUR QUERY PROCESSOR
+#
+# Processes the query given by $self->{tree}
+# 
+# PARAMETERS: The tree to be processed
+#
+# RETURNS:    an XML tree containing a "query-result" element
+#
+# THIS FUNCTION IS OVERLOADED from CGIFTLink
+#
+sub similarity_order( $$ ) {
+  $b->{attributes}->{"calculated-similarity"}
+     <=>
+  $a->{attributes}->{"calculated-similarity"};
+}
+
+#
+# match_elt() -- match on a single element.
+#
+sub match_elt( $$ ) {
+  my $self=shift;
+  my $elt1 = shift;
+  my $elt2 = shift;
+  
+  #changed WM: text nodes have no name, named elements have no unparsed text
+  print "\n($elt1->{text})/($elt1->{element}) != ($elt2->{text})/($elt2->{element})\n";
+  {
+    if  (defined($elt1->{text}) 
+			      && defined($elt2->{text}) 
+			      && ($elt1->{text} eq $elt2->{text})){
+      print "\n($elt1->{text}) t-matches ($elt2->{text})\n";
+
+      print "T";
+      
+      return 1.0;
+    }
+    if  (defined($elt1->{element}) 
+	 && defined($elt2->{element}) 
+	 && ($elt1->{element} eq $elt2->{element})){
+
+      print "\n($elt1->{element}) e-matches ($elt2->{element})\n";
+
+      print "E";
+      return 1.0;
+    };
+  }
+
+  print "FAIL";
+
+
+  return 0.0;
+}
+
+#
+# rec_match() -- recursive sub-tree match.
+#
+sub rec_match( $$ ) {
+  my$self=shift;
+  my $num_children, $query_term, $sa_term, $rec_sim;
+  
+  my $sim = 0.0;
+  my $image = shift;
+  my $query = shift;
+  
+  if ($self->match_elt($image, $query)) {
+    # Terminating condition if we're at leaves in query.
+    if ((!defined($query->{children}))
+	|| (0==scalar(@{$query->{children}}))) {
+      print "\n\nLEAF MATCH $sim\n";
+      return 1.0;
+    }
+    
+    {# eliminate whitespace-only text children from QUERY
+      my $i;
+      my $lResultList=[];
+      foreach $i (@{$query->{children}}){
+	if(defined( $i->{text}) 
+	   && ($i->{text}=~m/^(\s*)$/s)){
+	  print "\n _{$i->{text}}_ matched _$1_\n REJECTED";
+	}else{
+	  push(@{$lResultList},$i);
+	}
+      }
+      $query->{children}=$lResultList;
+    }
+
+    $num_children = scalar(@{$query->{children}});
+
+
+    foreach $query_term (@{$query->{children}}) {
+
+      my $lQueryTermUsed=0;
+
+      foreach $sa_term (@{$image->{children}}) {
+	my $rec_sim = $self->rec_match($sa_term, $query_term);
+	if($rec_sim>0) {
+	  $sim += $rec_sim / $num_children unless $lQueryTermUsed;
+
+	  $lQueryTermUsed=1;
+	  print "REC MATCH $sim\n";
+	}
+      }
+    }
+  } else {
+    return 0.0;
+  }
+  
+  return $sim;
+}
+
+#
+# andys_ham() -- Andy's half-assed match.
+#
+sub andys_ham( $$ ) {
+  my $self=shift;
+  my ($query_term, $sa_term, $and_term, $and_sim, $temp);
+  my $sim = 0;
+  
+  # Deref the children member on the query and image set.
+  my $image = shift;
+  my $query = shift;
+  
+  print "++++++++++IN ANDYS HAM \n";
+
+  # Iterate over all top level query elements.
+  foreach $query_term (@{$query->{children}}) {
+    
+    print "--$query_term->{element}--";
+
+    # And now over all top-level SA elements.
+    $and_sim = 0.0;
+    foreach $sa_term (@{$image->{children}}) {
+      print "++$sa_term->{element}++";
+      my $temp = $self->rec_match($sa_term, $query_term);
+      if ($temp) {
+	$and_sim += $temp unless $and_sim;
+	print "andys ham matches $sim\n";
+	;
+      }
+    }
+
+    if ($and_sim > $sim) {
+	$sim = $and_sim;
+      }#is this a succesful fix
+    
+    #$sim += $and_sim;
+  }
+  
+  return $sim;
+}
+
+sub query_match_anImg( $$$ ) {
+  my $self=shift;
+  my $id = shift;
+  my $img = shift;
+  my $query = shift;
+
+
+  return {
+    element => "query-result-element",
+    attributes => {
+      "calculated-similarity" => $self->andys_ham($img, $query),
+      "image-location" => $self->{urls}->{$id},
+      "thumbnail-location" => "http://no_thumbnail.org"
+    },
+    children => []
+  };
+}
+
+sub query( $ ){
+  my $self=shift;
+  my $inQuery= shift;
+
+  # $inQuery contains now an XML tree
+  # The top element of the tree you get ALWAYS will be a "query-step"
+  # The attribute "result-size" contains the maximum number of images to be retrieved
+  # (comes from the interface).
+  # the direct children of query-step will be anything you like.
+  #
+
+  print "---------->query:$inQuery->{attributes}:",$inQuery->{attributes}->{"result-size"},":",join(",",keys(%{$inQuery->{attributes}})),"\n\n";
+
+
+
+  # match the elements in the collection
+
+  # to get inside the mpeg-7-qbe tag
+  my $i;
+  my $lMPEG_QBE;
+
+
+  print "\n","QueryChildren\n",join("xx",@{$inQuery->{children}}),"\n";
+  
+  foreach $i (@{$inQuery->{children}}){
+    print "Looking at child ",$i->{element},"\n";
+    $lMPEG_QBE=$i if($i->{element} eq "mpeg-7-qbe");
+  }
+
+  {
+    my $lVisitor=new CXMLTreeVisitor();
+   
+    print "\nUGLY\n";
+ 
+    # "ugly-prints" the result of the query.
+    $self->traverseTree($lMPEG_QBE,$lVisitor);
+    print "\nUGLY\n";
+  }
+
+  my $allImg = $self->{"collection-tree"}->{children};
+  my %res = ();
+  foreach $img ( @$allImg ) {
+    my $id =  $img->{attributes}->{"ID"};
+
+    print "Looking at Image with ID: $id\n" if     defined($id);
+    print "ERROR: ID not defined\n"         unless defined($id);
+    
+
+    print("OK:    $lMPEG_QBE->{element}(" , join(",", @{$lMPEG_QBE->{children}}) ,")\n") if defined($lMPEG_QBE->{element});
+    print "ERROR: lMPEG_QBE-element undefined!\n" unless defined($lMPEG_QBE->{element});
+
+    if( (defined($img))
+	&& (defined($id))
+	&& (defined($lMPEG_QBE))){
+      print "actually calling query_match_anImg ( $id, $img, $lMPEG_QBE )\n";
+
+      $res{$id} = $self->query_match_anImg( $id, $img, $lMPEG_QBE );
+    }
+  }
+  my @allmatches = values( %res );
+  my @sortedmatches = sort similarity_order @allmatches;
+  
+  $#sortedmatches = $inQuery->{attributes}->{"result-size"} - 1 if(scalar(@sortedmatches) > $inQuery->{attributes}->{"result-size"} - 1);
+
+  #returning the final tree
+  return {
+          element => "query-result",
+          attributes => {},
+          children => [
+                       {
+                        element    => "query-result-element-list",
+                        attributes => {},
+                        children   => \@sortedmatches
+                       }
+                      ]
+         };
+}
+
+
+
+
+########################################
+#
+# randomQuery HERE GOES SOMETHING WHICH GIVES BACK A RANDOM NUMBER OF IMAGES
+#
+# Processes the query given by $inQuery
+# give back $inQuery->{attributes}->{"result-size"} random images
+# 
+# PARAMETERS: The "query" tree to be processed
+#
+# RETURNS:    an XML tree containing a "query-result" element
+#
+# THIS FUNCTION IS OVERLOADED from CGIFTLink
+#
+sub randomQuery( $ ){
+  my $self=shift;
+
+  my $inQuery= shift;# this would now contain an XML tree
+
+  print "---------->randomQuery:",$inQuery->{element},",",$inQuery->{attributes}->{"result-size"},":",keys(%{$inQuery->{attributes}}),"\n\n";
+
+  #returning a constant XML tree
+  return {
+	  element => "query-result",
+	  attributes => {},
+	  children => [
+		       {
+			element    => "query-result-element-list",
+			attributes => {},
+			children   => [
+				       ({
+					element    => "query-result-element",
+					attributes => {
+						       "calculated-similarity"  => rand(),
+						       "image-location"         => "http://gift.unige.ch/images/TSR500/b_1111_scaled_small_thumbnail_jpg.jpg",
+						       "thumbnail-location"     => "http://gift.unige.ch/images/TSR500/b_1111_scaled_small_thumbnail_jpg.jpg" 
+						      },
+					children   => []
+				       }) x $inQuery->{attributes}->{"result-size"} # result-size-times
+				      ]
+		       }
+		      ]
+	 };
+}
+
+
+
+
+

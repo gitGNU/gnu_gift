@@ -1,0 +1,258 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+#
+# A simple one-shot-query to GIFT 
+#
+
+#############################################################
+#
+# if you need printouts for what happens inside CFeedbackClient,
+# modify CFeedbackClient.pre-pm:
+#
+# the hash vDEBUG (line 98) in CFeedbackClient.pre-pm 
+# will be of interest for you
+#
+#############################################################
+
+
+
+# Author of this file: Wolfgang Müller 2000-02-18
+
+require 5.002;
+#use strict;
+
+use lib '__BINDIR__'; # for including CFeedbackClient
+
+use Getopt::Long;
+
+%lOptions=();
+
+GetOptions(\%lOptions,
+	   "help",
+	   "cgi",
+	   "user-id=s",
+	   "algorithm-id=s",
+	   "collection-id=s",
+	   "additional-algorithm-attributes=s",
+	   
+);
+
+if($lOptions{help}){
+  print "
+gift-mrml-client.pl: this program starts a one-shot-query to a given MRML server
+
+Usage: gift-mrml-client.pl host:port? output-file? (image-url image-relevance)*
+
+--help              shows this string
+--cgi               this script is run by a CGI script
+--user-id      the user-id to be used when connecting
+--algorithm-id      the algorithm-id to be used when configuring
+--collection-id     the collection-id to be used when configuring
+--additional-algorithm-attributes
+                    the string given will be passed through
+                    to the algorithm in place of an attribute.
+                    (see configuration documentation about this) 
+";
+  exit;
+}
+
+my $lUserID= $lOptions{"user-id"} || "-perl-one-shot-query-" ;
+my $lAlgorithmID= $lOptions{"algorithm-id"};
+my $lCollectionID=$lOptions{"collection-id"};
+my $lAdditionalAlgorithmAttributes=$lOptions{"additional-algorithm-attributes"};
+
+#$lAdditionalAlgorithmAttributes="BLABLA";
+
+use CFeedbackClient;
+
+package main;
+
+my @dummy=(
+	   'file:/home/muellerw/TestCase/TSR500/b_1000_scaled.gif',
+	   'file:/home/muellerw/TestCase/TSR500/b_1015_scaled.gif',
+	   'file:/home/muellerw/TestCase/TSR500/b_1030_scaled.gif',
+	   'file:/home/muellerw/TestCase/TSR500/b_1040_scaled.gif',
+	   'file:/home/muellerw/TestCase/TSR500/b_1050_scaled.gif',
+	   'file:/home/muellerw/TestCase/TSR500/b_1060_scaled.gif',
+	   'file:/home/muellerw/TestCase/TSR500/b_1070_scaled.gif',
+	   'file:/home/muellerw/TestCase/TSR500/b_1080_scaled.gif',
+	   'file:/home/muellerw/TestCase/TSR500/b_1090_scaled.gif',
+	  );
+
+my @dummy2=('file:/home/muellerw/TSR2500/tsr1_0046_small.jpg');
+
+my @dummy3=('file:/home/muellerw/TSR2500/tsr1_0046_small.jpg',
+ 	    'file:/home/muellerw/TSR2500/tsr1_0047_small.jpg',
+ 	    'file:/home/muellerw/TSR2500/tsr1_0048_small.jpg',
+ 	    'file:/home/muellerw/TSR2500/tsr1_0049_small.jpg',
+ 	    'file:/home/muellerw/TSR2500/tsr1_0050_small.jpg',
+ 	    'file:/home/muellerw/TSR2500/tsr1_0051_small.jpg',
+ 	    'file:/home/muellerw/TSR2500/tsr1_0052_small.jpg',
+ 	    'file:/home/muellerw/TSR2500/tsr1_0053_small.jpg',
+ 	    'file:/home/muellerw/TSR2500/tsr1_0054_small.jpg',
+ 	    'file:/home/muellerw/TSR2500/tsr1_0055_small.jpg',
+ 	    'file:/home/muellerw/TSR2500/tsr1_0056_small.jpg',
+ 	    'file:/home/muellerw/TSR2500/tsr1_0057_small.jpg',
+ 	    'file:/home/muellerw/TSR2500/tsr1_0058_small.jpg',
+ 	    'file:/home/muellerw/TSR2500/tsr1_0059_small.jpg'
+ 	   );
+
+
+#
+# how to use the automatic benchmark
+#
+
+# if(1==1){
+#   my $lFeedbackClient=new CFCMovingTargetTest();
+#   $lFeedbackClient->doQueryGroup(\@dummy2);
+# }else{
+#   my $lFeedbackClient=new CFeedbackClient();
+#   $lFeedbackClient->doQueryGroup(\@dummy3);
+# }
+
+#
+# At present no choice of algorithm
+#
+
+
+print "Usage: gift-mrml-client.pl host:port? output-file? (image-url image-relevance)*\n" ;
+
+#
+# Read the images from the command line
+#
+{#for scoping
+  my $lHost= shift || "localhost:12789";
+  my $OUTFILE=shift || "gift-mrml-client-outfile.html";
+  
+  $OUTFILE=">$OUTFILE";
+
+  my @lQuery;
+  #we are making a list of
+  #pairs from the flat list of
+  #arguments
+  
+  # a default query
+  @lQuery=([(shift || "http://gift.unige.ch/images//TSR500/b_1007_scaled_small.jpg"),
+	    1]);
+  
+
+  while(scalar(@_)){
+
+    push @lQuery,[shift,shift];
+   
+  }
+  #
+  # Our gift feedback client
+  # we should be able to tell it the port
+  #
+  my $lFeedbackClient=new CFeedbackClient();
+
+  #the following line is redundant, because
+  #this is the default
+  $lFeedbackClient->setAddress($lHost);
+  $lFeedbackClient->setResultSize(20);# set the size of the desired query result
+
+  $lFeedbackClient->startSession($lUserID);
+  
+  $lFeedbackClient->configureSession(
+				     $lFeedbackClient->getSessionID(),
+				     $lAlgorithmID,
+				     $lCollectionID,
+				     $lAdditionalAlgorithmAttributes
+				    );#take the defaults
+  print "Making query\n";
+  my $lQueryToSend=$lFeedbackClient->makeQueryString(
+						     \@lQuery,
+						     $lFeedbackClient->getSessionID(),
+						     $lAlgorithmID,
+						     $lCollectionID,
+						    );
+
+# SENDING THE QUERY and 
+# printing the MRML we got back from the query
+   print "MRML-----xx-----------------------------------\n";
+   print $lFeedbackClient->sendQueryString($lQueryToSend);
+   print "MRML-----xx-----------------------------------\n";
+
+  #
+  #now transform the results into HTML
+  #
+  my $lResultList=$lFeedbackClient->getResultList();
+
+
+  open OUTFILE, $OUTFILE or die "\ncould not open $OUTFILE\n$!";
+
+  print OUTFILE "
+<html>
+<head>One shot query</head>\n
+<body>
+<H1> One shot query </H1>
+<p>
+<table>
+<thead>
+<td>URL
+</td>
+<td>Relevance
+</td>
+</thead>
+<tbody>
+";
+
+  foreach $i (@lQuery){
+    my($lImage,$lRelevance)=@$i;
+    print "QUERY: $lImage, $lRelevance\n";
+    print OUTFILE "<tr><td><a href=\"$lImage\">$lImage</a></td><td><code>$lRelevance</code></td><tr>\n";
+  }
+
+  print OUTFILE "</tbody></table></p><p>
+
+<!-- RESULTS -->
+
+<table><tbody><tr>
+";
+
+
+  my $i;
+  my $lCount=0;
+  
+
+  foreach $i (@$lResultList){
+    if(!($lCount%4)){
+      print OUTFILE "</tr><tr>";
+    }
+    my($lImage,$lRelevance)=@$i;
+    print "RESULT: $lImage, $lRelevance\n";
+    print OUTFILE "<td><image src=\"$lImage\"><center>$lRelevance</center></td>\n";
+
+# <center>$lImage</center> insert this into print statement if you want to be able to read the URL
+
+    $lCount++;
+  }
+
+print OUTFILE "
+</tr></tbody></table>
+</body>
+</html>
+";
+}
+
+print "
+Simple MRML client:
+Usage: gift-mrml-client.pl host:port? output-file? (image-url image-relevance)*\n" ;

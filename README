@@ -1,0 +1,45 @@
+  GIFT 0.1.5 README
+  Wolfgang Mueller
+  13.12.2000
+
+  MILITARY USE OR OTHER USE HARMFUL TO PEOPLE STRICTLY PROHIBITED
+
+  The GIFT is a content based image retrieval system.
+  That is, it enables the user to retrieve images from a collection 
+  without attaching text-based annotation to each image.
+
+  For a no-problem-few-questions interactive installation type
+
+  % ./configure --enable-interactive --enable-multithreading
+  % make
+  % make install
+
+  If you ask yourself questions, read :
+
+  README             this file. The executive summary for the impatient.
+
+  INSTALL            How to install this program (or ANY GNU PROGRAM,
+		     that is).
+
+  AUTHORS            Contains author and contact info
+
+  Doc/gift-guide.txt for more information about how to install the 
+                     GIFT and the prerequisites, and how to get going.
+
+  Doc/configuring-and-hacking-the-gift.txt 
+                   for information about how to add your own plugins 
+                   to the GIFT, and how to configure the GIFT by hand.
+
+  More documentation can be obtained by installing
+      doxygen 
+  before configure-ing and make-ing the GIFT. You will find this doc
+  in Doc/autoDoc/HTML.
+
+  MAILINGLISTS:
+
+  bug-gift@gnu.org   subscribe using http://mail.gnu.org
+  help-gift@gnu.org  subscribe using http://mail.gnu.org
+
+
+  MOST FREQUENT ERROR:
+  PLEASE do a make clean before each run of ./configure .

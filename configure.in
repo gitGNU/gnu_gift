@@ -1,0 +1,367 @@
+dnl -*- mode: autoconf -*-
+
+dnl  GIFT, a flexible content based image retrieval system.
+dnl  Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+dnl  This program is free software; you can redistribute it and/or modify
+dnl  it under the terms of the GNU General Public License as published by
+dnl  the Free Software Foundation; either version 2 of the License, or
+dnl  (at your option) any later version.
+
+dnl  This program is distributed in the hope that it will be useful,
+dnl  but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl  GNU General Public License for more details.
+
+dnl  You should have received a copy of the GNU General Public License
+dnl  along with this program; if not, write to the Free Software
+dnl  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+dnl
+dnl automake configuration for 
+dnl the GIFT system
+
+dnl
+dnl Author: Wolfgang Müller
+dnl
+dnl Process this file with autoconf to produce a configure script.
+dnl 
+
+
+
+AC_INIT(libMRML/cc/CAccessorFactory.cc)
+AC_ARG_ENABLE(interactive,
+	[  --enable-interactive get automatically the prerequisites for this package. NEEDS ANSWERING QUESTIONS INTERACTIVLY.],
+	[
+	$SHELL gift-install-prerequisites.sh 
+	],
+	[
+	echo "------------------------------"
+	echo
+	echo "Do you know, that you could get" 
+	echo "the prerequisites to the gift automatically??"
+	echo
+	echo "call"
+	echo "perl gift-install-prerequisites.sh"
+	echo
+	echo "------------------------------"
+	]
+)
+
+AM_INIT_AUTOMAKE(gift,0.1.5pre)
+AM_CONFIG_HEADER(gift-config.h)
+AC_ISC_POSIX
+dnl Checks for programs.
+
+dnl AC_LIBTOOL_DLOPEN
+AC_PROG_LIBTOOL
+AC_SUBST(LIBTOOL_DEPS)
+
+
+AC_PROG_CC
+AC_PROG_CXX
+AC_PROG_RANLIB
+
+dnl
+dnl add the right lib versions:
+dnl 
+GIFT_LIB_VERSION_INFO="-version-info 0:1:5"
+AC_SUBST(GIFT_LIB_VERSION_INFO)
+
+
+AC_C_CONST
+AC_EXEEXT
+AC_LANG_CPLUSPLUS
+
+dnl MySQL checking if it's there
+
+
+AC_CHECK_FILE([/usr/include/mysql++/sqlplus.hh],
+	[
+		CXXFLAGS="$CXXFLAGS -I /usr/include/mysql++"
+	])
+AC_CHECK_FILE(
+	[/usr/local/include/mysql++/sqlplus.hh],
+	[
+		CXXFLAGS="$CXXFLAGS -I /usr/local/include/mysql++"
+	])
+AC_CHECK_FILE([/usr/include/mysql/mysql.h],
+	[
+		CXXFLAGS="$CXXFLAGS -I /usr/include/mysql"
+	])
+AC_CHECK_FILE(
+	[/usr/local/include/mysql/mysql.h],
+	[
+		CXXFLAGS="$CXXFLAGS -I /usr/local/include/mysql"
+	])
+
+
+AC_MSG_CHECKING("'new SQLQuery()' in -lsqlplus")
+RESCUE_LDFLAGS=$LDFLAGS
+LDFLAGS="$LDFLAGS -lsqlplus"
+AC_TRY_LINK([#include <sqlplus.hh>],[new SQLQuery();],[
+		CXXFLAGS="$CXXFLAGS -D__GIFT_WITH_MYSQL__ "
+		 AC_MSG_RESULT("yes")],
+		[
+		AC_MSG_RESULT("no! \nThe flags used in the unsuccessful compile were $CFLAGS $CXXFLAGS $LDFLAGS")
+		LDFLAGS=$RESCUE_LDFLAGS
+	])
+
+
+dnl an option for suppressing parts of gift which have not yet been
+dnl subject to scientific publication
+dnl AM_CONDITIONAL(DEBUG, test x$debug = xtrue)
+dnl this is quite a bit of circus, which has to be 
+dnl FIXED. Gotta write a mail to the automake maintainer.
+AC_ARG_ENABLE(gift,
+	[  --enable-gift To be used by the GIFT group for things which are not yet published],
+	[echo "hier";
+	case 	"${enableval}" in
+       		yes) VIF='-D__GIFT_UNPUBLISHED_WORK__'; IP='gift-browser-benchmark.pl gift-extract-text-features.pl gift-annotation-to-html.pl gift-ranking-comparison.pl CFCRankingComparison.pm CGraphCollection.pm'; UNPUBLISHED='-lUnpublished';UNPUBLISHED_DIR='$(top_srcdir)/libUnpublished/cc';echo "gift-internals" AC_SUBST(UNPUBLISHED);AC_SUBST(UNPUBLISHED_DIR);
+       		no)  VIF=''; IP = ''; echo "no gift-internals";;
+       		*) AC_MSG_ERROR(bad value ${enableval} for --enable-debug) ;;
+     	 esac;
+
+	GIFT_INTERNAL_FLAG=${VIF}
+	AC_SUBST(GIFT_INTERNAL_FLAG)
+
+	GIFT_INTERNAL_PERLS=${IP}
+	AC_SUBST(GIFT_INTERNAL_PERLS)
+	],
+	[GIFT_INTERNAL=false]
+)
+
+dnl
+dnl gift-add-collection supposes the personal web directory
+dnl directory to be at 
+dnl 
+dnl ~/public_html
+dnl
+dnl you can change this.
+dnl
+AC_ARG_ENABLE(set-web-publishing-directory,
+	[  --enable-set-web-publishing-directory setting the directory of the web publishing directory http://your.domain.here/~$USER by default],
+	[
+		WEB_PUBLISHING_DIRECTORY=${enableval}/
+		AC_SUBST(WEB_PUBLISHING_DIRECTORY)
+	],
+	[
+		WEB_PUBLISHING_DIRECTORY=~/public_html/
+		AC_SUBST(WEB_PUBLISHING_DIRECTORY)
+	]
+)
+
+dnl
+dnl gift-add-collection supposes the personal web directory
+dnl directory to be accessible by
+dnl http://your.domain.here/~your_username
+dnl
+dnl you can change this.
+dnl
+AC_ARG_ENABLE(set-web-publishing-location,
+	[  --enable-set-web-publishing-location setting the location of the web publishing location http://your.domain.here/~$USER by default],
+	[
+		WEB_PUBLISHING_LOCATION=`echo "${enableval}/" |sed "s:/+^:/:" `
+		AC_SUBST(WEB_PUBLISHING_LOCATION)
+	],
+	[
+		WEB_PUBLISHING_LOCATION="http://localhost/~${USER}"
+		AC_SUBST(WEB_PUBLISHING_LOCATION)
+	]
+)
+
+#check if there is perl on this system
+AC_PATH_PROG(PERL,perl)
+
+dnl 
+dnl Check if we can embed a perl interpreter
+dnl we cannot used AC_TRY_LINK, because perl defines
+dnl int main(int,char**,char**)
+dnl AC_CHECK_LINK defines 
+dnl int main()
+dnl this yields us a conflict
+dnl solution: we compile a test program in an external file
+dnl
+AC_CHECK_FILE($PERL,[
+  AC_MSG_CHECKING("if we can embed a Perl interpreter into GIFT")
+  #RESCUE_LDFLAGS=$LDFLAGS
+  #LDFLAGS=`echo $LDFLAGS \`perl -MExtUtils::Embed -e ldopts  \`|sed 's:-Dbool=char::'` 
+  RESCUE_CXXFLAGS=$CXXFLAGS
+  CXXFLAGS=`echo $CXXFLAGS -D__GIFT_WITH_PERL__ \`perl -MExtUtils::Embed -e ccopts  \`|sed 's:-Dbool=char::'`
+
+  if $CC perl-compile-test-program.cc $CXXFLAGS  -o perl-compile-test-program $LDFLAGS `echo  \`perl -MExtUtils::Embed -e ldopts  \`|sed 's:-Dbool=char::'` ; then
+	AC_MSG_RESULT([yes])
+	rm perl-compile-test-program
+	PERL_LD_ADD=`perl -MExtUtils::Embed -e ldopts`
+	AC_SUBST(PERL_LD_ADD)
+  else
+	CXXFLAGS=$RESCUE_CXXFLAGS
+	LDFLAGS=$RESCUE_LDFLAGS
+	AC_MSG_RESULT([no])
+  fi
+])
+
+AC_ARG_ENABLE(multi-threading,
+	[  --enable-multi-threading enable multithreading],
+	[
+	dnl 
+	dnl we need recursive locking, and this seems to be the way to test it
+	dnl	
+	AC_MSG_CHECKING([if we can use POSIX threads the way we want])
+	RESCUE_CXXFLAGS=$CXXFLAGS
+	CXXFLAGS="$CXXFLAGS -DHAVE_LIBPTHREAD"
+
+	dnl echo $CXXFLAGS
+	dnl echo "$CC pthread-compile-test-program.cc $CXXFLAGS -o pthread-compile-test-program  $LDFLAGS -lpthread"
+	if($CXX $CXXFLAGS pthread-compile-test-program.cc  -o pthread-compile-test-program  $LDFLAGS -lpthread) ; then
+		if ./pthread-compile-test-program ; then
+			AC_MSG_RESULT([yes (will use pthread)])
+			LDFLAGS="$LDFLAGS -lpthread"
+		else
+			AC_MSG_RESULT("no: testprogram compiled but failed to run");
+			CXXFLAGS=$RESCUE_CXXFLAGS
+		fi
+		rm pthread-compile-test-program
+else
+		CXXFLAGS=$RESCUE_CXXFLAGS
+		LDFLAGS=$RESCUE_LDFLAGS
+		AC_MSG_RESULT("no: failed: $CXX CXXFLAGS:($CXXFLAGS) pthread-compile-test-program.cc  -o pthread-compile-test-program  LDFLAGS:($LDFLAGS -lpthread"));
+	fi
+	],
+	[
+	AC_MSG_WARN([Use --enable-multi-threading for enabling multi threading])
+	]
+)
+
+
+
+dnl libmysql++.la -L/usr/lib/mysql -lmysqlclient -lnsl
+
+dnl PERL_LD_ADDITIONS=`echo \`perl -MExtUtils::Embed -e ldopts  \`|sed 's:-Dbool=char::'`
+dnl AC_SUBST(PERL_LD_ADDITIONS)
+dnl PERL_CC_ADDITIONS=`echo \`perl -MExtUtils::Embed -e ccopts  \`|sed 's:-Dbool=char::'`
+dnl AC_SUBST(PERL_CC_ADDITIONS)
+
+AC_ARG_ENABLE(tracking,
+	[  --enable-bayesian TrackingGIFT Bayesian extensions],
+	[echo "hier";
+	case 	"${enableval}" in
+       		yes) TVF='-D__GIFT_BAYESIAN__';BAYESIAN='-lBayesian';AC_SUBST(BAYESIAN)GIFT_BAYESIAN_DIR='libGIFTQuBayesian libGIFTAcDistanceMatrix';AC_SUBST(GIFT_BAYESIAN_DIR)CA_X_DISTANCEMATRIX='CAcDistanceMatrix.cc CAFDistanceMatrix.cc';AC_SUBST(CA_X_DISTANCEMATRIX);
+       		no)  GIFT_BAYESIAN_DIR='';;
+       		*) AC_MSG_ERROR(bad value ${enableval} for --enable-debug) ;;
+     	 esac;
+
+	GIFT_BAYESIAN_FLAG=${TVF}
+	AC_SUBST(GIFT_BAYESIAN_FLAG)
+	],
+	[GIFT_BAYESIAN=false]
+)
+BAYESIAN_LD_ADD=''
+AC_SUBST(BAYESIAN_LD_ADD)
+
+
+
+dnl try to find the installer program
+AC_PROG_INSTALL
+
+AM_PATH_LISPDIR
+
+AC_SUBST(EMACS)
+
+dnl ugh, beats me (phenomenological programming)
+AC_PROG_MAKE_SET
+dnl ugh, beats me.
+
+
+#check if there is image magick convert on this system
+AC_PATH_PROG(CONVERT,convert)
+#check if there is kdoc on the system
+AC_PATH_PROG(DOXYGEN,doxygen)
+#at present we do not draw any consequences out of these checks.
+AC_PATH_PROG(SGML2INFO,sgml2info)
+AC_PATH_PROG(SGML2TXT,sgml2txt)
+AC_PATH_PROG(SGML2LATEX,sgml2latex)
+
+PRE_INSTALL_LIBDIRS="-L${PWD}/libMRML/cc/ -L${PWD}/libGIFTAcPerl/cc/ -L${PWD}/libGIFTQuPerl/cc/ -L${PWD}/libGIFTAcInvertedFile/cc/ -L${PWD}/libGIFTAcHierarchy/cc/ -L${PWD}/libGIFTAcDistanceMatrix/cc/ -L${PWD}/libGIFTQuInvertedFile/cc/ -L${PWD}/libGIFTQuBayesian/cc/ -L${PWD}/libGIFTQuHierarchy/cc/ -L${PWD}/libGIFTAcURL2FTS/cc/"
+
+PRE_INSTALL_LINKDIRS="--rpath${PWD}/libMRML/cc/ -L${PWD}/libGIFTAcPerl/cc/ -L${PWD}/libGIFTQuPerl/cc/ --rpath${PWD}/libGIFTAcInvertedFile/cc/ --rpath${PWD}/libGIFTAcHierarchy/cc/ --rpath${PWD}/libGIFTAcDistanceMatrix/cc/ --rpath${PWD}/libGIFTQuInvertedFile/cc/ --rpath${PWD}/libGIFTQuBayesian/cc/ --rpath${PWD}/libGIFTQuHierarchy/cc/ --rpath${PWD}/libGIFTAcURL2FTS/cc/"
+
+AC_SUBST(PRE_INSTALL_LIBDIRS)
+AC_SUBST(PRE_INSTALL_LINKDIRS)
+
+
+dnl FIXME perl is missing here for full functionality
+
+dnl Checks for libraries.
+
+dnl probably we will need lib xml, at present we use expat...
+     
+dnl Checks for header files.
+AC_STDC_HEADERS
+AC_HAVE_HEADERS(string algorithm) 
+dnl Checks for system dependent include files
+AC_HAVE_HEADERS( stdlib.h unistd.h sys/types.h time.h sys/time.h sys/socket.h arpa/inet.h netinet/tcp.h )
+
+dnl this is just to check that I have understood how things work
+AC_CHECK_LIB(m,sin)
+dnl do we have an expat parser installed?
+dnl THIS IS PRESENTLY UNUSED.
+dnl AC_CHECK_LIB(expat,XML_ParserCreate)
+dnl SUNs need to link the -lsocket to programs using sockets. 
+AC_CHECK_LIB(socket,socket)
+#dnl check if we have posix threads
+AC_CHECK_LIB(pthread,pthread_mutexattr_destroy)
+
+
+
+dnl checks if this is big-endian or not
+AC_C_BIGENDIAN
+
+
+
+dnl the output
+
+dnl		libGIFTQuBayesian/Makefile
+dnl		libGIFTQuBayesian/cc/Makefile 
+
+AC_OUTPUT([Makefile 
+
+		libMRML/Makefile
+		libMRML/cc/Makefile 
+		libMRML/include/Makefile 
+
+		libGIFTQuPerl/Makefile 
+		libGIFTQuPerl/cc/Makefile 
+		libGIFTAcPerl/Makefile 
+		libGIFTAcPerl/cc/Makefile 
+
+		libGIFTAcURL2FTS/Makefile
+		libGIFTAcURL2FTS/cc/Makefile 
+		libGIFTAcInvertedFile/Makefile
+		libGIFTAcInvertedFile/cc/Makefile 
+		libGIFTQuInvertedFile/Makefile
+		libGIFTQuInvertedFile/cc/Makefile 
+
+		libGIFTAcHierarchy/Makefile
+		libGIFTAcHierarchy/cc/Makefile 
+		libGIFTQuHierarchy/Makefile
+		libGIFTQuHierarchy/cc/Makefile 
+
+		libGIFTAcDistanceMatrix/Makefile
+		libGIFTAcDistanceMatrix/cc/Makefile 
+
+		FeatureExtraction/Makefile
+
+		libSquirePPM/Makefile
+
+		scripts/Makefile
+		scripts/emacs-lisp/Makefile
+		scripts/perl/Makefile
+		
+		dtd/Makefile
+
+		Doc/Makefile
+
+		GIFTServer/Makefile
+		GIFTServer/gift-mrml-messages/Makefile
+		GIFTServer/gift-config/Makefile])

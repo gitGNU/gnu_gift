@@ -1,0 +1,52 @@
+#!/usr/bin/perl -w
+
+#
+# The goal of this is to be able to iterate
+# over several levels and to be able to accumulate
+# over these levels
+#
+
+
+select STDOUT;
+$|=1;
+
+use ListForHandler;
+use ListFor;
+
+package main;
+
+my $looper=new ListFor([1,["zero","one"]],[0,[0,1]]);
+
+ $looper->setBeginHandler(new ListForHandler(sub{
+ 					my$self=shift;
+ 					my $container=shift;
+ 					print "Begin0  :",join(":",$container->toList()),"\n";
+ 				      }
+ 				     ),0);
+ $looper->setEndHandler(new ListForHandler(sub{
+ 					my$self=shift;
+ 					my $container=shift;
+ 					print "End0    :",join(":",$container->toList()),"\n";
+ 				      }
+ 				     ),0);
+$looper->setBeginHandler(new ListForHandler(sub{
+					my$self=shift;
+					my $container=shift;
+					print "Begin1  :",join(":",$container->toListReplace(0,"average")),"\n";
+				      }
+				     ),1);
+$looper->setEndHandler(new ListForHandler(sub{
+					    my$self=shift;
+					    my $container=shift;
+					    print "End1    :",join(":",$container->toListReplace(0,"average")),"\n";
+					  }
+					 ),1);
+
+$looper->toZero();
+
+unless(0){
+  do{
+  }while($looper->increment());
+}
+
+print "finished\n"; 

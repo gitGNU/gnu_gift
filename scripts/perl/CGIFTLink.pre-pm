@@ -1,0 +1,632 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+# Author of this file: Wolfgang Müller
+
+#
+# contact people for MRML and MPEG
+#  check things out: would we be at a pre-meeting?
+#
+
+
+
+require 5.002;
+use lib '__BINDIR__'; # for including CFeedbackClient
+use CXMLTreeVisitor;
+use CXTVTripletList;
+use POSIX qw(floor ceil);
+
+
+=pod
+
+=head1 NAME 
+
+CGIFTLink - Linking the GNU Image Finding Tool to Perl
+
+=head1 SYNOPSIS 
+
+
+
+=head1 DESCRIPTION
+
+CGIFTLink is the baseclass for packages that are designed for linking
+up to the GIFT. 
+
+=head2 The big picture
+
+To put you into context: the server of the GNU Image Finding Tool has
+been developed entirely in c++. However, it clearly is desirable to
+have a more malleable environment for I<testing> when designing new
+query engines. Another big advantage is that Perl is a I<glue
+language> designed for interfacing all sorts of packages and programs
+with each other. 
+
+What we are doing here, is that upon request we create a Perl
+interpreter within the GIFT. Into this Perl interpreter we load all
+scripts which you have given in your configuration (see below). On
+further request, i.e. each time a query engine is requested by the
+user that is implemented as a Perl object, we will create the
+appropriate Perl object within this interpreter. We will delete it
+once it is not needed any more.
+
+(Why we don't use multiple intepreters? The user's Perl has to have
+been compiled with special flags to enable you to do that without
+harm. we do not want to impose a way of having compiled Perl to the
+user.)
+
+=head2 What happens when GIFT calls your package
+
+What Perl gives you for free, that's passing flat lists as
+parameters. Unfortunately, what really interests us, that is passing a
+tree, an XML parsing tree, in fact. However, we would like to shield
+the program from the burden of parsing. So what we are doing is to
+send a list of (instruction,attribute,value) triplets to the perl
+program. CGIFTLink will construct an XML parse tree from it, which is
+done using a very simple, albeit nonstandard API:
+
+Your function which is called, will get something like '
+
+ {
+   element=>'an-element-name',
+   attributes=>{
+                   'attribute-1' => 'value-1',
+                   'attribute-2' => 'value-2',
+                   'attribute-3' => 'value-3',
+               },
+   children=>  [
+                   {
+                      element=>'an-element-name',
+                      attributes=>{'some-other-attribute'
+                                    =>'some-other-value'},
+                      children=>[]
+                   }
+                   ...
+               ]
+ }
+
+as a parameter.
+
+In short, we are expressing only parts of the DOM semantic, but in a
+way that is very convenient for the programmer, and that
+exactly suits our needs. In the following, we will refer to this
+structure by the term I<parse tree>.
+
+You, after having done the processing based on the parameters, give
+back another parse tree as result. C<CGIFTLink> will flatten this
+parse tree and give it back to the GIFT.
+
+=head2 How to proceed.
+
+Please do not change CGIFTLink. Use the code in this class as a source
+of documentation (it itself is an example on how to use CGIFTLink). To
+write your own CGIFTLinks, please overload the following methods in
+this class.
+
+=over 2
+
+=item * 
+$self->query( $in_parse_tree ); The parameter is a parse tree
+which contains a C<query-step> mrml element. 
+
+=item *
+$self->randomQuery( $in_parse_tree ); Again, the parameter is a
+parse tree which contains a C<query-step> mrml element.
+
+=item * $self->configure( ); This function is called to give your
+class the opportunity to configure itself. You willl probably load
+some data, or open some sockets, etc. . I.e. you will do things that
+will affect the whole lifetime of your object. For this you will be
+able to use the variables $self->{algorithm} and $self->{collection}
+which will contain the configuration of your object. 
+
+=back
+
+=head1 EXAMPLES
+
+=head1 FILES
+
+=head1 SEE ALSO
+
+=head1 DIAGNOSTICS
+
+=head1 BUGS
+
+=head1 RESTRICTIONS
+
+=head1 AUTHOR
+
+Wolfgang Müller for the CUI Geneva
+
+
+=cut
+
+
+
+############################################################ 
+#
+# CGIFTLink
+#
+# A class for Perl-side of the link between
+# GIFT and Perl
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS CLASS
+# THERE IS AN ERROR
+#
+# SUBCLASS THIS FOR CREATING YOUR OWN QUERY PROCESSORS
+#
+use lib '__BINDIR__'; # adding the install directory to the library directory
+
+package CGIFTLink;
+
+@ISA= qw(Exporter);
+@EXPORT_OK= qw(new
+	       processGIFTQueryCall
+	       processGIFTRandomQueryCall
+	       tripletListToTree
+	       treeToTripletList
+	       traverseTree
+	       setAlgorithm
+	       setCollection
+	       traverseTree
+	       configure
+	      );
+
+sub new(){
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize();
+  return $self;
+}
+
+sub initialize(){
+  my$self=shift;
+}
+
+########################################
+#
+# tripletListToTree
+#
+# Transforms a list of triplets given by gift
+# into a tree of XML elements
+#
+# PARAMETERS: @_ contains a flat list of elements
+#   instruction, name, value, instruction, name, value, ...
+#
+# RETURNS:    the root of the tree generated
+#
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS FUNCTION UNLESS 
+# THERE IS AN ERROR
+#
+sub tripletListToTree{
+
+  my$self=shift;
+
+  $const_element=1;
+  $const_up=2;
+  $const_attribute=3;
+  $const_text=4;
+
+  my $lInstruction;
+  my $lName;
+  my $lValue;
+
+  my $lReturnTree;
+
+  do{
+
+    $lInstruction=shift;
+    $lName=shift;
+    $lValue=shift;
+
+    print "Received: $lInstruction," if (defined($lInstruction));
+    print "  $lName," if (defined($lName));
+    print "  $lValue," if (defined($lValue));
+    print "\n";
+
+    if(defined($lInstruction)){
+      if(($lInstruction == $const_element)
+	 ||($lInstruction == $const_text)
+	){
+	#
+	# I make a new subtree 
+	# containing just the name
+	# of the element
+	#
+	my $lTree;
+	
+	if($lInstruction == $const_element){
+	  $lTree={
+		  element => $lName,
+		  attributes => {},
+		  children => []
+		 };
+	}
+	if($lInstruction == $const_text){
+	  print "BEFORE TEXTT _{$lValue}_\n";
+
+	  unless($lValue=~m/^(\s|\n)+$/s){
+	    print "TEXTT _{$lName}_\n";
+	    $lTree={
+		    text => $lName
+		   };
+	  }
+	}
+	
+	if(defined($lTree)){
+	  unless(defined($lReturnTree)){
+	    
+	    $lReturnTree=$lTree;
+	    
+	  }else{
+	    
+	    push @{$self->{"insertion-stack"}->[0]->{children}},$lTree;
+	    
+	  }
+	  unshift  @{$self->{"insertion-stack"}},$lTree;
+	}
+
+      }
+      
+      if($lInstruction == $const_up){
+
+	unless(scalar(@{$self->{"insertion-stack"}})){
+
+	  print "ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRROR\n";
+	  
+	}
+
+	shift @{$self->{"insertion-stack"}};
+      }
+      
+      if($lInstruction == $const_attribute){
+	
+	$self->{"insertion-stack"}->[0]->{attributes}->{$lName} = $lValue;
+	
+      }
+    }
+  }while(defined($lInstruction,
+		 $lName,
+		 $lValue));
+
+  return $lReturnTree;
+}
+
+########################################
+#
+# traverseTree
+#
+# traverses a tree (as formed by tripletListToTree)
+# and lets a CXMLVisitor startVisit each node
+#
+# RETURNS:    nothing
+#
+sub traverseTree( $$ ){
+
+  my$self=shift;
+
+  my $lRoot=shift;
+  my $lVisitor=shift;
+
+  $lVisitor->startVisit($lRoot);
+
+  if(defined($lRoot->{children})){
+
+    my $i;
+
+    foreach $i (@{$lRoot->{children}}){
+      $self->CGIFTLink::traverseTree($i,$lVisitor);
+    }
+  }
+
+  $lVisitor->endVisit($lRoot);
+  return;
+}
+
+
+########################################
+#
+# processGIFTQueryCall
+#
+# PARAMETERS: @_ contains a flat list of elements
+#    instruction, name, value, instruction, name, value, ...
+#    it is suspected to contain a "query" element
+#
+# RETURNS: REVERSED, a flat list of elements of the same structure
+#    as the parameters, however containing a "query-result" 
+#    element. THE LIST IS REVERSED TO MAKE THINGS EASIER FOR GIFT
+#    WHO WILL POP THINGS OFF A STACK.
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS FUNCTION UNLESS 
+# THERE IS AN ERROR
+#
+sub processGIFTQueryCall( ; ){
+  my$self=shift;
+
+  # transform all parameters to a tree...
+  my $lQueryTree=$self->CGIFTLink::tripletListToTree(@_);
+
+  #...then call query,...
+  my $lQueryResultTree=$self->query($lQueryTree);
+
+  #...and return the reversed triplet list
+  return reverse($self->CGIFTLink::treeToTripletList($lQueryResultTree));
+}
+  
+########################################
+#
+# processGIFTRandomQueryCall
+#
+# PARAMETERS: @_ contains a flat list of elements
+#    instruction, name, value, instruction, name, value, ...
+#    it is exspected to contain a "query" element
+#
+# RETURNS: REVERSED, a flat list of elements of the same structure
+#    as the parameters, however containing a "query-result" 
+#    element. THE LIST IS REVERSED TO MAKE THINGS EASIER FOR GIFT
+#    WHO WILL POP THINGS OFF A STACK.
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS FUNCTION UNLESS 
+# THERE IS AN ERROR
+#
+sub processGIFTRandomQueryCall( ; ){
+  my$self=shift;
+
+  # transform all parameters to a tree...
+  my $lRandomQueryTree=$self->CGIFTLink::tripletListToTree(@_);
+
+  #...then call randomQuery,...
+  my $lRandomQueryResultTree=$self->randomQuery($lRandomQueryTree);
+
+  #...and return the reversed triplet list
+  return reverse($self->CGIFTLink::treeToTripletList($lRandomQueryResultTree));
+}
+  
+########################################
+#
+# treeToTripletList
+#
+# transforms an XML tree into a triplet list
+#
+# PARAMETERS: the root of the subtree to be transformed
+#
+# RETURNS:    a flat list of 
+# instruction, value, name, instruction, value, name, instruction ...
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS FUNCTION UNLESS 
+# THERE IS AN ERROR
+#
+sub treeToTripletList( $ ){
+  my$self=shift;
+
+  my $lRoot=shift;
+
+  my $lVisitor=new CXTVTripletList();
+
+  $self->CGIFTLink::traverseTree($lRoot, $lVisitor);
+
+  if($self->{DEBUG}->{treeToTripletList}){
+    print "The triplets: ",join(":",$lVisitor->getTripletList()),"\n";
+  }
+
+  return $lVisitor->getTripletList();
+}
+
+
+########################################
+#
+# setAlgorithm
+#
+# sets $self->{algorithm} to the root of an XML tree
+# containing an "algorithm" element. This can contain
+# useful configuration information, depending on your 
+# algorithm
+#
+# PARAMETERS:   tripletList containing "algorithm" element
+#
+# SIDE EFFECTS: sets $self->{algorithm}
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS FUNCTION UNLESS 
+# THERE IS AN ERROR
+#
+sub setAlgorithm( ; ){
+  my$self=shift;
+
+  print "setAlgorithm was called \n";
+
+  my $lRoot=$self->CGIFTLink::tripletListToTree(@_);
+
+  $self->{algorithm}=$lRoot;
+}
+
+########################################
+#
+# setCollection
+#
+# sets $self->{collection} to the root of an XML tree
+# containing a "collection" element. This can contain
+# useful configuration information, depending on your 
+# algorithm
+#
+# PARAMETERS:   tripletList containing "collection" element
+#
+# SIDE EFFECTS: sets $self->{collection}
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS FUNCTION UNLESS 
+# THERE IS AN ERROR
+#
+
+sub setCollection( ; ){
+  my$self=shift;
+  
+  print "setCollection was called \n";
+
+  my $lRoot=$self->CGIFTLink::tripletListToTree(@_);
+
+  $self->{collection}=$lRoot;
+}
+
+########################################
+#
+# query
+#
+# Processes the query given by $self->{tree}
+# 
+# PARAMETERS: The tree to be processed
+#
+# RETURNS:    an XML tree containing a "query-result" element
+#
+# THIS FUNCTION IS INTENDED TO BE OVERLOADED
+#
+sub query( $ ){
+  my $self=shift;
+
+  my $inQuery= shift;# this would now contain an XML tree
+  print "CGIFTLink---------->query:",$inQuery->{attributes}->{"result-size"},":",keys(%{$inQuery->{attributes}}),"\n\n";
+
+  #returning a constant XML tree
+
+  my $lResult=[];
+
+  @{$lResult}=@{$self->{url2fts}}[0..($inQuery->{attributes}->{"result-size"}-1)];  
+  return {
+	  element => "query-result",
+	  attributes => {},
+	  children => [
+		       {
+			element    => "query-result-element-list",
+			attributes => {},
+			children   => $lResult
+		       }
+		      ]
+	 };
+}
+
+
+########################################
+#
+# query
+#
+# Processes the query given by $inQuery
+# give back $inQuery->{attributes}->{"result-size"} random images
+# 
+# PARAMETERS: The "query" tree to be processed
+#
+# RETURNS:    an XML tree containing a "query-result" element
+#
+# THIS FUNCTION IS INTENDED TO BE OVERLOADED
+#
+sub randomQuery( $ ){
+  my $self=shift;
+
+  my $inQuery= shift;# this would now contain an XML tree
+
+  print "CGIFTLink---------->randomQuery:",$inQuery->{element},",",$inQuery->{attributes}->{"result-size"},":",keys(%{$inQuery->{attributes}}),"\n\n";
+
+  my $lResultSize=$inQuery->{attributes}->{"result-size"};
+
+  my $i;
+  my %lUsed;
+  my $lResult=[];
+  if(scalar(@{$self->{url2fts}})<$lResultSize){
+    $lResult=$self->{url2fts};
+  }else{
+    while(scalar(keys %lUsed)<$lResultSize){
+      my $lNew=POSIX::floor(rand()*scalar(@{$self->{url2fts}}));
+      $lUsed{$lNew}=1;
+    }
+    $lResult=[];
+    @{$lResult}=@{$self->{url2fts}}[(keys %lUsed)];
+  }
+
+  
+
+  #returning a constant XML tree
+  return {
+	  element => "query-result",
+	  attributes => {},
+	  children => [
+		       {
+			element    => "query-result-element-list",
+			attributes => {},
+			children   => $lResult
+		       }
+		      ]
+	 };
+}
+
+
+########################################
+#
+# configure
+#
+# processes the configuration data present in
+# $self->{collection} and $self->{algorithm}.
+# possible examples would be the opening of a 
+# connection to an SQL database.
+# 
+# PARAMETERS: expects $self->{collection} and $self->{algorithm}
+#             to be set
+#
+# RETURNS:    nothing
+#
+# THIS FUNCTION IS INTENDED TO BE OVERLOADED
+#
+sub configure( ){
+  my $self=shift;
+
+  die unless defined($self);
+  die unless defined($self->{collection});
+
+  my $inFileName=$self->{collection}->{attributes}->{'cui-base-dir'}
+  ."/"
+    .$self->{collection}->{attributes}->{'cui-feature-file-location'};
+
+  open(IF,$inFileName) 
+    or die "no url2fts file defined!\n";
+  
+  print "reading $inFileName\n";
+
+  $self->{url2fts}=[];
+
+  my $lCount;
+
+  while(<IF>){
+    my($lLocation,$lThumb,$lIgnoreFeatures)=split(" ",$_);
+
+    print "$lCount: $lLocation,$lThumb,$lIgnoreFeatures\n";
+
+    $lCount++;
+    push @{$self->{url2fts}},{
+			      element    =>'query-result-element',
+			      attributes =>{
+					    'image-location'=>$lLocation,
+					    'thumbnail-location'=>$lThumb,
+					    'calculated-similarity'=>$lCount
+					   },
+			      children=>   []
+			     }
+			      
+  }
+
+  print "finished reading $inFileName\nURL2FTS WAS LOADED SUCCESSFULLY!\n";
+
+  # does nothing at present
+}

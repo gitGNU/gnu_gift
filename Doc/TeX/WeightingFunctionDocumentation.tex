@@ -1,0 +1,140 @@
+\documentclass[10pt]{article}
+\usepackage{xspace} 
+\usepackage{amstex}
+\usepackage{a4}
+\usepackage{epsfig}
+\usepackage{cite}
+% Im Moment leer
+
+%Marking a text passage as ToDo
+\newcommand{\ToDo}[1]{\marginpar{{\tt ToDo}}\underline{#1}}
+
+\newcommand{\interval}[1]{{\iota_{#1}}}
+\newcommand{\discrete}{\delta}
+\newcommand{\continuous}{\varphi}
+\newcommand{\continuousVec}{{\vec\varphi}}
+\newcommand{\sdev}{\sigma}
+\newcommand{\GaussF}[1]{G_{#1}}
+\newcommand{\Gauss}[2]{\GaussF{#1}\left({#2}\right)}
+\newcommand{\GaussFSdev}{\GaussF{\sdev}}
+\newcommand{\etal}{{\em et al.}}
+\newcommand{\mybox}[2]{
+\begin{figure}
+\epsfig{file=#1.eps,width=12cm}
+\caption{\label{#1}{\em #2}}
+\end{figure}
+
+}
+\newcommand{\strich}{^\prime}
+
+\newcommand{\ImageToDiscreteFeatures}{\Lambda}
+\newcommand{\CumulativeDistributionFunction}{\Phi}
+\newcommand{\eg}{\emph{e.g.}\@\xspace} 
+\newcommand{\ie}{\emph{i.e.}\@\xspace} 
+\newcommand{\etc}{\emph{etc.}\@\xspace} 
+\newcommand{\ldq}{\lq\lq}
+\newcommand{\rdq}{\rq\rq\xspace}
+
+
+\newcommand{\df}{\mathrm{df}}
+\newcommand{\cf}{\mathrm{cf}}
+\newcommand{\wf}{\mathrm{wf}}
+\newcommand{\nf}{\mathrm{nf}}
+\newcommand{\tf}{\mathrm{tf}}
+\newcommand{\lf}{\mathrm{lcf}}
+\newcommand{\abs}{\mathrm{abs}}
+
+
+\begin{document}
+
+\title{GIFT's current weighting schemes}
+\author{Wolfgang M\"uller}
+
+\maketitle
+
+For the combination of query image weights GIFT uses the formula:
+\[
+	\df_{qj}=\sum_{i=1}^N \df_{ij}\cdot R_i
+\]
+
+I define the normalization factor:
+\[
+	\nf:=\sum_i \abs(R_i);
+\]
+
+For scoring GIFT uses:
+\[
+	s_{k_{new}}=s_{k_{old}} + \wf(q,k,j)
+\]
+
+$\wf$ is here the weighting function. Before giving a table of
+weighting functions I define some helper functions which depend on the
+collection frequency of an image and  the kind of feature (block or
+histogram) as well as on the actual query and the actual document.
+
+The standard factor for a document $k$, 
+query $q$ and feature $j$:
+\[
+	\wf^{0}_{kqj}:=
+	\begin{cases}	
+		\frac{sgn(\tf_{qj})}{\nf}&\text{for block features}\\
+
+		\frac 1{\nf}\cdot sgn(\tf_{qj})\cdot \min
+		\left\{\abs\left(\frac{\tf_{qj}}{\nf}\right),
+		\tf_{kj}\right\}& \text{for histogram features}\\
+
+	\end{cases}
+\]
+
+There arise two different logarithmic factors of the collection frequency:
+\[
+	\lf_{1j}=\begin{cases}
+		\log(\frac 1{\cf_j})& \text{for block features}\\
+		1 & \text{for histogram features}\\
+		\end{cases}
+\]
+and
+\[
+	\lf_{2j}=\begin{cases}
+		\log(\frac 1{\cf_j}-1+\epsilon)& \text{for block features}\\
+		1 & \text{for histogram features}\\
+		\end{cases}
+\]
+where the $\epsilon$ is added to avoid overflows.
+
+The weighting schemes presently coded are:
+
+\begin{tabular}{|c|p{3cm}|l|}
+\hline
+2&Best weighted probabilistic weight & 
+	$\left(0.5+\frac{0.5 \tf_{kj}}{\max_j \tf_{kj}}\right)\cdot\lf_{2j}\cdot 
+	\wf^0_{qkj}$\\\hline
+3&Classical idf weight & 
+	$\left(\lf_{1j}\right)^2\cdot \wf^0_{qkj}$\\\hline
+4&Binary term independence & $\lf_{2j}\cdot \wf^0_{qkj}$\\\hline
+5&Standard tf weight& $\frac 1{\sqrt{\sum_i\tf_{qi}^2}}\cdot\wf^0_{qkj}\cdot
+	\begin{cases}
+		{\tf_{kj}\cdot\tf_{qj}}&\text{for block features}\\
+		1 &\text{for historgram features}\\
+	\end{cases}$\\\hline
+6&Coordination level&$\wf^0_{qkj}$\\\hline
+\end{tabular}
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,30 @@
+# C compiler
+CC		=	cc
+
+# directories
+HOME = /user/u7/squire
+LIBDIR = -L$(HOME)/lib
+INCDIR = -I$(HOME)/include
+
+# libraries
+LIBS	=   -lsqppm -lfft -lm -lmalloc
+
+CFLAGS = -xO3 $(INCDIR) $(LIBDIR)
+
+MAIN =	gabor
+
+# objects
+OBJS =	$(MAIN).o\
+		rgb2hsv_utils.o
+
+# sources
+SRCS = $(OBJS:%.o=%.c)
+
+$(MAIN): $(MAIN).proto $(OBJS)
+	$(CC) $(CFLAGS) -o $(MAIN) $(OBJS) $(LIBS)
+
+$(MAIN).proto: $(SRCS)
+	makeproto $(SRCS) > $(MAIN).proto
+
+clean:
+	rm $(OBJS) $(MAIN).proto

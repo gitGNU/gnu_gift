@@ -1,0 +1,259 @@
+#!/usr/bin/perl -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+#!/usr/bin/perl -w
+
+use POSIX ;#(floor ceil)
+
+=pod
+
+This class addresses the problem of constructing a graph from
+many graphs. In general this will be something like constucting an 
+average graph from a graph. 
+
+To a graph collection, you can add point lists, which will be treated like
+a non-closed polygon drawing 
+
+You can unite two collections,
+and you can turn the collection into a string.
+
+=cut
+
+
+
+package CGraphCollection;
+require Exporter;
+@ISA    = qw(Exporter);
+@EXPORT = qw(new
+	     init
+	     addPointList
+	     unite
+	     toString
+	     transform
+	     output);
+
+
+###############################
+#
+# constructs a new graph collection
+# Parameters
+# from, to, stepwidth
+sub new( $;){
+  my $class=shift;
+  my $self={};
+  
+  bless $self,$class;
+  
+  $self->init(@_);
+  return $self;
+}
+
+sub init{
+  my$self=shift;
+  my $inFrom=shift;
+  my $inTo=shift;
+  my $inStepWidth=shift;
+  
+  my @lPlot;
+  my $i;
+  for($i=$inFrom;
+      $i<=$inTo;
+      $i+=$inStepWidth){
+    push @lPlot,[$i,[]];	# an X and a List of Ys
+  }
+  $self->{from}=$inFrom;
+  $self->{to}=$inFrom;
+  $self->{stepWidth}=$inStepWidth;
+  $self->{points}=\@lPlot;
+}
+
+
+###############################
+#
+# transform a value into an array index
+#
+#
+sub xToIndex( $ ){
+  my$self=shift;
+  my $inX=shift;
+  
+  return POSIX::floor(
+		      ($inX-$self->{from})/$self->{stepWidth}
+		     );
+}
+
+###############################
+#
+# Add a  list of points to the graph.
+# the points are given as a flat list
+# of values in the sequence x,y,x,y...
+#
+sub addPointList( @ ){
+  my$self=shift;
+  my($oldX,$oldY);
+  my($x,$y);
+  
+  while(defined($x=shift) && defined($y=shift)){
+    
+    if(defined($oldX) && defined($oldY)){
+      my $lFrom=$self->xToIndex($oldX);
+      my $lTo=$self->xToIndex($x);
+      my $lSteps=$lTo-$lFrom;
+
+
+      my $lDifference=0;
+      my @lIteratorList;
+      if($lSteps>=1){
+	@lIteratorList=($lFrom..($lTo-1));
+	$lDifference=($y-$oldY)/$lSteps;
+      }else{
+	$lDifference=0;
+	@lIteratorList=($lFrom);
+      }
+      
+      print "($x;$y) $lFrom $lTo STEPS: $lSteps, $lDifference\n" if($self->{DEBUG}->{addPointList});
+
+      my $i;
+      
+      for $i (@lIteratorList){
+	my $lPushValue=$oldY+(($i-$lFrom)
+			      *$lDifference);
+	if($self->{DEBUG}->{addPointList}){
+	  print "pushing into $i the value ",$lPushValue,"\n";
+	}
+	push (@{$self->{points}->[$i]->[1]},
+	      $lPushValue);
+      }
+#      print "ENDFOR\n";
+    }
+    $oldX=$x;
+    $oldY=$y;
+  }
+  if(defined($oldX) && defined($oldY)){
+    push (@{$self->{points}->[$self->xToIndex($oldX)]->[1]},
+	  $oldY+($lSteps*$lDifference));
+  }
+}
+
+###############################
+#
+# unite the data in two graphcollections
+# in a way that they can be used for the calculation
+# of averages etc.
+sub unite{
+  my$self=shift;
+  my $inGraph=shift;
+  
+  print "uniting $self with $inGraph\n";
+
+  if($self->{from}==
+     $inGraph->{from}
+     and
+     $self->{to}==
+     $inGraph->{to}
+     and
+     $self->{stepWidth}==
+     $inGraph->{stepWidth}
+    ){
+    #simply splice the lists
+    my $i;
+    
+    my $endfor=scalar(@{$self->{points}});
+    for($i=0;
+	$i<$endfor;
+	$i++){
+      @{$self->{points}->[$i]->[1]}=
+	(@{$self   ->{points}->[$i]->[1]},
+	 @{$inGraph->{points}->[$i]->[1]});
+    }
+  }else{
+    die "Graph parameters are not the same!\n";
+  }
+}
+
+###############################
+#
+# turn this list of point lists into a string
+# using a string to evaluate
+# this string assumes to be fed its data in $lPoint 
+# (one list of x value and y values
+sub toString( ;$ ){
+  my$self=shift;
+  my $lResult;
+  my $printer=shift || 
+    '
+  my($lSum,$i);
+
+  foreach $i (@{$lPoint->[1]}){
+   $lSum+=$i;
+   $lSquareSum+=$i*$i;
+  }
+
+  if(defined($lSum)){
+    my $lAverage=$lSum/scalar(@{$lPoint->[1]});
+
+    $lResult.= "$lPoint->[0], Average: $lAverage, Points: ";
+    foreach $i (@{$lPoint->[1]}){
+      $lResult.="$i ";
+    }
+    $lResult.="\n";
+  }
+';
+  my $lPoint;
+  foreach $lPoint (@ {$self->{points}}){
+    eval($printer);
+    if($@){
+      print "an eval error occurred $@\n";
+    }
+  }
+  return $lResult;
+}
+###############################
+#
+# like toString it allows looking
+# at each element of the list,
+# however, it does not print
+sub transform( ;$ ){
+  my$self=shift;
+  my $lResult;
+  my $printer=shift || 
+    '
+  my($lSum,$i);
+
+  foreach $i (@{$lPoint->[1]}){
+   $lSum+=$i;
+   $lSquareSum+=$i*$i;
+  }
+
+  if(defined($lSum)){
+    my $lAverage=$lSum/scalar(@{$lPoint->[1]});
+
+    $lResult.= "$lPoint->[0], Average: $lAverage, Points: ";
+    foreach $i (@{$lPoint->[1]}){
+      $lResult.="$i ";
+    }
+    $lResult.="\n";
+  }
+';
+  my $lPoint;
+  foreach $lPoint (@ {$self->{points}}){
+    eval($printer);
+  }
+  return $lResult;
+}

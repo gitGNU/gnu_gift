@@ -1,0 +1,123 @@
+require 5.002;
+use CXMLTreeVisitor;
+
+#############################################################
+#
+# CXTVTripletList
+#
+# a subclass of CXMLTreeVisitor
+# it transforms an XML tree (of the same form as generated 
+# by CGIFTLink::tripletListToTree) to a tripletList which
+# then can be returned to GIFT.
+#
+package CXTVTripletList;
+require Exporter;
+
+@ISA= qw(Exporter
+	 CXMLTreeVisitor);
+@EXPORT_OK= qw(new
+	       startVisit
+	       endVisit
+	       getTripletList
+	      );
+
+sub new(){
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize();
+  return $self;
+}
+
+sub initialize(){
+  my$self=shift;
+
+  $self->{"triplet-list"}=[];
+}
+
+########################################
+#
+# startVisit
+#
+# This function transforms each node visited into triplets
+# which are appended to @{$self->{"triplet-list"}}
+#
+# PARAMETERS: The startVisit function takes a tree node (i.e. a hash reference)
+# as parameter. The parameter is provided by CGIFTLink::traverse 
+#
+# RETURNS:    nothing
+#
+sub startVisit( $ ){
+  my $self=shift;
+  my $lRoot=shift;
+
+  my $const_element=1;
+  my $const_up=2;
+  my $const_attribute=3;
+  my $const_text=4;
+
+  if(defined($lRoot->{element})){
+
+    push @{$self->{"triplet-list"}},$const_element,$lRoot->{element},"";
+
+    my $i;
+    for $i (keys(%{$lRoot->{attributes}})){
+
+      push @{$self->{"triplet-list"}},$const_attribute,$i,$lRoot->{attributes}->{$i};
+
+    }
+  }else{
+
+    print "TEXT NODE: \n",$lRoot->{text},"\n\n";
+
+    push @{$self->{"triplet-list"}},$const_text,"",$lRoot->{text};
+  }
+}
+#########################################
+#
+# endVisit
+#
+# this endVisit moves up the tree after having inserted an element
+#
+# PARAMETERS: The endVisit function takes a tree node (i.e. a hash reference)
+#    as parameter. The parameter is provided by CGIFTLink::traverse 
+#
+# RETURNS:    nothing
+#
+sub endVisit( $ ){
+  my$self=shift;
+  my $lRoot=shift;
+
+  my $const_element=1;
+  my $const_up=2;
+  my $const_attribute=3;
+  my $const_text=4;
+
+  if(defined($lRoot->{element})){
+
+    push @{$self->{"triplet-list"}},$const_up,"","";
+
+  }else{
+
+    print "TEXT NODE: \n",$lRoot->{text},"\n\n";
+
+    push @{$self->{"triplet-list"}},$const_up,"","";
+  }
+}
+
+
+
+########################################
+#
+# getTripletList
+#
+# RETURNS: @{$self->{"triplet-list"}}, the triplet list
+# generated during traversal
+#
+sub getTripletList(){
+  my$self=shift;
+
+  return @{$self->{"triplet-list"}};
+}
+
+

@@ -1,0 +1,21 @@
+0.1 sourcecode evaluation package for the FSF
+
+0.1.3	first "preliminarily GNUed version for the FSF"
+	There are a couple of bugfixes and new features, as well as a 
+	change of the name from Viper to GIFT
+
+0.1.4	improvement of Perl query engine
+
+0.1.5	Plugin support.
+
+	Multithreading support, 
+	try ./configure --enable-multi-threading <other options>
+	for using this feature
+
+	Interactive script for automatic installation of prerequisites:
+	SnakeCharmer
+	Perl modules.
+	Try ./configure --enable-interactive <other options>
+	for using this feature
+
+	Better socket code. Got rid of some emabarassing workarounds.

@@ -1,0 +1,294 @@
+// -*- mode: c++ -*- 
+#line 3 "CAccessorCollection.pre-cc"
+/* 
+
+    GIFT, a flexible content based image retrieval system.
+    Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+*/
+#include "mrml_const.h"
+#include "my_throw.h"
+#include "my_assert.h"
+#include <assert.h>
+#include "GIFTExceptions.h"
+#include "CAccessorCollection.h"
+#include "CAttributeList.h"
+#include "xmlparse.h"
+#include <fstream>
+#include "CXMLElement.h" // for adding collections 
+#include "directory.h"
+
+void startAccessorCollectionElement(void *userData, 
+				    const char *inElementName, 
+				    const char **inAttributes)
+{
+  bool lSuccessful=true;
+  //the calling CSessionManager
+  CAccessorCollection* lCaller((CAccessorCollection*)userData);
+  
+
+#ifdef CAC_DEBUG_PRINTOUT
+  cout << "<"
+       << inElementName
+       << " WhileReading=\"true\" _"
+       << flush;
+#endif
+  CAttributeList lAttributes(inAttributes);
+#ifdef CAC_DEBUG_PRINTOUT
+  cout << "--"
+       << flush;
+  cout << lAttributes.size()
+       << "."
+       << flush;
+#endif
+
+  if(string(inElementName)
+     ==
+     string(mrml_const::collection)
+     || (lCaller->getCollectionInConstruction())
+     ){
+      {
+	if(!lCaller->getCollectionInConstruction()){
+	  lCaller->startCollectionConstruction(new CXMLElement(inElementName,
+							       inAttributes));
+	}else{
+	  lCaller->getCollectionInConstruction()->addChild(inElementName,
+							   inAttributes);
+	}
+      }
+  }
+#ifdef CAC_DEBUG_PRINTOUT
+  cout << " >"
+       << endl
+       << flush;
+#endif
+}
+
+void endAccessorCollectionElement(void *userData, const char *inElementName){
+  CAccessorCollection* lCaller((CAccessorCollection*)userData);
+  if((string(inElementName)
+      ==
+      string(mrml_const::collection))
+     ||lCaller->getCollectionInConstruction()){
+    {
+      my_assert(lCaller->getCollectionInConstruction(),
+		"Collection in construction not found");
+      
+      lCaller->getCollectionInConstruction()->moveUp();
+      if(lCaller->getCollectionInConstruction()->isSubtreeFinished()){
+	lCaller->addCollection(lCaller->getCollectionInConstruction());
+	lCaller->startCollectionConstruction((CXMLElement*)0);
+      }
+    }
+  }
+
+#ifdef CAC_DEBUG_PRINTOUT
+  cout << "</"
+       << inElementName
+       << " >"
+       << endl;
+#endif
+}
+
+CAccessorCollection::const_iterator CAccessorCollection::begin()const{
+  return mIDToProxy.begin();
+};
+CAccessorCollection::const_iterator CAccessorCollection::end()const{
+  return mIDToProxy.end();
+};
+
+CAccessorCollection::CAccessorCollection(string inFileName):
+  mCollectionInConstruction(0),
+  mFactory(new CAccessorFactoryContainer()){
+  {
+    cout << "-----" << endl
+	 << "Configuring CAccessorCollection" << endl;
+    // an XMLElement specifying what directories to scan
+    // presently this is just one directory,
+    // the libdir
+    CXMLElement* lFilesToScan(new CXMLElement("directories-to-scan",0));
+    CXMLElement* lTemp(new CXMLElement("directory",0));
+    lTemp->addAttribute("name",__LIBDIR__);
+    lFilesToScan->addChild(lTemp);
+    lFilesToScan->moveUp();
+    // configure the factory i.e. make it scan directories
+    mFactory->configure(lFilesToScan);
+  }
+
+  ifstream lConfigFile(inFileName.c_str());
+  if(lConfigFile){
+      lConfigFile.seekg(0,ios::end);
+      int lSize=lConfigFile.tellg();
+      char lConfigFileContent[lSize+1];
+      
+      lConfigFile.seekg(0,ios::beg);
+      lConfigFile.read(lConfigFileContent,
+			lSize);
+      
+      lConfigFileContent[lSize]=0;
+      
+      cout << "--" 
+	   << "gift::CAccessorCollection : I read the config file " << endl
+	   << inFileName << endl
+#ifdef CAC_DEBUG_PRINTOUT
+	   << "This file contains the following string: " << endl
+	   << lConfigFileContent 
+	   << endl
+#endif
+	   << "Now we will parse the contents of this file using an XML parser "
+	   << endl;
+
+      XML_Parser lParser = XML_ParserCreate(NULL);//default encoding
+      XML_SetUserData(lParser,
+		      this);
+      XML_SetElementHandler(lParser, 
+			    startAccessorCollectionElement, 
+			    endAccessorCollectionElement);
+      int lDone=true;
+
+      do {
+	if (!XML_Parse(lParser, 
+		       lConfigFileContent, 
+		       lSize, 
+		       lDone)) {
+	  cerr << "XML ERROR: "
+	       << XML_ErrorString(XML_GetErrorCode(lParser))
+	       << " at line "
+	       << XML_GetCurrentLineNumber(lParser)
+	       << endl;
+	  exit(1);
+	}
+      } while (!lDone);
+
+      cout << "The config file has been parsed " << endl
+	   << "successfully maybe other parts" << endl
+	   << "of the program will also parse" << endl
+	   << "the same config file. " << endl
+	   << "FINISHED configuring CAccessorCollection." << endl;
+      XML_ParserFree(lParser);  
+  }else{
+    my_throw(string(string("could not open config file_")+inFileName+string("_")).c_str());
+  }
+};
+///
+void CAccessorCollection::addCollection(CXMLElement* inCollectionElement){
+  pair<bool,string> lID=inCollectionElement->stringReadAttribute(mrml_const::collection_id);
+  
+  if(!lID.first){
+    cout << "throwing: "
+	 << VEProgrammingMistake("addAccessor")
+	 << endl
+	 << flush;
+    my_throw(VEProgrammingMistake("addAccessor"));
+  }
+
+  if(mIDToProxy.find(lID.second)
+     !=
+     mIDToProxy.end()){
+    cout << "The ID I am looking for is:"
+	 << lID.second
+	 << ", and I did not find it"
+	 << endl;
+    cout << "throwing: "
+	 << VEDoubleInsert("addAccessor")
+	 << endl
+	 << flush;
+    my_throw(VEDoubleInsert("addAccessor"));
+  }else{
+    mIDToProxy[lID.second] = (mCurrentProxy = new CAccessorProxy(*mFactory));
+    mIDToProxy[lID.second]->setCollectionElement(inCollectionElement);
+    cout << "CAccessorCollection: Adding collection " 
+	 << inCollectionElement->stringReadAttribute("collection-name").second << endl
+	 << "under the ID " << lID.second << endl;
+	 
+  }
+};
+///
+CAccessorProxy& CAccessorCollection::getCurrentProxy(){
+  return *mCurrentProxy;
+};
+///
+CAccessorProxy& CAccessorCollection::getProxy(const string& inID){
+  if(mIDToProxy.find(inID)!=mIDToProxy.end())
+    return *mIDToProxy[inID];
+  else{
+    cout << "The ID I am looking for is:"
+	 << inID
+	 << ", and I did not find it"
+	 << endl;
+    my_throw(VENotFound(string("mIDToProxy _"+inID+"_").c_str()));
+  }
+};
+
+
+//get some default accessor: simply take the first
+string CAccessorCollection::getDefaultAccessorID()const{
+  return mIDToProxy.begin()->first;
+};
+
+//turn this into xml (simplissime)
+CXMLElement* CAccessorCollection::toXMLElement()const{
+
+    cout << "x" 
+	 << flush
+	 << toXML(0)
+	 << endl;
+
+  CXMLElement* lReturnValue(new CXMLElement(mrml_const::collection_list,0));
+  
+  for(CContent::const_iterator i=mIDToProxy.begin();
+      i!=mIDToProxy.end();
+      i++){
+    CXMLElement* lNewChild(i->second->toXMLElement());
+    if(lNewChild){
+      lReturnValue->addChild(lNewChild);
+      lReturnValue->moveUp();
+    }
+  }
+  return lReturnValue;
+};
+//turn this into xml (simplissime)
+string CAccessorCollection::toXML(bool isPrivate)const{
+  string lRetVal=string("<")+mrml_const::collection_list+">\n";
+
+  
+
+  for(CContent::const_iterator i=mIDToProxy.begin();
+      i!=mIDToProxy.end();
+      i++){
+    lRetVal+=i->second->toXML(isPrivate);
+  }
+
+  lRetVal+=string("</")+mrml_const::collection_list+">\n";
+  return lRetVal;
+};
+CXMLElement* CAccessorCollection::getCollectionInConstruction(){
+  return mCollectionInConstruction;
+}
+void CAccessorCollection::startCollectionConstruction(CXMLElement*
+						 inCollection){
+  mCollectionInConstruction=inCollection;
+}
+
+//destroying the content of this
+CAccessorCollection::CContent::~CContent(){
+  for(const_iterator i=begin();
+      i!=end();
+      i++){
+    delete i->second;
+  }
+};

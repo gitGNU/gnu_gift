@@ -1,0 +1,495 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+# Author of this file: Wolfgang Müller
+
+#
+# contact people for MRML and MPEG
+#  check things out: would we be at a pre-meeting?
+#
+
+
+
+require 5.002;
+#use strict;
+# use Socket;
+# use FileHandle;
+# use English;
+# use IO::File;
+# use IO::Socket;
+# use XML::Parser;
+# use CQueryParadigmMatcher;
+
+
+
+#############################################################
+#
+# CXMLTreeVisitor
+#
+# this visitor class is intended as parameter to 
+# CGIFTLink::traverseTree
+# CGIFTLink::traverseTree will call the visit function of
+# this class.
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS CLASS
+# THERE IS AN ERROR
+#
+# SUBCLASS THIS CLASS TO OBTAIN WHAT YOU WANT
+#
+package CXMLTreeVisitor;
+require Exporter;
+
+@ISA= qw(Exporter);
+@EXPORT_OK= qw(new
+	       visit
+	      );
+
+sub new(){
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize();
+  return $self;
+}
+
+sub initialize(){
+  my$self=shift;
+
+}
+
+#########################################
+#
+# visit
+#
+# this visit function is intended as example, and prints the node
+# it gets as a parameter.
+#
+# PARAMETERS: The visit function takes a tree node (i.e. a hash reference)
+# as parameter. The parameter is provided by CGIFTLink::traverse 
+#
+# RETURNS:    nothing
+#
+sub visit( $ ){
+  my $self=shift;
+  my $lRoot=shift;
+
+  if(defined($lRoot->{element})){
+
+    print "Node: ",$lRoot->{element}, "\n";
+
+    my $i;
+    for $i (keys(%{$lRoot->{attributes}})){
+
+      print "    ",$i,"=\"",$lRoot->{attributes}->{$i},"\"\n";
+      
+    }
+  }else{
+
+    print "TEXT NODE: \n",$lRoot->{text},"\n\n";
+
+  }
+}
+
+
+#############################################################
+#
+# CXTVTripletList
+#
+# a subclass of CXMLTreeVisitor
+# it transforms an XML tree (of the same form as generated 
+# by CGIFTLink::tripletListToTree) to a tripletList which
+# then can be returned to GIFT.
+#
+package CXTVTripletList;
+require Exporter;
+
+@ISA= qw(Exporter
+	 CXMLTreeVisitor);
+@EXPORT_OK= qw(new
+	       visit
+	       getTripletList
+	      );
+
+sub new(){
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize();
+  return $self;
+}
+
+sub initialize(){
+  my$self=shift;
+
+  $self->{"triplet-list"}=[];
+}
+
+########################################
+#
+# visit
+#
+# This function transforms each node visited into triplets
+# which are appended to @{$self->{"triplet-list"}}
+#
+# PARAMETERS: The visit function takes a tree node (i.e. a hash reference)
+# as parameter. The parameter is provided by CGIFTLink::traverse 
+#
+# RETURNS:    nothing
+#
+sub visit(){
+  my $self=shift;
+  my $lRoot=shift;
+
+  my $const_element=1;
+  my $const_up=2;
+  my $const_attribute=3;
+  my $const_text=4;
+
+  if(defined($lRoot->{element})){
+
+    push @{$self->{"triplet-list"}},$const_element,$lRoot->{element},"";
+
+    my $i;
+    for $i (keys(%{$lRoot->{attributes}})){
+
+      push @{$self->{"triplet-list"}},$const_attribute,$i,$lRoot->{attributes}->{$i};
+
+    }
+  }else{
+
+    print "TEXT NODE: \n",$lRoot->{text},"\n\n";
+
+    push @{$self->{"triplet-list"}},$const_text,"",$lRoot->{text};
+  }
+}
+
+########################################
+#
+# getTripletList
+#
+# RETURNS: @{$self->{"triplet-list"}}, the triplet list
+# generated during traversal
+#
+sub getTripletList(){
+  my$self=shift;
+
+  return @{$self->{"triplet-list"}};
+}
+
+
+############################################################
+#
+# CGIFTLink
+#
+# A class for Perl-side of the link between
+# GIFT and Perl
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS CLASS
+# THERE IS AN ERROR
+#
+# SUBCLASS THIS FOR CREATING YOUR OWN QUERY PROCESSORS
+#
+package CGIFTLink;
+
+@ISA= qw(Exporter);
+@EXPORT_OK= qw(new
+	       tripletListToTree
+	      );
+
+########################################
+#
+# tripletListToTree
+#
+# Transforms a list of triplets given by gift
+# into a tree of XML elements
+#
+# PARAMETERS: @_ contains a flat list of elements
+#   instruction, name, value, instruction, name, value, ...
+#
+# RETURNS:    the root of the tree generated
+#
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS FUNCTION UNLESS 
+# THERE IS AN ERROR
+#
+sub tripletListToTree{
+
+  my$self=shift;
+
+  $const_element=1;
+  $const_up=2;
+  $const_attribute=3;
+  $const_text=4;
+
+  my $lInstruction;
+  my $lName;
+  my $lValue;
+
+  my $lReturnTree;
+
+  do{
+
+    $lInstruction=shift;
+    $lName=shift;
+    $lValue=shift;
+
+    print "---Received: $lInstruction, $lName, $lValue\n";
+
+    if(($lInstruction == $const_element)
+       ||($lInstruction == $const_text)
+       ){
+      #
+      # I make a new subtree 
+      # containing just the name
+      # of the element
+      #
+      my $lTree;
+  
+      if($lInstruction == $const_element){
+	$lTree={
+		element => $lName,
+		attributes => {},
+		children => []
+	       };
+      }
+      if($lInstruction == $const_text){
+	print "BEFORE TEXTT $lValue\n";
+
+	unless($lValue=~m/^(\s|\n)+$/){
+	  print "TEXTT $lValue\n";
+	  $lTree={
+		  text => $lValue
+		 };
+	}
+
+      }
+
+      if(defined($lTree)){
+	unless(defined($lReturnTree)){
+	  
+	  $lReturnTree=$lTree;
+	  
+	}else{
+	  
+	  push @{$self->{children}},$lTree;
+	  
+	}
+	unshift  @{$self->{"insertion-stack"}},$lTree;
+      }
+    }
+
+    if($lInstruction == $const_up){
+      shift @{$self->{"insertion-stack"}};
+    }
+
+    if($lInstruction == $const_attribute){
+
+      $self->{"insertion-stack"}->[0]->{attributes}->{$lName} = $lValue;
+
+    }
+
+  }while(defined($lInstruction,
+		 $lName,
+		 $lValue));
+
+  return $lReturnTree;
+}
+
+########################################
+#
+# traverseTree
+#
+# traverses a tree (as formed by tripletListToTree)
+# and lets a CXMLVisitor visit each node
+#
+# RETURNS:    nothing
+#
+sub traverseTree( $$ ){
+
+  my$self=shift;
+
+  my $lRoot=shift;
+  my $lVisitor=shift;
+
+  $lVisitor->visit($lRoot);
+
+  if(defined($lRoot->{children})){
+
+    my $i;
+
+    foreach $i (@{$lRoot->{children}}){
+      $self->traverseTree($i,$lVisitor);
+    }
+  }
+}
+
+
+########################################
+#
+# processGIFTQueryCall
+#
+# PARAMETERS: @_ contains a flat list of elements
+#    instruction, name, value, instruction, name, value, ...
+#    it is suspected to contain a "query" element
+#
+# RETURNS: REVERSED, a flat list of elements of the same structure
+#    as the parameters, however containing a "query-result" 
+#    element. THE LIST IS REVERSED TO MAKE THINGS EASIER FOR GIFT
+#    WHO WILL POP THINGS OFF A STACK.
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS FUNCTION UNLESS 
+# THERE IS AN ERROR
+#
+sub processGIFTQueryCall( ; ){
+  my$self=shift;
+
+  # transform all parameters to a tree...
+  my $lQueryTree=$self->tripletListToTree(@_);
+
+  #...then call query,...
+  my $lQueryResultTree=$self->query($lQueryTree);
+
+  #...and return the reversed triplet list
+  return reverse($self->treeToTripletList($lQueryResultTree));
+}
+  
+########################################
+#
+# treeToTripletList
+#
+# transforms an XML tree into a triplet list
+#
+# PARAMETERS: the root of the subtree to be transformed
+#
+# RETURNS:    a flat list of 
+# instruction, value, name, instruction, value, name, instruction ...
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS FUNCTION UNLESS 
+# THERE IS AN ERROR
+#
+sub treeToTripletList( $ ){
+  my$self=shift;
+
+  my $lRoot=shift;
+
+  my $lVisitor=new CXTVTripletList();
+
+  traverseTree($lRoot, $lVisitor);
+
+  print "The triplets: ",join(":",$lVisitor->getTripletList()),"\n";
+
+  return $lVisitor->getTripletList();
+}
+
+
+########################################
+#
+# setAlgorithm
+#
+# sets $self->{algorithm} to the root of an XML tree
+# containing an "algorithm" element. This can contain
+# useful configuration information, depending on your 
+# algorithm
+#
+# PARAMETERS:   tripletList containing "algorithm" element
+#
+# SIDE EFFECTS: sets $self->{algorithm}
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS FUNCTION UNLESS 
+# THERE IS AN ERROR
+#
+sub setAlgorithm( ; ){
+  my$self=shift;
+
+  print "setAlgorithm was called \n";
+
+  my $lRoot=$self->tripletListToTree(@_);
+
+  $self->{algorithm}=$lRoot;
+}
+
+########################################
+#
+# setCollection
+#
+# sets $self->{collection} to the root of an XML tree
+# containing a "collection" element. This can contain
+# useful configuration information, depending on your 
+# algorithm
+#
+# PARAMETERS:   tripletList containing "collection" element
+#
+# SIDE EFFECTS: sets $self->{collection}
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS FUNCTION UNLESS 
+# THERE IS AN ERROR
+#
+
+sub setCollection( ; ){
+  my$self=shift;
+  
+  print "setCollection was called \n";
+
+  my $lRoot=$self->tripletListToTree(@_);
+
+  $self->{collection}=$lRoot;
+}
+
+########################################
+#
+# query
+#
+# Processes the query given by $self->{tree}
+# 
+# PARAMETERS: The tree to be processed
+#
+# RETURNS:    an XML tree containing a "query-result" element
+#
+# THIS FUNCTION IS INTENDED TO BE OVERLOADED
+#
+sub query( $ ){
+  my $self=shift;
+
+  my $inQuery= shift;# this would now contain an XML tree
+
+  #returning a constant XML tree
+  return {
+	  element => "query-result",
+	  attributes => {},
+	  children => [
+		       {
+			element    => "query-result-element-list",
+			attributes => {},
+			children   => [
+				       {
+					element    => "query-result-element",
+					attributes => {
+						       "calculated-similarity"  => 0.885884,
+						       "image-location"         => "http://localhost/~muellerw/images/TSR500/b_1027_scaled_small_thumbnail_jpg.jpg",
+						       "thumbnail-location"     => "http://localhost/~muellerw/images/TSR500/b_1027_scaled_small_thumbnail_jpg.jpg" 
+						      },
+					children   => []
+				       }
+				      ]
+		       }
+		      ]
+	 };
+}
+
+

@@ -1,0 +1,15 @@
+<?xml version="1.0" standalone="no" ?>
+<!DOCTYPE mrml SYSTEM "~/public_html/dtd/mrml.dtd">
+<mrml sessionid="1">
+  <iquerystep resultsize="10" resultcutoff="0" collectionid="2" algorithmid="7">
+    <iuserrelevancelist>
+      <iuserrelevanceelement 
+	userrelevance="1" 
+	imagelocation="http://pc7170.unige.ch/~gift/databases/TSR500/b_1000_scaled_small.jpg"/>
+      <iuserrelevanceelement 
+	userrelevance="-1" 
+	imagelocation="http://pc7170.unige.ch/~gift/databases/TSR500/b_1009_scaled_small.jpg"/>
+    </iuserrelevancelist>
+  </iquerystep>
+</mrml>
+

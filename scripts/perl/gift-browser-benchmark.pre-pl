@@ -1,0 +1,181 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+
+#############################################################
+#
+# This program uses CFCMovingTarget for making a moving  
+# target test.
+#
+#
+
+
+#############################################################
+#
+# if you need printouts for what happens inside CFeedbackClient,
+# modify CFeedbackClient.pre-pm:
+#
+# the hash vDEBUG (line 98) in CFeedbackClient.pre-pm 
+# will be of interest for you
+#
+#############################################################
+
+
+
+# Author of this file: Wolfgang Müller 2000-03-20
+
+require 5.002;
+#use strict;
+
+use lib '__BINDIR__'; # for including CFeedbackClient
+use CFCMovingTarget;
+
+package main;
+
+print "Usage: gift-browser-benchmark.pl host:port? ";
+
+#
+# Read the images from the command line
+#
+{#for scoping
+  my $lHost= shift || "localhost:12789";
+  my $OUTFILE=shift || "gift-mrml-browser-benchmark-outfile.html";
+
+  $OUTFILE=">$OUTFILE";
+  
+  my @lQuery;
+  #we are making a list of
+  #pairs from the flat list of
+  #arguments
+  
+  # a default query
+  my $lFeedbackClient=new CFCMovingTargetTest();
+  $lFeedbackClient->setAddress($lHost);
+  
+  $lFeedbackClient->doQueryGroup(["http://gift.unige.ch/images/TSR500/b_1007_scaled_small.jpg",
+ 				"http://gift.unige.ch/images/TSR500/b_1014_scaled_small.jpg",
+#   				"http://gift.unige.ch/images/TSR500/b_1020_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1023_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1024_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1025_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1026_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1029_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1030_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1038_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1041_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1049_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1050_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1054_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1084_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1090_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1091_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1093_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1098_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1110_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1117_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1119_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1123_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1130_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1141_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1144_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1145_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1151_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1152_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1154_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1157_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1158_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1161_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1162_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1163_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1165_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1170_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1174_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1180_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1192_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1193_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1195_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1197_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1198_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1206_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1207_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1212_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1219_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1220_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1227_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1228_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1229_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1239_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1241_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1247_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1251_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1260_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1284_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1290_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1293_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1299_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1304_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1313_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1323_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1329_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1335_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1341_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1345_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1346_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1355_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1359_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1363_scaled_small.jpg",
+#   				"http://gift.unige.ch/images/TSR500/b_1366_scaled_small.jpg",
+#   				"http://gift.unige.ch/images/TSR500/b_1371_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1380_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1385_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1388_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1405_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1408_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1421_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1428_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1436_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1440_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1447_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1450_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1456_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1460_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1462_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1469_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1470_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1471_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1473_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1475_scaled_small.jpg",
+#   				"http://gift.unige.ch/images/TSR500/b_1479_scaled_small.jpg",
+#   				"http://gift.unige.ch/images/TSR500/b_1484_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1485_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1488_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1491_scaled_small.jpg",
+#  				"http://gift.unige.ch/images/TSR500/b_1498_scaled_small.jpg",
+ 				"http://gift.unige.ch/images/TSR500/b_1499_scaled_small.jpg"
+				 ],
+				 {address      => "localhost:12790",
+				  "collection-id"   => "c-52-41-23-27-2-100-1-86-0",
+				  "url-prefix" => "http://gift.unige.ch/images/"},
+				 {address      => "localhost:12790",
+				  "collection-id"   => "c-52-41-23-27-2-100-1-86-0",
+				  "url-prefix" => "http://gift.unige.ch/images/"});
+}
+
+print "Usage: gift-browser-benchmark.pl host:port? ";
+

@@ -1,0 +1,110 @@
+#!/usr/bin/perl -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+#############################################################
+#
+# CXMLTreeVisitor
+#
+# this visitor class is intended as parameter to 
+# CGIFTLink::traverseTree
+# CGIFTLink::traverseTree will call the startVisit function of
+# this class.
+#
+# YOU SHOULD NOT NEED TO TOUCH THIS CLASS
+# THERE IS AN ERROR
+#
+# SUBCLASS THIS CLASS TO OBTAIN WHAT YOU WANT
+#
+package CXMLTreeVisitor;
+require Exporter;
+
+@ISA= qw(Exporter);
+@EXPORT_OK= qw(new
+	       startVisit
+	       endVisit
+	      );
+
+sub new(){
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize();
+  return $self;
+}
+
+sub initialize(){
+  my$self=shift;
+
+}
+
+#########################################
+#
+# startVisit
+#
+# this startVisit function is intended as example, and prints the node
+# it gets as a parameter.
+#
+# PARAMETERS: The startVisit function takes a tree node (i.e. a hash reference)
+# as parameter. The parameter is provided by CGIFTLink::traverse 
+#
+# RETURNS:    nothing
+#
+sub startVisit( $ ){
+  my $self=shift;
+  my $lRoot=shift;
+
+  if(defined($lRoot->{element})){
+
+    print "<Node: ",$lRoot->{element}, "\n";
+
+    my $i;
+    for $i (keys(%{$lRoot->{attributes}})){
+
+      print "    ",$i,"=\"",$lRoot->{attributes}->{$i},"\"\n";
+      
+    }
+	print ">\n";
+  }else{
+
+    print "TEXT NODE:{",$lRoot->{text},"}\n\n";
+
+  }
+}
+#########################################
+#
+# endVisit
+#
+# this endVisit function does plain nothing
+#
+# PARAMETERS: The endVisit function takes a tree node (i.e. a hash reference)
+#    as parameter. The parameter is provided by CGIFTLink::traverse 
+#
+# RETURNS:    nothing
+#
+sub endVisit( $ ){
+  my $self=shift;
+  my $lRoot=shift;
+  if(defined($lRoot->{element})){
+
+    print "</Node: ",$lRoot->{element}, ">\n";
+
+  }
+}
+
+

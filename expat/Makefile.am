@@ -1,0 +1,1 @@
+SUBDIRS= gennmtab xmlparse xmltok 

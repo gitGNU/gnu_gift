@@ -1,0 +1,104 @@
+#!/usr/bin/perl -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+require 5.002;
+#use strict;
+package CQueryParadigmMatcher;
+require Exporter;
+
+@ISA= qw(Exporter);
+@EXPORT= qw(isMatchingQueryParadigm
+	    isMatchingQueryParadigmList
+	   );
+@EXPORT_OK= qw(new);
+
+sub new {
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize(@_);
+  return $self;
+}
+
+sub initialize( @ ){
+  my$self=shift;
+
+}
+
+=pod
+
+Two lists of query paradigms match, if
+There exists one element in the first list,
+which matches to at least one element in the
+second list  
+
+=cut
+
+
+sub isMatchingQueryParadigmList( $$ ){
+  my$self=shift;
+
+  my $inQuery=shift;
+  my $inMatching=shift;
+
+  my ($i,$j);
+  for $i (@ { $inQuery}){
+
+    print "outer loop Comparing: ",join("öö",keys(%$i)),"\n";
+
+    for $j (@ { $inMatching}){
+      print "outer loop With: ",join("àà",keys(%$j)),"\n";
+      if($self->isMatchingQueryParadigm($i,$j)){
+	return 1;
+      }
+    }
+  }
+  return 0;
+}
+
+
+=pod
+
+A query paradigm is matching anotherone, if
+all attributes in the intersection set of 
+attributes are 
+
+=cut
+sub isMatchingQueryParadigm( $$ ){
+  my$self=shift;
+  
+  my $inQuery=shift;
+  my $inMatching=shift;
+  
+  my $i;
+  for $i (keys(%$inQuery)){
+
+    print "Inner loop $inQuery->{$i} _$inMatching->{$i}_\n";
+
+    if(defined($inMatching->{$i})
+       && !($inQuery->{$i} eq $inMatching->{$i})){
+
+      print "---------- $inQuery->{$i} != $inMatching->{$i} \n";
+
+      return 0;
+    }
+  }
+  return 1;
+}
+

@@ -1,0 +1,62 @@
+The Viper query engine:
+
+Thierry Pun:		      supervision
+Thierry.Pun@cui.unige.ch      
+
+David McG. Squire:            idea to use many text-like features 
+David.Squire@cui.unige.ch     in inverted files
+	                        + all feature extraction code
+				+ testing 
+				+ supervision
+
+Stephane Marchand-Maillet:    successor of David Squire.
+Stephane.Marchand-Maillet@cui.unige.ch
+
+Henning Mueller:              pruning ideas and pruning code for inverted files
+Henning.Mueller@cui.unige.ch  	+ experiments (finding good values for 
+                                               the config files)
+                              	+ testing 
+				+ many important bugfixes
+
+Arjen P. de Vries	      helped improve the MRML DTD, patches for
+arjen@cwi.nl                  perl<->gift integration
+
+Christoph Giess               helped improve the MRML DTD
+Ch.Giess@DKFZ-Heidelberg.de   
+
+Cornelia Luoni                Most of CAcIFMySQL (not fully functional, yet).
+
+Wolfgang Mueller:             (all the rest, all the bugs, most fixes) 
+Wolfgang.Mueller@cui.unige.ch == maintainer
+
+
+
+All:
+
+Computer Vision Group
+Centre Universitaire d'Informatique
+Universite de Geneve
+24, rue du General Dufour
+1211 Geneve 4
+
+----------------------------------------
+
+The SnakeCharmer interface:
+
+Martin Vetterli			supervision
+Pearl Pu-Faltings             
+
+
+Zoran Pecenovic			maintainer & everything but...
+Zoran.Pecenovic@epfl.ch
+
+
+Wolfgang Mueller              ...some of the MRML parsing code
+Wolfgang.Mueller@cui.unige.ch 
+
+
+----------------------------------------
+
+Please note, that this directory tree includes a complete 
+expat distribution. Expat is (c) 1998 James Clark. Please read
+the html files in ./expat.

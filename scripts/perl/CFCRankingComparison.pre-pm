@@ -1,0 +1,219 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+# Author of this file: Wolfgang Müller
+
+require 5.002;
+#use strict;
+use Socket;
+use FileHandle;
+use English;
+use IO::File;
+use IO::Socket;
+use XML::Parser;
+
+use CFeedbackClient;
+use CGraphCollection;
+
+require Exporter;
+
+# =pod
+
+# =TITLE1 CFCRankingComparison
+
+# This package performs a ranking comparison of two algorithms.
+# This means, it performs a couple of queries using two different algorithms
+# (possibly on two different MRML servers).
+
+# The results obtained are then plotted such, that for each image retrieved, with
+# rank r1 using server s1 and with rank r2 using server s2, there will be a point
+# (r1,r2) in the plot. If the measures are perfectly equal, the result will contain
+# points only on the diagonal.
+
+# =cut
+
+package CFCRankingComparison;
+require Exporter;
+@ISA= qw(Exporter
+	 CFeedbackClient);
+@EXPORT_OK= qw(doQueryGroup);
+
+sub new {
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize();
+  return $self;
+}
+
+sub initialize(){
+  my$self=shift;
+
+  $self->SUPER::initialize();
+
+}
+
+=pod
+
+=TITLE1 doQueryGroup
+
+This is the function which does the real work described above
+
+=cut
+
+
+sub doQueryGroup( $$$ ){
+  my$self=shift;
+  my $inImages=shift;
+  my $inCollection1=shift;
+  my $inCollection2=shift;
+
+  my $lGraph=new CGraphCollection(0,
+				  100,#better: $self->getResultSize(),
+				  1);
+				  
+
+  my $i;
+  #   #
+  #   # make a deep copy of the image list entered
+  #   #
+  #   my @lModifiedImages;
+  #   foreach $i (@{$inImages}){
+  #     my $lPair=[];
+  #     @{$lPair}=@{$i};
+  #     push @lModifiedImages,$lPair;
+  #   }
+  
+  my @lModifiedImages=@$inImages;
+  foreach $i (@lModifiedImages){
+    print "\nImage $i\n";
+    $i=~s/^$inCollection1->{"url-prefix"}/$inCollection2->{"url-prefix"}/;
+  }
+  
+  
+  $self->subDoQueryGroup("x-ranks",
+			 $inImages,
+			 $inCollection1);
+  $self->subDoQueryGroup("y-ranks",
+			 \@lModifiedImages,
+			 $inCollection2);
+
+  # do something with these data
+
+  foreach $iQueryImage (keys(%{$self->{"x-ranks"}})){
+    print "Ranks for $iQueryImage\n",$self->{"x-ranks"}->{$iQueryImage},"\n";
+
+    my %lRankToImage=reverse(%{$self->{"x-ranks"}->{$iQueryImage}});
+
+    print join(",",sort {$a <=> $b;} keys(%lRankToImage)),"\n";
+	       
+
+    my @lPointList;
+    foreach $i (sort {$a <=> $b;} keys(%lRankToImage)){
+      my $lRankedImage=$lRankToImage{$i};
+
+      my $lRank=$self->{"y-ranks"}->{$iQueryImage}->{$lRankedImage};
+      $lRank=$self->getResultSize() unless defined($lRank);
+
+      print "$lRankedImage: \[$i,$lRank\]\n";
+
+      push @lPointList,$i;
+      push @lPointList,$lRank;
+    }
+    $lGraph->addPointList(@lPointList);
+  }
+
+  #
+  # Add to the collection of graphs
+  #
+  print "The resulting graph:";
+  print $lGraph->toString(q(
+			    my($lSum,$i,$lMin,$lMax);
+			    
+			    $lMin=$lPoint->[1]->[0];
+			    $lMax=$lPoint->[1]->[0];
+			    foreach $i (@{$lPoint->[1]}){
+			      $lSum+=$i;
+			      $lMin = $i if $i<$lMin;
+			      $lMax = $i if $i>$lMax;
+			    }
+			    
+			    if(defined($lSum)){
+			      my $lAverage=$lSum/scalar(@{$lPoint->[1]});
+			      
+			      $lResult.= "$lPoint->[0] $lMin $lAverage $lMax";
+			      $lResult.="\n";
+			    }
+			   )#do not forget the q-operator!
+			 );
+  
+}
+
+sub subDoQueryGroup( $$$ ){
+  my$self=shift;
+  my $inResultField=shift;
+  my $inImages=shift;
+  my $inCollection1=shift;
+
+  #
+  # This is the session whose data will be on the x-axis
+  #
+  $self->{mRanks}={};
+  $self->setAddress($inCollection1->{address});
+  $self->startSession($inResultField);
+  
+  #
+  # Configure the session to 
+  #
+  $self->configureSession($self->getSessionID(),
+			  $inCollection1->{algorithm},
+			  $inCollection1->{collection});
+  
+  print "Session configured\n";
+  
+  #
+  # for each of the query images
+  #
+  foreach $i (@$inImages){
+    print "Result size set, querying for $i\n";
+    $self->doFirstQueryStep("query-step",
+			    [[$i,1]],
+			    $self->getSessionID(),
+			    $inCollection1->{algorithm},
+			    $inCollection1->{collection});
+    #
+    # make a hash 
+    # (URL-suffix->Rank)
+    #
+    my $lRank=0;
+    $self->{$inResultField}->{$i}={};
+    my @lResultList=@{$self->getResultList()};
+    $_=scalar($i);
+    s/^$inCollection1->{"url-prefix"}//;#i.e. retract the prefix from $_
+    foreach $j (@lResultList){
+      
+      $j->[0]=~s/^$inCollection1->{"url-prefix"}//;#i.e. retract the prefix
+      print "Rank for $j->[0]: $lRank\n";
+
+      $self->{$inResultField}->{$_}->{$j->[0]}=$lRank++;
+    }
+  }
+  $self->saveSession();
+  $self->closeSession();
+}

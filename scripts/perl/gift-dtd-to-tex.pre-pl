@@ -1,0 +1,356 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+#
+# gift-dtd-to-tex.pl 
+#
+# This program turns a simple sgml dtd (with does not contain external
+# entities) into a class, which contains all keywords as string constants
+#
+# The use of this is to improve type safety when extendint MRML or changing
+# things in the program
+#
+use Getopt::Long;
+use XML::Parser;
+
+
+
+require 5.002;
+#use strict;
+use Socket;
+use FileHandle;
+use English;
+use IO::File;
+use XML::Parser;
+
+########################################
+#
+# slurps in some DTD and translates all te
+# keywords of the DTD into constant strings of
+# the language wanted
+#
+########################################
+package CDTDToTeX;
+require Exporter;
+
+@ISA= qw(Exporter);
+@EXPORT= qw(new
+	    slurpDTD
+	    translateToLanguage
+	   );
+
+sub new {
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize();
+  return $self;
+}
+
+sub initialize(){
+  my$self=shift;
+
+  $self->{parser} = new XML::Parser(Handlers => {Element => \&handleElement,
+						 Comment => \&handleComment,
+						 Attlist => \&handleAttlist,
+						});
+
+  # Make the parser know who is this structure 
+  $self->{parser}->{mCaller}=$self;
+  $self->{parser}->{mMagic}=42;
+  ###############################
+  #§
+  # for quick changes what to look at when debugging/testing
+  #
+  #
+  $self->{vDEBUG}={
+		   handleComment =>       0,
+		   handleElement =>       0,
+		   handleAttlist =>       0,
+		   processDTD    =>       0,
+		  };
+  print "Printing debugging info for the functions:\n";
+  {
+    my $i;
+    foreach $i (keys(%{$self->{vDEBUG}})){
+      if($self->{vDEBUG}->{$i}){
+	print "$i\n";
+      }
+    }
+  }
+  ###############################
+  #
+  # this structure contains the attribute-lists for all
+  # elements
+  #
+  
+
+  $self->{attribute_list}={};
+}
+
+##############################
+#
+# Expat parser handlers
+#
+sub handleComment( $$ ){
+  my $self=shift;
+
+  die "BLACK MAGIC!" if ($self->{mMagic}!=42);
+  $self=$self->{mCaller};
+
+  my $lComment=shift;
+
+  $lComment=~s/\+\+\++//g;
+
+  print "Comment: $lComment\n" if($self->{vDEBUG}->{handleComment});
+  $self->addComment($lComment);
+}
+
+sub handleElement( $$$ ){
+  my $self=shift;
+
+  die "BLACK MAGIC!" if ($self->{mMagic}!=42);
+  $self=$self->{mCaller};
+
+  my $inElementName=shift;
+  my $inElementModel=shift;
+
+  print "<!ELEMENT $inElementName,$inElementModel >\n" if($self->{vDEBUG}->{handleElement});
+  $self->addElement($inElementName,
+		    $inElementModel);
+}
+
+sub handleAttlist( $$$$$$ ){
+  my $self=shift;
+
+  die "BLACK MAGIC!" if ($self->{mMagic}!=42);
+  $self=$self->{mCaller};
+  
+  my $inElement=shift;
+  my $inAttributeName=shift;
+  my $inAttributeType=shift;
+  my $inDefault=shift;
+  my $inFixed=shift || "";
+
+  unless($inAttributeName=~m/^cui-/){
+    
+    $self->addAttribute($inElement,[$inAttributeName,
+				    $inAttributeType,
+				    $inDefault
+				   ]);
+    print "Attribute: $inAttributeName $inAttributeType $inDefault $inFixed\n" if($self->{vDEBUG}->{handleAttlist});
+  }
+}
+
+sub processDTD( $$$$ ){
+  my$self=shift;
+  my $lDTDHandle=shift;
+  my $lEmptyText=shift;
+  my $lStartTeX=shift;
+  my $lEndTeX=shift;
+  print "\nNow I will try to read...\n" if($self->{vDEBUG}->{processDTD});
+  
+  #we read, and then we parse
+  #for this reason, we can return the
+  #string read
+  $self->initialiseSequence($lStartTeX);
+  {
+    my $lRead=join("",$lDTDHandle->getlines());
+    
+    if($lRead){
+      
+      if($self->{vDEBUG}->{processDTD}){
+	print "Parsing: $lRead";
+	open OF,">mrml-parsing-log";
+	print OF $lRead;
+      }
+      $self->{parser}->parse("$lRead $lEmptyText");
+    }
+    $lRead;
+  }
+  $self->buildStringFromSequence();
+  $self->endSequence($lEndTeX);
+  return $self->{string_from_sequence};
+}
+
+sub addAttribute( $$ ){
+  my $self=shift;
+  
+  my $inElement=shift;
+  my $inAttributeDescription=shift;
+
+
+  unless(ref($self->{attribute_list}->{$inElement})){
+    $self->{attribute_list}->{$inElement}=[];
+    push @{$self->{printer_sequence}},["attribute",$inElement];
+  }
+
+  push @{$self->{attribute_list}->{$inElement}}, $inAttributeDescription;
+}
+
+sub addText( $ ){
+  my $self=shift;
+  my $inText=shift;
+
+  push @{$self->{printer_sequence}},["text",$inText];
+
+}
+
+sub addComment( $ ){
+  my $self=shift;
+  my $inText=shift;
+
+  push @{$self->{printer_sequence}},["comment",[$inText]];
+
+}
+
+sub addElement( $ ){
+  my $self=shift;
+  my $inElementName=shift;
+  my $inModel=shift;
+
+  push @{$self->{printer_sequence}},["element",[$inElementName,$inModel]];
+
+}
+
+sub addToSequence( $ ){
+  my$self=shift;
+  my $inText=shift;
+
+  $self->{string_from_sequence}.=$inText;
+}
+sub initialiseSequence( $ ){
+  my$self=shift;
+  my$inStart=shift || "\n%TESTBEGIN\n";
+  $self->{string_from_sequence}=$inStart;
+}
+sub endSequence( $ ){
+  my$self=shift;
+  my$inEnd=shift || "\n%TESTEND\n";
+  $self->{string_from_sequence}.=$inEnd;
+}
+sub buildStringFromSequence( ){
+  my $self=shift;
+
+  my $i;
+
+  foreach $i (@{$self->{printer_sequence}}){
+    $self->printText($i->[1]) if( $i->[0] eq "text");
+    $self->printComment($i->[1]) if( $i->[0] eq "comment");
+    $self->printAttribute($i->[1]) if( $i->[0] eq "attribute");
+    $self->printElement($i->[1]) if( $i->[0] eq "element");
+  }
+}
+
+sub printElement( $ ){
+  my $self=shift;
+  my $inElement=shift;
+  
+  unless($inElement->[0]=~m/^cui-/){
+    $lModel=$inElement->[1];
+
+    #remove cui-private tags
+    $lModel=~s/cui[\-a-zA-Z]*//g;
+    #clean up resulting untidiness
+    $lModel=~s/(\||,)(\s|\n)*([\)\|])/$3/g;
+    
+    $self->addToSequence("\\begin{verbatim}\n<!ELEMENT $inElement->[0] $lModel \n>\\end{verbatim}\n\n");
+  }
+}
+
+sub printComment( $ ){
+  my $self=shift;
+  my $inComment=shift;
+  
+  my $lCommentString=$inComment->[0];
+
+  $self->addToSequence("\\begin{verbatim}<!--\\end{verbatim}\n $lCommentString \n \\begin{verbatim}-->\\end{verbatim}\n\n\n\n") unless($lCommentString=~m/==HIDE/);
+	 
+}
+
+sub printAttribute( $ ){
+  my $self=shift;
+  my $inElement=shift;
+  
+  
+  $self->addToSequence("\\begin{verbatim}\n<!ATTLIST $inElement ");
+  my $i;
+  for $i (@{$self->{attribute_list}->{$inElement}}){
+    $self->addToSequence("\n             ".(" " x length($inElement)).join(" ",@$i));
+  }
+  $self->addToSequence("\n>\\end{verbatim}\n\n");
+}
+
+sub printText( $ ){
+  my $self = shift;
+  my $inText = shift;
+  
+  $self->addToSequence("$inText\n");
+
+}
+
+package main;
+
+%lOptions=();
+
+GetOptions(\%lOptions,
+	   "fragment"
+	  );
+
+my $inDTDFile=shift;
+my $inTag=(split(/(\.)|(\/)/,$inDTDFile))[-4];
+
+if(!$inDTDFile){
+  print "
+Usage: gift-dtd-to-tex.pl infile [--fragment]
+    
+This program turns a simple sgml dtd (with does not contain external
+entities) into LaTeX.
+
+Options:
+--fragment create a fragment which can be included into other LaTeX files
+
+";
+}
+
+my $lDTDToTeX=new CDTDToTeX();
+
+{
+  my $lFH=new IO::File;
+  my $lOH=new IO::File;
+  $lFH->open("< $inDTDFile") or die "there is no $inDTDFile $!\n";
+  $lOH->open("> ${inDTDFile}.tex") or die "there is no ${inDTDFile}.tex $!\n";
+  
+  unless(%lOptions->{fragment}){  
+    print $lOH $lDTDToTeX->processDTD($lFH,"<$inTag></$inTag>",
+				      '\documentclass{article}
+ \newcommand{\requesttitle}[1]{\textbf{Request: }{\texttt{#1}}\\\\}
+ \newcommand{\responsetitle}[1]{\textbf{Response: }{\texttt{#1}}\\\\}
+ \newcommand{\tagtitle}[1]{\textbf{Tag: }{\texttt{#1}}\\\\}
+ \newcommand{\MRML}{\textrm{MRML}}
+ \newcommand{\tag}[1]{\texttt{#1}}
+ \begin{document}
+',
+				      '\end{document}
+'
+				     );
+  }else{
+    print $lOH $lDTDToTeX->processDTD($lFH,"<$inTag></$inTag>");
+  }
+}

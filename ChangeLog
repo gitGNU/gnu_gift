@@ -1,0 +1,1607 @@
+2001-01-31  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc (_NO_CONSISTENCYPRINT):
+	(_NO_CHECK_CONSISTENCY): These defines block some annoying
+	checks and check printouts, that are done when indexing
+	collections, and which take MUCH longer than the indexing
+	itself.
+
+	* scripts/perl/Makefile.am (distclean): Added this target.
+	It does the same as make clean in this directory
+
+	* libMRML/cc/CCommunicationHandler.cc(parseString): do not
+	exit on XML error
+
+	* libMRML/cc/CAlgorithmCollection.cc (CAlgorithmCollection): 
+	* libMRML/cc/CAccessorCollection.cc(CAccessorCollection): added to
+	printout on XML error.
+
+	* GIFTServer/Makefile.am: remove data_DATA line
+
+2001-01-24  Wolfgang Mueller  <Wolfgang.Mueller@cui.unige.ch>
+
+	* configure.in: replaced all "CPPFLAGS" by
+	"CXXFLAGS"
+	$CC pthread-compile-test-program.cc uses
+	LDFLAGS now.
+
+2001-01-23  Wolfgang Mueller  <Wolfgang.Mueller@cui.unige.ch>
+
+	* GIFTServer/Makefile.am(gift_LDADD): changed link sequence
+	we need to link libMRML first. Otherwise the perl stuff does
+	not get linked correctly
+
+2001-01-11  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* scripts/perl/CXMLTreeBuilder.pm (handleChar): added ?
+	after newline in regexp. makes me catch more whitespace
+	text nodes.
+
+2001-01-03  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libGIFTQuBayesian/cc/Makefile.am (libGIFTQuBayesian_la_SOURCES): 
+	Renamed CIFQuickAndDirtyHunter to CQTracker.
+	
+	* libGIFTQuBayesian/cc/CIFQuickAndDirtyHunter.cc:
+	* libGIFTQuBayesian/include/CIFQuickAndDirtyHunter.h:
+	* libGIFTQuBayesian/cc/CQTracker.cc:
+	* libGIFTQuBayesian/include/CQTracker.h:
+	Renamed CIFQuickAndDirtyHunter to CQTracker. This fits
+	the naming scheme, it's shorter, and it meeds the case better.
+
+2000-12-29  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* scripts/emacs-lisp/gift-compile-current.el (gift-associated): 
+	Change routines for finding associated files so that they
+	cope also with flat directory structures.
+	(gift-switch-to-associated-h): 
+
+2000-12-28  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libGIFTAcURL2FTS/include/CAcURL2FTS.h: 
+	* libGIFTAcURL2FTS/cc/CAcURL2FTS.cc:
+	adding the functions newStartURL2FTSElement
+	newEndURL2FTSElement in order to read url2fts.xml
+	files.
+
+	* scripts/perl/gift-add-collection.pre-pl: 
+	Making this script xml-ready.
+
+2000-12-24  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CXEVCommunication.cc: 
+	changed include CCommunicationHandler
+
+2000-12-23  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/Makefile.am (libMRML_la_SOURCES): 
+	* GIFTServer/Makefile.am (gift_SOURCES): 
+	* GIFTServer/CCommunicationHandler.cc:
+	* GIFTServer/CCommunicationHandler.h:
+	* libMRML/cc/CCommunicationHandler.cc:
+	* libMRML/include/CCommunicationHandler.h:
+	moved CCommunicationHandler.cc to libMRML
+
+2000-12-20  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* scripts/perl/gift-add-collection.pre-pl: 
+	appending an "/" to lIndexPrefix. We assume
+	that the path ends with a "/" throughout the
+	program.
+	
+
+2000-12-15  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* scripts/emacs-lisp/gift-compile-current.el (gift-Utomake): 
+	(gift-Itomake): use --enable-multi-threading option
+
+	* NEWS: news.
+
+	* Doc/gift-guide.sgml: documented new options of
+	configure. Erased "done" items from "to-do" list.
+	
+	* configure.in: created --enable-multi-threading 
+	option. 
+
+2000-12-14  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libGIFTQuPerl/cc/plug_in_fo.cc: surrounding
+	the whole file with #ifdef __GIFT_WITH_PERL__
+
+2000-12-13  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* Doc/Makefile.am (CLEANFILES): Don't remove 
+	gift-guide.txt and configuring-and-hacking-the-gift.txt
+	these files are part of the distribution. Now.
+
+	* README: New short readme for the impatient
+
+	* configure.in: Making gift-install-prerequisites.pl
+	part of the configuration process.
+
+	* Doc/gift-guide.sgml (Caveat): Adding and changing
+	some parts about the installation procedure which
+	has become much nicer.
+
+	* gift-install-prerequisites.pl: added this file
+	it automatically installs all software prerequisites.
+	that are needed by the GIFT.
+
+2000-12-10  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* dtd/Makefile.am: making automatically 
+	libMRML/cc/mrml_const.cc and libMRML/include/mrml_const.h
+	and mrml_const.java using scripts/perl/gift-dtd-to-keywords.pl
+	
+	* Makefile.am (SUBDIRS): changing sequence. make
+	scripts first, then dtd, then libraries. 
+
+2000-12-07  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CAlgorithm.cc(getInheritsFrom):
+	* libMRML/include/CAlgorithm.h(getInheritsFrom):
+	added
+
+2000-12-06  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* GIFTServer/CCommunicationHandler.cc(waitReadStream):
+	Added error handling
+
+	* GIFTServer/CCommunicationHandler.h: A mutex for
+	the communication handler makes sure that
+	no two threads write to the log in the same moment.
+	
+
+2000-12-05  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* GIFTServer/Server.cc: waiting for eof from
+	client for better teardown
+
+	* GIFTServer/CCommunicationHandler.cc(waitReadStream): removed
+	&lWaitingTime from read wait
+	
+
+2000-12-01  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libGIFTAcInvertedFile/include/CAcIFFileSystem.h: 
+	improving doc of the constructor
+
+	* Doc/Makefile.am: New targets and new cleanfiles
+	for making more documentation
+	(noinst_DATA): Now the documentation is automatically made.
+	(system-doc): Doxyfile is a precondition for the target.
+
+	* Doc/Doxyfile (MAN_EXTENSION): 
+	Manpages into 3gift
+
+	* configure.in: replacing kdoc by doxygen.
+
+2000-11-30  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* scripts/perl/gift-url-to-fts.pre-pl (convertURLToFeatureFile): 
+	did not give __BINDIR__ for gift-extract-features
+
+	* libMRML/cc/CQMultiple.cc(fastQuery): Giving something
+	to do for the main thread
+	(CQMThread): adding function callFunction which does
+	not spawn a thread
+
+	* scripts/perl/gift-add-collection.pre-pl: 
+	lDatabaseName became lCollectionName
+	Reading DOT_FILE .gift-add-collection
+	Primitive variable reprlacement
+	Moved generation/copying of configuration files behind
+	processing of the --help option
+
+2000-11-29  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* configure.in: Now doing explicit check for being
+	able to lock recursively.
+
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc (URLToFeatureList): 
+	adjusted path to new directory.h [bugfix relative to unreleased
+	version].
+
+2000-11-28  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CSessionManager.cc: 
+	* libMRML/include/CSessionManager.h:
+	making CSession threadsafe:
+	mMutexSession
+
+	* libGIFTAcURL2FTS/include/CAcURL2FTS.h: 
+	* libGIFTAcURL2FTS/cc/CAcURL2FTS.cc: 
+	analog: adding mMutexURL2FTS
+	
+	* libGIFTAcHierarchy/include/CAcHierarchy.h: 
+	adding mMutexHierarchy
+
+	* libGIFTAcHierarchy/cc/CAcHierarchy.cc: adding
+	mMutexHierarchy.lock()/unlock() to all functions
+
+2000-11-27  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CQMultiple.cc: added function doQueryThread. 
+	This function is supposed to run in a spawned thread.
+
+	* configure.in: Added check for POSIX threads
+	Changing versioning for libraries
+
+	* GIFTServer/Makefile.am (gift_generate_inverted_file_LDADD): 
+	Changing library paths to match reality...
+
+	* GIFTServer/Server.cc (main): moving the construction
+	of gHandler into the socket listening loop
+
+	* GIFTServer/CCommunicationHandler.h: 
+	* GIFTServer/CCommunicationHandler.cc: 
+	Changed constructor to take the session manager
+	as parameter, as well as the ostream of the logfile.
+	The corresponding members become references instread
+	of auto variables.
+	Deleted unused members mSessionFile mConfigFile
+
+	* GIFTServer/CCommunicationHandler.cc: 
+	* libMRML/cc/CXEVCommunication.cc: 
+	* libMRML/include/CXEVCommunication.h: 
+	Disentangling the two classes in order to prepare them
+	for multithreading.
+
+	* libMRML/cc/CSessionManager.cc: Instead of throwing
+	exceptions giving back error message in case
+	of unknown session. Advantage: easier multithreading.
+
+2000-11-24  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc: 
+	adding lock/unlock calls to all functions
+
+	* libMRML/include/CAccessor.h: Beginning to add
+	multithreading using posix threads. Adding
+	conditionally a lock/unlock, and a mutex.
+	
+	
+
+2000-11-22  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* Doc/Makefile.am (CLEANFILES): the automatically
+	generated documentation will now be deleted before
+	shipping.
+
+	* Doc/autoDoc/HTML: 
+	* Doc/autoDoc/TeX:
+	Deleted.
+
+	* libGIFTAcInvertedFile/cc/Makefile.am:
+	* libMRML/cc/Makefile.am:
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc (URLToFeatureList): 
+	* libMRML/cc/CAccessorCollection.cc: These files
+	now use directory.h . This makes the use of
+	pre-cc obsolete. Makefile.am-s changed accordingly.
+
+2000-11-21  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libMRML/include/CAccessorFactory.h(closeAccessor): 
+	* libMRML/cc/CAccessorFactory.cc(closeAccessor): 
+	Added closeAccessor function
+	
+	* libMRML/include/CAccessorProxy.h(CContent): 
+	* libMRML/cc/CAccessorProxy.cc(openAccessor): 
+	* libMRML/include/CAccessorFactoryContainer.h(CContent): 
+	* libMRML/cc/CAccessorFactoryContainer.cc(openAccessor): 
+	Moved the open/close-accessor logic from the
+	factory container to the accessor proxy.
+	Affects openAccessor in both classes, as well
+	as the definition of a map which administrates this logic.
+	This is mContent of type CContent
+
+	* libMRML/include/CAccessorFactoryContainer.h: 
+	* libMRML/cc/CAccessorFactoryContainer.cc: 
+	Changed params of CAccessorFactoryContainer::configure
+	to CXMLElement* [was const].
+
+2000-11-20  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libMRML/include/Makefile.am: 
+	* libMRML/Makefile.am: 
+	generating a file directory.h from ./configure results
+	in order to get around this ugly pre-cc business
+	
+	
+	* GIFTServer/Makefile.am: Added remark
+	that CAcPerl and CQuPerl HAVE to be linked
+	at linking time.
+
+	* libMRML/include/CAccessorFactoryContainer.cc: 
+	* libMRML/cc/CAccessorFactoryContainer.cc: 
+	Some aftermath of cleaning the accessorfactorycontainer business up.
+	CAccessorFactoryContainer::openAccessor needed a new parameter.
+	changed call to openAccessor
+	
+	* libMRML/cc/CAFPlugin.cc: 
+	* libMRML/include/CAFPlugin.h: 
+	Added these files. They implement an accessor Factory which
+	functions for plugged-in accessors.
+	
+	* libMRML/cc/CAccessorFactoryContainer.cc: 
+	Receives now a parameter which is an XML parse
+	tree. This tree is scanned for names of directories.
+	These directories will be scanned for plugins.
+	Changed error message, if a plugin is registered twice
+
+
+
+2000-11-18  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CAccessorFactoryContainer.cc: Made
+	a constructor for this function
+
+2000-11-17  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CAlgorithmCollection.cc:
+	* libMRML/cc/CAccessorCollection.cc:
+	  ifdef-ed out some debugging printout
+	
+	* libMRML/include/CAccessorCollection.h: 
+	* libMRML/cc/CAccessorCollection.cc: unused function
+	  getAllQueryMethods deleted
+
+	* libMRML/cc/CAccessorProxy.cc(constructor): 
+	emptied constructor of things which are realy none of
+	CAccessorProxy's business [moved into 
+	CAccessorFActoryContainer]
+	(constructor): Gets new parameter inFactoryContainer
+
+	* libMRML/cc/CAccessorCollection.cc(constructor):
+	Give mFactory as parameter to new new CAccessorProxy
+
+	* libMRML/include/CAccessorCollection.h: mFactory
+	becomes new member
+
+	* libMRML/cc/CDynamicBaseTypeFactory.cc: 
+	Two query engines are not plugins CQPerl and CQMultiple.
+	CQMultiple will be used too often, and CQPerl would be
+	only doable if we could count on libPerl being present
+	on the system.
+	Now I consider CQuery plugins working. Tomorrow we
+	do the same with CAccessors.
+
+	* libMRML/cc/CBaseTypeFactory.cc (makeQuery): ifdef-ed out
+	this function if LINK_DYNAMICALLY
+
+	* libMRML/cc/CSessionManager.cc(makeQuery):
+	call works without algorithm collection now
+
+	* libMRML/cc/CAlgorithmCollection.cc: 
+	* libMRML/include/CAlgorithmCollection.h: mFactory
+	removed. becomes inFactory in makeQuery, which means
+	that makeQuery has become quite obsolete
+
+	* libMRML/cc/CAlgorithmCollection.cc (constructor): 
+	Takes now a CBaseTypeFactory as parameter
+
+	* libMRML/include/CDynamicBaseTypeFactory.h: Is now inherited
+	from CBaseTypeFactory
+
+	* libMRML/include/CBaseTypeFactory.h: making makeQuery
+	virtual
+
+	* libMRML/include/CSessionManager.h (class CSessionManager): 
+	Added mBaseTypeFactory
+
+	* libMRML/cc/CSessionManager.cc(setActiveAlgorithm): 
+	added inBaseTypeFactory to the call, handed through
+	to buildQueryTree
+	
+
+	* libMRML/include/CQueryTreeBuilder.h: 
+	* libMRML/cc/CQueryTreeBuilder.cc: 
+	Added an inBaseTypeFactory parameter to the configure
+	call. and to the buildQueryTree function.
+	
+
+	* libMRML/include/CQueryTreeNode.h: Things are getting
+	hot. I removed mFactory from CQueryTreeNode. This 
+	design is not compatible to the idea of having external
+	plugins.
+
+	Added an inBaseTypeFactory parameter to the configure
+	function.
+
+	* libMRML/include/CAlgorithmCollection.h:
+	* libMRML/include/CAlgorithmCollection.cc:
+	Changed things that dependent on the -DLINK_DYNAMICALLY
+	flag, either the classic CBaseTypeFactory or the
+	new CDynamicBaseTypeFactory is used
+
+	* libMRML/cc/Makefile.am:
+	Added the aforementioned files
+	
+	* libMRML/cc/CQueryPlugin.cc: 
+	* libMRML/include/CQueryPlugin.h: 
+	* libMRML/include/CDynamicBaseTypeFactory.h: 
+	* libMRML/cc/CDynamicBaseTypeFactory.cc: 
+	New files: The dynamic pendant to CBaseTypeFactory. It scans
+	a directory for suitable .so-s and then calls their plug_in_fo
+	functions. This gets stored in CQueryPlugin objects.
+	
+	* libGIFTQuHierarchy/cc/plug_in_fo.cc: 
+	* libGIFTQuInvertedFile/cc/plug_in_fo.cc: 
+	* libGIFTQuPerl/cc/plug_in_fo.cc: 
+	New files. This file contains functions to be used
+	as plugin information.
+	
+2000-11-16  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* GIFTServer/CCommunicationHandler.cc: 
+	moved the "ID administration subsystem"
+        TID gID; to libMRML/cc/CSessionManager.cc
+
+
+
+2000-11-15  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* GIFTServer/Server.cc: Cleaned include list
+	and added CAcURL2FTS accessor
+
+	* GIFTServer/CCommunicationHandler.h: Cleaned the include list
+	* GIFTServer/CCommunicationHandler.cc: Cleaned the include list
+
+	* libGIFTAcInvertedFile/include/CAcIFMySQL.h: 
+	added include of CAcURL2FTS
+
+	* libMRML/include/CAccessor.h: 
+	* libGIFTAcInvertedFile/include/CAcInvertedFile.h: Slimmed list of includes
+
+	* GIFTServer/Makefile.am: 
+	(gift_LDADD): removed @PERL_LD_ADD@ from this target and put it
+	into libInvertedFile_la_LIBADD
+
+	* libInvertedFile/cc/Makefile.am (libInvertedFile_la_LIBADD): 
+	created this target.
+
+	* GIFTServer/CSelfDestroyPointer.h (CSelfClonePointer): 
+	Added <T> to CSelfClonePointer
+
+	* CAccessor.h:
+	* CAccessorCollection.h:
+	* CAccessorElement.h:
+	* CAccessorFactory.h:
+	* CAccessorFactoryContainer.h:
+	* CAccessorProxy.h:
+	* CAlgorithm.h:
+	* CAlgorithmCollection.h:
+	* CAttributeList.h:
+	* CBaseTypeFactory.h:
+	* CIDRelevanceLevelPair.h:
+	* CIDRelevanceLevelPairList.h:
+	* CMagic.h:
+	* CPropertySheetList.h:
+	* CRelevanceLevel.h:
+	* CRelevanceLevelList.h:
+	* CSessionManager.h:
+	* CXEVCommunication.h:
+	* CXEVTripletList.h:
+	* CXMLElement.h:
+	* CXMLElementVisitor.h:
+	* CXMLHelper.h:
+	* GIFTExceptions.h:
+	* mrml_const.c:
+	moved these files from libInvertedFile/include to libMRML/include
+
+	* CAccessor.cc:
+	* CAccessorCollection.cc:
+	* CAccessorElement.cc:
+	* CAccessorFactory.cc:
+	* CAccessorFactoryContainer.cc:
+	* CAccessorProxy.cc:
+	* CAlgorithm.cc:
+	* CAlgorithmCollection.cc:
+	* CAttributeList.cc:
+	* CBaseTypeFactory.cc:
+	* CIDRelevanceLevelPair.cc:
+	* CIDRelevanceLevelPairList.cc:
+	* CMagic.cc:
+	* CPropertySheetList.cc:
+	* CRelevanceLevel.cc:
+	* CRelevanceLevelList.cc:
+	* CSessionManager.cc:
+	* CXEVCommunication.cc:
+	* CXEVTripletList.cc:
+	* CXMLElement.cc:
+	* CXMLElementVisitor.cc:
+	* CXMLHelper.cc:
+	* GIFTExceptions.cc:
+	* mrml_const.c:
+	moved these files from libInvertedFile/cc to libMRML/cc
+	
+	* libMRML/Makefile.am: created
+
+	* configure.in: added entry for libMRML. This library will
+	contain all the MRML-specific parts of the GIFT, i.e. the
+	framework. I will subsequently break down libInvertedFile
+	into smallerlibs which will eventualley end up as plugins.
+
+	* GIFTServer/Server.cc: 
+	* GIFTServer/CCommunicationHandler.cc: 
+	moved sendMessage and readMessage from Server.cc to 
+	CCommunicationHandler.cc in order to solve linking problems
+	when using dynamic libraries
+	
+	* scripts/emacs-lisp/gift-compile-current.el (gift-GIFTServerMake): 
+	Changed this function to do what the name sais 
+	[quite a change, actually]. It now does the same as Utomake, but
+	without configuring first.
+
+	* GIFTServer/Makefile.am: adding -L$(libdir) to a 
+	number of targets.
+
+	* configure.in: restructured the file to use 
+	libtool, inspired by the libtool demo
+
+2000-11-12    <muellerw@pc71114.unige.ch>
+
+	* scripts/perl/CGLDistanceMatrix.pre-pm: created
+
+	* scripts/perl/CXTVWriter.pre-pm: moved 'use lib'
+	statement out of CXTVWriter
+
+2000-11-11    <muellerw@pc71114.unige.ch>
+
+	* libInvertedFile/include/CAcDistanceMatrix.h: 
+
+	* GIFTServer/obsolete.cc:
+	removed this file
+
+2000-11-09    <muellerw@pc71114.unige.ch>
+
+	* GIFTServer/gift-config/gift-config.pre-mrml(m/$lTheLine/):
+	Changed query-paradigm tag. now clear that the types
+	inverted-file and perl-demo can be used
+
+	* scripts/perl/gift-add-collection.pre-pl (wanted): 
+	deleted this line from collection tag
+	cui-perl-script-file="__BINDIR__/CGIFTLinkDemo.pl"
+	it is rather part of the algorithm tag
+
+	* GIFTServer/gift-config/gift-config.pre-mrml: Setting
+	pruning to 70% of the features as default, except
+	for histogram features
+
+	* libInvertedFile/include/CAcURL2FTS.h: Adding friend
+	entry for CAcIFFileSystem.
+
+	* libInvertedFile/cc/CAcIFFileSystem.pre-cc (checkConsistency): 
+	Function did not compile (was defined out)
+	
+	* libInvertedFile/cc/CAcIFFileSystem.pre-cc (FeatureToList): 
+	* libInvertedFile/cc/CAcIFFileSystem.pre-cc (getFeatureFile): 
+	Removing old emulation of read binary for lists
+
+	* libInvertedFile/cc/CDocumentFrequencyList.cc: 
+	Cleaning up: making readBinary read also into a list
+
+	* libInvertedFile/cc/CQInvertedFile.cc(buildQueryHash): 
+	Cleaning error-prone redundancies.
+
+2000-11-04    <muellerw@pc71114.unige.ch>
+
+	* expat/Makefile (check): Adding a message
+	into the expat makefile, along with the check
+	target. Presently we do not run any
+	checking, but at least the target should run 
+	through.
+
+2000-10-30  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* CAcInvertedFile.cc:
+	* CAcInvertedFile.pre-cc:
+	Files obsolete: deleted
+
+	* GIFTServer/gift-config/gift-config.pre-mrml: 
+	cui-perl-package attribute added
+
+	* GIFTServer/gift-config/Makefile.am (data_DATA): 
+	Removed InvertedFileFeatureDescription.db
+
+	* GIFTServer/gift-config/gift-config.pre-mrml: 
+	Changed line for cui-perl-script-file to reflect
+	new perl embedding architecture and the
+	location of gift-add-collection.pre-pl
+
+	* scripts/perl/gift-add-collection.pre-pl: 
+	Added part which automatically adds 
+	gift-embed-perl-modules.pl
+
+	* IFFDBase.db:
+	* InvertedFileFeatureDescription.db:
+	Deleted. They are now automatically generated
+	during installation.
+	
+	
+2000-10-29  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* Doc/Makefile.am (system-doc): Removed 
+	"../libBayesian/include/*.h" from kdoc call.
+	We cannot ship libBayesian, because we have
+	to clear that yet (possible patents of others).
+
+	* libInvertedFile/cc/CQPerl.cc (CQPerl): Changing
+	completely the way CQPerl works. Reason for this are
+	inherent memory leaks in the current version.
+
+	* libInvertedFile/cc/CDocumentFrequencyList.cc: 
+	Cured small bugs end(), end()const, setEnd()
+
+	* libInvertedFile/cc/CAcPerl.cc: Adding destructor
+
+2000-10-25  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/include/CSelfDestroyPointer.h: 
+	Bracketed out some debugging output: ifdef 
+	_DEBUG_SELF_DESTROY_
+
+	* scripts/perl/CXTVWriter.pre-pm (initialize): 
+	Setting data mode in XML::Writer
+
+2000-10-23  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/cc/CAcInvertedFile.cc: The whole file
+	was already commented out. These comments are now deleted
+	inorder to de-obfuscate the line count
+
+	* libInvertedFile/include/CXMLElement.h: Made destructor of
+	CXMLElement virtual
+
+	* libInvertedFile/include/CQuery.h: Made destructor of
+	CQuery virtual.
+
+	* libInvertedFile/include/CAccessor.h: Made destructor of
+	CQuery virtual.
+
+	* libInvertedFile/cc/CSessionManager.cc: added deleteSession
+	function. 
+	(setActiveAlgorithm): have to delete old mQueryTree before
+	constructing new one.
+
+	* libInvertedFile/cc/CXEVCommunication.cc: activated 
+	delete-session signal.
+	
+
+	* libInvertedFile/cc/CAcIFFileSystem.pre-cc (FeatureToList): 
+	Noticed that I have not used the readBinary function from the 
+	CDocumentFrequencyList class. I am using it now.
+
+	* libInvertedFile/cc/CQInvertedFile.cc(buildQueryHash): 
+	* libInvertedFile/cc/CInvertedFileChunk.cc (writeBinary): 
+	Replacement code for vector<CDocumentFrequencyElement>::push_back
+
+	* libInvertedFile/include/CDocumentFrequencyList.h:
+	* libInvertedFile/cc/CDocumentFrequencyList.cc:
+	Adding functions to mimick STL, as well as function
+	setEnd.
+
+2000-10-22  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/cc/CAcIFFileSystem.pre-cc: 
+	Changed ifdef CDocumentFrequencyListIsVector to 
+	ifndef CDocumentFrequencyListIsList
+
+	* libInvertedFile/include/CDocumentFrequencyList.h: 
+	* libInvertedFile/cc/CDocumentFrequencyList.cc: 
+	Added a destructor + debugging code which counts up/down
+	if the CDocumentFrequencyLists are properly 
+	allocated/deallocated
+	Replaced the use of vectors by the use of arrays
+	
+
+	* libInvertedFile/include/CWeightingFunctionPointerHash.h: 
+	added function clear.
+
+	* libInvertedFile/include/CXMLElement.h: 
+	* libInvertedFile/cc/CXMLElement.cc: 
+	Added destructor ~CXMLElement
+
+	* libInvertedFile/include/CSessionManager.h: 
+	* libInvertedFile/cc/CSessionManager.cc: 
+	Added destructor for CSession
+	(CSessionManager::closeSession): deleting the 
+	session when closing for avoiding memory leaks.
+
+	* libInvertedFile/include/CQueryTreeBuilder.h: 
+	Changed type of CQueryContainer. Was before 
+	map<string,CSelDestroyPointer<CQueryTreeNode> >
+	This would lead to double destruction.
+
+	* libInvertedFile/cc/CQueryTreeNode.cc: 
+	* libInvertedFile/include/CQueryTreeNode.h: mContent
+	changed type to CSelfDestroyPointer<CQuery>, i.e.
+	it will be automatically destroyed on the destruction
+	of the query tree. Had to put in some static_cast<CQuery*>
+	in the cout ... lines.
+
+2000-10-13  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* configure.in: instead of changing LD_FLAGS
+	the check for perl now creates a new autoconf
+	variable PERL_LD_ADD.
+	(GIFTServer/Makefile.am): PERL_LD_ADD is used for
+	linking gift. The standard method (LD_FLAGS) does not 
+	work for reasons of sequence dependencies.
+
+2000-10-12  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* configure.in: bugfix
+	-D__GIFT_WITH_MYSQL__ to -D__GIFT_WITH_PERL__
+	in perl expression
+
+2000-10-10  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* scripts/perl/gift-add-collection.pre-pl: 
+	help does not get called before anything happens.
+	BAD. Changed this my moving a call to mkdir.
+	(wanted): Added making a path to the thumbnail
+	if necessary.
+
+2000-10-09  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/cc/xs_init.cc: 
+	ifdef __GIFT_WITH_PERL__ comments out
+	Perl-specific-parts, if needed.
+
+	RELEASE 0.1.4 here
+	
+2000-10-08  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* scripts/perl/gift-add-collection.pre-pl (wanted): changed
+	regexp which checks for image file name extensions to case 
+	insensitive
+
+	* Doc/gift-guide.sgml (Caveat): 
+	This file was changed to make it more readable
+	and to reflect some new features.
+
+2000-10-06  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/cc/Makefile.am: 
+
+	* scripts/perl/gift-add-collection.pre-pl: 
+	adding option --gift-home to specify a location
+	for the configuration directory other than home,
+	if the environment variable $GIFT_HOME is not set.
+
+	* libInvertedFile/cc/CMatrix.cc:
+	* libInvertedFile/include/CMatrix.h:
+	* libInvertedFile/cc/CWeightedFeature.cc:
+	* libInvertedFile/include/CWeightedFeature.h:
+	* libInvertedFile/cc/CMatrixWithEigenVectors.cc:
+	* libInvertedFile/include/CMatrixWithEigenVectors.h:
+	* libInvertedFile/cc/Makefile.am (libInvertedFile_a_SOURCES): 
+	removed CMatrix.cc CMatrixWithEigenVectors.cc 
+	CWeightedFeature.cc as they are currently unused (old idea).
+
+	* scripts/perl/gift-socket-workaround.pre-pl: 
+	* scripts/perl/Makefile.am: 
+	Removed gift-socket-workaround.pre-pl and related targets
+
+	* libInvertedFile/cc/CAccessorProxy.cc: 
+	* libInvertedFile/include/CAccessorProxy.h: 
+	* libInvertedFile/include/CAFPerl.h: 
+	* libInvertedFile/cc/CAFPerl.h: 
+	* libInvertedFile/cc/CBaseTypeFactory.cc (makeQuery): 
+	* libInvertedFile/include/CAcPerl.h: 
+	* libInvertedFile/cc/CAcPerl.h: 
+	* libInvertedFile/include/CQPerl.h: 
+	* libInvertedFile/cc/CQPerl.cc: 
+	ifdef __GIFT_WITH_PERL__ comments out
+	Perl-specific-parts, if needed.
+
+	* libInvertedFile/cc/Makefile.am (INCLUDES): 
+	removed @PERL_CC_ADDITIONS@ 
+
+	* GIFTServer/Makefile.am (gift_LDFLAGS): removed
+	(gift_LDADD): removed @PERL_LD_ADDITIONS@ 
+
+	* libInvertedFile/cc/Makefile.am (INCLUDES): 
+	removed @MY_SQL_PLUS@ @MY_SQL@ 
+
+	* configure.in: got rid of ugly perl code stuff. Implemented
+	real test if -lsqlplus is there and working same for includes
+
+	* scripts/emacs-lisp/gift-compile-current.el (gift-utomake): 
+	Changed this to delete ./config.cache before deletion.
+
+	* perl-compile-test-program.cc:
+	File was added. This file is compiled when running
+	./configure in order to test if perl is well installed.
+	It should compile with a decently installed Perl 5.
+
+2000-10-05  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/include/CAcIFMySQL.h: 
+		...(class string) not accepted
+	by gcc any more. 
+	
+
+	* GIFTServer/Server.cc (main): 
+	gGIFTHome is now the variable which contains
+	the current home directory of the gift.
+
+2000-10-02  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/include/CDNFullyWeighted.h:
+	* libInvertedFile/include/CDocumentNormalizer.h:
+	these obsolete files were deleted
+
+	
+	* libInvertedFile/include/CAcIFFileSystem.h: 
+	* libInvertedFile/include/CAcInvertedFile.h: 
+	* libInvertedFile/include/CAccessorImplementation.h: 
+	deleted: #include "CCollectionFrequencyList.h"
+
+	* libInvertedFile/cc/Makefile.am (libInvertedFile_a_SOURCES): 
+	removed CCollectionFrequencyElement.cc
+
+	* libInvertedFile/cc/CCollectionFrequencyElement.cc: removed
+	* libInvertedFile/include/CCollectionFrequencyElement.h: removed
+	* libInvertedFile/include/CCollectionFrequencyList.h: removed
+	
+	* libInvertedFile/cc/CAlgorithmIDList.cc: 
+	* libInvertedFile/cc/CAlgorithmIDListList.cc: 
+	* libInvertedFile/include/CAlgorithmIDList.h: 
+	* libInvertedFile/include/CAlgorithmIDListList.h: 
+
+	* libInvertedFile/cc/CSessionManager.cc (startConfigElement): 
+	removed references to algorithm-id-list-list
+	(toXML): removed "lReturnValue += CAlgorithmIDListList::toXML();"
+	(convertPropertyToXML): commented out this function
+
+	* libInvertedFile/include/CSessionManager.h: 
+	removed #include "CAlgorithmIDListList.h"
+
+	* libInvertedFile/cc/Makefile.am (libInvertedFile_a_SOURCES): 
+	Removed AlgorithmIDList AlgorithmIDListList
+
+	* libInvertedFile/cc/CAttributeList.cc: ifdef'ed out a couple 
+	of debugging printouts. 
+
+2000-09-29  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* Doc/Makefile.am (gift-guide.txt): Added this target.
+	It makes gift-guide.txt which is then copied to README 
+	by hand.
+
+2000-09-27  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* scripts/perl/CXMLTreeBuilder.pre-pm (addChildToTree): Changed
+	debugging output
+
+2000-09-26  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* scripts/perl/gift-add-collection.pre-pl (wanted): On finding
+	a pre-exsisting feature file, gift checks, if this file is newer
+	than the script. If so, the script will not generate a new feature
+	file. This greatly simplifies re-indexing databases after adding 
+	images. 
+
+2000-09-25  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* scripts/perl/gift-url-to-fts.pre-pl (convertURLToFeatureFile): 
+	* libInvertedFile/cc/CAcIFFileSystem.pre-cc (URLToFeatureList): 
+	Removed feature file naming bug in the case of an previously 
+	unknown image
+
+	* libInvertedFile/cc/CQInvertedFile.cc: 
+	If mModulo!=0, only features with 
+	featureID % mModulo == mModuloClass are
+	taken into account.
+
+	* scripts/perl/CFeedbackClient.pre-pm (getAlgorithmID): 
+	* scripts/perl/CFeedbackClient.pre-pm (getCollectionID): 
+	Changed these functions in a way that they return identity
+	if they are fed with an ID -instead of a number- by mistake.
+
+	* libInvertedFile/include/CQInvertedFile.h: 
+	* libInvertedFile/cc/CQInvertedFile.cc(CQInvertedFile::init): 
+	Reading the attributes mrml::cui_pr_modulo mrml::cui_pr_moculo_class
+	into the variable mModulo and mModuloClass.
+
+	* libInvertedFile/include/mrml_const.h:
+	* libInvertedFile/cc/mrml_const.cc:
+	Newly generated these files from changed DTD using 
+	gift-dtd-to-keywords.pl
+	
+	* dtd/mrml.dtd: added the attributes cui-pr-modulo and 
+	cui-pr-modulo-class to algorithm
+
+2000-09-22  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* GIFTServer/gift-mrml-messages/gift-iconfigure.mrml: 
+	* scripts/perl/CFeedbackClient.pre-pm (configureSession): 
+	Added a further optional parameter $lAdditionalAlgorithmAttributes.
+	This is a string which will be placed at the position of an attribute
+	within the MRML signal for configuration that will be sent to the 
+	server.
+
+2000-09-21  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* GIFTServer/gift-config/gift-config.pre-mrml: 
+	Changed faulty reference to CVLDAudreyTam.pl to
+	CViperLinkDemo.pl
+
+	* scripts/perl/gift-mrml-client.pre-pl: Using Getopt::Long
+	for better configuring this script.
+
+	* ALLFILES: Viper has changed its name to GIFT. According
+	to this all occurences of "viper" have been changed to "gift".
+	Derived names have changed vrom CVL.... to CGL etc. The files
+ 	have also been MOVED accordingly. Sorry for this, but this gives
+	us consistency.
+
+2000-09-19  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* configure.in: adding --enable-set-web-publishing-directory
+	--enable-set-web-publishing-location for improving
+	v-add-collection.pl
+
+	* Doc/viper-guide.sgml (Caveat): Added item containing 
+	description how to "configure" SnakeCharmer after 
+	unpacking.
+
+2000-08-18  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* Doc/viper-guide.sgml (Always): Added changes to
+	reflect changes in v-add-collection.pl . Also adding
+	remarks about JAVA2 vs. JAVA1.1.
+
+2000-08-17  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/cc/CAlgorithmCollection.cc: Added function
+	containsAlgorithmByType
+
+2000-08-16  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/cc/CAlgorithm.cc: Do attribute inheritance
+	for CAlgorithms only (not for other XML elements) like e.g. 
+	<property>
+
+	* libInvertedFile/cc/CAccessorProxy.cc: added perl accessor
+	entry
+
+	* scripts/perl/v-add-collection.pre-pl: Putting thumbnails
+	into a _thumbnail directory. if you are indexing ~/aaa, the
+	thumbnails will be put into ~/aaa_thumbnails by default.
+
+	* libInvertedFile/cc/CAlgorithmCollection.cc(CAlgorithmCollection::getAlgorithmByType): 
+	New, more sensible strategy of returning default algorithm.
+	
+2000-08-15  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* scripts/perl/v-add-collection.pre-pl: In order to avoid 
+	bugs, this v-add-collection.pre-pl creates for each collection
+	created its InvertedFileFeatureInformation.db on the fly.
+
+	More than that, it will now recognize if an image directory is in
+	the public_html, and will set the options accordingly. One does
+	not need to do anything to put things on the web.
+	
+
+	* ViperServer/viper-config/viper-config.pre-mrml: 
+	Changed this file for providing a reasonable configuration for
+	novice users  
+
+2000-07-27  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/include/CAFIFMySQL.h: 
+	* libInvertedFile/cc/CAFIFMySQL.cc: 
+	Added file.
+
+	* libInvertedFile/include/CDocumentFrequencyList.h: 
+	Added default constructor
+
+2000-07-17  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/include/CAcIFFileSystem.h: 
+	* libInvertedFile/cc/CAcIFFileSystem.cc: 
+	This class does what CAcInvertedFile did before.
+	In order to avoid double inheritance, I had to make
+	the CAcURL2FTS class a member [instead of the 
+	inheritance that was used before].
+
+	* libInvertedFile/include/CAcInvertedFile.h: 
+	* libInvertedFile/cc/CAcInvertedFile.cc: 
+	CAcInvertedFile has become purely abstract.
+	
+	* libInvertedFile/include/CAccessor.h: 
+	* libInvertedFile/cc/CAccessor.cc: 
+	* libInvertedFile/include/CAccessorImplementation.h: 
+	* libInvertedFile/cc/CAccessorImplementation.cc: 
+	CAccessor has become a pure abstract class.
+	CAccessorImplementation contains now the 
+	implementation of CAccessor. This is preparing the structure
+	for accessors which access SQL databases.
+
+2000-07-14  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/cc/CAcURL2FTS.cc: 
+	* libInvertedFile/include/CAcURL2FTS.h: 
+	Adding accessors to the filenames in CAcURL2FTS
+
+	* scripts/emacs-lisp/v-compile-current.el (v-switch-to-associated-c++): 	
+	this function is now aware of the fact that there exsist files
+	which have the extension .pre-cc and which will be turned into
+	.cc by a sed script. This allows some preconfigurations.
+	(v-switch-to-associated-h): the same.
+	(v-associated): the same.
+	(v-compile-current): dito 
+
+2000-07-05  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* configure.in: "released" as 0.1.1
+
+2000-07-03  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* Doc/Makefile.am (CLEANFILES): added viper-guide.info
+	* Doc/Makefile.am (all): added target system-doc and 
+	viper-guide.info, in a way that the Makefile will try to make
+	them, however, building will be continued even if the Doc cannot
+	be made.
+
+2000-07-03  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* Doc/viper-guide.sgml : removing remarks about
+	known bugs which have been fixed in the meanwhile.
+
+2000-06-26  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/cc/CQPerl.cc (CQPerl): 
+	Adding the use of CAcPerl
+
+	* libInvertedFile/include/CAcPerl.h: 
+	* libInvertedFile/cc/CAcPerl.cc: 
+	* libInvertedFile/include/CAFPerl.h: 
+	* libInvertedFile/cc/CAFPerl.cc: 
+	New files for configuring perl accessors for a 
+	collection
+
+	
+	* ViperServer/generateInvertedFile.cc (main): 
+	* libInvertedFile/cc/CAFInvertedFile.cc: 
+	Changing new CAcInvertedFile to
+	new CAcIFFileSystem.
+
+	* libInvertedFile/include/CAcIFFileSystem.h:
+	* libInvertedFile/cc/CAcIFFileSystem.cc:
+	* libInvertedFile/include/CAcInvertedFile.h:
+	Moving files:
+	CAcInvertedFile now contains some abstraction
+	of CAcIFFileSystem and CAcIFMySQl.
+	The old CAcInvertedFile is now CAcIFFileSystem
+
+	* libInvertedFile/include/CAcIFMySQL.h:
+	* libInvertedFile/cc/CAcIFMySQL.cc:
+	Created. Will contain Cornelia's code?
+	 removing getRandomRLLs, because unused.
+	
+	* libInvertedFile/include/CAcInvertedFile.h:
+	* libInvertedFile/include/CAccessor.h: 
+	adding comments removing getRandomRLLs, because unused
+
+2000-06-23  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* ViperServer/Makefile.am: 
+	Adding @PERL_LD_ADDITIONS@
+
+	* libInvertedFile/cc/Makefile.am: Adding 
+	@PERL_CC_ADDITIONS@ 
+
+	* configure.in (PERL_LD_ADDITIONS): 
+	* configure.in (PERL_CC_ADDITIONS): New variables 
+	and substitutions which contain the additional cc 
+	and ld flags needed when lining Perl with Viper
+
+	* ViperServer/Server.cc (main): void cast became 
+	char cast. uint became int.
+
+2000-06-21  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/include/CAlgorithmIDList.h: 
+	* libInvertedFile/cc/CAlgorithmIDList.cc: 
+	setID(const string&);
+
+	* libInvertedFile/include/CSessionManager.h: 
+	* libInvertedFile/cc/CSessionManager.cc(CSessionManager::toXMLHandshake): 
+	is not anymore const.
+
+2000-06-20  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* configure.in: 
+	* Makefile.am (SUBDIRS): Changing for separating
+	the libBayesian files from the distribution. These
+	files presently are unused, but we have to check the
+	patent situation before making them GNU. In fact I do not see
+	too many problems, as the inspiration drawn from the patented
+	PicHunter system is quite remote, our system that uses libBayesian
+	is slow and rather for research purposes. However, I would like to
+	contact NEC first before proceeding
+
+	* libBayesian/cc/CDistanceCalculator.cc: changing 
+	calls to do_for_equal_first by adding lInserter.
+	The in-line version does not compile any more with
+	the new gcc.
+
+2000-06-19  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* scripts/perl/v-add-collection.pre-pl (wanted):
+	Viper does not cope well with the fact that kaffe removes "//" out
+	of URLs. So when adding collections, we have to do the same.
+
+	* libInvertedFile/cc/CAccessorCollection.cc: 
+	* libInvertedFile/cc/CAlgorithmCollection.cc: Proper error message
+	when configuration file not found.
+
+2000-06-14  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* scripts/perl/CFeedbackClient.pre-pm (handleStart): 
+	changing m[] to m:: in order to deconfuse the perl mode of
+	XEmacs. Adding more comments.
+
+	* dtd/mrml.dtd: added allows-children tag, as well as some
+	further comments
+
+	* scripts/perl/v-dtd-to-tex.pre-pl: Added a description
+	of the --fragment option
+
+2000-05-25  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/cc/CAlgorithm.cc: the HACK
+	marked part did not cope with text nodes
+	in the configuration before.
+
+2000-05-23  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/include/CXMLElement.h: 
+	* libInvertedFile/cc/CXMLElement.cc: getText Function.
+
+2000-05-19  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* ViperServer/viper-config/Makefile.am (MRMLCONFIG): 
+	Inserted __BINDIR__ and __PERL_LOCATION__ 
+
+	* ViperServer/viper-config/viper-config.pre-mrml: 
+	Added "a-perl" algorithm, removed legacy code 
+	the (property-item-list) and algorithm-list-list.
+
+2000-05-18  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/cc/Makefile.am: 
+	Added a echo|sed to the INCLUDE part. The goal of this
+	is to remove the define -Dbool=char from the perl 
+	configuration data.
+
+	* libInvertedFile/include/CXMLElement.h: 
+	* libInvertedFile/cc/CXMLElement.cc: 
+	Added a type of nodes. Necessary for text/CDATA nodes.
+	
+2000-05-17  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* scripts/perl/CTripleTransfer.pre-pl: 
+	* scripts/perl/CVLDAudreyMTam.pre-pl: 
+	* scripts/perl/CVLStructuredAnnotation.pre-pm: 
+	* scripts/perl/CViperLink.pre-pm: 
+	* scripts/perl/CViperLinkDemo.pre-pl: 
+	* scripts/perl/CXMLTreeBuilder.pre-pm: 
+	* scripts/perl/CXMLTreeVisitor.pre-pm: 
+	* scripts/perl/CXTVTripletList.pre-pm: 
+	* scripts/perl/CXTVTripletList.pre-pm: 
+	* scripts/perl/Makefile.am: 
+	Added these files, changed Makefile.am accordingly
+	(bin_SCRIPTS): 
+
+2000-04-20  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* ViperServer/Server.cc: 
+	* ViperServer/CCommunicationHandler.cc: fixing
+	even more the problem when VIPER_HOME is unset.
+	Test works now.
+	
+
+2000-04-19  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* scripts/perl/CFeedbackClient.pre-pm: 
+	* scripts/perl/CFCMovingTarget.pre-pm: 
+	I spent a "nice afternoon" (between 20:00 and 01:40) changing 
+	some undocumented stuff, i.e. all the files which have to do 
+	with benchmarking and MRML negotiation in Perl, fixing 
+	some small annoying mistakes.
+
+	* scripts/perl/CQueryPradigmMatcher.pre-pm:
+	added a $self where it was missing.
+	
+2000-04-18  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* scripts/perl/CFeedbackClient.pre-pm (getCollection(): 
+	Quite radical changes in about all the program
+	for bringing MRML negotiation on the state of
+	the JAVA/C++ packages.
+
+2000-04-17  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* ViperServer/CCommunicationHandler.cc(readAndParse): 
+	Fixed annoying bug which lets viper crash if the environment 
+	variable VIPER_HOME is unset.
+	
+	* ViperServer/viper-config/Makefile.am (clean): 
+	Have to delete viper-config.mrml when cleaning.
+
+	* scripts/perl/CQueryPradigmMatcher.pre-pm: A perl
+	module for matching query-paradigm and query-paradigm-list
+
+	* scripts/perl/Makefile.am (EXTRA_SCRIPTS): Adding
+	CQueryParadigmMatcher.pre-pm
+
+2000-04-13  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* ViperServer/viper-config/viper-config.pre-mrml: Added query-paradigm
+	tag into algorithm, as well as an empty property sheet.
+
+	* scripts/perl/v-add-collection.pre-pl: Added query-paradigm
+	tag to the "collection" elements in print statement.
+
+2000-04-10  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* ViperServer/Server.cc(sendMessage): 
+	Put last sent message into a separate file
+
+	* ViperServer/CCommunicationHandler.cc(readAndParse): 
+	Put last recieved message into a separate file
+
+2000-04-04  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/include/CAttributeList.h(operator[]): 
+	* libInvertedFile/cc/CAttributeList.cc(operator[]): 
+	got rid of embarassing workaround which seemed to be unnecessary
+	AND causing bugs.
+	
+	* libInvertedFile/cc/CSessionManager.cc(CSessionManager::query): 
+	fixed a bug which made the system crash if the session which 
+	is supposed to be containing the query is unknown. Now the system 
+	exits with an error message instead.
+	
+	* ViperServer/Server.cc(startMRMLElement): 
+	* ViperServer/Server.cc(endMRMLElement): 
+	Commented out this "legacy code".
+
+	* ViperServer/CCommunicationHandler.h(CSortBySessionID_SH):
+	* ViperServer/CCommunicationHandler.cc(CSortBySessionID_SH):
+	never used=>removed
+
+	* libInvertedFile/include/CXEVCommunication.h(startVisit): 
+	* libInvertedFile/cc/CXEVCommunication.cc(startVisit): 
+	* libInvertedFile/include/CXMLElementVisitor.h(startVisit): 
+	* libInvertedFile/cc/CXMLElementVisitor.cc(startVisit): 
+	* libInvertedFile/include/CXEVCommunication.h(endVisit): 
+	* libInvertedFile/cc/CXEVCommunication.cc(endVisit): 
+	* libInvertedFile/include/CXMLElementVisitor.h(endVisit): 
+	* libInvertedFile/cc/CXMLElementVisitor.cc(endVisit): 
+	Changing from preorder visits to a visit both ways, i.e.
+	visitor is called once before visiting the children, 
+	once afterwards 
+		
+	* ViperServer/CCommunicationHandler.h(processQuery): 
+	* ViperServer/CCommunicationHandler.cc(processQuery): 
+	* ViperServer/CCommunicationHandler.h(endConfiguration): 
+	* ViperServer/CCommunicationHandler.cc(endConfiguration): 
+	* ViperServer/CCommunicationHandler.h(setCurrentSession): 
+	* ViperServer/CCommunicationHandler.cc(setCurrentSession): 
+	Cleaning up. Deleted all functions which are not used any
+	more because of the new visitor aproach. Also trying to move
+	things into the threadsafe direction
+
+2000-03-28  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* scripts/emacs-lisp/v-compile-current.el (v-compile-current): 
+	added JAVA support to this function which before worked only for
+	.cc and .h files
+
+2000-03-27  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/cc/Makefile.am (libInvertedFile_a_SOURCES): 
+	adding CXMLElementVisitor and CXEVCommunication
+
+	* libInvertedFile/include/CXEVCommunication.h: 
+	* libInvertedFile/cc/CXEVCommunication.cc: 
+	* libInvertedFile/include/CXMLElementVisitor.h: 
+	* libInvertedFile/cc/CXMLElementVisitor.cc: 
+	A visitor which is supposed to visit the subtree of an 
+	CXMLElement
+	
+	* ViperServer/Server.cc
+	* ViperServer/CCommunicationHandler.h:
+	* ViperServer/CCommunicationHandler.cc:
+	Moving things towards DOM parsing with subsequent traversal. This
+	is a bit slower, but easier to change afterwards.
+	
+	* ViperServer/CCommunicationHandler.h(stringOfRelevanceLevelList): 
+	* ViperServer/CCommunicationHandler.cc(stringOfRelevanceLevelList): 
+	Removed this obsolete function.
+
+	* libInvertedFile/include/CXMLElement.h(getNumberOfAttributes): 
+	* libInvertedFile/cc/CXMLElement.cc(getNumberOfAttributes): 
+	adding a function to get the number of attributes in an CXMLElement.
+
+	* libInvertedFile/include/CPropertySheetMatcher.h: 
+	* libInvertedFile/cc/CPropertySheetMatcher.cc: 
+	* libInvertedFile/cc/Makefile.am:
+	A new class for matchin property sheets. This becomes important
+	for getAlgorithm, getCollection.
+
+	* ViperServer/CCommunicationHandler.cc(getAlgorithms): 
+	* ViperServer/CCommunicationHandler.h(getAlgorithms): 
+	added
+
+	* ViperServer/Server.cc(startMRMLElement): 
+	adding getAlgorithms and getCollections.
+
+	* ViperServer/CCommunicationHandler.cc(getCollections): 
+	* libInvertedFile/include/CSessionManager.h(getCollections): 
+	* libInvertedFile/cc/CSessionManager.cc(getCollections): 
+	New function. Probably only temporarily in CSessionManager, but
+	here to stay in the CCommunicationHandler.
+
+	* libInvertedFile/include/CAlgorithmCollection.h(CAlgorithmCollection): 
+	* libInvertedFile/cc/CAlgorithmCollection.cc(CAlgorithmCollection): 
+	Constructor now takes an argument, the config file.
+
+	* libInvertedFile/include/CAlgorithmCollection.cc(startAlgorithmCollectionElement):
+	* libInvertedFile/include/CAlgorithmCollection.cc(endAlgorithmCollectionElement): 
+	Making CAlgorithmCollection read the configuration file
+	as a part of operation to disentangle CAlgorithmCollection
+	and CSessionManager
+
+	* libInvertedFile/include/CSessionManager.h: 
+	Adding some critic comments to CSessionManager.
+
+	* libInvertedFile/cc/CAccessorProxy.cc(toXMLElement): 
+	* libInvertedFile/include/CAccessorProxy.h(toXMLElement): 
+	* libInvertedFile/include/CAccessorCollection.h(toXMLElement): 
+	* libInvertedFile/cc/CAccessorCollection.cc(toXMLElement): 
+	* libInvertedFile/cc/CAlgorithmCollection.cc(toXMLElement): 
+	* libInvertedFile/include/CAlgorithmCollection.h(toXMLElement): 
+	Added the function toXMLElement which turns the content of
+	the respective structures into an CXMLElement which can be
+	used for answering mrml_const::get_collections and
+ 	mrml_const::get_algorithms requests
+	
+
+2000-03-24  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* scripts/perl/v-dtd-to-tex.pre-pl: 
+	complete rewrite of this perl program, in order
+	to make output better, and in order to suppress
+	our proprietary extensions from the tex output
+	if needed. As a downside, this perl program now
+	needs XML::Parser, which is not so surprising after
+	all.
+
+2000-03-23  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* ViperServer/CCommunicationHandler.h(openSession): 
+	* ViperServer/CCommunicationHandler.h(renameSession): 
+	* ViperServer/CCommunicationHandler.h(deleteSession): 
+	* ViperServer/CCommunicationHandler.h(getSessionsForUser): 
+	* ViperServer/CCommunicationHandler.cc(openSession): 
+	* ViperServer/CCommunicationHandler.cc(renameSession): 
+	* ViperServer/CCommunicationHandler.cc(deleteSession): 
+	* ViperServer/CCommunicationHandler.cc(getSessionsForUser): 
+	Changed return value of these functions to CXMLElement*
+	
+	* ViperServer/CCommunicationHandler.h(getSessions):
+	* ViperServer/CCommunicationHandler.cc(getSessions):
+	* ViperServer/Server.cc: 
+	adding functions to implement mrml:get-sessions.
+
+2000-03-22  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* ViperServer/CCommunicationHandler.h(newSession):
+	* ViperServer/CCommunicationHandler.cc(newSession):
+	deleted.
+
+	* dtd/mrml.dtd(open-session): 
+	Added "password" attribute.
+
+	* ViperServer/CCommunicationHandler.h(openSession): 
+	* ViperServer/CCommunicationHandler.h(renameSession): 
+	* ViperServer/CCommunicationHandler.h(deleteSession): 
+	* ViperServer/CCommunicationHandler.h(getSessionsForUser): 
+	* ViperServer/CCommunicationHandler.cc(openSession): 
+	* ViperServer/CCommunicationHandler.cc(renameSession): 
+	* ViperServer/CCommunicationHandler.cc(deleteSession): 
+	* ViperServer/CCommunicationHandler.cc(getSessionsForUser): 
+	Adding new functions for new MRML handshake.
+
+2000-03-21  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+        * version 0.1 as sent to the FSF.
+	* configure.in: 
+	* Makefile.am (SUBDIRS): 
+	Added a new directory for scientific work which has not yet been 
+	published and thus is not yet released.
+
+2000-03-13  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/cc/CAcInvertedFile.cc(newGenerateInvertedFile): 
+	Delete viper-auxiliary-? files created by the mergesort performed.
+	The files stay intact if newGenerateInvertedFile aborts with an
+	error for facilitating debugging.
+
+	* libInvertedFile/include/mrml_const.h: 
+	* libInvertedFile/cc/mrml_const.cc: 
+	Making all string constants named constants in the c++ sense.
+	By this we can check if a string constant is defined or not, typos
+	are detected at compile time.
+
+2000-03-05  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/include/CAcDistanceMatrix.h: 
+	* libInvertedFile/include/CAcInvertedFile.h: 
+	* libInvertedFile/include/CAcURL2FTS.h: 
+	* libInvertedFile/cc/CAcDistanceMatrix.cc: 
+	* libInvertedFile/cc/CAcInvertedFile.cc: 
+	* libInvertedFile/cc/CAcURL2FTS.cc: 
+	Have to change the constructors for the new CAccessor factory design
+
+2000-03-01  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/include/CAccessorFactoryContainer.h: 
+	* libInvertedFile/include/CAccessorFactoryContainer.cc: 
+	* libInvertedFile/include/CAccessorFactory.h: 
+	* libInvertedFile/include/CAccessorFactory.cc: 
+	* libInvertedFile/include/COpenCloseTracker.h: 
+	* libInvertedFile/cc/COpenCloseTracker.cc: 
+	* libInvertedFile/include/CAccessorProxy.h: 
+	* libInvertedFile/cc/CAccessorProxy.cc: 
+	* libInvertedFile/cc/CAccessorCollection.cc: 
+	Changing the CAccessor factory design. Makes adding accessors as easy
+	as adding CQueries.
+
+2000-02-18  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* scripts/perl/CFeedbackClient.pre-pm:
+	* scripts/perl/v-mrml-client.pre-pl:
+	renamed file from v-mrml-client.pre-pm to CFeedbackClient.pre-pm
+	created new v-mrml-client.pre-pm which uses CFeedbackClient
+	v-mrml-client contains now a very simple client which does
+	a one-shot query
+
+2000-02-17  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/cc/CQInvertedFile.cc(buildQueryHash): 
+	The deleting of feature lists that are not wanted 
+	does is not compatible with STL vectors. Unfortunately
+	we changed the type to vector, so we have to do something
+	we chose to use the #define from CDocumentFrequencyList
+
+	* ViperServer/Server.cc(startMRMLElement): 
+	* ViperServer/Server.cc(endMRMLElement): 
+	query-step: building an XML subtree instead of a 
+	CRelevanceLevelList. Changing tag names to new MRML
+	
+	* ViperServer/CCommunicationHandler.h(startTreeBuilding): 
+	* ViperServer/CCommunicationHandler.h(addToCurrentTree): 
+	* ViperServer/CCommunicationHandler.h(moveUpCurrentTree): 
+	* ViperServer/CCommunicationHandler.cc(startTreeBuilding): 
+	* ViperServer/CCommunicationHandler.cc(addToCurrentTree): 
+	* ViperServer/CCommunicationHandler.cc(moveUpCurrentTree): 
+	Adding functionality for making document subtrees. 
+
+	* libInvertedFile/cc/CSessionManager.cc: 
+	* libInvertedFile/cc/CQuery.cc: 
+	* libBayesian/cc/CEnhancedPicHunter.cc: 
+	* libInvertedFile/cc/CQIFFerDeLance.cc: 
+	* libInvertedFile/cc/CQInvertedFile.cc:
+	* libInvertedFile/include/CSessionManager.h: 
+	* libInvertedFile/include/CQuery.h: 
+	* libBayesian/include/CEnhancedPicHunter.h: 
+	* libInvertedFile/include/CQIFFerDeLance.h: 
+	* libInvertedFile/include/CQInvertedFile.h:
+	In fastQuery and query: a new way of passing parameters. Parameters
+	now given as an XML document subtree (CXMLElement)
+
+	
+	
+2000-02-14  Wolfgang MÜLLER  <muellerw@cui.unige.ch>
+
+	* FeatureExtraction/extract_block_features.c: HACK to convert
+	integer features to float features. WARNING: this is a real
+	hack. We write floats in the place of integers. At the time
+	of writing this happens at line 480. (For people who get the
+	creeps: David wants to redesign feature extraction anyway).
+
+	* FeatureExtraction/viper_features.h (FREQ_MAX): Changed to 0x7ffffff
+	to get a high resolution for the above HACK
+
+2000-02-10  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libInvertedFile/cc/CAcInvertedFile.cc (newGenerateInvertedFile): 
+	* libInvertedFile/cc/CAcInvertedFile.cc (generateInvertedFile): 
+	* libInvertedFile/cc/CAcInvertedFile.h (newGenerateInvertedFile): 
+	Changes for incorporating new writeBinary function.
+	Added function newGenerateInvertedFile. Supposed to be much faster	
+	* libInvertedFile/cc/CInvertedFileChunk.cc (writeBinary): added 
+	one parameter. Now the CInvertedfileChunk also writes the FeatureID.
+	Before that the caller had to assure that FeatureID was written.
+
+2000-01-24    Wolfgang Mueller <muellerw@cui.unige.ch>
+
+	* libInvertedFile/cc/CScoreBoard.h(CScoreboard::CScoreboard):
+	* libInvertedFile/cc/CScoreBoard.cc(CScoreboard::operator()):
+	* libInvertedFile/cc/CScoreBoard.cc(CScoreboard::CScoreboard): 
+	  Changed things such, that CScoreBoard does not need a CAccessor for
+	  being constructed. 
+
+2000-01-06  Wolfgang Mueller  <Wolfgang.Mueller@cui.unige.ch>
+
+	* libInvertedFile/cc/CQInvertedFile.cc (blockFeatureGroup): 
+	now activates blocking of feature groups
+
+2000-01-04  Wolfgang Mueller  <Wolfgang.Mueller@cui.unige.ch>
+
+	* libInvertedFile/cc/CWeightingFunction.cc (addQueryFeature): 
+		Even if the inital version entry is younger than this...
+		This is to notify other members, that I deleted in
+		the function mentioned above the adjustRelevanceSum entry,
+		which seems redundant to me.
+		(setID): Necessary changes for rocchio weighting.
+
+1999-11-29  Wolfgang Mueller  <muellerw@flyer.unige.ch>
+
+	* libInvertedFile/include/CInvertedFileQuery.h: 
+	Changed pruning interface: Scoreboard pruning now works
+	on a fraction of the total number of features, as well as
+	a factor of the total number of documents we want to retrieve.
+	
+
+1999-11-18  Wolfgang Mueller  <muellerw@flyer.unige.ch>
+
+	* libInvertedFile/include/ViperExceptions.h: 
+	* libInvertedFile/include/ViperExceptions.h: VEProgrammingMistake
+	added. Goal of this: show if we think what you experienced is not
+	an uncaught case, but rather a blunt programming mistake.
+
+	* libInvertedFile/cc/CAlgorithm.cc (buildQueryTree): 
+	preliminary implementation
+
+	* libInvertedFile/cc/CAlgorithmCollection.cc (getAlgorithm): 
+	* libInvertedFile/cc/CAlgorithmCollection.cc (makeAlgorithm): 
+	* libInvertedFile/include/CAlgorithmCollection.h (getAlgorithm):
+	* libInvertedFile/include/CAlgorithmCollection.h (makeAlgorithm):
+	Thes functions operate now on algorithm TYPES.
+
+	* libInvertedFile/include/CQuery.h: added addChild function and
+	lCChildren type and lCChildren mChildren variable. For building
+	query trees.
+
+	* libInvertedFile/cc/CAlgorithm.cc: 
+	CAlgorithm::getType added in reaction to previous change.
+
+	* mrml.dtd: added attribute "type" to algorithm.
+	Background of this is: the actual IDs of the algorithms have to be
+	generated by the interface, because there can be multiple
+	instances of one type of algorithm. Only the interface knows if
+	this is the case. So TODO: we need to add also the functionality to
+	property sheets to send a unique ID.
+
+	* libInvertedFile/cc/CInvertedFileQuery.cc
+	(buildNormalizedQueryList): 
+	Using CSortByAbsQueryFactor_WF instead of CSortByQueryFactor_WF
+	(without the "Abs") for queries.
+
+	* libInvertedFile/include/CWeightingFunction.h: 
+	added CSortByAbsQueryFactor_WF. its a new sorting
+	operator  for making Viper more immune
+	against negative feedback. This probably will become unnecessary
+	when we incorporate Rocchio feedback. The problem was that if
+	features get negative they get pruned, although they might have
+	large impact on the query result.
+	
+

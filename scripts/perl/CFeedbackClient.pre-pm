@@ -1,0 +1,1312 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+# Author of this file: Wolfgang Müller
+# 
+require 5.002;
+#use strict;
+use Socket;
+use FileHandle;
+use English;
+use IO::File;
+use IO::Socket;
+use XML::Parser;
+use CQueryParadigmMatcher;
+
+=pod
+
+It might be useful for a feedback client to treat multiple sessions at the same time and 
+to gather the corresponding information. The session data is stored in CSessions
+
+=cut
+
+package CFeedbackClient;
+require Exporter;
+
+@ISA= qw(Exporter
+	 CQueryParadigmMatcher);
+@EXPORT= qw(new
+	    setAddress
+	    doQueryGroup
+	    startSession
+	    saveSession
+	    closeSession
+	    configureSession
+	    makeQueryString
+	    sendQueryString
+	   );
+
+
+#############################################################
+#
+# A script for performing 
+# benchmarks on CBIRS systems
+# which use MRML
+#
+#############################################################
+#
+#
+# WARNING: this code is quick and dirty, but flexible.
+# it will be difficult to make it multi-threaded, but
+# this probably will not be interesting for a while
+#
+#
+#############################################################
+
+##################################################
+#
+# maintaining the xpath to the currently parsed tag
+#
+# what we are doing here is to have a path like
+# /root-element-name/child-element-name/grandchild-element-name
+# to the currently parsed XML element.
+# In the example above, the root XML element of the document 
+# has the name "root-element-name", the currently parsed XML element
+# has the name "grandchild-element-name"
+
+##############################
+#
+# pushes the currently parsed XML element to the back of the path
+#
+sub pushToXMLPath( $ ){
+
+  my$self=shift;
+
+  my$inElement=shift;
+
+  push @{$self->{path}},$inElement;
+
+}
+##############################
+#
+# pops the last name from the path
+#
+sub popFromXMLPath( ){
+
+  my$self=shift;
+  return pop @{$self->{path}};
+
+}
+##############################
+#
+# clears the path
+#
+sub clearXMLPath( ){
+
+  my$self=shift;
+  $self->{path}=[];
+
+}
+
+##############################
+#
+# transforms the path to a string
+#
+sub getXMLPath( ){
+
+  my$self=shift;
+  "/".join("/",@{$self->{path}});
+
+}
+
+############################################################
+#
+# constructor
+#
+##############################
+#
+# new
+#
+sub new( ){
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize();
+  return $self;
+}
+##############################
+#
+# initialises this:
+# create an XML parser
+#
+sub initialize(){
+  my$self=shift;
+
+  $self->clearResultList();
+  
+  $self->{locQuery}=[];
+
+  $self->{parser} = new XML::Parser(Handlers => {Start => \&handleStart,
+						 End => \&handleEnd,
+						});
+
+  # Make the parser know who is this structure 
+  $self->{parser}->{mCaller}=$self;
+  $self->{parser}->{mMagic}=42;
+  ###############################
+  #
+  # for quick changes what to look at when debugging/testing
+  # set the value for a given function to "1" for getting
+  # debugging code printed in this function
+  # warning: this is done by hand, there is nothing automatic...
+  #
+  $self->{vDEBUG}={
+		   configureSession =>  0,
+		   startSession =>      0,
+		   addCollection =>     0,
+		   doFirstQueryStep =>  0,
+		   doQueryStep =>       0,
+		   readAndParse =>      0, 
+		   buildNewQuery =>     0,
+		   handleStart =>       0,
+		   handleEnd =>         0,
+		   setRelevantImages => 0,
+		   sendQueryString =>   0,
+		  };
+  #
+  # printing which functions are to be debugged
+  #
+  print "Printing debugging info for the functions:\n";
+  {
+    my $i;
+    foreach $i (keys(%{$self->{vDEBUG}})){
+      if($self->{vDEBUG}->{$i}){
+	print "$i\n";
+      }
+    }
+  }
+
+  ###############################
+  #
+  # Initialise using reasonable values
+  #
+
+  #
+  # initially no algorithms available and none chosen
+  #
+  $self->clearAlgorithm();
+  $self->clearCollection();
+  $self->setSessionID("");
+
+  #
+  # query for 20 images without cutoff
+  #
+  $self->setCutoff(0.0);
+  $self->setResultSize(20);
+
+  #
+  # talk to the localhost at port 12789
+  #
+  $self->setAddress("localhost:12789");
+}
+
+##############################
+#
+# Set a new address for the CBIR server
+#
+# Parameters:
+# inAddress: Address in "server:port" format
+#            e.g. "localhost:12789"
+sub setAddress( $ ){
+  my$self=shift;
+  my $inAddress=shift;
+  ($self->{mHost},$self->{mPort})=split(":",$inAddress);
+}
+
+
+###############################
+#
+# Setting the array of relevant images
+# the relevance feedback will be generated
+# based on these images.
+# 
+# Parameter: 
+# a list of URLs of relevant images
+#
+sub setRelevantImages{
+  my$self=shift;
+  #a list of the relevant images
+  $self->{gRelevantImages}=[];
+  @{$self->{gRelevantImages}}=@_;
+  
+  #
+  # building a hash to look up
+  # if a given url belongs to an 
+  # image from the list
+  #
+  my $i;
+  foreach $i (@{$self->{gRelevantImages}}){
+    print "relevant image: $i\n" if($self->{vDEBUG}->{setRelevantImages});
+    $self->{locRelevantHash}->{$i}=1;
+  }
+}
+
+###############################
+#
+# get the list of relevant images
+#
+sub getRelevantImages(){
+  my$self=shift;
+  return $self->{gRelevantImages};
+}
+
+
+#########################################
+#
+# HELPERS FOR XML WRITING 
+# (largely unused, but its a c++-reflex ;-) 
+#  in perl things like that are more quickly done 
+#  by hand)
+#
+
+#
+# attribute-value pair to attribute="value"
+#
+sub toAttribute{
+  my$self=shift;
+  my $inName=  shift;
+  my $inValue= shift;
+  
+  return " $inName=\"$inValue\"";
+}
+
+#
+# Elementname, list of attribute/value pairs => element start tag
+#
+sub toStartTag( $$$ ){
+  my$self=shift;
+
+  
+  my $inEmpty=shift;
+  my $inName=shift;
+  my $inAttributes=shift;
+  
+  my $lReturnValue="";
+  
+  my $i;
+  
+  foreach $i (values(%$inAttributes)){
+    $lReturnValue.=$self->toAttribute(@{$i});
+  }
+  
+  if($inEmpty){
+    return "<$inName $lReturnValue/>\n";
+  }else{
+    return "<$inName $lReturnValue>\n";
+  }
+}
+#
+# Element name to element end tag
+#
+sub toEndTag( $ ){
+  my$self=shift;
+
+  my $inName=shift;
+  return "</$inName>\n";
+}
+
+########################################
+#
+# making a query string
+#
+# PARAMETERS:
+# lQueryImages: a REFERENCE to a list of URLs
+#
+# OPTIONAL:
+# 
+# inSession:   the MRML session-id of this session
+# inAlgorithm: the number of the algorithm to be used
+# inCollection: the number of the collection to be used.
+#       both numbers are the number in the sequence in which they
+#       were sent by the MRML server when the information was requested
+#       by this client
+sub makeQueryString( $;$$$ ){
+  my$self=shift;
+  my $lQueryImages=shift;
+  my $inSession=(shift || $self->getSessionID());
+  my ($inAlgorithm)=$self->getAlgorithmID(shift);
+  my ($inCollection)=$self->getCollectionID(shift);
+
+  my $lAdditionalAlgorithmAttributes=shift || "";
+
+  my $inResultSize=$self->getResultSize();  # the desired result size
+  my $inCutoff=$self->getCutoff();          # the cutoff.
+
+
+  if($self->{vDEBUG}->{makeQueryString}){
+    print $inSession,"\n";
+    print $inResultSize,"\n";
+    print $inCutoff,"\n";
+    print $inCollection,"\n";
+    print $inAlgorithm,"\n";
+  }
+
+
+  #
+  # building the string "query-step" + headers
+  #
+  my $lResult=qq(<?xml version="1.0" standalone="no" ?>
+		 <!DOCTYPE mrml SYSTEM "~/public_html/dtd/mrml.dtd">
+		 <mrml session-id="$inSession">
+		 <query-step 
+		 result-size="$inResultSize" 
+		 result-cutoff="$inCutoff" 
+		 collection-id="$inCollection" 
+		 algorithm-id="$inAlgorithm">
+		 <user-relevance-element-list>);
+
+  foreach $i (sort {$$a[0] cmp $$b[0]} @$lQueryImages){
+
+    my($lURL,$lRelevance)=@$i;
+
+
+    $lResult.=qq(
+		 <user-relevance-element 
+		 user-relevance="$lRelevance" 
+		 image-location="$lURL"/>
+		);
+  }
+  
+  $lResult.=qq(</user-relevance-element-list>
+	       </query-step>
+	       </mrml>
+	      );
+  return $lResult;
+}
+
+############################################################
+#
+# Handling incoming MRML
+# using XML::Parser
+#
+
+########################################
+#
+# Building and maintaining a list of query results
+#
+##############################
+#
+# clear the list of results
+#
+sub clearResultList(){
+  my$self=shift;
+
+  $self->{locResultList}=[];
+}
+
+##############################
+#
+# add a URL-userrelevance pair to the list of results
+# PARAMETERS:
+# inURL           the URL
+# inUserRelevance the relevancelevel
+sub addToResultList( $$ ){
+  my$self=shift;
+
+  my $inURL= shift;
+  my $inUserRelevance= shift;
+
+  push @{$self->{locResultList}},[$inURL,$inUserRelevance];
+}
+##############################
+#
+# get the list of URL-userrelevance pairs
+# the result is a reference.
+#
+sub getResultList( ){
+  my$self=shift;
+
+  return $self->{locResultList};
+}
+##############################
+#
+# turns the list of URL-userrelevance pairs
+# into a hash and returns a reference to this hash
+#
+sub getResultHash( ){
+  my$self=shift;
+
+  my @lResultList=@{$self->getResultList( )};
+  
+  my $lReturnValue={};
+
+  foreach $i (@lResultList){
+    $lReturnValue->{$i->[0]}=$i->[1];
+  }
+
+  return $lReturnValue;
+}
+########################################
+#
+# Expat parser handlers
+#
+
+##############################
+#
+# handle the start of an element
+#
+sub handleStart( $$ ){
+  
+  my $self=shift;
+  
+  die "BLACK MAGIC!" if ($self->{mMagic}!=42);
+  
+  $self=$self->{mCaller};
+  
+  my $inElement=shift;
+  
+  $self->pushToXMLPath($inElement);
+  
+  my %inAttributes=@_;
+  
+  my $lPath=$self->getXMLPath();
+  
+
+  #
+  # print debugging info if necessary
+  #
+  if($self->{vDEBUG}->{handleStart}){
+    print("start ",$inElement,",",join(":",%inAttributes),"\n");
+  }
+  #
+  # add an algorithm to the list of possible algorithms
+  #
+  if($lPath=~m:algorithm-list/algorithm$:){
+    $self->addAlgorithm($inAttributes{"algorithm-type"});
+  }
+  #
+  # add a collection to the list of possible collections
+  #
+  if($lPath=~m:collection-list/collection$:){
+    $self->addCollection($inAttributes{"collection-id"});
+  }
+  #
+  # add a collection to the list of possible collections
+  #
+  if($lPath=~m:algorithm/query-paradigm-list/query-paradigm:){
+    if($self->{vDEBUG}->{handleStart}){
+      print "add-QP§§§§§§§§§§§§§$inAttributes{'interaction-type'}§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§§\n";
+    }
+    $self->addQueryParadigmToCurrentAlgorithm(\%inAttributes);
+  }
+  if($lPath=~m:collection/query-paradigm-list/query-paradigm:){
+    $self->addQueryParadigmToCurrentCollection(\%inAttributes);
+  }
+
+  if($lPath eq "/mrml"){
+    $self->setSessionID($inAttributes{"session-id"});
+  }
+
+  if($inElement eq "query-result-element-list"){
+    $self->clearResultList();
+  }
+
+     #
+     #
+     #
+  if($inElement eq "query-result-element"){
+    $self->addToResultList($inAttributes{"image-location"},
+			   $inAttributes{"calculated-similarity"});
+  }
+}
+
+##############################
+#
+# handle the end of an element
+#
+sub handleEnd( $ ){
+  my $self=shift;
+  $self=$self->{mCaller};
+  
+  my $inElement=shift;
+
+  $self->popFromXMLPath($inElement);
+  
+  if($inElement eq "query-result"){
+    $self->buildNewQuery($self->getResultList(),
+			 $self->{locRelevantHash});
+  }
+  print "end ",$inElement,"\n" if($self->{vDEBUG}->{handleEnd}); 
+}
+
+
+############################################################
+#
+# Accessors
+#
+#
+
+###############################
+#
+# The following three functions support you in 
+# opening several sessions
+#
+
+##############################
+#
+# Clear the list of open sessions
+#
+sub clearSessionIDList(){
+  my$self=shift;
+  $self->{mSessionIDList}=[];
+}
+
+##############################
+#
+# add an MRML session-id to the list of open sessions
+#
+sub addSessionIDToList( $ ){
+  my$self=shift;
+  
+  my $lAddedItem= shift || $self->getSessionID();
+  
+  $self->clearSessionID() unless defined($self->{mSessionIDList});
+  
+  push @{$self->{mSessionIDList}},
+}
+##############################
+#
+# get either the last or the nth session-id
+# from the list
+# PARAMETER
+# inN : the n-th session-id in the list is to be returned
+sub getSessionIDFromList(  ;$ ){
+  my$self=shift;
+  
+  return $self->{mSessionIDList}->[(0 || shift)];
+}
+
+
+###############################
+#
+# setSessionID is used at each mrml-message
+# to set the SessionID 
+# TO THE ONE USED IN THE LAST MESSAGE 
+#
+# remark: THIS IS NOT BEAUTIFUL
+#
+sub setSessionID( $ ){
+  my$self=shift;
+
+  $self->{gSessionID}=shift;
+}
+#
+# get the sessionID as written by the function above
+#
+sub getSessionID( ){
+  my$self=shift;
+
+  return $self->{gSessionID} if defined($self->{gSessionID});
+  return "no-session-id-available";
+}
+########################################
+#
+# creating/maintaining a list of all algorithms available
+#
+#
+##############################
+#
+# clear
+#
+sub clearAlgorithm( ){
+  my$self=shift;
+  return $self->{algorithm}=[];
+}
+##############################
+#
+# add to the "current" algorithm a query-paradigm.
+# the "current" algorithm is defined as the one
+# containing the query-paradigm tag in question
+#
+sub addQueryParadigmToCurrentAlgorithm( $ ){
+  my $self=shift;
+  my $lNewQueryParadigm=shift;
+  
+  if($self->{vDEBUG}->{addQueryParadigmToCurrentAlgorithm}){
+    print "addQueryParadigmToCurrentAlgorithm Acting on algorithm $self->{algorithm}->[-1]->{'algorithm-id'}\n";
+  }
+  $self->{algorithm}->[-1]->{"query-paradigm-list"}=[] 
+    unless defined($self->{algorithm}->[-1]->{"query-paradigm-list"});
+
+  # add this paradigm to the hash of query paradigms
+  push @{$self->{algorithm}->[-1]->{"query-paradigm-list"}},$lNewQueryParadigm;
+}
+##############################
+#
+# add an algorithm to the list of available algorithms
+#
+sub addAlgorithm( $ ){
+  my$self=shift;
+  
+  my $lAlgorithmID=shift;
+  
+  my $lNewAlgorithm={"algorithm-id" => $lAlgorithmID,
+		     "query-paradigm-list" => []};
+  
+  print("\naddalgorithm ",join(",",@{$lNewAlgorithm}),"\n") if $vDEBUG{addAlgorithm};
+
+
+  $self->clearAlgorithm() unless defined $self->{algorithm};
+  
+  push @{$self->{algorithm}},$lNewAlgorithm;
+}
+##############################
+#
+# get either the 0th or the Nth algorithm from the list of available algorithms
+# Parameters: N
+# 
+# RETURNVALUE: the algorithm given back by this is a hash containing the algorithm-id
+#              as well as the list of available query paradigms
+#
+sub getAlgorithm( ;$){
+  my$self=shift;
+  
+  return $self->{algorithm}->[(shift || 0)];
+}
+##############################
+#
+# get either the 0th or the Nth algorithm-id from the list of available algorithms
+# 
+#
+sub getAlgorithmID( ;$){
+  my$self=shift;
+  
+  my $inAlgorithmNumber=shift;
+
+  if($inAlgorithmNumber=~m/[^0-9 \t]/){
+    return $inAlgorithmNumber;#in fact, the algorithm number was already an ID
+  }
+
+  return $self->getAlgorithm($inAlgorithmNumber||0)->{"algorithm-id"};
+}
+
+##############################
+#
+# get either the 0th or the Nth algorithm-type from the list of available algorithms
+# 
+# XXX: CHECK IF THIS FUNCTION IS USED
+#
+sub getAlgorithmType( ;$){
+  my$self=shift;
+  
+  return $self->getAlgorithm(shift||0)->{"algorithm-type"};
+}
+
+############################################################
+#
+# Making and maintaining a list of all collections available
+#
+#
+sub clearCollection( ){
+  my$self=shift;
+  return $self->{collection}=[];
+}
+##############################
+#
+# adding a query paradigm to the list of query-paradigms allowed for this collection
+#
+#
+sub addQueryParadigmToCurrentCollection( $ ){
+  my $self=shift;
+  my $lNewParadigm=shift;
+  
+  # add this paradigm to the hash of query paradigms
+  push @{$self->{collection}->[-1]->{"query-paradigm-list"}},$lNewQueryParadigm;
+}
+##############################
+#
+# adding a collection to this list
+# PARAMETER: ID of the collection
+#
+sub addCollection( $ ){
+  my$self=shift;
+  
+  my $lCollectionID=shift;
+  
+  my $lNewCollection={"collection-id" => $lCollectionID,
+		      "query-paradigm-list" => []};
+  
+  print("\nxxx addcollection $lCollectionID:",join(",",(%{$lNewCollection})),"\n") ;#if $vDEBUG{addCollection};
+
+
+  $self->clearCollection() unless defined $self->{collection};
+  
+  push @{$self->{collection}},$lNewCollection;
+}
+##############################
+#
+# Get a hash describing the Nth collection
+# PARAMETER: N/CollectionID 
+#             
+sub getCollection( ;$){
+  my$self=shift;
+  
+  my $inCollectionID=shift;
+
+  if($inCollectionID=~m/[a-zA-Z]/){
+    foreach $i (@{$self->{collection}}){
+      print "\ncollection-id: $i->{'collection-id'}\n";
+      if($i->{"collection-id"} eq $inCollectionID){
+	return $i;
+      }
+    }
+    die "in CFeedbackClient::getCollection Could not get any collection matching $inCollectionID "
+  }
+
+  return $self->{collection}->[($inCollectionID || 0)];
+}
+##############################
+#
+# Get the collection ID of the Nth collection
+#             
+sub getCollectionID( ;$){
+  my$self=shift;
+  
+  my $inCollectionNumber=shift;
+
+  if($inCollectionNumber=~m/[^0-9 \t]/){
+    return $inCollectionNumber;#in fact, the collection number was already an ID
+  }
+
+  return $self->getCollection(shift||0)->{"collection-id"};
+}
+
+##############################
+#
+# Find out which algorithms fit your preferred query paradigm
+# PARAMETERS: inParadigm, a query paradigm element represented 
+#             by a hash from attriute to value
+sub getAlgorithmsByParadigm( $ ){
+  my$self=shift;
+  
+  my $inParadigm=shift;
+  
+  my @lResult;
+
+  foreach $i (@{$self->{algorithm}}){
+    
+    if($self->isMatchingQueryParadigmList($i->{"query-paradigm-list"},
+					  $inParadigm)){
+      print "found ",$i->{"algorithm-id"},":",join(",",(%$i)),"\n";
+      
+      push @lResult,$i;
+    }
+  }
+  return @lResult;
+}
+##############################
+#
+# Find out which algorithms fit your preferred query paradigm and collection
+#
+sub getAlgorithmsByParadigmAndCollection( $$ ){
+  my$self=shift;
+  
+  my $inParadigm=shift;
+  my $inCollection=shift;
+
+  my @lResult;
+
+  foreach $i (@{$self->{algorithm}}){
+    
+    if(($self->isMatchingQueryParadigmList($inParadigm,
+					   $i->{"query-paradigm-list"}))){
+      print ("HIER\n");
+      if(($self->isMatchingQueryParadigmList($i->{"query-paradigm-list"},
+ 					     $inCollection->{"query-paradigm-list"})))
+	{
+	print "found algorithm ",$i->{"algorithm-id"},":",join(",",(%$i)),"\n";
+	
+	push @lResult,$i;
+      }
+    }
+  }
+  return @lResult;
+}
+sub getCollectionsByParadigm( $ ){
+  my$self=shift;
+  
+  my $inParadigm=shift;
+  
+  my @lResult;
+  
+  foreach $i (@{$self->{collection}}){
+    
+    if($self->isMatchingQueryParadigmList($i->{"query-paradigm-list"},
+					  $inParadigm)){
+      print "found ",$i->{"collection-id"},":",join(",",(%$i)),"\n";
+      
+      push @lResult,$i->{"collection-id"};
+    }
+  }
+  return @lResult;
+}
+
+sub collectionToParadigmList( $ ){
+  my$self=shift;
+  
+  my $inCollection=shift;
+
+  return $inCollection->{"query-paradigm-list"};
+}
+sub collectionToID( $ ){
+  my$self=shift;
+  
+  my $inCollection=shift;
+
+  return $inCollection->{"collection-id"};
+}
+sub algorithmToParadigmList( $ ){
+  my$self=shift;
+  
+  my $inAlgorithm=shift;
+
+  return $inAlgorithm->{"query-paradigm-list"};
+}
+sub algorithmToID( $ ){
+  my$self=shift;
+  
+  my $inAlgorithm=shift;
+
+  return $inAlgorithm->{"algorithm-id"};
+}
+
+
+##############################
+#
+# Setting the desired maximum 
+# size of the result of the next query
+#
+#
+sub getResultSize( ){
+  my$self=shift;
+
+  return $self->{gResultSize};
+}
+sub setResultSize( $ ){
+  my$self=shift;
+
+  $self->{gResultSize}=shift;
+}
+##############################
+#
+# Setting the "cutoff": minimal desired calculated relevance
+# of the retrieved result
+#
+sub getCutoff( ){
+  my$self=shift;
+
+  return $self->{gCutoff};
+}
+sub setCutoff( $ ){
+  my$self=shift;
+
+  $self->{gCutoff}=shift;
+}
+
+
+
+##############################
+#
+# Build a new query using makeQueryString
+# out of a list of retrieved images.
+#
+#
+# In fact this is the main function which users of this class 
+# will need to overload 
+#
+sub buildNewQuery( $$ ){
+  my$self=shift;
+
+  #a reference to an ARRAY containing the retrieved images
+  my $inRetrieved=shift;
+
+  if($self->{vDEBUG}->{buildNewQuery}){
+    print "--------------------buildNewQuery";
+    my $i;
+    foreach $i (@$inRetrieved){
+      print "buildNewQuery: $$i[0]\n";
+    };
+  }
+
+  #a reference to a HASH containing the relevant images as keys
+  my $inRelevantHash=shift;
+
+  # this array has to be filled up using the feedback algorithm
+  my @outQueryImages=();
+
+  ##################################################
+  #
+  # This is the real feedback algorithm
+  # Heirs put changements here!
+  #
+
+  # in this case:
+  {#these braces are there for scoping reasons
+    my $i;
+    foreach $i (@$inRetrieved){#for each retrieved image,...
+      if($$inRelevantHash{$$i[0]}){#...which is in the hash of relevant images...
+	push @outQueryImages,[$$i[0],1];#...add it to the query.
+	#... and give some output , if requested
+	print "adding query image $$i[0]\n" if $self->{vDEBUG}->{buildNewQuery};
+      }
+    }
+  }#these braces are there for scoping reasons
+
+  #
+  # this was the feedback algorithm
+  #
+  ##################################################
+  #  die qq(Error in feedback generating algorithm: $@) if $@;
+  $locQuery=$self->makeQueryString(\@outQueryImages,
+				   $self->getSessionID(0),
+				   $self->getAlgorithmID(0),
+				   $self->getCollectionID(0),
+				  );
+}
+
+
+
+
+
+#############################################################
+#
+#
+# NETWORKING
+#
+#
+sub old_opensock( ;$$ ){
+  my$self=shift;
+  #snipped from the perlbook
+  
+  my($remote,$port,$iaddr,$paddr,$proto,$line,$newport);
+
+  $remote = shift || 'localhost';
+  $port   = shift || 12789;
+  $newport=$port;
+
+  if($port=~/\D/){$newport=getservbyname($newport,'tcp');}
+  die "No port" unless $newport;
+  $iaddr = main::inet_aton($remote) or die "no host: $remote";
+  $paddr = main::sockaddr_in($newport,$iaddr);
+  
+  $proto = getprotobyname('tcp');
+  
+  socket(SOCK,main::PF_INET,main::SOCK_STREAM,$proto) or die "socket:  $!";
+  connect(SOCK,$paddr)                                or die "connect: $!";
+  
+  autoflush SOCK 1;
+  autoflush STDOUT 1;
+  
+}
+
+
+#############################################################
+#
+#
+# NETWORKING open a socket 
+# PARAMETERS: remote host, port.
+#
+# by default the values of $self->{mHost} and $self->{mPort};
+# are taken.
+sub opensock( ;$$ ){
+  my$self=shift;
+  #snipped from man IO::Socket
+  
+  my($remote,$port,$iaddr,$paddr,$proto,$line,$newport);
+
+  $remote = shift || $self->{mHost};
+  $port   = shift || $self->{mPort};
+  
+  autoflush STDOUT 1;
+
+  print "connecting to: $remote:$port\n" if $vDEBUG{opensock};
+  
+  $self->{mSocket} = IO::Socket::INET->new(PeerAddr => $remote,
+					   PeerPort => $port,
+					   Proto    => 'tcp');
+
+  print "finished making the socket" if $vDEBUG{opensock};
+
+  $self->{mSocket}->autoflush(1);
+}
+
+
+
+###############################
+#
+# read from the socket and parse.
+# returns the string read.
+#
+sub readAndParse( ){
+  my$self=shift;
+
+  print "\nNow I will try to read...\n" if($self->{vDEBUG}->{readAndParse});
+
+  #parsing directly from the stream
+#     $self->{parser}->parse($self->{mSocket});
+#       "\nthis value should not be used!\n";
+
+  #we read, and then we parse
+  #for this reason, we can return the
+  #string read
+  {
+    my $lRead=join("",$self->{mSocket}->getlines());
+
+    if($lRead){
+      
+      if($self->{vDEBUG}->{readAndParse}){
+	print "Parsing: $lRead";
+	$lOF= new IO::File;
+	$lOF->open(">mrml-parsing-log");
+	print $lOF $lRead;
+	print "--\n";
+      }
+      #
+      $self->clearXMLPath();
+      $self->{parser}->parse($lRead);
+    }
+    $lRead;
+  }
+}
+
+
+###############################
+#
+# sends an ihandshake message
+# to the server.
+#
+sub startSession(){
+  my$self=shift;
+  
+  my $lUser=shift || "default-user";  
+
+  #tentative  my $MESSAGEFILE="__DATADIR__/gift-ihandshake.mrml";
+
+  
+  $self->opensock();
+  
+  #   open MESSAGEFILE,$MESSAGEFILE  or  die "There is no $MESSAGEFILE: $!";
+  #   while(<MESSAGEFILE>){
+  #     s/PPusernamePP/$lUser/g;
+  $_= qq(<?xml version="1.0" standalone="no" ?>
+	 <!DOCTYPE mrml SYSTEM "file:__DATADIR__/mrml.dtd">
+	 <mrml session-id="nothing">
+	 <open-session user-id="$lUser" session-name="--feedback-client-session--"/>
+	 <get-algorithms />
+	 <get-collections />
+	 </mrml>
+	);
+  
+  $self->{mSocket}->print($_);
+  print "Sent: $_" if($vDEBUG{startSession});
+  $self->readAndParse();
+}
+###############################
+#
+# Save the state of the session on the server
+#
+# FIXME: presently this is empty
+#
+sub saveSession(){
+  my$self=shift;
+}
+###############################
+#
+# close the session
+#
+# FIXME: presently this is empty
+#
+sub closeSession(){
+  my$self=shift;
+}
+###############################
+#
+# FOR TESTING ONLY: TRYING TO SIMULATE A SESSION
+#
+# configures an algorithm
+# to the server.
+#
+sub configureSession(;$$$$ ){
+  my$self=shift;
+  
+  my $inSessionID=shift    || $self->getSessionID();
+  my $inAlgorithmID=shift  || $self->getAlgorithmID();
+  my $inCollectionID=shift || $self->getCollectionID();
+  my $inAdditionalAlgorithmAttributes=shift || "";
+
+
+  my $MESSAGEFILE="__DATADIR__/gift-iconfigure.mrml";
+  
+  $self->opensock();
+  
+  ###############################
+  #
+  # We read a prefabricated configuration message, in which we
+  # replace the appropriate attribute values
+  #
+  open MESSAGEFILE,$MESSAGEFILE  or  die "There is no $MESSAGEFILE: $!";
+  while(<MESSAGEFILE>){
+    s/PPsessionidPP/$inSessionID/;
+    s/PPalgorithmidPP/$inAlgorithmID/;
+    s/PPcollectionidPP/$inCollectionID/;
+    s/PPadditionalalgorithmattributesPP/$inAdditionalAlgorithmAttributes/;
+    $self->{mSocket}->print($_);
+    print "Sent: $_" if $self->{vDEBUG}->{configureSession};
+  }
+  
+  $self->readAndParse();
+}
+
+##############################
+#
+# Send a query to the server
+#
+sub sendQueryString( $ ){
+  my$self=shift;
+  my $lQuery=shift;
+  $self->opensock();
+  
+  if($self->{vDEBUG}->{sendQueryString}){
+    print "sendQueryString++++++++++++++++++++++++++++++Sending query....\n\n";
+    print $lQuery;
+    print "\nsendQueryString------------------------------Sending query....\n\n";
+  }
+  
+  $self->{mSocket}->print($lQuery);
+
+  $self->readAndParse();
+
+  $self->{mSocket}->close();
+}
+
+##############################
+#
+# generate a query and feed it to the server.
+# subsequent queries will be generated by the xml parser
+# and its helpers.
+sub doFirstQueryStep( $;$$$ ){
+  my$self=shift;
+
+  my $lInstruction=shift;
+  my $lQuery=shift || [[$self->getRelevantImages()->[0],1]];
+
+  my $inSession=(shift || ($self->getSessionID(0)));
+  my $inAlgorithm=(shift || ($self->getAlgorithmID(0)));
+  my $inCollection=(shift || ($self->getCollectionID(0)));
+  
+  my $lQueryString;
+
+  if($lInstruction eq "query-step"){
+    $lQueryString=$self->makeQueryString($lQuery,
+					 $inSession,
+					 $inAlgorithm,
+					 $inCollection);
+  }
+  if($lInstruction eq "cui-hierarchy-up"){
+    my $inResultSize=$self->getResultSize();
+    my $inCutoff=$self->getCutoff();
+    $lQueryString=qq(<?xml version="1.0" standalone="no" ?>
+		     <!DOCTYPE mrml SYSTEM "~/public_html/dtd/mrml.dtd">
+		     <mrml session-id=\"$inSession\">
+		     <query-step 
+		     result-size="$inResultSize" 
+		     result-cutoff="$inCutoff" 
+		     collection-id="$inCollection" 
+		     algorithm-id="$inAlgorithm">
+		     <cui-hierarchy-up/>
+		     </query-step>
+		     </mrml>);
+
+  }
+  if($self->{vDEBUG}->{doFirstQueryStep}){
+    print "doFirstQueryStep++++++++++++++++++++++++++++++Sending query....\n\n";
+  }
+  $self->sendQueryString($lQueryString);
+  {
+    print "\ndoFirstQueryStep------------------------------Sending query....\n\n";
+  }
+  return $lQueryString;
+}
+
+###############################
+#
+# send a feedback query, if the same query was not performed
+# in the last step.
+#
+sub doQueryStep( $$ ){
+  my$self=shift;
+
+  my $inCount=shift;
+  my $lOld=shift;
+  my $lNow=$locQuery;
+
+  if ($lOld ne $lNow){
+    if($self->{vDEBUG}->{doQueryStep}){
+      print "$inCount ++++++++++++++++++++++++++++++Sending query....\n\n";
+      print $locQuery;
+      print "\n$inCount ------------------------------Sending query....\n\n";
+    }
+    $self->opensock();
+    $self->{mSocket}->print($locQuery);
+    $self->readAndParse();
+    return $lNow;
+  }else{
+    if($self->{vDEBUG}->{doQueryStep}){
+      print "$inCount ++NOT SENDING QUERY\n";
+      print $locQuery;
+      print "\n$inCount --NOT SENDING QUERY\n";
+    }
+  }
+  return "";
+}
+
+
+############################################################
+#
+# perform a group of queries. This can be a browsing
+# query process or a simple sequence of next neigbour 
+# query feedback steps. What it really is depends on the
+# heir which overloads doQueryStep
+#
+# PARAMETERS: 
+# $inImages reference to a list containing the relevant images
+#
+sub doQueryGroup( $ ){
+  my$self=shift;
+
+  my $inImages=shift;
+  $self->setRelevantImages(@$inImages);
+  
+  
+  $self->startSession("default-user");
+  $self->configureSession();
+  {
+    my $lOldQuery=$self->doFirstQueryStep("query-step");
+    my $lCount=1;
+    while(($lOldQuery=$self->doQueryStep($lCount,
+					 $lOldQuery)) 
+	  && 
+	  ($lCount<100)){
+      ++$lCount;
+    };
+  }
+}
+
+
+

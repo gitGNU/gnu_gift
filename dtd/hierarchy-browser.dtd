@@ -1,0 +1,25 @@
+<?xml encoding="US-ASCII" ?>
+<!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+     A DTD for storing the database of very simple hierarchical browsers.
+
+     The tree structure is encoded using a list with references.
+     It is easier to build up a proper accessor this way.
+
+     ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<!ELEMENT hierarchy-browser (element-list,reference-tree)>
+
+<!-- a hierarchy-browser has access to elements,
+     in the browser the elements are stored as a hierarchy -->
+<!ELEMENT element-list (element+)>
+<!ELEMENT element EMPTY>
+<!ATTLIST element image-id        CDATA #REQUIRED
+                  image-location  CDATA #REQUIRED>
+<!-- in the browser the elements are stored as a hierarchy 
+     for saving memory and typing, the tree structure is
+     only stored as a tree, in which every node contains
+     the ID of the image wanted.
+-->
+<!ELEMENT reference-tree (reference-tree*)>
+<!ATTLIST reference-tree  image-id CDATA #REQUIRED>
+

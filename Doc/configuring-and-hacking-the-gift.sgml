@@ -1,0 +1,1344 @@
+<!doctype linuxdoc system "//usr/lib/sgml-tools/dtd/linuxdoc.dtd">
+
+  <article>
+      <title>Configuring and hacking the GIFT </title>
+      <author>Wolfgang Müller</author>
+      <date>0.1, 10th of December 2000</date>
+      <abstract>
+The GIFT (ex: Viper) is a content based image retrieval (CBIRS)
+tool. It has been developed at the University of Geneva. See the 
+README and AUTHORS for more details. This manual gives information to
+the advanced user and the hacker (in the sense of "programmer") on how
+to configure the GIFT. To the hacker and the scientist it gives
+information on how to include new query engines into the GIFT
+framework. 
+      </abstract>
+    <toc>
+    <sect>
+      <heading>Introduction</heading>
+      <p><em>Probably the following article is easier to understand,
+if you once have indexed and tested a collection using the GIFT. In
+the appendix, there is an example <tt>gift-config.mrml file</tt>, but
+I guess it's easiest to understand, if you know what things look like
+on your system</em></p>
+      <p>The GIFT has been designed to maximize flexibility, both for
+users and developers. This document explains, how GIFT can be
+configured (levering this flexibility), and how the configuration
+files are digested in the interior workings of GIFT.</p>
+    </sect>
+    <sect>
+      <heading>The basic structure</heading>
+      <p>The basic structure of the GIFT is given by the capabilities of
+      our protocol MRML, and these in turn are given by the basic
+      requirements of a multi-user image retrieva system. 
+</p>
+      <p>Just imagine us entering GIFT at the front door: we want to
+enable the system to know who we are in order to memorize who has used
+which configuration. Otherwise somebody choosing an option would
+choose the option for anyone else. We want the user to be able to open
+and close sessions, to choose between different collections and algorithms etc. .</p>
+      <p>We want to be able to choose between different collections</p>
+      <p>What's more, we want to be able to combine different query
+engines to increase their strenght and weaken their weaknesses. </p>
+      <p>Given these requirements we end up with a system, which is
+able to construct during runtime trees of query engines, where the
+leaves are query engines, and the inner nodes assemble the
+results. To make things easy for simple clients, we want to be able to
+provide reasonable default value. A simple client should enable the
+user to provide just the ID of an algorithm as configuration. A
+complicated client might specify a whole very elaborate tree.</p>
+      <p>This flexibility creates a couple of small practical
+configuration problems:
+<itemize>
+	  <item>How do we specify which collection can be used with
+which query engine?</item>
+	  <item>How do we specify which node can be father of which
+node in the tree</item>
+	  <item>How do we provide reasonable the values in a flexible manner?</item>
+	</itemize>
+</p>
+      <p>Given, that about all this information has to be sent to a
+client if it asks for it, and the format which is used for sending
+this information is MRML, the we chose a
+modified version of MRML as the configuration file format. This is
+quite nice for us: explaining MRML explains the configuration and vice
+versa</p>
+    </sect>
+    <sect>
+      <heading>The structure of <tt>gift-config.mrml</tt> </heading>
+      <p>Now let's look at an actual <tt>gift-config.mrml</tt>. It begins
+telling us it's MRML. That's only partly true, as it does not fully
+conform with the DTD. However, almost every tag <em>is</em> MRML. </p>
+      <p>It starts with the usual XML document header </p>
+<p><tt>&lt;?xml version="1.0" standalone="no" ?&gt;</tt></p>
+      <p>We don't give it an XML doctype, because this is DTD-less
+non-validated XML. If we give it an XML doctype, this won't hurt or
+better things, as the parser will not validate anyway.</p>
+      <p>Then there follows a comment wich tells you what this really
+is. No surprises. The top-level element of the file is</p>
+<p><tt>&lt;mrml&gt;</tt></p>
+<p>containing one <tt>&lt;cui-configuration&gt;</tt> element. The sense of
+using a <tt>&lt;cui-configuration&gt;</tt> element is twofold:  
+<list>
+	  <item>it is some sort of comment of its content</item>
+	  <item>if (accidentally) sent as a message, a query processor
+will discard the whole content.
+</item>
+	</list>
+ </p>
+      <p>The  element itself contains two elements. A list of
+algorithms (<tt>algorithm-list</tt>) and a list of collections
+(<tt>collection-list</tt>). Let's start the explanation with the
+<tt>collection-list</tt> as it's easier to explain and prepares
+the ground for the <tt>algorithm-list</tt>:</p>
+      <sect1>
+	<heading><tt>collection-list</tt></heading>
+	<p>
+The <tt>collection-list</tt> contains a list of image collections, as the name
+might suggest. Each collection this list is specified by a collection
+element. Let's look at one of these elements:
+</p>
+	<p><verb>
+                &lt;collection 
+		      collection-id="c-17-44-14-22-8-100-5-265-0" 
+		      collection-name="minidb" 
+		      
+		      cui-number-of-images="10" 
+		      cui-base-dir="/home/muellerw/gift-indexing-data/minidb/"
+		      cui-inverted-file-location="InvertedFile.db" 
+		      cui-offset-file-location="InvertedFileOffset.db"
+		      cui-feature-description-location=
+		      "InvertedFileFeatureDescription.db"
+		      cui-feature-file-location="url2fts"
+		      &gt;
+		      &lt;query-paradigm-list&gt;           
+                           &lt;query-paradigm type="inverted-file"/&gt;
+                      &lt;/query-paradigm-list&gt;
+		&lt;/collection&gt;
+		      </verb></p>
+	<p><em>We see:</em><itemize>
+	    <item>The collection element has lots of attributes. Most
+of them are nonstandard MRML. They are extensions. Let us start withe
+two only attributes which are standard:<list>
+		<item><tt>collection-id</tt>: this is a machine-readable name
+of the collection. It is a unique collection identifier for a given
+server.</item>
+		<item><tt>collection-name</tt>: is a name which is
+human-readable. It is not necessarily unique, and it is intended to be
+shown to the users on MRML clients.</item>
+	      </list>
+The nonstandard attributes are not for external use. They just tell
+GIFT where to look for files. So they are interesting for you who are
+setting up a GIFT server.
+ <list>
+		<item><tt>cui-number-of-images</tt>: the number of images in
+the collection. This might be interesting for some collections that
+use strange indexing schemes (like e.g. distance matrices that are
+expressed as a flat list of distances, and where you need the size of
+the matrix to get at the size information). Needless to say, minidb is
+a very small collection.</item>
+		<item><tt>cui-base-dir</tt>: Usually you will put indexing
+files for one collection into one directory. This will be the
+<em>base directory</em> of the collection. </item>
+		<item><tt>cui-inverted-file-location</tt>: the inverted file
+indexing minidb
+is stored in 
+<tt>/home/muellerw/gift-indexing-data/minidb/InvertedFile.db</tt></item>
+		<item><tt>cui-offset-file-location</tt>: analog, the location
+of the file that contains pointers into the inverted file.</item>
+		<item><tt>cui-feature-description-location</tt>: this file
+contains information which features have which type (color
+blocks, color histograms, texture blocks, texture histograms,
+enumerated by 0..3)</item>
+		<item><tt>cui-feature-file-location</tt>: it should be
+<tt>cui-url-to-feature-file-location</tt>, but we put some limit to
+the lenght of tagnames. This file assigns to each image URL contained
+in the collection a feature file location. The feature file contains a
+list of the characterstics of the image, which then will be used to
+query the inverted file</item> 
+	      </list>
+   </item>
+	    <item>The collection element contains a
+<tt>query-paradigm-list</tt> element. This element and its contents specify
+which algorithms go with which collections. An algorithm is allowed to
+use a collection, if their query paradigms lists match. Two lists (A
+and B) of query paradigms match, if at least one item (<em>i.e.</em> a
+query-paradigm tag) of list A matches an item of list B. 
+Two query-paradigm tags I and K match, <em>if there is no attribute
+(named N) that is both set in I and K, and where the value of N is
+different in tag I and in tag K</em>. In our case, the
+<tt>query-paradigm-list</tt> of an algorithm that wants to use the collection
+<tt>minidb</tt>, has to contain either a <tt>query-paradigm</tt> tag that has the
+attribute <tt>type</tt> not set, or a <tt>query-paradigm</tt> tag that has the <tt>type</tt>
+attribute set to <tt>inverted-file</tt>.</item> 
+	  </itemize>
+</p>
+      </sect1>
+      <sect1>
+	<heading><tt>algorithm-list</tt></heading>
+	<p>
+We have seen that the <tt>collection-list</tt> is a list of
+collections. Now we will look at the algorithm list which
+happens to be (surprise!) a list of algorithm
+specifications. The only reason why this is more complicated that the
+algorithm list is that the algorithm specifiactions are more
+complicated. Let's look at what we want to achieve:
+<list>
+	    <item>We want to be able to combine algorithms with each
+other. If possible, GIFT should be query engine and meta query engine
+at the same time.</item>
+	    <item>We want to provide reasonable default
+values. Somebody choosing a given algorithm should not need to specify
+everything</item> 
+	    <item>We want to give GIFT the opportunity to send
+information about property sheets to its clients.</item>
+	  </list>
+I guess that you can already feel that things get a bit more complex
+than with collections.
+</p>
+	<sect2>
+	  <heading>Algorithms and sub-algorithms</heading>
+	  <p>The requirements amount to having a tree of query
+processors where each node hands down the query to its children,
+collects the result and hands it up to its ancestor. Of course each
+node is allowed to process the query all by itself. Typically only the
+leaf nodes will actually process the query, and the inner nodes will
+be specialised in disptching and assembling queries and results.</p>
+	  <p>This structure is easily expressed by a tree of
+&lt;algorithm&gt; tags. The basic idea is very simple: one node, one
+query processor. All this gets constructed in the moment a
+<tt>configure-session</tt> message reaches the server. </p>
+	  <p><em>Complications</em> are introduced by the fact that we
+would like to have reasonable default behaviour:
+<code>
+&lt;configure-session session-id="my-current-session"&gt;
+  &lt;algorithm algorithm-id="my-algorithm"&gt;
+&lt;/configure-session&gt;
+</code>
+Should result in a resonable configuration of the session with id
+<tt>my-current-session</tt> (note that typically, session IDs are not human
+readable. Session names are.). What's more, we want to save us from
+having to do too much cut-and-paste in our configuration files. This
+is why we implemented lexical scoping and a simple kind of inheritance:
+</p>
+	  <p>Firstly, attributes are resolved in a way similar to
+programming languages with lexical scoping. If an attribute A is not
+contained in a given node N, the GIFT will try to find the attribute
+in all the ancestors, starting with the immediate ancestor of N, and
+ending with the root node of the algorithm tree.</p>
+	  <p>Each algorithm contains an <tt>algorithm-id</tt> attribute, an
+<tt>algorithm-type</tt>. This corresponds to the identification tasks we have to
+perform:<list>
+	      <item>As we already stated, the client will want to
+build a tree of algorithm elements. Each node will have to have a
+known type. This type provides the default values of the &lt;algorithm&gt;
+attributes, as well as descendants for the attribute tag, if
+needed. The type is identified using the <tt>algorithm-type</tt> attribute.</item>
+	      <item>The tree of algorithms possibly contains multiple
+items of the same type. We want to give the client the possibility to
+discern the different instances of the same algorithm. For this we
+need the <tt>algorithm-id</tt> attribute.</item>
+	      <item></item>
+	    </list>
+</p>
+	  <p>This is already quite flexible, but the algorithm tag
+contains more. Property sheets. </p>
+	</sect2>
+	<sect2>
+	  <heading>Property sheets</heading>
+	  <p>Property sheets are necessary, as we do not want MRML
+clients and users to one fat set of parameters that are to be fed to
+the &lt;algorithm&gt; specification. GIFT was built as a
+system for research, and SnakeCharmer was made to accomodate the needs
+of both the CIRCUS and the Viper groups in Lausanne and
+Geneva. Research typically means, <em>n</em> people wanting to explor
+<em>n*n</em> ideas. You cannot expect to know useful parameter sets
+before you have considered the problem thorroughly. We did not want to
+limit the freedom of programmers, so we invented a simple-to-implement
+property sheet specification.</p>
+	  <p>As you can see in the following example, as with
+algorithm, a property sheet is made of property sheets. Again, let us
+look at our premises:
+<itemize>
+	      <item>We want to be able to show which values an be
+changed by the user.
+</item>
+	      <item>There should be some dialog dynamics: not
+everything should be visible/clickable all the time.</item>
+	      <item>The property sheet specification should contain
+information concerning the MRML (<em>i.e.</em> XML) to be generated by
+the property sheet.</item>
+	    </itemize>
+In short, because of property sheets the programmer of an MRML client
+has to know very nothing about how an algorithm is to be
+configured. Let's look more closely at the example:
+<code>
+
+        &lt;property-sheet property-sheet-id="cui-p-1"  
+                           property-sheet-type="subset"
+	                   send-type="none" 
+                           minsubsetsize="0" 
+                           maxsubsetsize="1"&gt; 
+          &lt;property-sheet property-sheet-id="cui-p0" 
+                             caption="Modify default configuration" 
+                             property-sheet-type="set-element" 
+                             send-type="none"&gt;
+  	  &lt;property-sheet property-sheet-id="cui-p15" 
+                             caption="Prune at % of features" 
+                             property-sheet-type="numeric" 
+                             send-type="attribute" 
+                             send-name="cui-pr-percentage-of-features"
+	                     from="20" 
+                             to="100" 
+                             step="5" 
+                             send-value="70"/&gt;
+  	  &lt;property-sheet property-sheet-id="cui-p1"  
+                             property-sheet-type="subset" 
+                             send-type="none" 
+                             minsubsetsize="1" 
+                             maxsubsetsize="4"&gt;
+   	    &lt;property-sheet property-sheet-id="cui-p12" 
+	                       send-boolean-inverted="yes" 
+	                       caption="Colour blocks" 
+                               property-sheet-type="set-element" 
+                               send-type="attribute" 
+                               send-name="cui-block-color-blocks" 
+                               send-value="yes"/&gt;
+  	    &lt;property-sheet property-sheet-id="cui-p14" 
+                               send-boolean-inverted="yes" 
+                               caption="Gabor blocks" 
+                               property-sheet-type="set-element" 
+                               send-type="attribute" 
+                               send-name="cui-block-texture-blocks" 
+                               send-value="yes"/&gt;
+  	    &lt;property-sheet property-sheet-id="cui-p13" 
+                               send-boolean-inverted="yes" 
+                               caption="Gabor histogram" 
+                               property-sheet-type="set-element" 
+                               send-type="attribute" 
+                               send-name="cui-block-texture-histogram"
+	                       send-value="yes"/&gt;
+  	    &lt;property-sheet property-sheet-id="cui-p11" 
+                               send-boolean-inverted="yes" 
+                               caption="Colour histogram" 
+                               property-sheet-type="set-element" 
+                               send-type="attribute" 
+                               send-name="cui-block-color-histogram" 
+                               send-value="yes"/&gt;
+            &lt;/property-sheet&gt;
+          &lt;/property-sheet&gt;
+        &lt;/property-sheet&gt;
+</code>
+</p>
+	  <p>Each element is identified using an id (this is not used
+in the current MRML clients, but it's potentially very useful). Each
+property sheet item has a type. It is the choice of the implementer
+how to display such types. [NOTE: FOR THE MOMENT, I REFER YOU TO THE
+MRML SPECIFICATION WHICH CAN BE DOWNLOADED ON 
+<url url="http://www.mrml.net">. I hope to
+include the relevant parts into this document soon. Presently, some
+chapter about adding new collections seem to me more important.]</p>
+	</sect2>
+	<sect2>
+	  <heading>query-paradigm-list and allows-children</heading>
+	  <p>These two tags work exactly as described in the part
+about collections. The evident use of these tags is to make algorithms
+use only collections with matchin query-paradigm-list, and children
+with a matching query-paradigm-list contained in the allows-children
+tags. "Good" clients such as SnakeCharmer will propose only
+algorithm-collection combinations that are allowed by the
+query-paradigm-list.</p>
+	  <p> For "legacy" reasons, an empty or nonexsisting
+allows-children tag matches everything.</p>
+	</sect2>
+      </sect1>
+      <sect1>
+	<heading>Assembling everything: what happens during
+configuration</heading>
+	<p>I've just described the building blocks of configuration,
+in this section I will give a summary of what happens during
+configuration, intended to allow you to skip the section about adding
+query engines to the GIFT if you are not interested in doing so.</p>
+	<p>A <tt>&lt;configure-session&gt;</tt> message contains among
+other things an <tt>algorithm</tt> element. In the following we will
+call this element the <em>in-element</em>. In a similar way, we will
+call an attribute <tt>A</tt> <em>in-element/@A</em> The GIFT will process the
+<em>in-element</em>:
+<enum>
+	    <item>Making a configuration tree:<itemize>
+		<item>GIFT gets from its algorithm collection the
+<tt>&lt;algorithm&gt;</tt> corresponding to
+<em>in-element/algorithm-type</em>. Let us call this element the
+<em>conf-element</em></item>
+		<item>GIFT overrides all attributes in the
+<em>conf-element</em> using the corresponding attributes from the
+<em>in-element</em></item>
+		<item>If the <em>in-element</em> has any children that are
+elements of type <tt>algorithm</tt> the children of type
+<tt>algorithm</tt> of the <em>conf-element</em> are replaced by the
+children of the <em>in-element</em></item>
+		<item>The same procedure is repeated for the then-current
+children of the <em>conf-element</em></item>
+	      </itemize></item>
+	    <item>Scoping: the attribute sets of the element are
+merged according to the scoping rules described above</item>
+	    <item>Query engine construction: the resulting parse tree
+is visited. At each <tt>&lt;algorithm&gt;</tt> node encountered, a
+query engine is constructed. Which query engine is used is defined by
+the <em>algorithm/@cui-base-type</em> attribute. The parameter given
+to this query engine are all attributes of the
+<tt>&lt;algorithm&gt;</tt> element</item>
+	  </enum>
+</p>
+      </sect1>
+    </sect>
+    <sect>
+      <heading>Adding C++ query engines to the GIFT</heading>
+      <p>As you have seen when playing with GIFT and SnakeCharmer,
+GIFT lets you open and close sessions, and lets you configure this
+session. As a consequence, we have to maintain the configuration for
+each user. To phrase it more positively: we have the possibility to
+<em>learn</em> about each user, and it's up to you to provide him with
+the best performance possible.</p><p> Before getting into detail,
+let us first define some nomenclature. In the following, I
+will talk about two kinds of entities<itemize>
+	  <item><em>Accessors</em>: accessors are specialised on the
+access on the indexing structure you chose. They are intended to be
+<em>stateless</em>, if at all possible, and in any case they keep no
+information which might be session specific.
+</item>
+	  <item><em>Query processors</em> these are the entities,
+that receive the queries, talk to the accessors, rank the results and
+give them back. They contain all the necessary information to serve
+the user (or, of course, pointers to this necessary information).</item>
+	</itemize>
+ </p>
+      <p>The GIFT features a plugin mechanism that lets you include
+new query engines into the GIFT without changing a single line of the
+interior workings of GIFT. This mechanism needs the possibility of
+dynamic loading on your system (GNU/Linux has this capability, for
+example). When doing static linking, you will have to add less than
+ten lines of code for each query engine used.</p>
+      <p>In the following we will describe how to make accessor and
+query plugins. This boils down to writing classes in C++. More simply,
+it is also possible to write query processors in Perl.</p>
+      <sect1>
+	<heading>How to write an Accessor plugin</heading><p>The
+class treating the collection inside the GIFT is 
+the CAccessor class, and it's descendants. The goal of CAccessor
+is to handle the access to a collection. The accessor is not
+supposed to do any learning, nothing fancy. It is supposed to
+provide the query processors with the necessary access
+functions like giving the features that belong to a given
+image, and giving a random list of images. 
+In the following we will treat a small example. If you are interested in
+this, please consult the documentation generated by doxygen to find out
+more. 
+</p>    
+	<sect2>
+	  <heading>libGIFTAcHierarchy: a simple hierarchy
+accessor</heading>
+	  <p>Our example is in the directory
+	    libGIFTAcHierarchy. Please look at the name:<itemize>
+	      <item>lib: it's a library</item>
+	      <item>GIFT: it's for the GIFT</item>
+	      <item>Ac: it's an accessor</item>
+	      <item>Hierarchy: it's an accessor for accessing hierarchy</item>
+	    </itemize>. The simple plugin manager I wrote will scan
+the $(libdir), <em>i.e.</em> the directory in which GIFT installs it's
+libraries (typically either /usr/local/lib or PREFIX/lib, where PREFIX
+is the path you chose when running ./configure --prefix PREFIX). Each
+file whose name starts with "libGIFTAc" and which ends with ".so" will
+be tested for correct plugin behaviour. How this works, will be
+described below.
+</p><p>In libGIFTAcHierarchy/cc, you will find three
+	    *.cc files:<enum>
+	      <item>plug_in_fo.cc: this file contains the
+plugin-information about this class.</item>
+	      <item>CAFHierarchy.cc: the filename indicates that
+the class that is defined in this file is inherited from
+CAccessorFactory. This class is what's used when we are linking
+statically.</item>
+	      <item>CAcHierarchy.cc: the filename tells us that the
+class defined in this file is inherited from CAccessor. This class
+does the real work.</item>
+	    </enum>
+</p>
+	  <sect3>
+	    <heading>plug_in_fo.cc</heading>
+	    <p><em>plug_in_fo.cc</em> contains two functions,
+libGIFTAcHierarchy_getClassName, 
+and 
+libGIFTAcHierarchy_makeAccessor. <em>Please note</em>: the prefix of
+the function names, (<em>i.e.</em> libGIFTAcHierarchy) is the same as the name
+of the library. If this is not the case, the plugin is not
+recognized. <em>Make sure</em> both functions are linked using C
+linking (extern "C"). Otherwise, C++ name mangling gets in our way.</p>
+	  <p>The name returned by libGIFTAcHierarchy_getClassName()
+has to be unique. No other GIFT plugin should return the the same name
+for getClassName. If encountering the same name twice, the GIFT exits
+on  startup.</p>
+	  <p>libGIFTAcHierarchy_getClassName() just returns an
+accesor of the desired type (CAcHierarchy). The parameter taken by
+this function is the same as any CAccessor constructor. More to this
+in one of the next sections.
+</p>
+	  </sect3>
+	  <sect3>
+	    <heading>CAFHierarchy</heading>
+	    <p>	    This does essentially the same as
+plug_in_fo.cc. It's just expressed in  
+C++, inheriting from CAccessorFactory.cc . If you want to 
+provide the opportunity to link your accessor statically to the 
+GIFT, you need to put a line like 
+<code>
+(new CAFHierarchy->registerFactory(*this)) 
+</code> 
+into libMRML/cc/CAccessorFactoryContainer.cc. In the
+constructor there are enough lines to "inspire" you how to add your
+new line. Of course, there have to be some #ifdef to make sure that
+there are no conflicts between static and dynamic linking. You have to
+make sure that the GIFT never tries both.
+</p>
+	  </sect3>
+	  <sect3>
+	    <heading>CAcHierarchy.cc and its &lt;collection&gt; element</heading>
+	    <p>This file contains the accessor. The real stuff. This
+accessor adresses the case that you have some sort of hierarchy
+defined over your image collection. Let's say you did some clustering
+on different levels, and you want to have a query engine which
+displays the cluster centers at each level.</p>
+	    <p>For moving in the hierarchy, you need some state. The
+system has to know where you are. However, this is <em>not</em> the work of the
+accessor. The accessor is just going to tell us how to get from one
+position within the hierarchy to another position within the
+hierarchy.</p>
+	    <p>To summarise what this accessor is doing: on
+initialisation, it reads the hierarchy description from an XML
+file. Almost all the functions of this accessor are done for
+performing this task. The only function which is actually used during
+querying is the getChildren function, which returns the child nodes
+for a given state. I do not want to go into the details of the inner
+workings of this accessor. This accessor is better described in the
+doxygen-generated documentation (you find it in
+Doc/autoDoc/HTML). </p>
+	    <p>What is interesting here, is rather the configuration
+aspect. <em>How does the accessor know how to configure
+itself?</em>. This is very simple: the only parameter to the
+constructor of <em>any</em> accessor, is an CXMLElement. CXMLElement
+is a class for XML parse trees that contain all nodes and attributes
+contained in an XML element. The XML element given to your accessor
+(in this case to the CAcHierarchy accessor) on construction is exactly
+the &lt;collection&gt; element in the gift-config.mrml file that has
+the collection-id as choosen by the user. This means, any attribute
+you add to the gift-config file, is directly accessible by your
+accessor. In our case the will just take two attributes of the
+collection element and combine them to the file name from which the
+hierarchy file will be loaded: 
+
+<code>
+  init(inCollectionElement
+       .stringReadAttribute(mrml_const::cui_base_dir).second
+       +inCollectionElement
+       .stringReadAttribute(mrml_const::cui_hierarchy_file_location).second);
+</code>
+The attribues are read using the stringReadAttribute function (to be
+found in the doxygen documentation of CXMLElement). 
+mrml_const::cui_base_dir and 
+mrml_const::cui_hierarchy_file_location are string constants which
+correspond to "cui-base-dir" and "cui-hierarchy-file"
+respectively. <footnote>These string constants are extracted from the
+MRML DTD and converted to C++ constants, in order to make
+typographical errors detectable for the compiler.</footnote> 
+</p>
+	    <p>The hierarchy file loaded by the <tt>init</tt> function
+contains all necessary information to set up the hierarchy, in
+particular, it contains also the URLs of theimagaes present in the
+collection.</p>
+	    <p></p>
+	  </sect3>
+	</sect2>
+	<sect2>
+	  <heading>Some summarizing remarks</heading>
+	  <sect3>
+	    <heading>Typing</heading>
+	    <p>Query engines <em>have</em> to be implemented in a class that 
+inherits from <tt>CAccessor</tt> by single inheritance (to allow safe downcasting).</p>
+	  </sect3>
+	  <sect3>
+	    <heading>How to obtain parameters</heading>
+	    <p>The GIFT provides your accessor with the parse tree
+containing the <tt>collection</tt> XML element corresponding in
+<tt>gift-config.mrml</tt> to the collection you want to access using
+the accessor. It's your responsability to get from this XML element
+the information you need. It's also your reponsability to put the
+information into the configuration file, first. An example how this
+can be done is <tt>gift-add-collection.pl</tt> which is used to add
+collections that are indexed in an inverted file.</p>
+	  </sect3>
+	  <sect3>
+	    <heading>Administrative code</heading>
+	    <p>The fact that your accessor will be used as a plugin,
+forces you to provide a <tt>plug_in_fo.cc</tt> file, containing the
+functions <tt>libGIFTAcAndYouChooseTheRestOfTheName_getClassName</tt>, 
+<tt>libGIFTAcAndYouChooseTheRestOfTheName_makeAccessor</tt>. If you
+want to make your plugin work also with static linking, (at least
+currently) you will have to add also an accessor factory class that
+makes instances of your accessor.
+</p>
+	  </sect3>
+	  <sect3>
+	    <heading>Interfacing with query engines:</heading>
+	    <p>The kernel of the GIFT does not know anything about
+your query processor. Which functions your query processor is going to
+use, is already within the responsibility of the query processor
+designer.</p> 
+	  </sect3>
+	  <sect3>
+	    <heading>Accessor lifecycle</heading><p>
+The accessor is constructed
+when the first query processor requests a given collection and a given
+accesors, and it is typically shared by multipe query engines. The
+accessor is destroyed when the last query engine needing the accessor
+is destroyed.
+</p>
+	  </sect3>
+	</sect2>
+	<sect2>
+	  <heading>Makefiles</heading>
+	  <p>All GNU tools are configured using GNU <tt>autoconf</tt>
+or <tt>automake</tt> (actually, this is a requirement for getting
+accepted as a GNU package). This means, the Makefiles are generated
+during a run of <tt>./configure</tt>. So: <em>never touch
+<tt>Makefile</tt>s, always use <tt>Makefile.am</tt>s</em>. I suggest
+getting inspired by the different <tt>Makefile.am</tt>s as well as 
+<tt>configure.in</tt>. Look at
+<itemize>
+	      <item>the last few lines of <tt>./configure.in</tt> (the
+AC_OUTPUT instruction)</item>
+	      <item><tt>Makefile.am</tt></item>
+	      <item><tt>libGIFTAcHierarchy/Makefile.am</tt></item>
+	      <item><tt>libGIFTAcHierarchy/cc/Makefile.am</tt></item>
+	    </itemize>
+
+</p>
+	</sect2>
+      </sect1>
+<sect1>
+	<heading>How to write an Query Proccessor plugin</heading><p>The
+class processing queries inside the GIFT is 
+the CQuery class, and it's descendants. The query processor contains 
+all the intelligence neede for processing queries. In this section
+we will continue the small hierarchy query example. If you are interested in
+this, please consult the documentation generated by doxygen to find out
+more. <footnote>As you probably noticed, this is heavily cut and
+pasted from the previous section. This is done to give save work and
+to keep the structure so similar that you can spot the differences
+easily.</footnote>
+</p>    
+	<sect2>
+	  <heading>libGIFTQuHierarchy: browsing fixed hierarchies</heading>
+	  <p>Our example is in the directory
+	    libGIFTQuHierarchy. Please look at the name:<itemize>
+	      <item>lib: it's a library</item>
+	      <item>GIFT: it's for the GIFT</item>
+	      <item>Qu: it's a Query processor</item>
+	      <item>Hierarchy: it's an query processor for hierarchies</item>
+	    </itemize>. The simple plugin manager I wrote will scan
+the $(libdir), <em>i.e.</em> the directory in which GIFT installs it's
+libraries (typically either /usr/local/lib or PREFIX/lib, where PREFIX
+is the path you chose when running ./configure --prefix PREFIX). Each
+file whose name starts with "libGIFTQu" and which ends with ".so" will
+be tested for correct plugin behaviour. How this works, will be
+described below.
+</p><p>In libGIFTQuHierarchy/cc, you will find three
+	    *.cc files:<enum>
+	      <item>plug_in_fo.cc: this file contains the
+plugin-information about this class.</item>
+	      <item>CQHierarchy.cc: the filename tells us that the
+class defined in this file is inherited from CQuery. This class
+does the real work.</item>
+	    </enum>
+</p>
+	  <sect3>
+	    <heading>plug_in_fo.cc</heading>
+	    <p>This works exactly as for accessors. The only
+difference is that on construction, CQuery needs other parameters than
+CAccessor.</p>
+	    <p><em>plug_in_fo.cc</em> contains two functions,
+libGIFTQuHierarchy_getClassName, 
+and 
+libGIFTQuHierarchy_makeQuery. <em>Please note</em>: the prefix of
+the function names, (<em>i.e.</em> libGIFTQuHierarchy) is the same as the name
+of the library. If this is not the case, the plugin is not
+recognized. <em>Make sure</em> both functions are linked using C
+linking (extern "C"). Otherwise, C++ name mangling gets in our way.</p>
+	  <p>The name returned by libGIFTQuHierarchy_getClassName()
+has to be unique. No other GIFT Query plugin should return the the
+same name for getClassName. If encountering the same name twice, the
+GIFT exits on  startup.</p>
+	  <p>libGIFTQuHierarchy_makeQuery() just returns a query
+engine of the desired type (CAcHierarchy). The parameter taken by
+this function is the same as any CQuery constructor. More to this
+in one of the next sections.
+</p>
+	  </sect3>
+	  <sect3>
+	    <heading>Static linking</heading>
+	    <p>If you want to enable static linking for your query
+engine you have to add a line to
+<tt>libMRML/cc/CBaseTypeFactory.cc</tt>.</p><p> The same rules apply as
+	    for adding something to
+<tt>CAccessorFactoryCollection.cc</tt></p> 
+	  </sect3>
+	  <sect3>
+	    <heading>CQHierarchy.cc</heading>
+	    <p>This file contains the hierarchy browsing engine.</p>
+	    <sect4>
+	      <heading>The query processor itself</heading>
+	      <p>It does very little, as you can see in the query
+processing function, <tt>fastQuery</tt>. It maintains the current path
+and implements move operations. The most complex in this query
+processor are the loops that scan the input parameter (the <tt>CXMLElement</tt>
+<tt>inQuery</tt>) for useful parameters. Please consult the appendix
+and the doxygen-generated documentation for information about how to
+use the class <tt>CXMLElement</tt>. The documentation in the
+implementation of the <tt>CQHierarchy</tt> should also provide some
+help.</p>
+	      <p>As a general note, the functions <tt>fastQuery</tt>
+and <tt>query</tt> receive as parameter the contents of the <tt>query-step</tt>
+MRML element. The comments in the function <tt>fastQuery</tt> provide
+useful information on how this information can be used.</p>
+	      <p>Now, let us focus on the construction
+process. There are two routines you typically will implement. The
+constructor (<tt>CQHierarchy::CQHierarchy</tt> in this case) and the
+setAlgorithm function.</p>
+	    </sect4>
+	    <sect4>
+	      <heading>The constructor</heading>
+	      <p>The constructor calls the constructor of CQuery from
+which it inherits. The <tt>CQuery::CQuery</tt> constructur sets <tt>mProxy</tt> 
+accordingly (as an aside, this is where the parameter
+<tt>inAccessorCollection</tt> is necessary). <tt>mProxy</tt> is really an
+open-close administrator for collections. It makes sure that the query
+engine is finding a well-configured collection with the right
+type. The <tt>mProxy->openAccessor</tt> opens the collection using a
+CAcHierarchy accessor. <em>So we see, which accessor is used is the
+choice of the query engine</em>. Of course, <tt>CQHierarchy</tt> could
+make use of the <tt>inAlgorithm</tt> parameter. However, in this
+simple case, this is not necessary.</p> 
+	    </sect4>
+	    <sect4>
+	      <heading>setAlgorithm</heading>
+	      <p>Presently, if a session received a
+<tt>&lt;configure-session&gt;</tt> message, it is completely
+reconfigured. This means, the whole tree of query engines is
+rebuilt. <tt>setAlgorithm</tt> is a function which was made for
+reconfiguring sessions. It is not used yet, however, this is intended
+for the future. </p>
+	      <p>In our case, this function does nothing but close the
+old accessor and open a new one, if the collection ID changes (as
+compared to the previous configuration)</p>
+	    </sect4>
+	  </sect3>
+	</sect2>
+	<sect2>
+	  <heading>Some summarizing remarks</heading>
+	  <sect3>
+	    <heading>Typing</heading>
+	    <p>Query engines <em>have</em> to be implemented in a class that 
+inherits from CQuery by single inheritance (to allow safe downcasting).</p>
+	  </sect3>
+	  <sect3>
+	    <heading>How to obtain parameters</heading>
+	    <p>The GIFT provides your accessor with the parse tree
+containing the <tt>algorithm</tt> XML element. This is built from
+components that are specified in <tt>gift-config.mrml</tt>. The whole
+process has been described above. It's your responsability to get from
+this XML element the information you need. It's also your
+reponsability to put the information into the configuration file,
+first.</p> 
+	  </sect3>
+	  <sect3>
+	    <heading>Administrative code</heading>
+	    <p>The fact that your query engine will be used as a plugin,
+forces you to provide a <tt>plug_in_fo.cc</tt> file, containing the
+functions <tt>libGIFTAcAndYouChooseTheRestOfTheName_getClassName</tt>, 
+<tt>libGIFTAcAndYouChooseTheRestOfTheName_makeQuery</tt>. If you
+want to make your plugin work also with static linking, (at least
+currently) you will have to add a line into
+<tt>libMRML/cc/CBaseTypeFactory</tt> that instantiates your query
+engine.</p>
+	  </sect3>
+	  <sect3>
+	    <heading>Interfacing with query engines:</heading>
+	    <p>The kernel of the GIFT does not know anything about
+your query processor. Which functions your query processor is going to
+use, is already within the responsibility of the query processor
+designer.</p> 
+	  </sect3>
+	  <sect3>
+	    <heading>CQuery lifecycle</heading><p>
+The query processor is constructed when a
+<tt>&lt;configure-session&gt;</tt> message is received. Each session
+owns its own tree of query processors. A tree of query processors is
+destroyed, when the next <tt>&lt;configure-session&gt;</tt> message is
+received for the same session. 
+</p>
+	  </sect3>
+	</sect2>
+	<sect2>
+	  <heading>Makefiles</heading>
+	  <p>All GNU tools are configured using GNU <tt>autoconf</tt>
+or <tt>automake</tt> (actually, this is a requirement for getting
+accepted as a GNU package). This means, the Makefiles are generated
+during a run of <tt>./configure</tt>. So: <em>never touch
+<tt>Makefile</tt>s, always use <tt>Makefile.am</tt>s</em>. I suggest
+getting inspired by the different <tt>Makefile.am</tt>s as well as 
+<tt>configure.in</tt>. Look at
+<itemize>
+	      <item>the last few lines of <tt>./configure.in</tt> (the
+AC_OUTPUT instruction)</item>
+	      <item><tt>Makefile.am</tt></item>
+	      <item><tt>libGIFTQuHierarchy/Makefile.am</tt></item>
+	      <item><tt>libGIFTQuHierarchy/cc/Makefile.am</tt></item>
+	    </itemize>
+
+</p>
+	</sect2>
+      </sect1>
+    </sect>
+    <sect>
+      <heading>Adding Perl query engines to the GIFT</heading>
+      <p>Perl being my favourite language for prototyping, I found it
+desirable to be able to include query engines into the gift that are
+implemented in Perl. In my eyes, this has two major positive
+consequences: <enum>
+	  <item>You are now able to write prototypes in
+Perl. Perl/GIFT interface is very simple, yet powerful, giving you all
+information a C++ query engine would get. This makes it very simple
+for you to make the step from your private prototype to the web
+demo.</item> 
+	  <item>Perl is very popular as a <em>glue
+language</em>. Assuming you have a content-based tool which is already
+running, and you want to use the GIFT/SnakeCharmer infrastructure, the
+GIFT/Perl link will get you interfaced very quickly.</item>
+	</enum>
+Thes are the "plusses", and in my eyes, the drawbacks are not
+important:<enum> 
+	  <item>If I had known more about Perl from the start, the C++
+side of the interface would be less complex. But I guess you don't
+care as the Perl side would be used in the same way anyway.</item>
+	  <item>You cannot assume Perl to threadsafe. As a
+consequence, query processing of Perl queries parallel and quasi-parallel 
+to other (Perl or non-Perl) queries is impossible. That is, if you
+want speed, you have to do things in C++. However, this insight is not
+new and applies to about any application.</item>
+	  <item>The only way I made things work without memory leaks
+was to load <em>all scripts involved on instantiation of the first
+Perl query</em>. The Perl interpreter is stays instantiated at all
+times. This makes things less dynamic as I would like them to be, but
+it's not very disturbing in daily work.</item>
+	</enum>
+All in all, I have found the GIFT/Perl link an extremely useful
+tool. Now, let's go a bit into detail.
+</p>
+      <sect1>
+	<heading>C++-side of the Perl/GIFT interface</heading>
+	<p>The C++-side of the interface is implemented in the
+<tt>CQPerl</tt> class. It does the following things:
+<itemize>
+	    <item>On construction, 
+<enum>
+		<item>it constructs a
+the Perl interpreter (if this has not been done yet by another
+<tt>CQPerl</tt> object)</item>
+		<item>it loads the
+file given in the attribute <tt>algorithm/@cui-perl-script-file</tt>
+into the new interpreter (only if this interpreter has been newly
+constructed). </item>
+		<item>in any case, it will construct a Perl object (<em>PO</em>
+in the following)of the class given by
+<tt>algorithm/@cui-perl-package</tt></item>
+		<item>The complete <tt>&lt;algorithm&gt;</tt> element
+is given to the PO calling the PO's <tt>setAlgorithm</tt>
+method. </item>
+		<item>The complete <tt>&lt;collection&gt;</tt> element
+is given to the PO calling the PO's <tt>setCollection</tt>
+method. </item>
+		<item>The PO is invited to use the configuration data
+we just gave to it: we call the <tt>configure</tt> method on the
+PO.</item>
+	      </enum>
+            </item>
+	    <item>If the function <tt>query</tt> is called on the
+CQPerl object, it will call the function given by
+<tt>algorithm/cui-perl-query-function</tt> on the PO. Currently, this
+value should stay <bf>fixed</bf> to
+<tt>processGIFTQueryCall</tt>. Otherwise you would have to change the
+CGIFTLink class.</item>
+	    <item>If an empty query is received, the function
+the CQPerl object will call the function given by 
+<tt>algorithm/cui-perl-random-query-function</tt> on the PO.
+Currently, this value should stay <bf>fixed</bf> to 
+<tt>processGIFTRandomQueryCall</tt>. Otherwise you would have to change the
+CGIFTLink class.</item>
+	  </itemize>
+</p> 
+      </sect1>
+      <sect1>
+	<heading>The Perl side of the GIFT/Perl interface</heading>
+	<p>The Perl side of the interface is quickly described. 
+But before that we need just a couple of definitions. 
+<list>
+	    <item>Let us call <tt>PO-&gt;query</tt> the function that will be
+provided by you to process queries. It receives as a parameter a
+pointer to <tt>self</tt> (<em>i.e.</em> the PO), as well as a
+reference to a <tt>&lt;query-step&gt;</tt> MRML element. It gives back
+a <tt>&lt;query-result&gt;</tt> MRML element in exactly the same
+representation which will be described below.</item>
+	    <item><tt>PO-&gt;randomQuery</tt> is the function that
+will be provided by you to process queries for a given number of
+random elements from the collection. It receives exactly the same
+parameters as <tt>PO-&gt;query</tt>. It returns its result in the same
+manner.</item>
+	    <item><tt>configure</tt> does not receive any parameters,
+however, it can expect $self->{configure} and $self->{algorithm} to be
+set. It does not return any value at present.</item>
+	  </list>
+<bf>Please note, that (at the current state) if you call <tt>die</tt>
+in your Perl script, the GIFT dies, too.</bf> So please recover
+gracefully, except for errors that need to be noticed (<em>e.g.</em>
+misconfiguration).
+</p>
+      </sect1>
+      <sect1>
+	<heading>Important files</heading>
+	<p>If you want to add your own query engine written in Perl, I
+would suggest you to look at<itemize>
+	    <item><tt>scripts/perl/CGIFTLink.pre-pm</tt> There is
+quite a long POD section, which you can turn in a man page using
+pod2man. The code could also be interesting for its simplicity. (You
+can also look at <tt>processGIFTQueryCall</tt>, if you like, but be
+warned that one could do these things more beautifully.)</item>
+	    <item><tt>scripts/perl/CGLDistanceMatrix.pre-pm</tt> This
+is a query processor that reads a pre-calculated distance matrix and
+uses it to process next-neighbour queries by simple lookup.</item>
+	    <item>And, as always <tt>gift-config.mrml</tt></item>
+	  </itemize>
+</p>
+      </sect1>
+    </sect>
+    <appendix>
+    <sect>
+      <heading>Processing MRML using string constants</heading>
+      <p>It becomes clear very quickly that in processing XML you are
+often using string constants in situations, in which you would use
+variables in C++, <tt>stringReadAttribute("algorithm-id")</tt> for
+retrieving an attribute with the name "algorithm-id" from an XML
+element. This is convenient and simple, however, the compiler looses
+ability to do type checking for you, <em>and</em> you are forced to
+have changes in the MRML DTD being followed by <em>the same
+changes</em> in the program.</p>
+      <p>This problem is adressed by a tool, that automatically
+generates the files <list>
+	  <item><tt>libMRML/cc/mrml_const.cc</tt></item>
+	  <item><tt>libMRML/include/mrml_const.h</tt></item>
+	</list>
+when <tt>make</tt> is used in the <tt>dtd/</tt> directory. These files
+contain the declaration and the definition of a C++-class named
+<tt>mrml_const</tt> that contains <tt>static const</tt> members. Each
+of these member is named as an element/attribute of the MRML DTD, and
+the name of the string constant is closely related to the value of the
+string constant. All that is changed is that a
+"<tt>-</tt>" will be replaced by a "<tt>_<tt>". For example,
+"<tt>algorithm-id</tt>" becomes
+"<tt>mrml_const::algorithm_id</tt>". That's more verbose than the
+string-based notation (<tt>"algorithm-id"</tt>) however, now the
+compiler can report your typographical errors. 
+</p>
+      <p><bf>So:</bf> if you use any new MRML tags,<enum>
+	  <item>Add the tags to the MRML DTD in dtd/mrml.dtd</item>
+	  <item>Call the makefile in dtd</item>
+	  <item>Implement these tags in your query processors and
+accesssors using <tt>#include "mrml.h"</tt></item>
+	</enum>
+</p>
+    </sect>
+    <sect>
+      <heading>CXMLElement</heading>
+      <p>Please browse the doxygen-generated documentation</p>
+    </sect>
+    <sect>
+      <heading>An example <tt>gift-config.mrml</tt></heading>
+<p><code>
+&lt;mrml&gt;
+&lt;cui-configuration&gt;
+    &lt;algorithm-list&gt;
+    &lt;!--COMMENT The new definiton of the default algorithm
+                The default algorithm performs in fact a meta
+                query of several inverted file queries.
+                Each sub-query of the meta query is
+                specialised on one of the feature groups 
+
+                Color histogram
+                Color block
+                Gabor histogram
+                Gabor block
+
+                Each one of them is pruned in adifferent way.
+                (this is the goal of the operation)
+      --&gt;
+      &lt;algorithm 
+	algorithm-id="a-structured-annotation" 
+        algorithm-type="a-structured-annotation" 
+	algorithm-name="Structured_Annotation.pl"
+	collection-id="c-17-44-14-22-8-100-5-265-0"
+
+	cui-base-type="perl"
+
+        cui-perl-script-file="/home/muellerw/generate-template/all-known-mods.pl"
+        cui-perl-query-function="processGIFTQueryCall"
+	cui-perl-package="CVLFast"
+        cui-perl-random-function="processGIFTRandomQueryCall"
+ 
+	cui-weighting-function="ClassicalIDF"
+	&gt;
+        &lt;query-paradigm-list&gt;
+           &lt;query-paradigm type="structured-annotation"/&gt;
+        &lt;/query-paradigm-list&gt;
+        &lt;allows-children&gt;
+           &lt;query-paradigm-list&gt;
+             &lt;query-paradigm type="NONE"/&gt;
+           &lt;/query-paradigm-list&gt;
+        &lt;/allows-children&gt;
+        &lt;property-sheet property-sheet-id="cui-p-1"  
+                           property-sheet-type="subset" 
+                           send-type="none" 
+                           minsubsetsize="0" 
+                           maxsubsetsize="1"&gt;
+          &lt;property-sheet property-sheet-id="cui-p0" 
+                             caption="Modify default configuration" 
+                             property-sheet-type="set-element" 
+                             send-type="none"/&gt;
+        &lt;/property-sheet&gt;
+      &lt;/algorithm&gt;
+      &lt;algorithm 
+	algorithm-id="a-quickhunter" 
+        algorithm-type="a-quickhunter" 
+	algorithm-name="QuickHunter"
+	collection-id="c-17-44-14-22-8-100-5-265-0"
+
+	cui-base-type="perl"
+
+        cui-perl-script-file=
+           "/home/muellerw/generate-template/all-known-mods.pl"
+	cui-perl-package="CVLQuickHunter"
+
+        cui-perl-query-function="processGIFTQueryCall"
+        cui-perl-random-function="processGIFTRandomQueryCall"
+ 
+	cui-weighting-function="ClassicalIDF"
+	&gt;
+        &lt;query-paradigm-list&gt;
+           &lt;query-paradigm type="distance-matrix"/&gt;
+        &lt;/query-paradigm-list&gt;
+        &lt;property-sheet property-sheet-id="cui-p-1"  
+                           property-sheet-type="subset" 
+                           send-type="none" 
+                           minsubsetsize="0" 
+                           maxsubsetsize="1"&gt;
+          &lt;property-sheet property-sheet-id="cui-p0" 
+                             caption="Modify default configuration" 
+                             property-sheet-type="set-element" 
+                             send-type="none"/&gt;
+        &lt;/property-sheet&gt;
+      &lt;/algorithm&gt;
+      &lt;algorithm 
+	algorithm-id="a-gift-link-demo" 
+        algorithm-type="a-gift-link-demo" 
+	algorithm-name="Gift-Link-Demo"
+	collection-id="c-17-44-14-22-8-100-5-265-0"
+
+	cui-base-type="perl"
+
+        cui-perl-script-file=
+            "/home/muellerw/generate-template/all-known-mods.pl"
+	cui-perl-package="CGIFTLink"
+        cui-perl-query-function="processGIFTQueryCall"
+        cui-perl-random-function="processGIFTRandomQueryCall"
+ 
+	cui-weighting-function="ClassicalIDF"
+	&gt;
+        &lt;query-paradigm-list&gt;
+           &lt;query-paradigm type="distance-matrix"/&gt;
+        &lt;/query-paradigm-list&gt;
+        &lt;property-sheet property-sheet-id="cui-p-1"  
+                           property-sheet-type="subset" 
+                           send-type="none" 
+                           minsubsetsize="0" 
+                           maxsubsetsize="1"&gt;
+          &lt;property-sheet property-sheet-id="cui-p0" 
+                             caption="Modify default configuration" 
+                             property-sheet-type="set-element" 
+                             send-type="none"/&gt;
+        &lt;/property-sheet&gt;
+      &lt;/algorithm&gt;
+&lt;!--        cui-pr-modulo="4"
+        cui-pr-modulo-class="0"
+--&gt;
+      &lt;algorithm 
+	algorithm-id="adefault" 
+        algorithm-type="adefault" 
+	algorithm-name="Classical IDF" 
+
+	collection-id="c-17-44-14-22-8-100-5-265-0"
+
+	cui-block-color-histogram="no"
+	cui-block-color-blocks="no"
+	cui-block-texture-histogram="no"
+	cui-block-texture-blocks="no"
+
+	cui-base-type="inverted_file" 
+	cui-weighting-function="ClassicalIDF"
+	&gt;
+        &lt;query-paradigm-list&gt;
+           &lt;query-paradigm type="inverted-file"/&gt;
+        &lt;/query-paradigm-list&gt;
+        &lt;property-sheet property-sheet-id="cui-p-1"  
+                           property-sheet-type="subset" 
+                           send-type="none" 
+                           minsubsetsize="0" 
+                           maxsubsetsize="1"&gt;
+          &lt;property-sheet property-sheet-id="cui-p0" 
+                             caption="Modify default configuration" 
+                             property-sheet-type="set-element" 
+                             send-type="none"&gt;
+  	  &lt;property-sheet property-sheet-id="cui-p15" 
+                             caption="Prune at % of features" 
+                             property-sheet-type="numeric" 
+                             send-type="attribute" 
+                             send-name="cui-pr-percentage-of-features" 
+                             from="20" 
+                             to="100" 
+                             step="5" 
+                             send-value="70"/&gt;
+  	  &lt;property-sheet property-sheet-id="cui-p1"  
+                             property-sheet-type="subset"
+                             send-type="none" 
+                             minsubsetsize="1" 
+                             maxsubsetsize="4"&gt;
+   	    &lt;property-sheet property-sheet-id="cui-p12" 
+                               send-boolean-inverted="yes" 
+                               caption="Colour blocks" 
+                               property-sheet-type="set-element" 
+                               send-type="attribute" 
+                               send-name="cui-block-color-blocks" 
+                               send-value="yes"/&gt;
+  	    &lt;property-sheet property-sheet-id="cui-p14" 
+                               send-boolean-inverted="yes" 
+                               caption="Gabor blocks" 
+                               property-sheet-type="set-element" 
+                               send-type="attribute" 
+                               send-name="cui-block-texture-blocks" 
+                               send-value="yes"/&gt;
+  	    &lt;property-sheet property-sheet-id="cui-p13"  
+                               send-boolean-inverted="yes" 
+                               caption="Gabor histogram" 
+                               property-sheet-type="set-element"  
+                               send-type="attribute" 
+                               send-name="cui-block-texture-histogram" 
+                               send-value="yes"/&gt;
+  	    &lt;property-sheet property-sheet-id="cui-p11" 
+                               send-boolean-inverted="yes" 
+                               caption="Colour histogram" 
+                               property-sheet-type="set-element" 
+                               send-type="attribute" 
+                               send-name="cui-block-color-histogram" 
+                               send-value="yes"/&gt;
+            &lt;/property-sheet&gt;
+          &lt;/property-sheet&gt;
+        &lt;/property-sheet&gt;
+     &lt;/algorithm&gt;&lt;!-- adefault --&gt;
+&lt;!--        cui-pr-modulo="2"
+        cui-pr-modulo-class="0"--&gt;
+      &lt;algorithm 
+	algorithm-id="a-sepnorm" 
+        algorithm-type="a-sepnorm" 
+	algorithm-name="Separate Normalisation" 
+	collection-id="c-17-44-14-22-8-100-5-265-0"
+
+
+	cui-block-color-histogram="no"
+	cui-block-color-blocks="no"
+	cui-block-texture-histogram="no"
+	cui-block-texture-blocks="no"
+
+	cui-base-type="multiple" 
+	cui-weighting-function="ClassicalIDF"
+	&gt;
+      &lt;algorithm 
+	algorithm-id="sub1" 
+        algorithm-type="sub1" 
+	algorithm-name="sub1" 
+
+	cui-block-color-blocks="yes"
+	cui-block-texture-histogram="yes"
+	cui-block-texture-blocks="yes"
+
+	cui-base-type="inverted_file" 
+	/&gt;
+      &lt;algorithm 
+	algorithm-id="sub2" 
+        algorithm-type="sub2" 
+	algorithm-name="sub2" 
+
+	cui-block-color-histogram="yes"
+	cui-block-texture-histogram="yes"
+	cui-block-texture-blocks="yes"
+
+	cui-base-type="inverted_file" 
+	/&gt;
+      &lt;algorithm 
+	algorithm-id="sub3" 
+        algorithm-type="sub3" 
+	algorithm-name="sub3" 
+
+	cui-block-color-histogram="yes"
+	cui-block-color-blocks="yes"
+	cui-block-texture-blocks="yes"
+
+	cui-base-type="inverted_file" 
+	/&gt;
+      &lt;algorithm 
+	algorithm-id="sub4" 
+        algorithm-type="sub4" 
+	algorithm-name="sub4" 
+
+	cui-block-color-histogram="yes"
+	cui-block-color-blocks="yes"
+	cui-block-texture-histogram="yes"
+
+	cui-base-type="inverted_file" 
+	/&gt;
+        &lt;query-paradigm-list&gt;
+           &lt;query-paradigm type="inverted-file"/&gt;
+        &lt;/query-paradigm-list&gt;
+        &lt;property-sheet property-sheet-id="cui-p-1"  
+                           property-sheet-type="subset" 
+                           send-type="none" 
+                           minsubsetsize="0" 
+                           maxsubsetsize="1"&gt;
+          &lt;property-sheet property-sheet-id="cui-p0" 
+                             caption="Modify default configuration" 
+                             property-sheet-type="set-element" 
+                             send-type="none"&gt;
+  	  &lt;property-sheet property-sheet-id="cui-p15" 
+                             caption="Prune at % of features" 
+                             property-sheet-type="numeric" 
+                             send-type="attribute" 
+                             send-name="cui-pr-percentage-of-features" 
+                             from="20" 
+                             to="100" 
+                             step="5" 
+                             send-value="70"/&gt;
+  	  &lt;property-sheet property-sheet-id="cui-p1"  
+                             property-sheet-type="subset" 
+                             send-type="none" 
+                             minsubsetsize="1" 
+                             maxsubsetsize="4"&gt;
+   	    &lt;property-sheet property-sheet-id="cui-p12" 
+                               send-boolean-inverted="yes" 
+                               caption="Colour blocks" 
+                               property-sheet-type="set-element" 
+send-type="attribute" send-name="cui-block-color-blocks" send-value="yes"/&gt;
+  	    &lt;property-sheet property-sheet-id="cui-p14" send-boolean-inverted="yes" caption="Gabor blocks" property-sheet-type="set-element" send-type="attribute" send-name="cui-block-texture-blocks" send-value="yes"/&gt;
+  	    &lt;property-sheet property-sheet-id="cui-p13" send-boolean-inverted="yes" caption="Gabor histogram" property-sheet-type="set-element" send-type="attribute" send-name="cui-block-texture-histogram" send-value="yes"/&gt;
+  	    &lt;property-sheet property-sheet-id="cui-p11" send-boolean-inverted="yes" caption="Colour histogram" property-sheet-type="set-element" send-type="attribute" send-name="cui-block-color-histogram" send-value="yes"/&gt;
+            &lt;/property-sheet&gt;
+          &lt;/property-sheet&gt;
+        &lt;/property-sheet&gt;
+     &lt;/algorithm&gt;&lt;!-- adefault --&gt;
+    &lt;/algorithm-list&gt;
+    &lt;collection-list listid="1"&gt;
+
+&lt;!-- automatically added by v_add_collection.pl --&gt;
+		      &lt;collection 
+		      collection-id="c-17-44-14-22-8-100-5-265-0" 
+		      collection-name="minidb" 
+		      
+		      cui-number-of-images="10" 
+		      cui-base-dir="/home/muellerw/gift-indexing-data/minidb/"
+		      cui-inverted-file-location="InvertedFile.db" 
+		      cui-offset-file-location="InvertedFileOffset.db"
+		      cui-feature-description-location=
+		      "InvertedFileFeatureDescription.db"
+		      cui-feature-file-location="url2fts"
+		      &gt;
+		      &lt;query-paradigm-list&gt;           
+                           &lt;query-paradigm type="inverted-file"/&gt;
+                      &lt;/query-paradigm-list&gt;
+		      &lt;/collection&gt;
+		      
+
+&lt;!-- automatically added by v_add_collection.pl --&gt;
+		      &lt;collection 
+		      collection-id="TSR500"
+		      collection-name="TSR500" 
+		      
+		      cui-number-of-images="506" 
+		      cui-base-dir="/home/muellerw/gift-indexing-data/TSR500/"
+		      cui-inverted-file-location="InvertedFile.db" 
+		      cui-offset-file-location="InvertedFileOffset.db"
+		      cui-feature-description-location=
+		      "InvertedFileFeatureDescription.db"
+		      cui-feature-file-location="url2fts"
+		      &gt;
+		      &lt;query-paradigm-list&gt;           
+                           &lt;query-paradigm type="structured-annotation"/&gt;
+                           &lt;query-paradigm type="inverted-file"/&gt;
+                           &lt;query-paradigm type="distance-matrix"/&gt;
+                      &lt;/query-paradigm-list&gt;
+		      &lt;/collection&gt;
+		      
+
+&lt;!-- automatically added by v_add_collection.pl --&gt;
+		      &lt;collection 
+		      collection-id="c-57-23-13-4-9-100-3-277-0" 
+		      collection-name="Lausanne6100" 
+		      
+		      cui-number-of-images="6100" 
+		      cui-base-dir="/home/muellerw/gift-indexing-data/Lausanne6100/"
+		      cui-inverted-file-location="InvertedFile.db" 
+		      cui-offset-file-location="InvertedFileOffset.db"
+		      cui-feature-description-location=
+		      "InvertedFileFeatureDescription.db"
+		      cui-feature-file-location="url2fts"
+		      &gt;
+		      &lt;query-paradigm-list&gt;                           
+                           &lt;query-paradigm type="inverted-file"/&gt;
+                      &lt;/query-paradigm-list&gt;
+		      &lt;/collection&gt;
+		      
+
+		      
+
+&lt;!-- xxyx gift-add-collection xyxx DEPENDS ON THIS LINE --&gt;
+
+    &lt;/collection-list&gt;
+  &lt;/cui-configuration&gt;
+&lt;/mrml&gt;
+
+&lt;!-- this is for xemacs to make it start up in the right mode.
+     it does the right thing, but complains
+--&gt;
+
+&lt;!-- ;;; Local Variables: *** --&gt;
+&lt;!-- ;;; mode: sgml       *** --&gt;
+
+
+</code></p>
+    </sect>
+  </article>
+
+

@@ -1,0 +1,442 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+# Author of this file: Wolfgang Müller
+
+###############################
+#
+# This is used for making inverted files
+# from files which contain pure text annotation
+#
+
+
+require 5.002;
+#use strict;
+use Socket;
+use FileHandle;
+use English;
+use IO::Socket;
+use XML::Parser;
+
+package CUsedWordHash;
+require Exporter;
+
+@ISA= qw(Exporter);
+@EXPORT= qw(new
+	    addWords
+	    getWords
+	    generateLookup
+	    getSize
+	    wordToNumber
+	    translate
+	   );
+
+
+
+
+#############################################################
+#
+# This script is useful for collecting, which
+# words have been used in the annotation
+# this is a precondition for creating an inverted file 
+# from it.
+#
+#############################################################
+#
+#
+# WARNING: this code is quick and dirty, but flexible.
+# it will be difficult to make it multi-threaded, but
+# this probably will not be interesting for a while
+#
+#
+#############################################################
+
+sub new {
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize();
+  return $self;
+}
+
+sub initialize(){
+  my$self=shift;
+
+  $self->{used}={};
+  ###############################
+  #
+  # for quick changes what to look at when debugging/testing
+  #
+  #
+  $self->{vDEBUG}={
+		  };
+  print "Printing debugging info for the functions:\n";
+  {
+    my $i;
+    foreach $i (keys(%{$self->{vDEBUG}})){
+      if($self->{vDEBUG}->{$i}){
+	print "$i\n";
+      }
+    }
+  }
+}
+
+sub addWords(;){
+  my$self=shift;
+
+  foreach $i (@_){
+    $self->{used}->{$i}++;
+  }
+}
+
+sub getWords(){
+  my$self=shift;
+
+  return keys(%{$self->{used}});
+}
+
+sub getSize(){
+  my$self=shift;
+
+  return scalar(keys(%{$self->{used}}));
+}
+
+sub generateLookup( $ ){
+  my$self=shift;
+  my $inOffset=shift;
+
+  $self->{lookup}={};
+
+  for $i (sort(keys(%{$self->{used}}))){
+    $self->{lookup}->{$i}= $inOffset++;
+  }
+  
+  return $inOffset;
+}
+
+sub wordtoNumber( $ ){
+  my$self=shift;
+
+  my $inWord;
+
+  return $self->{lookup}->{$inWord};
+}
+
+sub translate( $$ ){
+  my$self=shift;
+  my $inString=shift;
+  my $inCount=shift;
+  foreach $i (@_){
+    print "_",$self->{lookup}->{$i},".";
+    $inString.=pack "if",$self->{lookup}->{$i},1;
+    $inCount++;
+  }
+  return ($inString,$inCount);
+}
+
+sub statistics( $ ){
+  my$self=shift;
+
+  my $inName=shift;
+  print "In cathegory $inName: ",scalar(keys(%{$self->{lookup}}))," different Words. \n";
+  
+  my @lWords;
+
+  foreach  $i (keys(%{$self->{used}})){
+    push @lWords,[$i,$self->{used}->{$i}];
+  }
+  
+  @lSortedWords=sort {$a->[1] <=> $b->[1];} @lWords;
+
+  print "Words and their frequency: ";
+
+  $lCount=0;
+  $lDiffcount=0;
+  $lSum=0;
+  $lPrevious=0;
+  my @lWordTimes;
+  foreach $i (@lSortedWords){
+    $lDiffcount++;
+    if($lPrevious != $i->[1]){
+
+      push @lWordTimes,[$lPrevious,$lDiffcount];
+
+      print "$lDiffcount words\n";
+      $lDiffcount=0;
+    }
+    print ++$lCount,": $i->[1]           $i->[0]\n";
+    $lSum+=$i->[1];
+    $lPrevious=$i->[1];
+  }
+  print "$lSum words total\n\n";
+  
+  print "To express things otherwise:\n";
+  foreach $i (@lWordTimes){
+    print "$i->[1] words arose $i->[0] times\n" if $i->[0];
+  }
+}
+
+package main;
+
+sub WNOutputToWordList( $ ){     
+  my $lNounHyper=shift;
+  @lLines=split("\n",$lNounHyper);
+  $lNounHyper="";
+  foreach $j (@lLines){
+    $lNounHyper.=$j unless($j=~m/^S/);
+  }
+  
+  $lNounHyper=~s/Sense.*\n//g;
+  @lShortNounList=split("=>",$lNounHyper);
+  foreach $j (@lShortNounList){
+    my @lList=split(", ",$j);
+    push @lNounList,(@lList);
+  }
+  
+  my @lAux=@lNounList;
+  @lNounList=();
+  foreach $j (@lAux){
+    $j=~s/^\s+//;
+    $j=~s/\s+$//;
+    if($j){
+      push @lNounList,$j;
+    }
+  }
+  
+  return(@lNounList);
+}
+
+sub removeDoubles{
+  my %lRemoverHash;
+
+  my $lCurrent;
+  while($lCurrent=shift){
+    $lRemoverHash{$lCurrent}=1;
+  }
+  #print "KEYS:",join(",",keys(%lRemoverHash)),"\n";
+  print "\n->",scalar(keys(%lRemoverHash)),"\n";
+  return keys(%lRemoverHash);
+}
+
+sub useThesaurus( $$ ){
+  
+  my $inThesaurus=shift;
+  my $inWordList=shift;
+  
+  
+  
+  my @lOutList;
+  my $i;
+  
+  #
+  # push the word and its associated list for each word in the word list
+  #
+  for $i (@$inWordList){
+    push @lOutList,$i;
+    push @lOutList,$inThesaurus->{$i};
+#     $lNounHyper=`/home/wolfgang/wordnet1.6/bin/wn $i -hypen -n1`;
+#     if($lNounHyper){
+#       push @lOutList,WNOutputToWordList($lNounHyper);
+#     }
+#     $lVerbHyper=`/home/wolfgang/wordnet1.6/bin/wn $i -hypev -n1`;
+#     if($lVerbHyper){
+#       push @lOutList,WNOutputToWordList($lVerbHyper);
+#     }
+    
+  }
+  #print "\n------------------------------\n",join(",_",@lOutList),"\n------------------------------\n",;
+  print scalar(@lOutList),$lOutList[0],".\n";
+  return @lOutList;
+}
+
+my %lThesaurus;
+open INTHESAURUS,"thesaurus" or die "No thesaurus";
+{
+  
+  print "I opened successfully the thesaurus\n";
+  
+  while(<INTHESAURUS>){
+    my @lLine=split(/\s+/,$_);
+    if(scalar(@lLine)>1){
+      my $lIndex=shift @lLine;
+      $lThesaurus{$lIndex}=\@lLine;
+      
+      print "Inserting to thesaurus: $lIndex: (",join(", ",@lLine),")\n";
+    }
+  }  
+}
+
+$/="";#slurp whole paragraphs
+
+my $inFileName=shift;
+
+open INFILE,$inFileName or die "Could not open $inFileName\n";
+
+
+my $lCount=0;
+
+my $lOneWordUsed   =new CUsedWordHash;
+my $lFreeUsed      =new CUsedWordHash;
+my $lForegroundUsed=new CUsedWordHash;
+my $lBackgroundUsed=new CUsedWordHash;
+
+while(<INFILE>){
+  if(m/:\n/){
+    s/:\n//;
+    chomp;
+    my $lImage=$_;
+    
+    $_=<INFILE>;
+    chomp;chomp;
+
+    my @lOneWordAnnotation=split(/\s+/,$_);
+    $lOneWordUsed->addWords(@lOneWordAnnotation);
+
+    $_=<INFILE>;
+    chomp;chomp;
+    my @lFreeAnnotation=split(/\s+/,$_);
+    @lAugmentedFreeAnnotation=removeDoubles(useThesaurus(\%lThesaurus,
+							 \@lFreeAnnotation
+							));
+    $lFreeUsed->addWords(@lAugmentedFreeAnnotation);
+
+    $_=<INFILE>;
+    chomp;chomp;
+    my @lForegroundAnnotation=split(/\s+/,$_);
+    $lForegroundUsed->addWords(@lForegroundAnnotation);
+
+    $_=<INFILE>;
+    chomp;chomp;
+    my @lBackgroundAnnotation=split(/\s+/,$_);
+    $lBackgroundUsed->addWords(@lBackgroundAnnotation);
+  }
+}
+print "Oneword:",join(", ",sort($lOneWordUsed->getWords())),"\n";
+print "Free:",join(", ",sort($lFreeUsed->getWords())),"\n";
+print "Foreground:",join(", ",sort($lForegroundUsed->getWords())),"\n";
+print "Background:",join(", ",sort($lBackgroundUsed->getWords())),"\n";
+
+$lBackgroundUsed
+  ->generateLookup($lForegroundUsed
+		   ->generateLookup($lFreeUsed
+				    ->generateLookup($lOneWordUsed
+						     ->generateLookup(0))));
+
+${gBaseDir}="/home/wolfgang/a2notated/";
+
+
+sub writeFeatureDescription{
+  open IFFI,">${gBaseDir}InvertedFileFeatureDescription.db" or die "no IFFI";
+
+  my $lShiftCount=0;
+  foreach $lSize(@_){
+    my $i;
+    my $lCount=0;
+    for($i=0;
+	$i<$lSize;
+	$i++){
+      print IFFI "$lCount $lShiftCount\n";
+      $lCount++;
+    }
+    $lShiftCount=0;
+  }
+}
+
+writeFeatureDescription($lOneWordUsed->getSize(),
+			$lFreeUsed->getSize(),
+			$lForegroundUsed->getSize(),
+			$lBackgroundUsed->getSize());
+
+close INFILE;
+
+
+open URL2FTS,">${gBaseDir}url2fts";
+
+open INFILE,$inFileName or die "Could not open $inFileName\n";
+while(<INFILE>){
+  if(m/:\n/){
+    s/:\n//;
+    chomp;
+    
+    m/([^\/]*)$/;
+    
+    $_=$1;
+
+    print URL2FTS "http://gift.unige.ch/images/TSR500/$_ http://gift.unige.ch/images/TSR500/$_ ";
+    
+    s/jpg$/fts/;
+
+    my $lFeature="${gBaseDir}$_";
+    
+    print URL2FTS "$lFeature\n";
+
+    print "Opening: >$lFeature\n";
+    
+    open OUTFILE,">$lFeature" or die "Could not open $lFeature\n";
+    
+    my $lFeatureString="";
+    my $lCount=0;
+
+    $_=<INFILE>;
+    chomp;chomp;
+    my @lOneWordAnnotation=split(/\s+/,$_);
+    ($lFeatureString,$lCount)=$lOneWordUsed->translate($lFeatureString,
+						       $lCount,
+						       @lOneWordAnnotation);
+    
+    $_=<INFILE>;
+    chomp;chomp;
+    my @lFreeAnnotation=split(/\s+/,$_);
+    @lAugmentedFreeAnnotation=removeDoubles(useThesaurus(\%lThesaurus,
+							 \@lFreeAnnotation
+							));
+    ($lFeatureString,$lCount)=$lFreeUsed->translate($lFeatureString,
+						    $lCount,
+						    @lAugmentedFreeAnnotation);
+    
+    $_=<INFILE>;
+    chomp;chomp;
+    my @lForegroundAnnotation=split(/\s+/,$_);
+    ($lFeatureString,$lCount)=$lForegroundUsed->translate($lFeatureString,
+							  $lCount,
+							  @lForegroundAnnotation);
+    $_=<INFILE>;
+    chomp;chomp;
+    my @lBackgroundAnnotation=split(/\s+/,$_);
+    ($lFeatureString,$lCount)=$lBackgroundUsed->translate($lFeatureString,
+							  $lCount,
+							  @lBackgroundAnnotation);
+    $lAddString=pack "i",scalar(split("",$lFeatureString))/8;
+    $lFeatureString=$lAddString.$lFeatureString;
+
+
+    print OUTFILE $lFeatureString;
+    #print "\nFS: $lFeatureString\n";
+  }
+}
+#$lOneWordUsed->statistics("One word annotation");
+#$lFreeUsed->statistics("Free annotation");
+#$lForegroundUsed->statistics("Foreground Visual");
+#$lBackgroundUsed->statistics("Background Visual");
+
+    
+
+
+
+

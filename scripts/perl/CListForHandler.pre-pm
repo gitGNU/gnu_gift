@@ -1,0 +1,45 @@
+#!/usr/bin/perl -w
+
+#
+# The goal of this is to be able to iterate
+# over several levels and to be able to accumulate
+# over these levels
+#
+
+
+package ListForHandler;
+require Exporter;
+@ISA    = qw(Exporter);
+@EXPORT = qw(setBody
+	     handle);
+
+
+
+sub new( $;){
+  my $class=shift;
+  my $self={};
+  
+  bless $self,$class;
+
+  $self->init(@_);
+  return $self;
+}
+
+sub setBody( & ){
+  my$self=shift;
+  $self->{body}=shift;
+}
+
+sub init{
+  my$self=shift;
+
+  $self->setBody(shift);
+}
+
+sub handle( ; ){
+  my$self=shift;
+  
+  return & {$self->{body}}($self,@_);
+}
+
+

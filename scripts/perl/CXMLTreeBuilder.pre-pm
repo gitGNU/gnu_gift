@@ -1,0 +1,184 @@
+#!/usr/bin/perl -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+use lib '__BINDIR__'; # for including CFeedbackClient
+use XML::Parser;
+use CQueryParadigmMatcher;
+
+package CXMLTreeBuilder;
+require Exporter;
+
+use lib '__BINDIR__'; # for including CFeedbackClient
+
+@ISA= qw(Exporter
+	 CQueryParadigmMatcher);
+@EXPORT_OK= qw(new
+	    stringToTree);
+	    
+##############################
+#
+# Expat parser handlers
+#
+sub handleEnd( $$ ){
+  
+  my $self=shift;
+
+  die "BLACK MAGIC!" if ($self->{mMagic}!=42);
+
+  $self=$self->{mCaller};
+
+  
+  print "----------POPPING\n" if $self->{vDEBUG}->{handleEnd};
+  pop @{$self->{stack}};
+
+}
+
+
+sub addChildToTree( $ ){
+  my $self=shift;
+  
+  my $inChild=shift;
+
+
+  ##############################
+  #
+  # making $lNewTreeElement a new child element
+  #
+  if(defined($self->{stack}->[-1])){
+    push @{$self->{stack}->[-1]->{children}},$inChild;
+    print "PUSHING:   " if $self->{vDEBUG}->{handleEnd};
+  }else{
+    print "adding:    " if $self->{vDEBUG}->{handleEnd};
+    $self->{tree}=$inChild;
+  }
+
+  print("_",defined($inChild->{element})?$inChild->{element}:'undefined',"/",defined($inChild->{text})?$inChild->{text}:'undefined',"_\n") if $self->{vDEBUG}->{handleEnd};
+
+  push @{$self->{stack}},$inChild;
+
+}
+
+sub handleStart( $$ ){
+  my $self=shift;
+  $self=$self->{mCaller};
+  
+  my $inElement=shift;
+  my %inAttributes=(@_);
+
+  ####$##########################
+  #
+  # making $lNewTreeElement a child element
+  #
+  my $lNewTreeElement={
+		       element => $inElement,
+		       attributes => \%inAttributes,
+		       children => []
+		      };
+
+  $self->addChildToTree( $lNewTreeElement );
+
+  
+}
+
+sub handleChar( $$ ){
+
+  my $self=shift;
+  $self=$self->{mCaller};
+  
+  my $inText=shift;
+
+  if(defined($inText)){
+    unless($inText=~m/^(\s*\n)+$/){
+      
+      ####$##########################
+      #
+      # making $lNewTreeElement a child element
+      #
+      my $lNewTreeElement={
+			   text => $inText,
+			   children => []
+			  };
+      
+      $self->addChildToTree( $lNewTreeElement );
+      pop @{$self->{stack}};
+      print "----------POPPING\n" if $self->{vDEBUG}->{handleEnd};
+    }
+  }
+}
+
+sub new( ){
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize();
+  
+  # $self->{vDEBUG}->{handleEnd}=1;
+  
+  return $self;
+}
+
+
+sub initialize(){
+  my $self=shift;
+
+  $self->{parser} = new XML::Parser(Handlers => {Start => \&handleStart,
+						 End => \&handleEnd,
+						 Char => \&handleChar,
+						});
+
+  # Make the parser know who is this structure 
+  $self->{parser}->{mCaller}=$self;
+  $self->{parser}->{mMagic}=42;#set a magic number
+
+  ###############################
+  #
+  # which functions do debugging printouts?
+  #
+  #
+  $self->{vDEBUG}={
+
+		  };
+}
+
+sub stringToTree( $ ){
+  my $self=shift;
+
+  my $inString=shift;
+
+  $self->{stack}=[];
+
+  $self->{parser}->parse($inString);
+
+  return $self->{tree};
+}
+
+sub fileToTree( $ ){
+  my $self=shift;
+
+  my $fileName=shift;
+
+  $self->{stack}=[];
+
+  $self->{parser}->parsefile($fileName);
+
+  return $self->{tree};
+}
+
+
+package main;

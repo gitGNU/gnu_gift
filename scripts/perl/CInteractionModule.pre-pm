@@ -1,0 +1,1037 @@
+#!__PERL_LOCATION__ -w # -*- mode: perl -*-
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+# Author of this file: Wolfgang Müller
+
+require 5.002;
+#use strict;
+use Socket;
+use FileHandle;
+use English;
+use IO::Socket;
+use XML::Parser;
+
+package CInteractionModule;
+require Exporter;
+
+@ISA= qw(Exporter);
+@EXPORT= qw(new
+	    
+	   );
+
+
+
+
+#############################################################
+#
+#  APOLOGY:
+#  This is a quick and dirty port of a perl program which initially 
+#  was NOT a module. This you will see at many places.
+#
+#############################################################
+
+
+#############################################################
+#
+# A script for performing 
+# benchmarks on CBIRS systems
+# which use MRML
+#
+#############################################################
+#
+#
+# WARNING: this code is quick and dirty, but flexible.
+# it will be difficult to make it multi-threaded, but
+# this probably will not be interesting for a while
+#
+#
+#############################################################
+
+sub new {
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize();
+  return $self;
+}
+
+sub initialize(){
+  my$self=shift;
+
+  $self->clearResultList();
+  
+  $self->{locQuery}=[];
+§
+  $self->{parser} = new XML::Parser(Handlers => {Start => \&handleStart,
+						 End => \&handleEnd,
+						});
+
+  # Make the parser know who is this structure 
+  $self->{parser}->{mCaller}=$self;
+  $self->{parser}->{mMagic}=42;
+  ###############################
+  #
+  # for quick changes what to look at when debugging/testing
+  #
+  #
+  $self->{vDEBUG}={
+		   doFirstQueryStep =>  0,
+		   doQueryStep =>       0,
+		   readAndParse =>      0, 
+		   buildNewQuery =>     0,
+		   handleStart =>       0,
+		   handleEnd =>         0,
+		   setRelevantImages => 0,
+		   sendQueryString =>   0,
+		  };
+  print "Printing debugging info for the functions:\n";
+  {
+    my $i;
+    foreach $i (keys(%{$self->{vDEBUG}})){
+      if($self->{vDEBUG}->{$i}){
+	print "$i\n";
+      }
+    }
+  }
+  ###############################
+  #
+  # Parameters for the query. Here some set/get/functions would be nice
+  #
+  $self->clearAlgorithmCollectionPair();
+  $self->setSessionID("");
+
+  $self->setCutoff(0.0);
+  $self->setResultSize(20);
+
+  $self->setAddress("localhost:12789");
+}
+
+sub setAddress( $ ){
+  my$self=shift;
+
+  my $lAddress=shift;
+
+  ($self->{mHost},$self->{mPort})=split(":",$lAddress);
+}
+
+
+###############################
+#
+# Setting the array of relevant images
+#
+sub setRelevantImages{
+  my$self=shift;
+  #a list of the relevant images
+  $self->{gRelevantImages}=[];
+  @{$self->{gRelevantImages}}=@_;
+  
+  #
+  # building a hash to look up
+  # if a given url belongs to an 
+  # image from the list
+  #
+  my $i;
+  foreach $i (@{$self->{gRelevantImages}}){
+    print "relevant image: $i\n" if($self->{vDEBUG}->{setRelevantImages});
+    $self->{locRelevantHash}->{$i}=1;
+  }
+}
+
+sub getRelevantImages(){
+  my$self=shift;
+  return $self->{gRelevantImages};
+}
+
+
+#########################################
+#
+# HELPERS FOR XML WRITING 
+# (largely unused, but its a c++-reflex ;-) 
+#  in perl things like that are more quickly done 
+#  by hand)
+#
+sub toAttribute{
+  my$self=shift;
+  my $inName=  shift;
+  my $inValue= shift;
+  
+  return " $inName=\"$inValue\"";
+}
+
+sub toStartTag( $$$ ){
+  my$self=shift;
+
+  
+  my $inEmpty=shift;
+  my $inName=shift;
+  my $inAttributes=shift;
+  
+  my $lReturnValue="";
+  
+  my $i;
+  
+  foreach $i (values(%$inAttributes)){
+    $lReturnValue.=$self->toAttribute(@{$i});
+  }
+  
+  if($inEmpty){
+    return "<$inName $lReturnValue/>\n";
+  }else{
+    return "<$inName $lReturnValue>\n";
+  }
+}
+sub toEndTag( $ ){
+  my$self=shift;
+
+  my $inName=shift;
+  return "</$inName>\n";
+}
+
+########################################
+#
+# making a query string
+#
+sub makeQueryString( $;$ ){
+  my$self=shift;
+  my $lQueryImages=shift;
+  # getting a pair of algorithm
+  # and collection for the query
+  my $lPairNumber=(shift || 0);
+  my $inSession=$self->getSessionID();
+  my ($inAlgorithm,$inCollection)=$self->getAlgorithmCollectionPair($lPairNumber);
+  my $inResultSize=$self->getResultSize();
+  my $inCutoff=$self->getCutoff();
+  
+
+
+  my $lResult=qq(<?xml version="1.0" standalone="no" ?>
+		 <!DOCTYPE mrml SYSTEM "~/public_html/dtd/mrml.dtd">
+		 <mrml session-id="$inSession">
+		 <query-step 
+		 result-size="$inResultSize" 
+		 result-cutoff="$inCutoff" 
+		 collection-id="$inCollection" 
+		 algorithm-id="$inAlgorithm">
+		 <user-relevance-element-list>);
+
+  foreach $i (sort {$$a[0] cmp $$b[0]} @$lQueryImages){
+
+    my($lURL,$lRelevance)=@$i;
+
+
+    $lResult.=qq(
+		 <user-relevance-element 
+		 user-relevance="$lRelevance" 
+		 image-location="$lURL"/>
+		);
+  }
+  
+  $lResult.=qq(</user-relevance-element-list>
+	       </query-step>
+	       </mrml>
+	      );
+  return $lResult;
+}
+
+#########################################
+#
+# Handling incoming MRML
+# using XML::Parser
+#
+###############################
+#
+# Building a list of query results
+#
+sub clearResultList(){
+  my$self=shift;
+
+  $self->{locResultList}=[];
+}
+
+sub addToResultList( $$ ){
+  my$self=shift;
+
+  my $inURL= shift;
+  my $inUserRelevance= shift;
+
+  push @{$self->{locResultList}},[$inURL,$inUserRelevance];
+}
+sub getResultList( ){
+  my$self=shift;
+
+  return $self->{locResultList};
+}
+sub getResultHash( ){
+  my$self=shift;
+
+  my @lResultList=@{$self->getResultList( )};
+  
+  my $lReturnValue={};
+
+  foreach $i (@lResultList){
+    $lReturnValue->{$i->[0]}=$i->[1];
+  }
+
+  return $lReturnValue;
+}
+##############################
+#
+# Expat parser handlers
+#
+sub handleStart( $$ ){
+  
+  my $self=shift;
+
+  die "BLACK MAGIC!" if ($self->{mMagic}!=42);
+
+  $self=$self->{mCaller};
+
+  my $inElement=shift;
+
+  my %inAttributes=@_;
+
+  if($self->{vDEBUG}->{handleStart}){
+    print("start ",$inElement,",",join(":",values(%inAttributes)),"\n");
+  }
+  
+  if($inElement eq "algorithm"){
+    $self->addAlgorithmCollectionPair($inAttributes{"algorithm-type"},
+				      $inAttributes{"collection-id"});
+  }
+
+  if($inElement eq "mrml"){
+    $self->setSessionID($inAttributes{"session-id"});
+  }
+
+  if($inElement eq "query-result-element-list"){
+    $self->clearResultList();
+  }
+  if($inElement eq "query-result-element"){
+    $self->addToResultList($inAttributes{"image-location"},
+			   $inAttributes{"calculated-similarity"});
+  }
+}
+
+sub handleEnd( $ ){
+  my $self=shift;
+  $self=$self->{mCaller};
+  
+  my $inElement=shift;
+  
+  if($inElement eq "query-result"){
+    $self->buildNewQuery($self->getResultList(),
+			 $self->{locRelevantHash});
+  }
+  print "end ",$inElement,"\n" if($self->{vDEBUG}->{handleEnd}); 
+}
+
+
+############################################################
+#
+# Accessors
+#
+#
+
+
+###############################
+#
+# The following three functions support you in 
+# opening several sessions
+#
+sub clearSessionIDList(){
+  my$self=shift;
+  $self->{mSessionIDList}=[];
+}
+
+sub addSessionIDToList( $ ){
+  my$self=shift;
+  
+  my $lAddedItem= shift || $self->getSessionID();
+  
+  $self->clearSessionID() unless defined($self->{mSessionIDList});
+  
+  push @{$self->{mSessionIDList}},
+}
+sub getSessionIDFromList(  ;$ ){
+  my$self=shift;
+  
+  return $self->{mSessionIDList}->[(0 || shift)];
+}
+
+
+###############################
+#
+# setSessionID is used at each mrml-message
+# to set the SessionID to the one used in the last message 
+#
+sub setSessionID( $ ){
+  my$self=shift;
+
+  $self->{gSessionID}=shift;
+}
+
+sub getSessionID( ){
+  my$self=shift;
+
+  return $self->{gSessionID};
+}
+##############################
+#
+# Making a list of all algorithms available
+#
+#
+sub clearAlgorithmCollectionPair( ){
+  my$self=shift;
+  return $self->{mAlgorithmCollectionPair}=[];
+}
+sub addAlgorithmCollectionPair( $$ ){
+  my$self=shift;
+
+  my $lNewPair=[shift,shift];
+
+  $self->clearAlgorithmCollectionPair() unless defined $self->{mAlgorithmCollectionPair};
+  
+  push @{$self->{mAlgorithmCollectionPair}},$lNewPair;
+}
+sub getAlgorithmCollectionPair( ;$){
+  my$self=shift;
+  
+  return @{$self->{mAlgorithmCollectionPair}->[(shift || 0)]};
+}
+
+sub getAlgorithmID( ;$ ){
+  my$self=shift;
+
+  return ($self->getAlgorithmCollectionPair(shift))[0];
+}
+sub getCollectionID( ;$ ){
+  my$self=shift;
+
+  return ($self->getAlgorithmCollectionPair(shift))[1];
+}
+
+##############################
+#
+# Setting the desired maximum 
+# size of the result of the next query
+#
+#
+sub getResultSize( ){
+  my$self=shift;
+
+  return $self->{gResultSize};
+}
+sub setResultSize( $ ){
+  my$self=shift;
+
+  $self->{gResultSize}=shift;
+}
+##############################
+#
+# Setting the "cutoff": minimal desired calculated relevance
+# of the retrieved result
+#
+sub getCutoff( ){
+  my$self=shift;
+
+  return $self->{gCutoff};
+}
+sub setCutoff( $ ){
+  my$self=shift;
+
+  $self->{gCutoff}=shift;
+}
+
+
+
+##############################
+#
+# Build a new query using makeQueryString
+# out of a list of retrieved images.
+#
+#
+# In fact this is the main function which users of this class 
+# will need to overload 
+#
+sub buildNewQuery( $$ ){
+  my$self=shift;
+
+  #a reference to an ARRAY containing the retrieved images
+  my $inRetrieved=shift;
+
+  if($self->{vDEBUG}->{buildNewQuery}){
+    print "--------------------buildNewQuery";
+    my $i;
+    foreach $i (@$inRetrieved){
+      print "buildNewQuery: $$i[0]\n";
+    };
+  }
+
+  #a reference to a HASH containing the relevant images as keys
+  my $inRelevantHash=shift;
+
+  # this array has to be filled up using the feedback algorithm
+  my @outQueryImages=();
+
+  ##################################################
+  #
+  # This is the real feedback algorithm
+  # Heirs put changements here!
+  #
+
+  # in this case:
+  {#these braces are there for scoping reasons
+    my $i;
+    foreach $i (@$inRetrieved){#for each retrieved image,...
+      if($$inRelevantHash{$$i[0]}){#...which is in the hash of relevant images...
+	push @outQueryImages,[$$i[0],1];#...add it to the query.
+	#... and give some output , if requested
+	print "adding query image $$i[0]\n" if $self->{vDEBUG}->{buildNewQuery};
+      }
+    }
+  }#these braces are there for scoping reasons
+
+  #
+  # this was the feedback algorithm
+  #
+  ##################################################
+  #  die qq(Error in feedback generating algorithm: $@) if $@;
+  $locQuery=$self->makeQueryString(\@outQueryImages);
+}
+
+
+
+
+
+#############################################################
+#
+#
+# NETWORKING
+#
+#
+sub old_opensock( ;$$ ){
+  my$self=shift;
+#snipped from the perlbook
+  
+  my($remote,$port,$iaddr,$paddr,$proto,$line,$newport);
+
+  $remote = shift || 'localhost';
+  $port   = shift || 12789;
+  $newport=$port;
+
+  if($port=~/\D/){$newport=getservbyname($newport,'tcp');}
+  die "No port" unless $newport;
+  $iaddr = main::inet_aton($remote) or die "no host: $remote";
+  $paddr = main::sockaddr_in($newport,$iaddr);
+  
+  $proto = getprotobyname('tcp');
+  
+  socket(SOCK,main::PF_INET,main::SOCK_STREAM,$proto) or die "socket:  $!";
+  connect(SOCK,$paddr)                                or die "connect: $!";
+  
+  autoflush SOCK 1;
+  autoflush STDOUT 1;
+  
+}
+
+
+#############################################################
+#
+#
+# NETWORKING
+#
+#
+sub opensock( ;$$ ){
+  my$self=shift;
+  #snipped from man IO::Socket
+  
+  my($remote,$port,$iaddr,$paddr,$proto,$line,$newport);
+
+  $remote = shift || $self->{mHost};
+  $port   = shift || $self->{mPort};
+  
+  autoflush STDOUT 1;
+  $self->{mSocket} = IO::Socket::INET->new(PeerAddr => $remote,
+					   PeerPort => $port,
+					   Proto    => 'tcp');
+  $self->{mSocket}->autoflush(1);
+}
+
+
+
+###############################
+#
+# read from the socket and parse.
+# returns the string read.
+# This has a problem if strings get too long
+# so I have to parse from a IO::Handle
+#
+sub readAndParse( ){
+  my$self=shift;
+  
+  print "\nNow I will try to read...\n" if($self->{vDEBUG}->{readAndParse});
+
+  #parsing directly from the stream
+#     $self->{parser}->parse($self->{mSocket});
+#       "\nthis value should not be used!\n";
+
+  #we read, and then we parse
+  #for this reason, we can return the
+  #string read
+  {
+    my $lRead=join("",$self->{mSocket}->getlines());
+
+    if($lRead){
+      
+      if($self->{vDEBUG}->{readAndParse}){
+	print "Parsing: $lRead";
+	open OF,">mrml-parsing-log";
+	print OF $lRead;
+      }
+      $self->{parser}->parse($lRead);
+    }
+    $lRead;
+  }
+}
+
+
+###############################
+#
+# sends an ihandshake message
+# to the server.
+#
+sub startSession(){
+  my$self=shift;
+  
+  my $lUser=shift || "default-user";  
+
+  my $MESSAGEFILE="__DATADIR__/gift-ihandshake.mrml";
+
+  
+  $self->opensock();
+  
+  open MESSAGEFILE,$MESSAGEFILE  or  die "There is no $MESSAGEFILE: $!";
+  while(<MESSAGEFILE>){
+    s/PPusernamePP/$lUser/g;
+    $self->{mSocket}->print($_) ;
+    print "Sent: $_";
+  }
+  
+  $self->readAndParse();
+}
+
+###############################
+#
+# FOR TESTING ONLY: TRYING TO SIMULATE A SESSION
+#
+# configures an algorithm
+# to the server.
+#
+sub configureSession(;$$$ ){
+  my$self=shift;
+  
+  my $inSessionID=shift    || $self->getSessionID();
+  my $inAlgorithmID=shift  || $self->getAlgorithmID();
+  my $inCollectionID=shift || $self->getCollectionID();
+
+
+
+  my $MESSAGEFILE="__DATADIR__/gift-iconfigure.mrml";
+  
+  $self->opensock();
+  
+  ###############################
+  #
+  # We read a prefabricated configuration message, in which we
+  # replace the appropriate attribute values
+  #
+  open MESSAGEFILE,$MESSAGEFILE  or  die "There is no $MESSAGEFILE: $!";
+  while(<MESSAGEFILE>){
+    s/PPsessionidPP/$inSessionID/;
+    s/PPalgorithmidPP/$inAlgorithmID/;
+    #s/PPcollectionidPP/$inCollectionID/;
+    $self->{mSocket}->print($_);
+    print "Sent: $_";
+  }
+  
+  $self->readAndParse();
+}
+
+##############################
+#
+# Send a query to the server
+#
+sub sendQueryString( $ ){
+  my$self=shift;
+  my $lQuery=shift;
+  $self->opensock();
+  
+  if($self->{vDEBUG}->{sendQuery}){
+    print "sendQueryString++++++++++++++++++++++++++++++Sending query....\n\n";
+    print $lQuery;
+    print "\nsendQueryString------------------------------Sending query....\n\n";
+  }
+  
+  $self->{mSocket}->print($lQuery);
+  $self->readAndParse();
+}
+
+##############################
+#
+# generate a query and feed it to the server.
+# subsequent queries will be generated by the xml parser
+# and its helpers.
+sub doFirstQueryStep( ;$$ ){
+  my$self=shift;
+
+  my $lQuery=shift || [[$self->getRelevantImages()->[0],1]];
+
+  $lQuery=$self->makeQueryString($lQuery,shift);
+  
+  if($self->{vDEBUG}->{doFirstQueryStep}){
+    print "doFirstQueryStep++++++++++++++++++++++++++++++Sending query....\n\n";
+  }
+  $self->sendQueryString();
+  {
+    print "\ndoFirstQueryStep------------------------------Sending query....\n\n";
+  }
+  return $lQuery;
+}
+
+###############################
+#
+# send a feedback query, if the same query was not performed
+# in the last step.
+#
+sub doQueryStep( $$ ){
+  my$self=shift;
+
+  my $inCount=shift;
+  my $lOld=shift;
+  my $lNow=$locQuery;
+
+  if ($lOld ne $lNow){
+    if($self->{vDEBUG}->{doQueryStep}){
+      print "$inCount ++++++++++++++++++++++++++++++Sending query....\n\n";
+      print $locQuery;
+      print "\n$inCount ------------------------------Sending query....\n\n";
+    }
+    $self->opensock();
+    $self->{mSocket}->print($locQuery);
+    $self->readAndParse();
+    return $lNow;
+  }else{
+    if($self->{vDEBUG}->{doQueryStep}){
+      print "$inCount ++NOT SENDING QUERY\n";
+      print $locQuery;
+      print "\n$inCount --NOT SENDING QUERY\n";
+    }
+  }
+  return "";
+}
+
+
+#
+#
+# perform a group of queries. This can be a browsing
+# query process or a simple sequence of next neigbour 
+# query feedback steps. What it really is depends on the
+# heir wich overloads doQueryStep
+#
+sub doQueryGroup( $ ){
+  my$self=shift;
+
+  my $inImages=shift;
+  $self->setRelevantImages(@$inImages);
+  
+  
+  $self->startSession("default-user");
+  $self->configureSession();
+  {
+    my $lOldQuery=$self->doFirstQueryStep();
+    my $lCount=1;
+    while(($lOldQuery=$self->doQueryStep($lCount,
+					 $lOldQuery)) 
+	  && 
+	  ($lCount<100)){
+      ++$lCount;
+    };
+  }
+}
+
+package CFCMovingTargetTest;
+require Exporter;
+@ISA= qw(Exporter
+	 CFeedbackClient);
+@EXPORT= qw(new
+	    doQueryGroup);
+sub new {
+  my $class = shift;
+  my $self = {};
+  bless $self, $class;
+  $self->initialize();
+  return $self;
+}
+
+sub initialize(){
+  my$self=shift;
+
+  $self->SUPER::initialize();
+
+}
+
+###############################
+#
+# This function performs a complete moving target test
+#
+sub doQueryGroup( $ ){
+  my$self=shift;
+  my $inImages=shift;
+
+  ###############################
+  #
+  # First we need a distance measure for each target
+  #
+  $self->{mRanks}={};
+  $self->startSession("--making-distance-measure--");
+  $self->configureSession($self->getSessionID(),
+			  $self->getAlgorithmID(),
+			  $self->getCollectionID());
+  foreach $i (@$inImages){
+    #
+    # Retrieve, if possible, all images from the database.
+    #
+    $self->setResultSize( 1_000_000_000 );
+    $self->doFirstQueryStep( [[$i,1]],
+			     -1 );
+    #
+    # make a hash 
+    # (URL->Rank)
+    #
+     my $lRank=0;
+    $self->{mRanks}->{$i}={};
+    foreach $j (@{$self->getResultList()}){
+      $self->{mRanks}->{$i}->{$j->[0]}=$lRank++;
+    }
+  }
+
+
+  ###############################
+  #
+  # Then we perform a target test for each target given
+  #
+  $self->startSession("default-user");
+  $self->configureSession($self->getSessionID(),
+			  $self->getAlgorithmID(-1),
+			  $self->getCollectionID(-1));
+  $self->setResultSize( 100 );
+  my $lCount=0;
+  foreach $iTarget (@$inImages){
+    my $lFeedbackList=[];
+
+    $lOldCount=$lCount;
+
+    while(($lOldQuery=$self->doFirstQueryStep($lFeedbackList))
+	  && 
+	  ($lCount-$lOldCount<50)){
+      ++$lCount;
+      # in the 
+      my $lRetrieved=$self->getResultHash();
+      
+      if(defined $lRetrieved->{$iTarget}){
+	print "Target $iTarget found after $lCount tries\n"; 
+	goto TARGET_FOUND;
+      }
+      # now create some feedback
+      # find the maximum and the minimum image.
+      # these two will make up the query
+      {
+	my @lResultList=@{$self->getResultList()};
+	my $lPositiveImage={ 
+			    name=> $lResultList[0]->[0],
+			    rank=> 999_999_999
+			   };
+	my $lNegativeImage={
+			    name=> $lResultList[0]->[0],
+			    rank=> 0
+			   };
+
+# 	print "------------------------------",
+# 	join ("--\n",keys (%{$self->{mRanks}->{$iTarget}})),
+# 	"\n";
+
+	foreach $j (@lResultList){
+	  print "Looking at ",$j->[0],",";
+	  print $self->{mRanks}->{$iTarget}->{$j->[0]};
+	  print "\n";
+	  if($self->{mRanks}->{$iTarget}->{$j->[0]} 
+	     && ($self->{mRanks}->{$iTarget}->{$j->[0]} < $lPositiveImage->{rank})){
+	    $lPositiveImage={
+			     name=>$j->[0],
+			     rank=>$self->{mRanks}->{$iTarget}->{$j->[0]}
+			    };
+	  }
+	}
+
+	foreach $j (@lResultList){
+	  print "Looking at ",$j->[0],",";
+	  print $self->{mRanks}->{$iTarget}->{$j->[0]};
+	  print "\n";
+	  if($self->{mRanks}->{$iTarget}->{$j->[0]} 
+	     && ($self->{mRanks}->{$iTarget}->{$j->[0]} > $lNegativeImage->{rank})){
+	    $lNegativeImage={
+			     name=>$j->[0],
+			     rank=>$self->{mRanks}->{$iTarget}->{$j->[0]}
+			    };
+	  }
+	}
+
+	$lFeedbackList=[[$lPositiveImage->{name},1],
+			[$lNegativeImage->{name},-1]];
+      }
+      TARGET_FOUND:
+    }
+  }
+  print "The whole Target test took $lCount tries\n";
+
+}
+
+package CFCOneShot;
+#
+# This package is not really an automatic feedback client,
+# but something programmed on Henning's request for giving
+# him the possibility to make quick tests with the program
+#
+sub doOneShotQuery( ){
+  my$self=shift;
+
+  $self->startSession("--one-shot-query--");
+  $self->configureSession($self->getSessionID(),
+			  $self->getAlgorithmID(),
+			  $self->getCollectionID());
+  
+}
+
+sub doQueryGroup( $ ){
+  my $inImages=shift;
+
+  ###############################
+  #
+  # Pick one algorithm (the first one given)
+  #
+  foreach $i (@$inImages){
+    #
+    # Retrieve, if possible, all images from the database.
+    #
+    $self->getResultSize() or $self->setResultSize( 10 );
+    $self->doFirstQueryStep( [[$i,1]],
+			     -1 );
+    #
+    # make a hash 
+    # (URL->Rank)
+    #
+     my $lRank=0;
+    $self->{mRanks}->{$i}={};
+    foreach $j (@{$self->getResultList()}){
+      $self->{mRanks}->{$i}->{$j->[0]}=$lRank++;
+    }
+  }
+
+
+  ###############################
+  #
+  # Then we perform a target test for each target given
+  #
+  $self->startSession("default-user");
+  $self->configureSession($self->getSessionID(),
+			  $self->getAlgorithmID(-1),
+			  $self->getCollectionID(-1));
+  $self->setResultSize( 100 );
+  my $lCount=0;
+  foreach $iTarget (@$inImages){
+    my $lFeedbackList=[];
+
+    $lOldCount=$lCount;
+
+    while(($lOldQuery=$self->doFirstQueryStep($lFeedbackList))
+	  && 
+	  ($lCount-$lOldCount<50)){
+      ++$lCount;
+      # in the 
+      my $lRetrieved=$self->getResultHash();
+      
+      if(defined $lRetrieved->{$iTarget}){
+	print "Target $iTarget found after $lCount tries\n"; 
+	goto TARGET_FOUND;
+      }
+      # now create some feedback
+      # find the maximum and the minimum image.
+      # these two will make up the query
+      {
+	my @lResultList=@{$self->getResultList()};
+	my $lPositiveImage={ 
+			    name=> $lResultList[0]->[0],
+			    rank=> 999_999_999
+			   };
+	my $lNegativeImage={
+			    name=> $lResultList[0]->[0],
+			    rank=> 0
+			   };
+
+# 	print "------------------------------",
+# 	join ("--\n",keys (%{$self->{mRanks}->{$iTarget}})),
+# 	"\n";
+
+	foreach $j (@lResultList){
+	  print "Looking at ",$j->[0],",";
+	  print $self->{mRanks}->{$iTarget}->{$j->[0]};
+	  print "\n";
+	  if($self->{mRanks}->{$iTarget}->{$j->[0]} 
+	     && ($self->{mRanks}->{$iTarget}->{$j->[0]} < $lPositiveImage->{rank})){
+	    $lPositiveImage={
+			     name=>$j->[0],
+			     rank=>$self->{mRanks}->{$iTarget}->{$j->[0]}
+			    };
+	  }
+	}
+
+	foreach $j (@lResultList){
+	  print "Looking at ",$j->[0],",";
+	  print $self->{mRanks}->{$iTarget}->{$j->[0]};
+	  print "\n";
+	  if($self->{mRanks}->{$iTarget}->{$j->[0]} 
+	     && ($self->{mRanks}->{$iTarget}->{$j->[0]} > $lNegativeImage->{rank})){
+	    $lNegativeImage={
+			     name=>$j->[0],
+			     rank=>$self->{mRanks}->{$iTarget}->{$j->[0]}
+			    };
+	  }
+	}
+
+	$lFeedbackList=[[$lPositiveImage->{name},1],
+			[$lNegativeImage->{name},-1]];
+      }
+      TARGET_FOUND:
+    }
+  }
+  print "The whole Target test took $lCount tries\n";
+
+}
+
+

@@ -1,0 +1,370 @@
+# Makefile.in generated automatically by automake 1.4c from Makefile.am
+
+# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000
+# Free Software Foundation, Inc.
+# This Makefile.in is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY, to the extent permitted by law; without
+# even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+# PARTICULAR PURPOSE.
+
+SHELL = @SHELL@
+
+srcdir = @srcdir@
+top_srcdir = @top_srcdir@
+VPATH = @srcdir@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+
+bindir = @bindir@
+sbindir = @sbindir@
+libexecdir = @libexecdir@
+datadir = @datadir@
+sysconfdir = @sysconfdir@
+sharedstatedir = @sharedstatedir@
+localstatedir = @localstatedir@
+libdir = @libdir@
+infodir = @infodir@
+mandir = @mandir@
+includedir = @includedir@
+oldincludedir = /usr/include
+
+pkgdatadir = $(datadir)/@PACKAGE@
+pkglibdir = $(libdir)/@PACKAGE@
+pkgincludedir = $(includedir)/@PACKAGE@
+
+top_builddir = ../..
+
+ACLOCAL = @ACLOCAL@
+AUTOCONF = @AUTOCONF@
+AUTOMAKE = @AUTOMAKE@
+AUTOHEADER = @AUTOHEADER@
+
+INSTALL = @INSTALL@
+INSTALL_PROGRAM = @INSTALL_PROGRAM@
+INSTALL_DATA = @INSTALL_DATA@
+INSTALL_SCRIPT = @INSTALL_SCRIPT@
+INSTALL_STRIP_FLAG =
+transform = @program_transform_name@
+
+NORMAL_INSTALL = :
+PRE_INSTALL = :
+POST_INSTALL = :
+NORMAL_UNINSTALL = :
+PRE_UNINSTALL = :
+POST_UNINSTALL = :
+
+@SET_MAKE@
+host_alias = @host_alias@
+host_triplet = @host@
+AMDEP = @AMDEP@
+AMTAR = @AMTAR@
+AS = @AS@
+AWK = @AWK@
+BAYESIAN = @BAYESIAN@
+BAYESIAN_LD_ADD = @BAYESIAN_LD_ADD@
+CC = @CC@
+CONVERT = @CONVERT@
+CPP = @CPP@
+CXX = @CXX@
+DEPDIR = @DEPDIR@
+DLLTOOL = @DLLTOOL@
+DOXYGEN = @DOXYGEN@
+ECHO = @ECHO@
+EMACS = @EMACS@
+EXEEXT = @EXEEXT@
+GCJ = @GCJ@
+GCJFLAGS = @GCJFLAGS@
+GIFT_BAYESIAN_FLAG = @GIFT_BAYESIAN_FLAG@
+GIFT_INTERNAL_FLAG = @GIFT_INTERNAL_FLAG@
+GIFT_INTERNAL_PERLS = @GIFT_INTERNAL_PERLS@
+GIFT_LIB_VERSION_INFO = @GIFT_LIB_VERSION_INFO@
+LEX = @LEX@
+LIBADD_DL = @LIBADD_DL@
+LIBOBJS = @LIBOBJS@
+LIBTOOL = @LIBTOOL@
+LIBTOOL_DEPS = @LIBTOOL_DEPS@
+LN_S = @LN_S@
+MAINT = @MAINT@
+MAKEINFO = @MAKEINFO@
+OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
+PACKAGE = @PACKAGE@
+PERL = @PERL@
+PERL_LD_ADD = @PERL_LD_ADD@
+PRE_INSTALL_LIBDIRS = @PRE_INSTALL_LIBDIRS@
+PRE_INSTALL_LINKDIRS = @PRE_INSTALL_LINKDIRS@
+PYTHON = @PYTHON@
+PYTHON_EXEC_PREFIX = @PYTHON_EXEC_PREFIX@
+PYTHON_PLATFORM = @PYTHON_PLATFORM@
+PYTHON_PREFIX = @PYTHON_PREFIX@
+PYTHON_SITE = @PYTHON_SITE@
+PYTHON_SITE_EXEC = @PYTHON_SITE_EXEC@
+PYTHON_SITE_INSTALL = @PYTHON_SITE_INSTALL@
+PYTHON_SITE_PACKAGE = @PYTHON_SITE_PACKAGE@
+PYTHON_VERSION = @PYTHON_VERSION@
+RANLIB = @RANLIB@
+SGML2INFO = @SGML2INFO@
+SGML2LATEX = @SGML2LATEX@
+SGML2TXT = @SGML2TXT@
+STRIP = @STRIP@
+U = @U@
+UNPUBLISHED = @UNPUBLISHED@
+VERSION = @VERSION@
+WEB_PUBLISHING_DIRECTORY = @WEB_PUBLISHING_DIRECTORY@
+WEB_PUBLISHING_LOCATION = @WEB_PUBLISHING_LOCATION@
+install_sh = @install_sh@
+lispdir = @lispdir@
+multi_basedir = @multi_basedir@
+pythondir = @pythondir@
+
+#     GIFT, a flexible content based image retrieval system.
+#     Copyright (C) 1998, 1999, 2000 CUI, University of Geneva
+
+#     This program is free software; you can redistribute it and/or modify
+#     it under the terms of the GNU General Public License as published by
+#     the Free Software Foundation; either version 2 of the License, or
+#     (at your option) any later version.
+
+#     This program is distributed in the hope that it will be useful,
+#     but WITHOUT ANY WARRANTY; without even the implied warranty of
+#     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#     GNU General Public License for more details.
+
+#     You should have received a copy of the GNU General Public License
+#     along with this program; if not, write to the Free Software
+#     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+#
+# we configure the add collection program to work even if gift is not in the path
+# this is also necessary for installing several versions of GIFT at the same time
+#
+
+
+EXTRA_SCRIPTS = gift-url-to-fts.pl gift-browser-benchmark.pl gift-extract-text-features.pl gift-annotation-to-html.pl gift-ranking-comparison.pl CFCRankingComparison.pm CGraphCollection.pm CQueryParadigmMatcher.pm CXTVTripletList.pm CTripleTransfer.pl CGLDAudreyMTam.pl CGLStructuredAnnotation.pm CGIFTLink.pm CGIFTLinkDemo.pl CGLDistanceMatrix.pm CXMLTreeBuilder.pm CXMLTreeWriter.pm CXMLTreeVisitor.pm CXTVWriter.pm CXTVTripletList.pm CXTVTripletList.pm 
+
+PERLCONFIG = sed "s:__PERL_LOCATION__:@PERL@:g;s:__BINDIR__:@bindir@:g;s:__DATADIR__:@datadir@:g;s:__WEB_PUBLISHING_DIRECTORY__:@WEB_PUBLISHING_DIRECTORY@:g;s§__WEB_PUBLISHING_LOCATION__§@WEB_PUBLISHING_LOCATION@§g" < $< > $@
+
+bin_SCRIPTS = @GIFT_INTERNAL_PERLS@ gift-url-to-fts.pl gift-diagnose-print-all-ADI.pl gift-mrml-client.pl CFeedbackClient.pm CFCMovingTarget.pm gift-perl-example-server.pl gift-add-collection.pl gift-dtd-to-tex.pl gift-dtd-to-keywords.pl CQueryParadigmMatcher.pm CTripleTransfer.pl CGLDAudreyMTam.pl CGLStructuredAnnotation.pm CGIFTLink.pm CGLDistanceMatrix.pm CGIFTLinkDemo.pl CXMLTreeBuilder.pm CXMLTreeWriter.pm CXMLTreeVisitor.pm CXTVTripletList.pm CXTVWriter.pm CGraphCollection.pm gift-old-to-new-url2fts.pl
+subdir = scripts/perl
+mkinstalldirs = $(SHELL) $(top_srcdir)/mkinstalldirs
+CONFIG_HEADER = ../../gift-config.h
+CONFIG_CLEAN_FILES = 
+SCRIPTS =  $(bin_SCRIPTS)
+
+DIST_SOURCES = 
+DIST_COMMON =  Makefile.am Makefile.in
+
+
+DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+
+GZIP_ENV = --best
+all: all-redirect
+.SUFFIXES:
+$(srcdir)/Makefile.in: Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+	cd $(top_srcdir) && $(AUTOMAKE) --gnu scripts/perl/Makefile
+
+Makefile: $(srcdir)/Makefile.in  $(top_builddir)/config.status
+	cd $(top_builddir) \
+	  && CONFIG_FILES=$(subdir)/$@ CONFIG_HEADERS= $(SHELL) ./config.status
+
+
+install-binSCRIPTS: $(bin_SCRIPTS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(bindir)
+	@list='$(bin_SCRIPTS)'; for p in $$list; do \
+	  f="`echo $$p|sed '$(transform)'`"; \
+	  if test -f $$p; then \
+	    echo " $(INSTALL_SCRIPT) $$p $(DESTDIR)$(bindir)/$$f"; \
+	    $(INSTALL_SCRIPT) $$p $(DESTDIR)$(bindir)/$$f; \
+	  elif test -f $(srcdir)/$$p; then \
+	    echo " $(INSTALL_SCRIPT) $(srcdir)/$$p $(DESTDIR)$(bindir)/$$f"; \
+	    $(INSTALL_SCRIPT) $(srcdir)/$$p $(DESTDIR)$(bindir)/$$f; \
+	  else :; fi; \
+	done
+
+uninstall-binSCRIPTS:
+	@$(NORMAL_UNINSTALL)
+	@list='$(bin_SCRIPTS)'; for p in $$list; do \
+	  f="`echo $$p|sed '$(transform)'`"; \
+	  echo " rm -f $(DESTDIR)$(bindir)/$$f"; \
+	  rm -f $(DESTDIR)$(bindir)/$$f; \
+	done
+tags: TAGS
+TAGS:
+
+
+distdir = $(top_builddir)/$(PACKAGE)-$(VERSION)/$(subdir)
+
+distdir: $(DISTFILES)
+	@for file in $(DISTFILES); do \
+	  d=$(srcdir); \
+	  if test -d $$d/$$file; then \
+	    cp -pR $$d/$$file $(distdir) \
+	    || exit 1; \
+	  else \
+	    test -f $(distdir)/$$file \
+	    || cp -p $$d/$$file $(distdir)/$$file \
+	    || exit 1; \
+	  fi; \
+	done
+info-am:
+info: info-am
+dvi-am:
+dvi: dvi-am
+check-am: all-am
+check: check-am
+installcheck-am:
+installcheck: installcheck-am
+install-exec-am: install-binSCRIPTS
+install-exec: install-exec-am
+
+install-data-am:
+install-data: install-data-am
+
+install-am: all-am
+	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
+install: install-am
+uninstall-am: uninstall-binSCRIPTS
+uninstall: uninstall-am
+all-am: Makefile $(SCRIPTS)
+all-redirect: all-am
+install-strip:
+	$(MAKE) $(AM_MAKEFLAGS) INSTALL_STRIP_FLAG=-s install
+installdirs:
+	$(mkinstalldirs)  $(DESTDIR)$(bindir)
+
+
+mostlyclean-generic:
+
+clean-generic:
+
+distclean-generic:
+	-rm -f Makefile $(CONFIG_CLEAN_FILES)
+	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
+
+maintainer-clean-generic:
+	-rm -f Makefile.in
+mostlyclean-am:  mostlyclean-generic
+
+mostlyclean: mostlyclean-am
+
+clean-am:  clean-generic mostlyclean-am
+
+clean: clean-am
+
+distclean-am:  distclean-generic clean-am
+	-rm -f libtool
+
+distclean: distclean-am
+
+maintainer-clean-am:  maintainer-clean-generic distclean-am
+	@echo "This command is intended for maintainers to use;"
+	@echo "it deletes files that may require special tools to rebuild."
+
+maintainer-clean: maintainer-clean-am
+
+.PHONY: all all-am all-redirect check check-am clean clean-generic \
+distclean distclean-generic distdir dvi dvi-am info info-am install \
+install-am install-binSCRIPTS install-data install-data-am install-exec \
+install-exec-am install-strip installcheck installcheck-am installdirs \
+maintainer-clean maintainer-clean-generic mostlyclean \
+mostlyclean-generic tags uninstall uninstall-am uninstall-binSCRIPTS
+
+
+CTripleTransfer.pl: CTripleTransfer.pre-pl
+	$(PERLCONFIG)
+
+CGLDAudreyMTam.pl: CGLDAudreyMTam.pre-pl
+	$(PERLCONFIG)
+
+CGLStructuredAnnotation.pm: CGLStructuredAnnotation.pre-pm
+	$(PERLCONFIG)
+
+CGIFTLink.pm:  CGIFTLink.pre-pm
+	$(PERLCONFIG)
+
+CGLDistanceMatrix.pm: CGLDistanceMatrix.pre-pm
+	$(PERLCONFIG)
+
+CGIFTLinkDemo.pl:  CGIFTLinkDemo.pre-pl
+	$(PERLCONFIG)
+
+CXMLTreeBuilder.pm:  CXMLTreeBuilder.pre-pm
+	$(PERLCONFIG)
+
+CXMLTreeWriter.pm:  CXMLTreeWriter.pre-pm
+	$(PERLCONFIG)
+
+CXMLTreeVisitor.pm:  CXMLTreeVisitor.pre-pm
+	$(PERLCONFIG)
+
+CXTVWriter.pm:  CXTVWriter.pre-pm
+	$(PERLCONFIG)
+
+CXTVTripletList.pm:  CXTVTripletList.pre-pm
+	$(PERLCONFIG)
+
+gift-dtd-to-keywords.pl: gift-dtd-to-keywords.pre-pl
+	$(PERLCONFIG)
+
+gift-add-collection.pl: gift-add-collection.pre-pl
+	$(PERLCONFIG)
+
+gift-browser-benchmark.pl: gift-browser-benchmark.pre-pl
+	$(PERLCONFIG)
+
+gift-ranking-comparison.pl: gift-ranking-comparison.pre-pl
+	$(PERLCONFIG)
+
+gift-mrml-client.pl: gift-mrml-client.pre-pl
+	$(PERLCONFIG)
+
+gift-url-to-fts.pl: gift-url-to-fts.pre-pl
+	$(PERLCONFIG)
+
+CQueryParadigmMatcher.pm: CQueryParadigmMatcher.pre-pm
+	$(PERLCONFIG)
+
+CFeedbackClient.pm: CFeedbackClient.pre-pm
+	$(PERLCONFIG)
+
+CGraphCollection.pm: CGraphCollection.pre-pm
+	$(PERLCONFIG)
+
+CFCMovingTarget.pm: CFCMovingTarget.pre-pm
+	$(PERLCONFIG)
+
+CFCRankingComparison.pm: CFCRankingComparison.pre-pm
+	$(PERLCONFIG)
+
+gift-diagnose-print-all-ADI.pl: gift-diagnose-print-all-ADI.pre-pl
+	$(PERLCONFIG)
+
+gift-perl-example-server.pl: gift-perl-example-server.pre-pl
+	$(PERLCONFIG)
+
+gift-dtd-to-tex.pl: gift-dtd-to-tex.pre-pl
+	$(PERLCONFIG)
+
+gift-extract-text-features.pl: gift-extract-text-features.pre-pl
+	$(PERLCONFIG)
+
+gift-annotation-to-html.pl: gift-annotation-to-html.pre-pl
+	$(PERLCONFIG)
+
+gift-old-to-new-url2fts.pl: gift-old-to-new-url2fts.pre-pl
+	$(PERLCONFIG)
+
+clean: 
+	-rm *.pl *.pm
+
+distclean: 
+	-rm *.pl *.pm
+
+# Tell versions [3.59,3.63) of GNU make to not export all variables.
+# Otherwise a system limit (for SysV at least) may be exceeded.
+.NOEXPORT:
