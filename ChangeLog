@@ -1,3 +1,7 @@
+2001-05-31  Wolfgang Mueller  <Wolfgang.Mueller@cui.unige.ch>
+
+	* configure.in: changeing package version number
+
 2001-09-10  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* libMRML/cc/CQMultiple.cc: CQMThread gets 
@@ -47,6 +51,7 @@
 	(AM_INIT_AUTOMAKE): Changed package version to 0.1.6pre2
 
 2001-05-31  Wolfgang Mueller  <Wolfgang.Mueller@cui.unige.ch>
+>>>>>>> 1.20
 
 	* GIFTServer/generateInvertedFile.cc: have to initialise
 	gMutex. Otherwise failure in gift-generate-inverted-file when
