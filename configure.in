@@ -222,7 +222,7 @@ AC_CHECK_FILE($PERL,[
   RESCUE_CXXFLAGS=$CXXFLAGS
   CXXFLAGS=`echo $CXXFLAGS -D__GIFT_WITH_PERL__ \`perl -MExtUtils::Embed -e ccopts  \`|sed 's:-Dbool=char::'`
 
-  if $CC perl-compile-test-program.cc $CXXFLAGS  -o perl-compile-test-program $LDFLAGS `echo  \`perl -MExtUtils::Embed -e ldopts  \`|sed 's:-Dbool=char::'` ; then
+  if $CXX perl-compile-test-program.cc $CXXFLAGS  -o perl-compile-test-program $LDFLAGS `echo  \`perl -MExtUtils::Embed -e ldopts  \`|sed 's:-Dbool=char::'` ; then
 	AC_MSG_RESULT([yes])
 	rm perl-compile-test-program
 	PERL_LD_ADD=`perl -MExtUtils::Embed -e ldopts`
@@ -231,7 +231,7 @@ AC_CHECK_FILE($PERL,[
 
 dnl -ldl was added on pruets request
 	CXXFLAGS=$RESCUE_CXXFLAGS
-	LDFLAGS=$RESCUE_LDFLAGS -ldl
+	LDFLAGS="$RESCUE_LDFLAGS -ldl"
 	AC_MSG_RESULT([no])
   fi
 ])

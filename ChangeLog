@@ -1,3 +1,8 @@
+2002-01-12  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+
+	* configure.in: $(CXX) instead of $(CC) in perl test
+	compile
+
 2002-01-11  MUELLER Wolfgang  <Wolfgang.Mueller@cui.unige.ch>
 
 	* configure.in(AC_CHECK_FILE[$PERL...]): 
