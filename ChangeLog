@@ -1,3 +1,12 @@
+2001-02-15  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* GIFTServer/Makefile.am:
+	* configure.in: UNPUBLISHED_DIR contains
+	now the name of the unpublished directory
+	AND the -L flags. This is a fix for libtool
+	problems I had
+	
+
 2001-02-13  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* GIFTServer/generateInvertedFile.cc (main): 

@@ -117,7 +117,7 @@ AC_ARG_ENABLE(gift,
 	[  --enable-gift To be used by the GIFT group for things which are not yet published],
 	[echo "hier";
 	case 	"${enableval}" in
-       		yes) VIF='-D__GIFT_UNPUBLISHED_WORK__'; IP='gift-browser-benchmark.pl gift-extract-text-features.pl gift-annotation-to-html.pl gift-ranking-comparison.pl CFCRankingComparison.pm CGraphCollection.pm'; UNPUBLISHED='-lUnpublished';UNPUBLISHED_DIR='$(top_srcdir)/libUnpublished/cc';echo "gift-internals" AC_SUBST(UNPUBLISHED);AC_SUBST(UNPUBLISHED_DIR);
+       		yes) VIF='-D__GIFT_UNPUBLISHED_WORK__'; IP='gift-browser-benchmark.pl gift-extract-text-features.pl gift-annotation-to-html.pl gift-ranking-comparison.pl CFCRankingComparison.pm CGraphCollection.pm'; UNPUBLISHED='-lUnpublished';UNPUBLISHED_DIR='-L$(top_srcdir)/libUnpublished/cc';echo "gift-internals" AC_SUBST(UNPUBLISHED);AC_SUBST(UNPUBLISHED_DIR);
        		no)  VIF=''; IP = ''; echo "no gift-internals";;
        		*) AC_MSG_ERROR(bad value ${enableval} for --enable-debug) ;;
      	 esac;

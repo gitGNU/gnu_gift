@@ -7728,7 +7728,7 @@ if test "${enable_gift+set}" = set; then
   enableval="$enable_gift"
   echo "hier";
 	case 	"${enableval}" in
-       		yes) VIF='-D__GIFT_UNPUBLISHED_WORK__'; IP='gift-browser-benchmark.pl gift-extract-text-features.pl gift-annotation-to-html.pl gift-ranking-comparison.pl CFCRankingComparison.pm CGraphCollection.pm'; UNPUBLISHED='-lUnpublished';UNPUBLISHED_DIR='$(top_srcdir)/libUnpublished/cc';echo "gift-internals" ;;
+       		yes) VIF='-D__GIFT_UNPUBLISHED_WORK__'; IP='gift-browser-benchmark.pl gift-extract-text-features.pl gift-annotation-to-html.pl gift-ranking-comparison.pl CFCRankingComparison.pm CGraphCollection.pm'; UNPUBLISHED='-lUnpublished';UNPUBLISHED_DIR='-L$(top_srcdir)/libUnpublished/cc';echo "gift-internals" ;;
        		no)  VIF=''; IP = ''; echo "no gift-internals";;
        		*) { { echo "$as_me:7733: error: bad value ${enableval} for --enable-debug" >&5
 echo "$as_me: error: bad value ${enableval} for --enable-debug" >&2;}
