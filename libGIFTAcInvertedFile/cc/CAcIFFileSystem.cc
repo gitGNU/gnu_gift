@@ -598,7 +598,8 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
 	       &&
 	       (lTriplet.mFeatureID
 		==lOldTriplet.mFeatureID));
-	
+
+	/* special case for very last feature */
 	if((!lInAuxiliaryFile) 
 	   &&
 	   (!lTriplet.isIdentical(lOldTriplet))){
