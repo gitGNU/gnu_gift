@@ -100,6 +100,8 @@ libMRML_la_SOURCES= \
 	\
 	CMutex.cc\
 	\
-	CCommunicationHandler.cc
+	CCommunicationHandler.cc\
+	\
+	CTimeStampGenerator.cc
 
 #CLEANFILES=CAccessorAdminCollection.cc

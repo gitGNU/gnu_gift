@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "mrml_const.h" //mrml string constants newStart/EndMRMLElement
-
+#include "../include/CTimeStampGenerator.h" // for time stamps
 string gGIFTHome;//dirty but necessary
 CMutex* gMutex;   //we need a global one
 
@@ -847,6 +847,9 @@ void CCommunicationHandler::startMultiRequest(const string& inSessionID){
   mMultiResponse=new CXMLElement("mrml",0);
   mMultiResponse->addAttribute("session-id",
 			       inSessionID);
+  
+  CTimeStampGenerator lGenerator;
+  addToMultiResponse(lGenerator.generateTimeStamp());
 };
 /** sends the message which has been built*/
 void CCommunicationHandler::endMultiRequest(){
@@ -855,6 +858,8 @@ void CCommunicationHandler::endMultiRequest(){
 
     mMultiResponse->addAttribute("just-for-test",
 				 "and-of-course-for-fun");
+    CTimeStampGenerator lGenerator;
+    addToMultiResponse(lGenerator.generateTimeStamp());
 
     mMultiResponse->toXML(lMessage);
 

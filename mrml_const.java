@@ -16,6 +16,7 @@ public class mrml_const {
      public final static String auto_id = new String("auto-id");
      public final static String auto_id_name = new String("auto-id-name");
      public final static String calculated_similarity = new String("calculated-similarity");
+     public final static String calendar_time = new String("calendar-time");
      public final static String caption = new String("caption");
      public final static String close_session = new String("close-session");
      public final static String collectiom_id = new String("collectiom-id");
@@ -63,6 +64,7 @@ public class mrml_const {
      public final static String cui_sql_host = new String("cui-sql-host");
      public final static String cui_sql_password = new String("cui-sql-password");
      public final static String cui_sql_username = new String("cui-sql-username");
+     public final static String cui_time_stamp = new String("cui-time-stamp");
      public final static String cui_weight = new String("cui-weight");
      public final static String cui_weighting_function = new String("cui-weighting-function");
      public final static String defaultstate = new String("defaultstate");

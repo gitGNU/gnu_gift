@@ -537,6 +537,9 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 <!ATTLIST cui-property-item       
           cui-property-item-id CDATA #REQUIRED>
 
+<!ELEMENT cui-time-stamp       EMPTY>
+<!ATTLIST cui-time-stamp
+          calendar-time        CDATA #REQUIRED>
 
 <!-- ==HIDE just for compatibility -->
 <!ELEMENT cui-ihandshake              EMPTY>

@@ -13,6 +13,7 @@ class mrml_const { public:
      static const string auto_id;
      static const string auto_id_name;
      static const string calculated_similarity;
+     static const string calendar_time;
      static const string caption;
      static const string close_session;
      static const string collectiom_id;
@@ -60,6 +61,7 @@ class mrml_const { public:
      static const string cui_sql_host;
      static const string cui_sql_password;
      static const string cui_sql_username;
+     static const string cui_time_stamp;
      static const string cui_weight;
      static const string cui_weighting_function;
      static const string defaultstate;

@@ -810,6 +810,16 @@ CXMLElement* CSessionManager::openSession(string inUserName,
 			       +inSessionID
 			       +"could not be opened");
   }
+
+  // this is added for making parsing log files easier,
+  // and to resolve possible ambiguities in log files.
+  if(lReturnValue){
+    lReturnValue->addAttribute(mrml_const::session_name,
+			       inSessionName);
+    lReturnValue->addAttribute(mrml_const::user_name,
+			       inUserName);
+  }
+
   mMutexSessionManager.unlock();
   return lReturnValue;
 };

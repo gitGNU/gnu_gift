@@ -1,3 +1,19 @@
+2001-03-07  MUELLER Wolfgang  <muellerw@cui.unige.ch>
+
+	* dtd/mrml.dtd: added cui-time-stamp tag with 
+	calendar-time attribute
+
+	* libMRML/include/CTimeStampGenerator.h: 
+	* libMRML/cc/CTimeStampGenerator.cc: 
+	Added these files. A CTimeStampGenerator is made for
+	generating time stamps
+
+	* libMRML/cc/CSessionManager.cc(openSession): When opening 
+	session, add session-name and user-id to the resulting
+	<ackn-session-op ...> element. This resolves some ambiguities 
+	in parsing log files. This is OPTIONAL MRML.
+	
+
 2001-03-02  Wolfgang Müller  <muellerw@cui.unige.ch>
 
 	* libMRML/include/CXMLElementBuilder.h: 
