@@ -553,18 +553,19 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
        << flush
        << endl;
     
-  merge_sort_streams<CIFBuilderTriplet>(lAuxiliaryName1.c_str(),
-					lAuxiliaryName2.c_str());
+  string lLastFileUsed(merge_sort_streams<CIFBuilderTriplet>(lAuxiliaryName1.c_str(),
+							     lAuxiliaryName2.c_str()));
 
 
-  cout << "after mergesort " 
+  cout << "after mergesort. The last file I used was " 
+       << lLastFileUsed
        << flush
        << endl;
   
   
   /* now read the file  buildertriplet by buildertriplet.
      each time the ID changes, we are finished with one list */
-  ifstream lInAuxiliaryFile(string(mTemporaryIndexingFileBase+"gift-auxiliary-1").c_str());
+  ifstream lInAuxiliaryFile(lLastFileUsed.c_str());
 
   cout << "Opening sorted stream for reading. State (should be '1'): "
        << lInAuxiliaryFile

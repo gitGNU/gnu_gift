@@ -1,3 +1,7 @@
+0.1.9+3epsilon
+	this fixes some anoying stuff found in 0.1.9 by testers. We 
+	hope some 0.1.10 out soon. 
+
 0.1.9   more bugfixes. Internationalization is on the way, there should
 	be no problem any more regaring umlauts in files that are indexed.
 	

@@ -1,7 +1,28 @@
+2003-04-22  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* PluginMaker/libGIFTAc@PLUGIN_NAME@/include/packages/GIFTPlugin-FEFTest/libGIFTAcFEFTest/include/CAcFEFTest.h: 
+	* PluginMaker/libGIFTAc@PLUGIN_NAME@/include/packages/GIFTPlugin-FEFTest/libGIFTAcFEFTest/include/CAFFEFTest.h: using namespace std
+
+	* configure.in: cleaned up stray files in PluginMaker
+	
+
+2002-11-12  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* Doc/configuring-and-hacking-the-gift.sgml (perform): 
+	changing date
+
 2002-11-05  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
 
+	* libGIFTAcInvertedFile/include/merge_sort_streams.h: 
+	removed cast when shifting << by one
+
+	* libGIFTAcInvertedFile/include/merge_sort_streams.h: 
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc: note which file
+	is the last one touched by merge_sort_streams.h. Seems to be 
+	an old and bad bug in indexing. 
+
 	* configure.in(ACX_PTHREAD): added spaces at end of the line
-	for each line of the parameter
+	for each line of the parameter.
 
 2002-10-23  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
 

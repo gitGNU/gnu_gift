@@ -302,9 +302,9 @@ sub tripletListToTree{
 	
       }
     }
-  }while(defined($lInstruction,
-		 $lName,
-		 $lValue));
+  }while(defined($lInstruction) 
+	 && defined($lName)
+	 && defined($lValue));
 
   return $lReturnTree;
 }
@@ -609,21 +609,29 @@ sub configure( ){
   my $lCount;
 
   while(<IF>){
-    my($lLocation,$lThumb,$lIgnoreFeatures)=split(" ",$_);
-
-    print "$lCount: $lLocation,$lThumb,$lIgnoreFeatures\n";
-
-    $lCount++;
-    push @{$self->{url2fts}},{
-			      element    =>'query-result-element',
-			      attributes =>{
-					    'image-location'=>$lLocation,
-					    'thumbnail-location'=>$lThumb,
-					    'calculated-similarity'=>$lCount
-					   },
-			      children=>   []
-			     }
-			      
+    my($lLocation,$lThumb,$lIgnoreFeatures);
+    if(m/url\-postfix="(.*?)"/){
+      $lLocation=$1;
+      m/thumbnail\-url\-postfix="(.*?)"/;
+      $lThumb=$1;
+      m/url\-postfix="(.*?)"/;
+      #$lIgnoreFeatures=$1;
+      
+      
+      
+      print "$lCount: $lLocation,$lThumb,$lIgnoreFeatures\n";
+      
+      $lCount++;
+      push @{$self->{url2fts}},{
+				element    =>'query-result-element',
+				attributes =>{
+					      'image-location'=>$lLocation,
+					      'thumbnail-location'=>$lThumb,
+					      'calculated-similarity'=>$lCount
+					     },
+				children=>   []
+			       }
+    }
   }
 
   print "finished reading $inFileName\nURL2FTS WAS LOADED SUCCESSFULLY!\n";

@@ -35,7 +35,9 @@ gift_LDADD = @PRE_INSTALL_LIBDIRS@ @PRE_INSTALL_LIBDIRS@ \
 	@UNPUBLISHED_DIR@ @UNPUBLISHED@ @BAYESIAN@ \
         -lGIFTQuPerl -lGIFTAcPerl -lMRML\
 	@BAYESIAN_LD_ADD@\
-	@PERL_LD_ADD@ -L$(libdir) -lwdbi
+	@PERL_LD_ADD@ -L$(libdir) 
+
+#-lwdbi
 
 #	-lefence \
 # -lGIFTAcURL2FTS -lGIFTAcInvertedFile \

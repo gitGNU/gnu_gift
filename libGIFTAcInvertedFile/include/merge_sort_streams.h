@@ -329,13 +329,12 @@ char* merge_sort_streams(const char* inFileToBeSortedName,
 	// the ! is, because we have have already
 	// the quicksort sorting pass behind us
 	;
-      (iMergeSize = long(iMergeSize) << 1),
+      (iMergeSize = iMergeSize << 1),
 	(lCount=lCount+static_cast<STREAMPOS_T>(1))){
     
     cout << "MERGESORT MergeSize " 
 	 << iMergeSize 
 	 << endl;
-    
     
     lToBeSorted1.open(lFileToBeSortedName);
     lToBeSorted1.clear();

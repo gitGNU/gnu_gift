@@ -3,7 +3,7 @@
   <article>
       <title>Configuring and hacking the GIFT </title>
       <author>Wolfgang Müller</author>
-      <date>0.1, 10th of December 2000</date>
+      <date>0.1.2 of this document, 12 of November 2002</date>
       <abstract>
 The GIFT (ex: Viper) is a content based image retrieval (CBIRS)
 tool. It has been developed at the University of Geneva. See the 
@@ -1338,6 +1338,13 @@ send-type="attribute" send-name="cui-block-color-blocks" send-value="yes"/&gt;
 
 
 </code></p>
+    </sect>
+    <sect>
+      <heading>Hacking <em>Viper</em></heading>
+      <p><em>Viper</em> is GIFT's main query engine the one that gets
+used and configured out-of-the box. This section is addressing
+question, on how to extend <em>Viper</em> for testing your own feature
+sets</p>
     </sect>
   </article>
 

@@ -1,6 +1,6 @@
   Configuring and hacking the GIFT
   Wolfgang Mller
-  0.1, 10th of December 2000
+  0.1.2 of this document, 12 of November 2002
 
   The GIFT (ex: Viper) is a content based image retrieval (CBIRS) tool.
   It has been developed at the University of Geneva. See the README and
@@ -111,10 +111,15 @@
 
      5.1 C++-side of the Perl/GIFT interface
      5.2 The Perl side of the GIFT/Perl interface
+     5.3 Important files
 
-  6. CXMLElement
+  6. Processing MRML using string constants
 
-  7. An example
+  7. CXMLElement
+
+  8. An example
+
+  9. Hacking
 
 
 
@@ -122,13 +127,15 @@
 
   11..  IInnttrroodduuccttiioonn
 
+  _P_r_o_b_a_b_l_y _t_h_e _f_o_l_l_o_w_i_n_g _a_r_t_i_c_l_e _i_s _e_a_s_i_e_r _t_o _u_n_d_e_r_s_t_a_n_d_, _i_f _y_o_u _o_n_c_e
+  _h_a_v_e _i_n_d_e_x_e_d _a_n_d _t_e_s_t_e_d _a _c_o_l_l_e_c_t_i_o_n _u_s_i_n_g _t_h_e _G_I_F_T_. _I_n _t_h_e _a_p_p_e_n_d_i_x_,
+  _t_h_e_r_e _i_s _a_n _e_x_a_m_p_l_e gift-config.mrml file, but I guess it's easiest to
+  understand, if you know what things look like on your system
+
   The GIFT has been designed to maximize flexibility, both for users and
   developers. This document explains, how GIFT can be configured
   (levering this flexibility), and how the configuration files are
   digested in the interior workings of GIFT.
-
-
-
 
   22..  TThhee bbaassiicc ssttrruuccttuurree
 
@@ -189,12 +196,10 @@
 
   Then there follows a comment wich tells you what this really is. No
   surprises. The top-level element of the file is
-
   <mrml>
 
   containing one <cui-configuration> element. The sense of using a <cui-
   configuration> element is twofold:
-
 
   it is some sort of comment of its content
 
@@ -322,11 +327,9 @@
   gets constructed in the moment a configure-session message reaches the
   server.
 
+
   _C_o_m_p_l_i_c_a_t_i_o_n_s are introduced by the fact that we would like to have
   reasonable default behaviour:
-
-
-
 
   ______________________________________________________________________
   <configure-session session-id="my-current-session">
@@ -392,7 +395,6 @@
      In short, because of property sheets the programmer of an MRML
      client has to know very nothing about how an algorithm is to be
      configured. Let's look more closely at the example:
-
 
      ___________________________________________________________________
 
@@ -523,6 +525,7 @@
   Before getting into detail, let us first define some nomenclature. In
   the following, I will talk about two kinds of entities
 
+
   +o  _A_c_c_e_s_s_o_r_s: accessors are specialised on the access on the indexing
      structure you chose. They are intended to be _s_t_a_t_e_l_e_s_s, if at all
      possible, and in any case they keep no information which might be
@@ -588,9 +591,6 @@
   3. CAcHierarchy.cc: the filename tells us that the class defined in
      this file is inherited from CAccessor. This class does the real
      work.
-
-
-
 
   44..11..11..11..  pplluugg__iinn__ffoo..cccc
 
@@ -990,28 +990,94 @@
         it: we call the configure method on the PO.
   +o  If the function query is called on the CQPerl object, it will call
      the function given by algorithm/cui-perl-query-function on the PO.
+     Currently, this value should stay ffiixxeedd to processGIFTQueryCall.
+     Otherwise you would have to change the CGIFTLink class.
 
   +o  If an empty query is received, the function the CQPerl object will
-     call the function given by algorithm/cui-perl-query-function on the
-     PO.
+     call the function given by algorithm/cui-perl-random-query-function
+     on the PO.  Currently, this value should stay ffiixxeedd to
+     processGIFTRandomQueryCall. Otherwise you would have to change the
+     CGIFTLink class.
 
   55..22..  TThhee PPeerrll ssiiddee ooff tthhee GGIIFFTT//PPeerrll iinntteerrffaaccee
 
-  FF..  CCXXMMLLEElleemmeenntt TTOODDOO
+  The Perl side of the interface is quickly described.  But before that
+  we need just a couple of definitions.
 
+  Let us call PO->query the function that will be provided by you to
+  process queries. It receives as a parameter a pointer to self (_i_._e_.
+  the PO), as well as a reference to a <query-step> MRML element. It
+  gives back a <query-result> MRML element in exactly the same
+  representation which will be described below.
 
-  GG..  AAnn eexxaammppllee ggiifftt--ccoonnffiigg..mmrrmmll
+  PO->randomQuery is the function that will be provided by you to
+  process queries for a given number of random elements from the
+  collection. It receives exactly the same parameters as PO->query. It
+  returns its result in the same manner.
 
+  configure does not receive any parameters, however, it can expect
+  $self->{configure} and $self->{algorithm} to be set. It does not
+  return any value at present.  PPlleeaassee nnoottee,, tthhaatt ((aatt tthhee ccuurrrreenntt ssttaattee))
+  iiff yyoouu ccaallll die in your Perl script, the GIFT dies, too. So please
+  recover gracefully, except for errors that need to be noticed (_e_._g_.
+  misconfiguration).
 
+  55..33..  IImmppoorrttaanntt ffiilleess
 
+  If you want to add your own query engine written in Perl, I would
+  suggest you to look at
 
+  +o  scripts/perl/CGIFTLink.pre-pm There is quite a long POD section,
+     which you can turn in a man page using pod2man. The code could also
+     be interesting for its simplicity. (You can also look at
+     processGIFTQueryCall, if you like, but be warned that one could do
+     these things more beautifully.)
 
+  +o  scripts/perl/CGLDistanceMatrix.pre-pm This is a query processor
+     that reads a pre-calculated distance matrix and uses it to process
+     next-neighbour queries by simple lookup.
 
+  +o  And, as always gift-config.mrml
 
+  FF..  PPrroocceessssiinngg MMRRMMLL uussiinngg ssttrriinngg ccoonnssttaannttss
 
+  It becomes clear very quickly that in processing XML you are often
+  using string constants in situations, in which you would use variables
+  in C++, stringReadAttribute("algorithm-id") for retrieving an
+  attribute with the name "algorithm-id" from an XML element. This is
+  convenient and simple, however, the compiler looses ability to do type
+  checking for you, _a_n_d you are forced to have changes in the MRML DTD
+  being followed by _t_h_e _s_a_m_e _c_h_a_n_g_e_s in the program.
 
+  This problem is adressed by a tool, that automatically generates the
+  files
 
+  libMRML/cc/mrml_const.cc
 
+  libMRML/include/mrml_const.h when make is used in the dtd/ directory.
+  These files contain the declaration and the definition of a C++-class
+  named mrml_const that contains static const members. Each of these
+  member is named as an element/attribute of the MRML DTD, and the name
+  of the string constant is closely related to the value of the string
+  constant. All that is changed is that a "-" will be replaced by a "_".
+  For example, "algorithm-id" becomes "mrml_const::algorithm_id". That's
+  more verbose than the string-based notation ("algorithm-id") however,
+  now the compiler can report your typographical errors.
+
+  SSoo:: if you use any new MRML tags,
+
+  1. Add the tags to the MRML DTD in dtd/mrml.dtd
+
+  2. Call the makefile in dtd
+
+  3. Implement these tags in your query processors and accesssors using
+     #include "mrml.h"
+
+  GG..  CCXXMMLLEElleemmeenntt
+
+  Please browse the doxygen-generated documentation
+
+  HH..  AAnn eexxaammppllee ggiifftt--ccoonnffiigg..mmrrmmll
 
 
 
@@ -1095,8 +1161,15 @@
                <query-paradigm type="NONE"/>
              </query-paradigm-list>
           </allows-children>
-          <property-sheet property-sheet-id="cui-p-1"  property-sheet-type="subset" send-type="none" minsubsetsize="0" maxsubsetsize="1">
-            <property-sheet property-sheet-id="cui-p0" caption="Modify default configuration" property-sheet-type="set-element" send-type="none"/>
+          <property-sheet property-sheet-id="cui-p-1"
+                             property-sheet-type="subset"
+                             send-type="none"
+                             minsubsetsize="0"
+                             maxsubsetsize="1">
+            <property-sheet property-sheet-id="cui-p0"
+                               caption="Modify default configuration"
+                               property-sheet-type="set-element"
+                               send-type="none"/>
           </property-sheet>
         </algorithm>
         <algorithm
@@ -1107,19 +1180,26 @@
 
           cui-base-type="perl"
 
-          cui-perl-script-file="/home/muellerw/generate-template/all-known-mods.pl"
+          cui-perl-script-file=
+             "/home/muellerw/generate-template/all-known-mods.pl"
           cui-perl-package="CVLQuickHunter"
 
           cui-perl-query-function="processGIFTQueryCall"
           cui-perl-random-function="processGIFTRandomQueryCall"
-
           cui-weighting-function="ClassicalIDF"
           >
           <query-paradigm-list>
              <query-paradigm type="distance-matrix"/>
           </query-paradigm-list>
-          <property-sheet property-sheet-id="cui-p-1"  property-sheet-type="subset" send-type="none" minsubsetsize="0" maxsubsetsize="1">
-            <property-sheet property-sheet-id="cui-p0" caption="Modify default configuration" property-sheet-type="set-element" send-type="none"/>
+          <property-sheet property-sheet-id="cui-p-1"
+                             property-sheet-type="subset"
+                             send-type="none"
+                             minsubsetsize="0"
+                             maxsubsetsize="1">
+            <property-sheet property-sheet-id="cui-p0"
+                               caption="Modify default configuration"
+                               property-sheet-type="set-element"
+                               send-type="none"/>
           </property-sheet>
         </algorithm>
         <algorithm
@@ -1130,7 +1210,8 @@
 
           cui-base-type="perl"
 
-          cui-perl-script-file="/home/muellerw/generate-template/all-known-mods.pl"
+          cui-perl-script-file=
+              "/home/muellerw/generate-template/all-known-mods.pl"
           cui-perl-package="CGIFTLink"
           cui-perl-query-function="processGIFTQueryCall"
           cui-perl-random-function="processGIFTRandomQueryCall"
@@ -1140,8 +1221,15 @@
           <query-paradigm-list>
              <query-paradigm type="distance-matrix"/>
           </query-paradigm-list>
-          <property-sheet property-sheet-id="cui-p-1"  property-sheet-type="subset" send-type="none" minsubsetsize="0" maxsubsetsize="1">
-            <property-sheet property-sheet-id="cui-p0" caption="Modify default configuration" property-sheet-type="set-element" send-type="none"/>
+          <property-sheet property-sheet-id="cui-p-1"
+                             property-sheet-type="subset"
+                             send-type="none"
+                             minsubsetsize="0"
+                             maxsubsetsize="1">
+            <property-sheet property-sheet-id="cui-p0"
+                               caption="Modify default configuration"
+                               property-sheet-type="set-element"
+                               send-type="none"/>
           </property-sheet>
         </algorithm>
   <!--        cui-pr-modulo="4"
@@ -1165,14 +1253,57 @@
           <query-paradigm-list>
              <query-paradigm type="inverted-file"/>
           </query-paradigm-list>
-          <property-sheet property-sheet-id="cui-p-1"  property-sheet-type="subset" send-type="none" minsubsetsize="0" maxsubsetsize="1">
-            <property-sheet property-sheet-id="cui-p0" caption="Modify default configuration" property-sheet-type="set-element" send-type="none">
-            <property-sheet property-sheet-id="cui-p15" caption="Prune at % of features" property-sheet-type="numeric" send-type="attribute" send-name="cui-pr-percentage-of-features" from="20" to="100" step="5" send-value="70"/>
-            <property-sheet property-sheet-id="cui-p1"  property-sheet-type="subset" send-type="none" minsubsetsize="1" maxsubsetsize="4">
-              <property-sheet property-sheet-id="cui-p12" send-boolean-inverted="yes" caption="Colour blocks" property-sheet-type="set-element" send-type="attribute" send-name="cui-block-color-blocks" send-value="yes"/>
-              <property-sheet property-sheet-id="cui-p14" send-boolean-inverted="yes" caption="Gabor blocks" property-sheet-type="set-element" send-type="attribute" send-name="cui-block-texture-blocks" send-value="yes"/>
-              <property-sheet property-sheet-id="cui-p13" send-boolean-inverted="yes" caption="Gabor histogram" property-sheet-type="set-element" send-type="attribute" send-name="cui-block-texture-histogram" send-value="yes"/>
-              <property-sheet property-sheet-id="cui-p11" send-boolean-inverted="yes" caption="Colour histogram" property-sheet-type="set-element" send-type="attribute" send-name="cui-block-color-histogram" send-value="yes"/>
+          <property-sheet property-sheet-id="cui-p-1"
+                             property-sheet-type="subset"
+                             send-type="none"
+                             minsubsetsize="0"
+                             maxsubsetsize="1">
+            <property-sheet property-sheet-id="cui-p0"
+                               caption="Modify default configuration"
+                               property-sheet-type="set-element"
+                               send-type="none">
+            <property-sheet property-sheet-id="cui-p15"
+                               caption="Prune at % of features"
+                               property-sheet-type="numeric"
+                               send-type="attribute"
+                               send-name="cui-pr-percentage-of-features"
+                               from="20"
+                               to="100"
+                               step="5"
+                               send-value="70"/>
+            <property-sheet property-sheet-id="cui-p1"
+                               property-sheet-type="subset"
+                               send-type="none"
+                               minsubsetsize="1"
+                               maxsubsetsize="4">
+              <property-sheet property-sheet-id="cui-p12"
+                                 send-boolean-inverted="yes"
+                                 caption="Colour blocks"
+                                 property-sheet-type="set-element"
+                                 send-type="attribute"
+                                 send-name="cui-block-color-blocks"
+                                 send-value="yes"/>
+              <property-sheet property-sheet-id="cui-p14"
+                                 send-boolean-inverted="yes"
+                                 caption="Gabor blocks"
+                                 property-sheet-type="set-element"
+                                 send-type="attribute"
+                                 send-name="cui-block-texture-blocks"
+                                 send-value="yes"/>
+              <property-sheet property-sheet-id="cui-p13"
+                                 send-boolean-inverted="yes"
+                                 caption="Gabor histogram"
+                                 property-sheet-type="set-element"
+                                 send-type="attribute"
+                                 send-name="cui-block-texture-histogram"
+                                 send-value="yes"/>
+              <property-sheet property-sheet-id="cui-p11"
+                                 send-boolean-inverted="yes"
+                                 caption="Colour histogram"
+                                 property-sheet-type="set-element"
+                                 send-type="attribute"
+                                 send-name="cui-block-color-histogram"
+                                 send-value="yes"/>
               </property-sheet>
             </property-sheet>
           </property-sheet>
@@ -1241,11 +1372,34 @@
           <query-paradigm-list>
              <query-paradigm type="inverted-file"/>
           </query-paradigm-list>
-          <property-sheet property-sheet-id="cui-p-1"  property-sheet-type="subset" send-type="none" minsubsetsize="0" maxsubsetsize="1">
-            <property-sheet property-sheet-id="cui-p0" caption="Modify default configuration" property-sheet-type="set-element" send-type="none">
-            <property-sheet property-sheet-id="cui-p15" caption="Prune at % of features" property-sheet-type="numeric" send-type="attribute" send-name="cui-pr-percentage-of-features" from="20" to="100" step="5" send-value="70"/>
-            <property-sheet property-sheet-id="cui-p1"  property-sheet-type="subset" send-type="none" minsubsetsize="1" maxsubsetsize="4">
-              <property-sheet property-sheet-id="cui-p12" send-boolean-inverted="yes" caption="Colour blocks" property-sheet-type="set-element" send-type="attribute" send-name="cui-block-color-blocks" send-value="yes"/>
+          <property-sheet property-sheet-id="cui-p-1"
+                             property-sheet-type="subset"
+                             send-type="none"
+                             minsubsetsize="0"
+                             maxsubsetsize="1">
+            <property-sheet property-sheet-id="cui-p0"
+                               caption="Modify default configuration"
+                               property-sheet-type="set-element"
+                               send-type="none">
+            <property-sheet property-sheet-id="cui-p15"
+                               caption="Prune at % of features"
+                               property-sheet-type="numeric"
+                               send-type="attribute"
+                               send-name="cui-pr-percentage-of-features"
+                               from="20"
+                               to="100"
+                               step="5"
+                               send-value="70"/>
+            <property-sheet property-sheet-id="cui-p1"
+                               property-sheet-type="subset"
+                               send-type="none"
+                               minsubsetsize="1"
+                               maxsubsetsize="4">
+              <property-sheet property-sheet-id="cui-p12"
+                                 send-boolean-inverted="yes"
+                                 caption="Colour blocks"
+                                 property-sheet-type="set-element"
+  send-type="attribute" send-name="cui-block-color-blocks" send-value="yes"/>
               <property-sheet property-sheet-id="cui-p14" send-boolean-inverted="yes" caption="Gabor blocks" property-sheet-type="set-element" send-type="attribute" send-name="cui-block-texture-blocks" send-value="yes"/>
               <property-sheet property-sheet-id="cui-p13" send-boolean-inverted="yes" caption="Gabor histogram" property-sheet-type="set-element" send-type="attribute" send-name="cui-block-texture-histogram" send-value="yes"/>
               <property-sheet property-sheet-id="cui-p11" send-boolean-inverted="yes" caption="Colour histogram" property-sheet-type="set-element" send-type="attribute" send-name="cui-block-color-histogram" send-value="yes"/>
@@ -1318,6 +1472,7 @@
 
 
   <!-- xxyx gift-add-collection xyxx DEPENDS ON THIS LINE -->
+
       </collection-list>
     </cui-configuration>
   </mrml>
@@ -1333,34 +1488,11 @@
 
 
 
+  II..  HHaacckkiinngg VViippeerr
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  _V_i_p_e_r is GIFT's main query engine the one that gets used and
+  configured out-of-the box. This section is addressing question, on how
+  to extend _V_i_p_e_r for testing your own feature sets
 
 
 
