@@ -29,7 +29,13 @@
 #include <iostream.h>
 #include <fstream.h>
 #include <map>
+
+#ifdef HAS_HASH_MAP
 #include <hash_map>
+#else
+#define hash_map map
+#endif
+
 #include "libMRML/include/CAccessor.h"
 #include "libMRML/include/CAccessorElement.h"
 

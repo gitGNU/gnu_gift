@@ -42,8 +42,8 @@
 #include "libMRML/include/TID.h"
 #include <string>
 #include <functional>
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 /** 
   Additional document information (ADI) is information
   is needed for weighting schemes which

@@ -40,7 +40,7 @@
 #include "libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h"
 #include "FeatureExtraction/gift_features.h"
 #include <assert.h>
-
+#include <fstream>
 
 #define _IS_FLOAT_FEATURE_
 
@@ -180,7 +180,7 @@ CDocumentFrequencyElement::CDocumentFrequencyElement(istream& inStream){
 
 #else
     //new fast beautiful
-    inStream.read(&mContent,
+    inStream.read((char*)&mContent,
 		  sizeof(mContent));
 
 #ifdef PRINT

@@ -2,6 +2,7 @@
 
 //Automatically generated from the dtd by gift-dtd-to-keywords
 #include <string>
+using namespace std;
 class mrml_const { public: 
     static const string acknowledge_session_op;
      static const string algorithm;

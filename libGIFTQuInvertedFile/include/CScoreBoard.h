@@ -25,6 +25,11 @@
 
 #include <functional>
 #include <map>
+#ifdef HAS_HASH_MAP
+#include <hash_map>
+#else
+#define hash_map map
+#endif
 #include <iostream.h>
 #include "libMRML/include/CRelevanceLevel.h"
 #include "libMRML/include/CRelevanceLevelList.h"

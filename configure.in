@@ -228,8 +228,10 @@ AC_CHECK_FILE($PERL,[
 	PERL_LD_ADD=`perl -MExtUtils::Embed -e ldopts`
 	AC_SUBST(PERL_LD_ADD)
   else
+
+dnl -ldl was added on pruets request
 	CXXFLAGS=$RESCUE_CXXFLAGS
-	LDFLAGS=$RESCUE_LDFLAGS
+	LDFLAGS=$RESCUE_LDFLAGS -ldl
 	AC_MSG_RESULT([no])
   fi
 ])

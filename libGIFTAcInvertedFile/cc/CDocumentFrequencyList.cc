@@ -92,7 +92,7 @@ bool CDocumentFrequencyList::writeBinary(ostream& outStream)const{
   bool lRetVal=true;
 
 #ifdef _CDocumentFrequencyListIsArray
-  outStream.write(mContent,size()*sizeof(CDocumentFrequencyElement));
+  outStream.write((char*)mContent,size()*sizeof(CDocumentFrequencyElement));
 #else
   for(const_iterator i=begin();
       i!=end();
@@ -116,7 +116,7 @@ bool CDocumentFrequencyList::readBinary(istream& inStream){
   if(inStream){
     //gMutex->lock();
     //    cout << "|[" << getpid() << flush;
-    inStream.read(begin(),size()*sizeof(CDocumentFrequencyElement));
+    inStream.read((char*)begin(),size()*sizeof(CDocumentFrequencyElement));
     //cout << "]" << flush; <gMutex->unlock();
   }
 #endif

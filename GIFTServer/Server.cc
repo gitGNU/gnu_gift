@@ -35,6 +35,7 @@ CDebuggingMemoryManager gMemManager(MEMSIZE);
 #include <stdlib.h>
 #include <assert.h>
 #include <iostream>
+#include <fstream>
 
 // mutual excludes for
 // multithreading

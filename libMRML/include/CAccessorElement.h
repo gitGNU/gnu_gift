@@ -4,6 +4,7 @@
 #include "../include/uses-declarations.h"
 #include <string>
 #include <functional>
+#include <iostream>
 #include "libMRML/include/TID.h"
 /** Quadruplet of Image-ID, image-URL, thumbnail-URL, feature file
     name and assorted sorting functions

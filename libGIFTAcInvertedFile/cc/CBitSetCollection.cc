@@ -35,7 +35,7 @@
 *
 *
 ****************************************/
-#include <iostream.h>
+#include <iostream>
 #include <algorithm>
 #include <list>
 #include "CBitVector.h"

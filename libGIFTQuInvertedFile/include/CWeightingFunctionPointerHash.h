@@ -41,6 +41,11 @@
 #include "../include/uses-declarations.h"
 #include <map>
 #include <algorithm>
+#ifdef HAS_HASH_MAP
+#include <hash_map>
+#else
+#define hash_map map
+#endif
 
 #include "libMRML/include/TID.h"
 #include "libGIFTQuInvertedFile/include/CWeightingFunction.h"

@@ -23,7 +23,7 @@
 #include "libMRML/include/CXMLElement.h"
 #include "libMRML/include/CXMLElementVisitor.h"
 #include <cstdio>
-
+#include <iostream>
 
 /** change the father of this*/
 void CXMLElement::setFather(CXMLElement* inFather){

@@ -40,7 +40,7 @@
 #define _CIFLISTSTART
 #include "../include/uses-declarations.h"
 #include "libMRML/include/TID.h"
-#include <iostream.h>
+#include <iostream>
 
 /**The chunk which starts a list
   in the inverted file, consisting of

@@ -54,11 +54,16 @@ class CXMLElement;
 #include "libMRML/include/TID.h"
 #include "libMRML/include/CAccessor.h"
 #include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <map>
 #include <vector>
+#ifdef HAS_HASH_MAP
 #include <hash_map>
+#else
+#define hash_map map
+#endif
+
 #include <functional>
 #include <algorithm>
 

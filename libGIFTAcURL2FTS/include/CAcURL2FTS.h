@@ -45,10 +45,14 @@
 #include "../include/uses-declarations.h"
 #include <string>
 #include "libMRML/include/TID.h"
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <map>
+#ifdef HAS_HASH_MAP
 #include <hash_map>
+#else
+#define hash_map map
+#endif
 #include "libMRML/include/CAccessorImplementation.h"
 #include "libMRML/include/CMutex.h" // multithreading
 class CXMLElement;  // parameter of constructor

@@ -56,11 +56,11 @@ void merge_streams(istream& in1, const streampos inCount1,
 	  i<inCount2;
 	  i++){
 	T l2;
-	in2.read(&l2,
+	in2.read((char*)&l2,
 		 sizeof(l2));
 	assert(in2);
 
-	out.write(&l2,
+	out.write((char*)&l2,
 		  sizeof(l2));
 	assert(out);
       }
@@ -71,10 +71,10 @@ void merge_streams(istream& in1, const streampos inCount1,
 	  i<inCount1;
 	  i++){
 	T l1;
-	in1.read(&l1,
+	in1.read((char*)&l1,
 		 sizeof(l1));
 	assert(in1);
-	out.write(&l1,
+	out.write((char*)&l1,
 		  sizeof(l1));
 	assert(out);
       }
@@ -86,11 +86,11 @@ void merge_streams(istream& in1, const streampos inCount1,
     
     //read the first record from both files
     T l1;
-    in1.read(&l1,
+    in1.read((char*)&l1,
 	     sizeof(l1));
     assert(in1);
     T l2;
-    in2.read(&l2,
+    in2.read((char*)&l2,
 	     sizeof(l2));
     assert(in2);
     
@@ -98,25 +98,25 @@ void merge_streams(istream& in1, const streampos inCount1,
 	  &&(lI2<inCount2)){
       if(l1<l2){
 	//
-	out.write(&l1,
+	out.write((char*)&l1,
 		  sizeof(l1));
 	assert(out);
 
 	//
 	lI1++;
 	if(lI1<inCount1){
-	  in1.read(&l1,
+	  in1.read((char*)&l1,
 		   sizeof(l1));
 	  assert(in1);
 	}
       }else{
 	//
-	out.write(&l2,
+	out.write((char*)&l2,
 		  sizeof(l2));
 	//
 	lI2++;
 	if(lI2<inCount2){
-	  in2.read(&l2,
+	  in2.read((char*)&l2,
 		   sizeof(l2));
 	  assert(in2);
 	}
@@ -124,25 +124,25 @@ void merge_streams(istream& in1, const streampos inCount1,
     }
     while(lI1<inCount1){
       //
-      out.write(&l1,
+      out.write((char*)&l1,
 		sizeof(l1));
       //
       lI1++;
       if(lI1<inCount1){
-	in1.read(&l1,
+	in1.read((char*)&l1,
 		 sizeof(l1));
 	assert(in1);
       }
     }
     while(lI2<inCount2){
       //
-      out.write(&l2,
+      out.write((char*)&l2,
 		sizeof(l2));
       assert(out);
       //
       lI2++;
       if(lI2<inCount2){
-	in2.read(&l2,
+	in2.read((char*)&l2,
 		 sizeof(l2));
 	assert(in2);
       }
@@ -183,7 +183,8 @@ void merge_sort_streams(const char* inFileToBeSortedName,
 	// ||(lCount%2) makes sure that we will get 
 	// the result in inFileToBeSorted
 	;
-      iMergeSize <<= 1,lCount++){
+      (iMergeSize = long(iMergeSize) << 1),
+	(lCount++)){
     
     cout << "MERGESORT MergeSize " 
 	 << iMergeSize 

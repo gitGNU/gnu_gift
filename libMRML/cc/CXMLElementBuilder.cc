@@ -1,4 +1,4 @@
-
+#include <iostream> // for printouts
 #include "libMRML/include/CXMLElementBuilder.h"
 
 void newStartXMLElement(void *inUserData, 

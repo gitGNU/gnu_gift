@@ -24,6 +24,9 @@
 #ifndef _CNODELETE
 #define _CNODELETE
 #include "../include/uses-declarations.h"
+
+#define INLINE
+
 /** 
     The use of this class is to control where an element
     is destroyed. If an instantiation of this class is
@@ -41,28 +44,28 @@ class CNoDelete{
       This means: destruction of this 
       will bomb the program using
       an assertion of !mIsActivated */
-  inline void activate(){
+  INLINE void activate(){
     mIsActivated=1;
-  };
+  }
   /** activate this.
       This means: destruction of *this 
       will bomb the program using
       a zero assertion */
-  inline void deActivate(){
+  INLINE void deActivate(){
     mIsActivated=0;
   };
   /** activate this.
       This means: destruction of *this 
       will be possible
   */
-  inline CNoDelete():
+  INLINE CNoDelete():
     mIsActivated(0){
   };
   /** activate this.
       This means: destruction of this 
       will bomb the program using
       a zero assertion */
-  inline ~CNoDelete(){
+  INLINE ~CNoDelete(){
     assert(!mIsActivated);
   };
   

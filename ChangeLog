@@ -1,3 +1,57 @@
+2002-01-11  MUELLER Wolfgang  <Wolfgang.Mueller@cui.unige.ch>
+
+	* configure.in(AC_CHECK_FILE[$PERL...]): 
+	added -ldl to non-perl branch as consequence of
+	patch suggestion by 
+	Pruet Boonma <pruet@eng.cmu.ac.th>
+
+2002-01-10  MUELLER Wolfgang  <Wolfgang.Mueller@cui.unige.ch>
+
+	* libGIFTAcInvertedFile/include/merge_sort_streams.h: 
+	streampos troubles
+
+	* libGIFTAcInvertedFile/cc/CDocumentFrequencyList.cc: 
+	* libGIFTAcInvertedFile/cc/CDocumentFrequencyElement.cc: (char*) cast 
+	in read/write from/to stream
+
+	* libGIFTAcURL2FTS/cc/CAcURL2FTS.cc: Yay, gcc v3.0.3 found
+	me an error mIDToFFN.find gave back an iterator mURLToFFN.
+
+	* libMRML/cc/CXMLElement.cc: 
+	* libMRML/cc/CAttributeList.cc: 
+	* libMRML/cc/CXMLElementBuilder.cc: include iostream
+
+	* libMRML/include/CQMultiple.h: 
+	* libMRML/include/CAccessorImplementation.h: 
+	ifdef HAS_HASH_MAP
+
+	* libGIFTAcInvertedFile/cc/CBitSetCollection.cc: 
+	* libGIFTAcInvertedFile/include/CIFListStart.h: 
+	* libGIFTAcInvertedFile/include/CAdditionalDocumentInformation.h: 
+	* libGIFTAcInvertedFile/include/CAcSQLInvertedFile.h: 
+	* libGIFTAcInvertedFile/include/CAcInvertedFile.h: 
+	* libGIFTAcInvertedFile/include/CAcIFMySQL.h: 
+	* libGIFTAcInvertedFile/include/CADIHash.h: 
+	* libGIFTAcInvertedFile/include/CAcIFFileSystem.h: 
+	* libMRML/include/myNew.h: 
+	* libGIFTAcInvertedFile/cc/CIFListStart.cc: 
+	* libGIFTAcInvertedFile/include/CDocumentFrequencyElement.h: 
+	iostream.h becomes iostream
+	fstream.h becomes fstream etc.
+
+	* libMRML/include/GIFTExceptions.h: added using namespace
+
+	* libMRML/include/CIDRelevanceLevelPair.h: casting to double
+	for making fabs unambiguous
+
+	* libMRML/include/CAccessorElement.h: 
+	include <iostream> makes it compile
+
+	* libMRML/cc/CAccessorElement.cc(operator<<): small changes
+	not affecting functionality for obtaining better error messages
+	from gcc v3
+	
+
 2002-01-09  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
 
 	* libMRML/cc/CAccessorElement.cc: cast TID to long

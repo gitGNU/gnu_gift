@@ -3,9 +3,9 @@
 /** creating clean output */
 ostream& operator<<(ostream& outStream,
 		    const CAccessorElement& inElement){
-  outStream << string("CAccessorElement(")
-	    << static_cast<long>(inElement.getID())
-	    << string(" ")
+  outStream << string("CAccessorElement(");
+  outStream.operator<<(long(inElement.getID()));
+  outStream << string(" ")
 	    << inElement.getURL()
 	    << string(" ")
 	    << inElement.getThumbnailURL()

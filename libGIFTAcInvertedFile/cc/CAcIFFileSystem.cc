@@ -71,7 +71,8 @@
 #include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"
 #include "libGIFTAcInvertedFile/include/CAcIFFileSystem.h"
 #include "libGIFTAcInvertedFile/include/CInvertedFileChunk.h"
-#include <iostream.h>
+#include <iostream>
+#include <fstream>
 #include <assert.h>
 #include <math.h>
 #include "libGIFTAcInvertedFile/include/CIFListStart.h"
@@ -201,7 +202,7 @@ bool CAcIFFileSystem::generateInvertedFile(){
     
     unsigned int lNumberOfFeatures=0;
     /* reads the number of features out of the file */
-    lFeatureFile.read(&lNumberOfFeatures,
+    lFeatureFile.read((char*)&lNumberOfFeatures,
 		      sizeof(lNumberOfFeatures));
     
     double lMaxDocumentFrequency=0;
@@ -221,7 +222,7 @@ bool CAcIFFileSystem::generateInvertedFile(){
 	      float second;
 	    } lInElement;
 
-	    lFeatureFile.read(&lInElement,
+	    lFeatureFile.read((char*)&lInElement,
 			      sizeof(lInElement));
 
 
@@ -394,9 +395,9 @@ void CAcIFFileSystem::writeOffsetFileElement(TID inFeatureID,
 					     int inPosition,
 					     ostream& inOpenOffsetFile){
   /**/gMutex->lock();
-  inOpenOffsetFile.write(&inFeatureID,
+  inOpenOffsetFile.write((char*)&inFeatureID,
 			 sizeof(inFeatureID));
-  inOpenOffsetFile.write(&inPosition,
+  inOpenOffsetFile.write((char*)&inPosition,
 			 sizeof(inPosition));
   /**/gMutex->unlock();
   
@@ -480,7 +481,7 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
     
     unsigned int lNumberOfFeatures=0;
     /* reads the number of features out of the file */
-    lFeatureFile.read(&lNumberOfFeatures,
+    lFeatureFile.read((char*)&lNumberOfFeatures,
 		      sizeof(lNumberOfFeatures));
     
     double lMaxDocumentFrequency=0;
@@ -499,7 +500,7 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
 	    float mDocumentFrequency;
 	  } lInElement;
 	    
-	    lFeatureFile.read(&lInElement,
+	    lFeatureFile.read((char*)&lInElement,
 			      sizeof(lInElement));
 
 	    CIFBuilderTriplet lBuilderTriplet(lInElement.mFeatureID,
@@ -508,7 +509,7 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
 	    
 	    
 	    
-	    lAuxOutputStream.write(&lBuilderTriplet,
+	    lAuxOutputStream.write((char*)&lBuilderTriplet,
 				   sizeof(lBuilderTriplet));
 	}
     }
@@ -571,7 +572,7 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
     CIFBuilderTriplet lTriplet(0,0,0);
     // read the first IFBuilder Triplet from the sorted
     // triplet file
-    lInAuxiliaryFile.read(&lTriplet,
+    lInAuxiliaryFile.read((char*)&lTriplet,
 			  sizeof(lTriplet));
     do{
       CInvertedFileChunk lChunk;      
@@ -586,7 +587,7 @@ bool CAcIFFileSystem::newGenerateInvertedFile(){
 	  lChunk.addElement(lOldTriplet.mDocumentID,
 			    lOldTriplet.mDocumentFrequency);
 	  
-	  lInAuxiliaryFile.read(&lTriplet,
+	  lInAuxiliaryFile.read((char*)&lTriplet,
 				sizeof(lTriplet));
 	}while(lInAuxiliaryFile 
 	       &&
@@ -936,7 +937,7 @@ bool CAcIFFileSystem::init(bool inMemory)
     SUIntUInt lVal;
 
     /* read a value into the offset file */
-    mOffsetFile.read(&lVal,sizeof(lVal));
+    mOffsetFile.read((char*)&lVal,sizeof(lVal));
 
 
     unsigned int lFeatureID=lVal.mUInt1;
@@ -1508,7 +1509,7 @@ CDocumentFrequencyList* CAcIFFileSystem::getFeatureFile(string inFileName)const{
       ifstream lFile(inFileName.c_str());
       unsigned int lNumberOfFeatures(0);
       if(lFile){
-	lFile.read(&lNumberOfFeatures,
+	lFile.read((char*)&lNumberOfFeatures,
 		   sizeof(lNumberOfFeatures));
       
 	if(lFile && (lRetVal=new CDocumentFrequencyList(lNumberOfFeatures))){

@@ -47,7 +47,11 @@
 #include <fstream.h>
 #include <list>
 #include <map>
+#ifdef HAS_HASH_MAP
 #include <hash_map>
+#else
+#define hash_map map
+#endif
 #include "libMRML/include/CAccessor.h"
 #include "libMRML/include/CSelfDestroyPointer.h"
 

@@ -60,11 +60,15 @@ class CXMLElement;
 #include "libGIFTAcInvertedFile/include/CADIHash.h"
 #include "libGIFTAcURL2FTS/include/CAcURL2FTS.h"
 #include "libGIFTAcInvertedFile/include/CAcInvertedFile.h"
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include <map>
 #include <vector>
+#ifdef HAS_HASH_MAP
 #include <hash_map>
+#else
+#define hash_map map
+#endif
 #include <functional>
 #include <algorithm>
 

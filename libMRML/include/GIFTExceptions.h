@@ -22,8 +22,10 @@
 */
 #ifndef _GIFTEXCEPTIONS
 #define _GIFTEXCEPTIONS
+using namespace std;
 
 #include <iostream>
+#include <fstream>
 
 /** A base class for exceptions thrown by GIFT 
 

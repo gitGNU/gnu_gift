@@ -40,8 +40,8 @@
 #ifndef _CINVERTEDFILECHUNK
 #define _CINVERTEDFILECHUNK
 #include "../include/uses-declarations.h"
-#include <iostream.h>
-#include <fstream.h>
+#include <iostream>
+#include <fstream>
 #include "libMRML/include/TID.h"
 #include <map>
 #include "libGIFTAcInvertedFile/include/CDocumentFrequencyList.h"

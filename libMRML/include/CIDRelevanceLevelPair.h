@@ -129,9 +129,9 @@ public:
   inline bool operator()(const CIDRelevanceLevelPair& l,
 			 const CIDRelevanceLevelPair& t){
     return 
-      fabs(l.getID())
+      fabs(double(l.getID()))
       <
-      fabs(t.getID());
+      fabs(double(t.getID()));
   };
 };
 

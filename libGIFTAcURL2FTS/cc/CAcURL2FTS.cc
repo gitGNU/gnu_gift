@@ -241,7 +241,7 @@ pair<bool,string> CAcURL2FTS::IDToFFN(TID inID)const{
   TID_string_map::const_iterator lFound=mIDToFFN.find(inID);
 
 
-  if(lFound != mURLToFFN.end()){
+  if(lFound != mIDToFFN.end()){
     pair<bool,string> lReturnValue(make_pair(true,lFound->second));
     mMutexURL2FTS.unlock();
     return lReturnValue;

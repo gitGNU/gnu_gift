@@ -38,7 +38,7 @@
 #include "libMRML/include/CXMLElement.h"
 #include "libMRML/include/CAFPlugin.h"
 #include <string>
-
+#include <iostream>
 CAccessorFactoryContainer::CAccessorFactoryContainer():
   mConfigurationData(0){
   //fill the accessor factory container in a sensible way

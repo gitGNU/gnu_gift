@@ -27,7 +27,7 @@
 #include "libMRML/include/TID.h"
 
 #include "libGIFTAcInvertedFile/include/CAdditionalDocumentInformation.h"
-#include <fstream.h>
+#include <fstream>
 
 /**
 *

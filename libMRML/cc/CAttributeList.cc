@@ -23,7 +23,7 @@
 #include "string.h"
 #include <cstdio>
 #include "libMRML/include/CMutex.h"
-
+#include <iostream>
 extern CMutex* gMutex;
 
 CAttributeList::CAttributeList(const char * const * const inAttributeList){
