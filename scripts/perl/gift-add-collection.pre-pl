@@ -658,7 +658,7 @@ sub findOutEncodings{
       $lInEncoding=$_     if($lFoundEncodings{$_});
     }
   }
-  return($lInEncoding,"UTF-8");
+  return($lInEncoding || "UTF-8","UTF-8");
 }
 
 
