@@ -166,10 +166,10 @@ AC_C_BIGENDIAN
 
 
 dnl find out what flags to add for libmrml
-MRMLLIBS=[`libMRML-config --ldflags --libs`]
+MRMLLIBS=[`libMRML-config -l -L`]
 AC_SUBST(MRMLLIBS)
 
-MRMLINCLUDES=`libMRML-config --includes --cxxflags`
+MRMLINCLUDES=`libMRML-config -i -c`
 AC_SUBST(MRMLINCLUDES)
 
 

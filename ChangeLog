@@ -1,3 +1,8 @@
+2003-05-06  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* PluginMaker/configure.in.in: fixed wrong options in call
+	to libMRML-config
+
 2003-04-24  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
 
 	* scripts/perl/gift-add-collection.pre-pl: adding collection
