@@ -1,3 +1,10 @@
+2003-04-24  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* scripts/perl/gift-add-collection.pre-pl: adding collection
+	element to config file has problem on recent perl, apparently.
+	Added safeConvertString (necessary, but does not solve this problem), 
+	and write out stuff into a temporary file, then use parsefile.
+
 2003-04-22  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
 
 	* PluginMaker/libGIFTAc@PLUGIN_NAME@/include/packages/GIFTPlugin-FEFTest/libGIFTAcFEFTest/include/CAcFEFTest.h: 

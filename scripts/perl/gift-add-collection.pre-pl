@@ -34,12 +34,15 @@ use File::Find;
 use File::Path;
 use File::Copy;
 use Text::Iconv;
+use POSIX qw(tmpnam);
 use strict;
 use vars qw($self
 	    
 	    $lFullName
 	    $lName
 	    $lExtension
+
+	    *FH
 
 	    $lCountPotentialImages
 	    $lCountVisitedImages
@@ -585,7 +588,8 @@ Copying $CONFIG to $OLDCONFIG
 	
       }
     }else{
-      my $lCollection=$lParser->parse(qq(<?xml version="1.0" standalone="no" ?>
+
+      my $lString=&safeConvertString(qq(<?xml version="1.0" standalone="no" ?>
 					 <collection 
 					 collection-id="$lUniqueCollectionID" 
 					 collection-name="$lCollectionName" 
@@ -605,7 +609,20 @@ Copying $CONFIG to $OLDCONFIG
 					 <query-paradigm type="perl-demo"/>
 					 </query-paradigm-list>
 					 </collection>
-					 \n\n));
+					\n\n));
+      #WORKAROUND: apparently under perl 5.8.0 XML::DOM::Parse has a problem
+      #            when parsing from strings. Solution: 1. write to a temporary file
+      #            2. parse the file. 3. delete the file.
+      my $lName="";
+      {
+	do { 
+	  $lName = tmpnam(); 
+	} until sysopen(FH, $lName, O_RDWR|O_CREAT|O_EXCL, 0600);
+	print FH $lString;
+	close FH;
+      }
+      my $lCollection=$lParser->parsefile($lName);
+      unlink $lName;
       
       &addCollection(collection=>$lCollection,
 		     document=>$lGIFTConfig);
