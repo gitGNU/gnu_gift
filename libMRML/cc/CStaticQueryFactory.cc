@@ -37,13 +37,14 @@ CQuery* CStaticQueryFactory::makeQuery(const string & inBaseType,
 				      inAlgorithm));
   }
 #endif
+
 #ifdef __GIFT_WITH_PERL__
   if(inBaseType=="perl"){
     return(new CQPerl(inAccessorAdminCollection,
-		      inAlgorithm));
+ 		      inAlgorithm));
   }
 #endif
-//   if(inBaseType=="parallel"){
+  //   if(inBaseType=="parallel"){
 //     return(new CQParallel(inAccessorAdminCollection,
 // 			  inAlgorithm));
 //   }

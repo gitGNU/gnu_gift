@@ -1,3 +1,53 @@
+2002-11-05  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* configure.in(ACX_PTHREAD): added spaces at end of the line
+	for each line of the parameter
+
+2002-10-23  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libMRML/cc/CQuery.cc (query): embarrassing bug: the
+	output mrml was wrong. query-result-elements were not
+	part of a query-result-element-list
+
+2002-10-20  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libMRML/cc/CSessionManager.cc(translate): removed throw
+
+	* configure.in: check for sys/times.h
+
+	* libMRML/cc/CQuery.cc (query): pipe out some statistics
+	about the raw fastQuery duration.
+
+2002-10-01  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libMRML/cc/CXMLElementBuilder.cc: I just got a 
+	sligthly misterious bug in a realloc in expat.
+	I try to solve this by copying c_str() to char*
+	using a strdup()
+
+2002-09-22  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* scripts/perl/gift-dtd-to-keywords.pre-pl (translateToH): 
+	add #ifdef to generated c++ headers
+
+2002-09-16  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libGIFTAcInvertedFile/include/merge_sort_streams.h: Instead
+	of doing mergesort all the time, the lowest levels of recursion
+	is sorted using quicksort in memory.
+
+	* configure.in: removed check for -ldbi, as this provokes
+	weird problems if using dbi in plugins
+
+2002-09-14  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* GIFTServer/Makefile.am (gift_LDADD): adding -ldbi (tentaitive)
+
+2002-09-13  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libMRML/cc/Makefile.am (libMRML-config.cc): added destination
+	directory to includepath
+
 2002-09-09  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
 
 	* libSquirePPM/normaliseContrast.c: 

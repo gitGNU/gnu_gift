@@ -57,6 +57,7 @@ EXTRA_DIST=PluginMaker \
 		gift-install-prerequisites.pl  \
 		teco.sh\
 		gift-install-prerequisites.sh\
-		gift-check-perl-config.pl
+		gift-check-perl-config.pl \
+		aclocal-add.m4
 
 

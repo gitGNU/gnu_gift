@@ -1,5 +1,6 @@
 
-
+#ifndef _MRML_CONST
+#define _MRML_CONST
 //Automatically generated from the dtd by gift-dtd-to-keywords
 #include <string>
 using namespace std;
@@ -130,3 +131,4 @@ class mrml_const { public:
      static const string user_segmented_element_list;
      static const string visibility;
  }; 
+#endif

@@ -42,6 +42,10 @@
 * _TREE_BUILD_PRINTOUT in query(): building a result tree
 *
 ****************************************/
+#include "libMRML/include/gift-config.h" // for defines about known headers
+#ifdef HAVE_SYS_TIMES_H
+#include <sys/times.h>
+#endif
 #include "libMRML/include/mrml_const.h" // for parsing
 #include "FeatureExtraction/gift_features.h"
 #include <algorithm>
@@ -127,7 +131,7 @@ CQuery::~CQuery(){
 ****************************************/
 CXMLElement* CQuery::getRandomImages(int inNumberOfInterestingImages)const{
 
-  cout << "Getting random images "
+  cout << "Getting " <<  inNumberOfInterestingImages << " random images "
        << endl;
 
   list<CAccessorElement> lURLList;
@@ -304,12 +308,15 @@ CXMLElement* CQuery::query(const CXMLElement& inQuery){
   
   double inCutoff=
     lCutoff.second;
-  
+
+
   //gMutex->lock();//debugging
   if(inQuery.child_list_begin()!=inQuery.child_list_end()){
     CSelfDestroyPointer<CIDRelevanceLevelPairList> lFastQueryResult(fastQuery(inQuery,
 									      inNumberOfInterestingImages,
 									      inCutoff));
+
+#warning put time stamp here
     cout << "Assembling a query result tree " 
 	 << endl;
     if(lFastQueryResult){
@@ -325,9 +332,12 @@ CXMLElement* CQuery::query(const CXMLElement& inQuery){
 #endif
 
     CXMLElement* lReturnValue(new CXMLElement(mrml_const::query_result,0));
+
+
+
     CXMLElement* lReturnList(new CXMLElement(mrml_const::query_result_element_list,0));
     lReturnValue->addChild(lReturnList);
-
+    lReturnValue->moveUp();
     assert(mAccessor);
 
     if(lFastQueryResult && mAccessor){
@@ -365,9 +375,9 @@ CXMLElement* CQuery::query(const CXMLElement& inQuery){
 				       lURL);
 	}
       
-	lReturnValue->addChild(lReturnElement);
+	lReturnList->addChild(lReturnElement);
       
-	lReturnValue->moveUp();
+	lReturnList->moveUp();
 
       }
       //gMutex->unlock();//debugging

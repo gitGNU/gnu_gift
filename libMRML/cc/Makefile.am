@@ -107,7 +107,7 @@ CLEANFILES=libMRML-config.cc
 #libMRML-config.cc: libMRML-config.pre-cc ../../make-gift-config.pl
 #	perl ../../make-gift-config.pl CXXFLAGS ' $(CXXFLAGS) ' INCLUDES ' -I$(includedir)/libMRML/include ' LDFLAGS '$(LDFLAGS)' LIBS ' $(LIBS) ' libdir ' -L $(libdir) '  < libMRML-config.pre-cc  > libMRML-config.cc
 libMRML-config.cc: libMRML-config.pre-cc
-	sed -e "s§%CXXFLAGS%§$(CXXFLAGS)§g;\
+	sed -e "s§%CXXFLAGS%§$(CXXFLAGS) -I$(includedir)§g;\
 	        s§%INCLUDES%§-I$(includedir)§g;\
                 s§%LDFLAGS%§$(LDFLAGS)§g;\
                 s§%LIBS%§$(LIBS)§ g;\

@@ -106,6 +106,8 @@ public:
   //----------------------------------------
   /** Constructor */
   CAccessorAdmin(CAccessorFactoryContainer& inFactoryContainer);
+  /** destructor */
+  ~CAccessorAdmin();
   /**  */
   string CAccessorAdmin::getAlgorithmIDListID()const;
   /**  */

@@ -3,7 +3,7 @@
 /* 
    
     GIFT, a flexible content based image retrieval system.
-    Copyright (C) 1998, 1999, 2000, 2001, 2002, CUI University of Geneva
+    Copyright (C) 1998, 1999, 2000, 2001, 2002, CUI University of Geneva, University of Bayreuth
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -23,6 +23,11 @@
 #ifndef _MERGE_SORT
 #define _MERGE_SORT
 
+//#warning FIXME: this needs to be added to the GIFT distro. It speeds up the generation
+//#warning of inverted files considerably
+//(done)
+
+#include <memory> // auto_ptr
 #include <algorithm> // using swap
 #include <fstream>   // file access
 
@@ -99,7 +104,8 @@ public:
 template<class T>
 void merge_streams(istream& in1, const STREAMPOS_T inCount1,
 		   istream& in2, const STREAMPOS_T inCount2,
-		   ostream& out){
+		   ostream& out,
+		   int inNumberOfPageElements=1){
 
   {
 //     cout << "Merging: " 
@@ -107,6 +113,7 @@ void merge_streams(istream& in1, const STREAMPOS_T inCount1,
 // 	 << ","
 // 	 << inCount2
 // 	 << endl;
+    const STREAMPOS_T lPageSize(sizeof(T)*inNumberOfPageElements);
 
 
 
@@ -208,6 +215,72 @@ void merge_streams(istream& in1, const STREAMPOS_T inCount1,
     }
   }
 }
+template<typename T>
+void first_level_quicksort(int inNumberOfPageElements,
+			   const char* inFileToBeSortedName,
+			   const char* inTemporaryName){
+
+  cout << "Starting quicksort: "
+       << inNumberOfPageElements 
+       << " elements per page." << endl
+       << "Sorting files " << inFileToBeSortedName << endl
+       << "to            " << inTemporaryName << endl;
+  cout << "NOW ALLOCATING A PAGE" << inNumberOfPageElements << endl;
+  auto_ptr<T> lPage(new T[inNumberOfPageElements]);
+
+  cout << "H" << flush;  
+
+  const STREAMPOS_T lPageSize(sizeof(T)*inNumberOfPageElements);
+
+  cout << "I" << flush;
+
+  STREAMPOS_T lFileSize(0);
+  ifstream lToBeSorted1(inFileToBeSortedName);
+  assert(lToBeSorted1);
+  lToBeSorted1.seekg(0,
+		    ios::end);
+  lFileSize=lToBeSorted1.tellg();
+  lToBeSorted1.clear();
+  lToBeSorted1.seekg(0,
+		    ios::beg);
+  cout << "E" << flush;
+
+  ofstream lTemporary(inTemporaryName);
+  assert(lTemporary);
+  cout << "R" << flush;
+
+  STREAMPOS_T lSum(0);
+
+  T* lBegin(lPage.get());
+  T* lEnd(lPage.get());
+  
+  cout << "FIRSTLEVELQUICK" << lFileSize << ";" << lSum<< endl;
+  while((lSum<lFileSize)
+	&& lToBeSorted1){
+
+    cout << "." << flush;
+
+    int lRead(0);
+    if(lSum+lPageSize < lFileSize){
+      lToBeSorted1.read((char*)lPage.get(),
+			lPageSize);
+      lRead=lPageSize;
+    }else{
+      lToBeSorted1.read((char*)lPage.get(),
+			lFileSize-lSum);      
+      lRead=lFileSize-lSum;
+    }
+    if(lRead){
+      lEnd=lBegin+(lRead)/sizeof(T);
+      sort(lBegin,lEnd);
+      lTemporary.write((char*)lPage.get(),lRead);
+      assert(lTemporary);
+    }
+  }
+  cout << "." << endl;
+
+}
+
 /**
    This function sorts a stream containing 
    elements of type T. The result of the merge sort
@@ -219,8 +292,10 @@ void merge_streams(istream& in1, const STREAMPOS_T inCount1,
    @param inFileToBeSortedName the name of a temporary file
  */
 template<class T>
-void merge_sort_streams(const char* inFileToBeSortedName,
-			const char* inTemporaryName){
+char* merge_sort_streams(const char* inFileToBeSortedName,
+			const char* inTemporaryName,
+			int inNumberOfPageElements=(1 << 20)
+			){
 
   const char* lFileToBeSortedName(inFileToBeSortedName);
   const char* lTemporaryName(inTemporaryName);
@@ -234,13 +309,25 @@ void merge_sort_streams(const char* inFileToBeSortedName,
   
   ofstream lTemporary;
   ifstream lToBeSorted2;
-    
+ 
+#ifdef first_level_quick
+  first_level_quicksort<T>(inNumberOfPageElements,
+			   inFileToBeSortedName,
+			   inTemporaryName);
+  swap(lFileToBeSortedName,
+       lTemporaryName);
+#else 
+  cout << "STARTING mit MERGESIZE1" << endl;
+  inNumberOfPageElements=1;
+#endif
   STREAMPOS_T lCount(0);
-  for(STREAMPOS_T iMergeSize(sizeof(T));
+  for(STREAMPOS_T iMergeSize(sizeof(T)*inNumberOfPageElements);
       (iMergeSize < lFileSize)
-	|| (lCount%2)
+	|| !(lCount%2)
 	// ||(lCount%2) makes sure that we will get 
 	// the result in inFileToBeSorted
+	// the ! is, because we have have already
+	// the quicksort sorting pass behind us
 	;
       (iMergeSize = long(iMergeSize) << 1),
 	(lCount=lCount+static_cast<STREAMPOS_T>(1))){
@@ -266,7 +353,7 @@ void merge_sort_streams(const char* inFileToBeSortedName,
       lToBeSorted1.seekg(i);
 
       if(!lToBeSorted1){
-	cerr << "__FILE__:__LINE__: lToBeSorted false, after seekg("
+	cerr << __FILE__ << ":" << __LINE__ << " lToBeSorted false, after seekg("
 	     << static_cast<long int>(i)
 	     << ")"
 	     << endl;
@@ -303,13 +390,17 @@ void merge_sort_streams(const char* inFileToBeSortedName,
 		       lMergeSize1/sizeof(T),
 		       lToBeSorted2,
 		       lMergeSize2/sizeof(T),
-		       lTemporary);
+		       lTemporary,
+		       inNumberOfPageElements
+		       );
 #else
       merge_streams<T>(lToBeSorted1,
 		       lMergeSize1.operator/(sizeof(T)),
 		       lToBeSorted2,
 		       lMergeSize2.operator/(sizeof(T)),
-		       lTemporary);
+		       lTemporary,
+		       inNumberOfPageElements
+		       );
 #endif
     }
     
@@ -320,5 +411,6 @@ void merge_sort_streams(const char* inFileToBeSortedName,
 	 lTemporaryName);
     cout << "endmerge" << endl;
   }
+  return strdup(lFileToBeSortedName);
 }
 #endif

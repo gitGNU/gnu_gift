@@ -1291,7 +1291,10 @@ void CSessionManager::translate(string inSessionID,
   
   //  assert(lSession);
   if(lFound==mIDToSession.end()){
-    my_throw(VENotFound("Could not find Session"));
+    //my_throw(VENotFound("Could not find Session"));
+    cerr << "Unknown session " << inSessionID << endl;
+    mMutexSessionManager.unlock();
+    return;
   }
   // if this fails this is a real bug
   // it should never happen

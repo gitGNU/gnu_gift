@@ -1,3 +1,4 @@
+#include <memory>
 #include <iostream> // for printouts
 #include "libMRML/include/CXMLElementBuilder.h"
 
@@ -81,8 +82,16 @@ CXMLElement* CXMLElementBuilder::stringToElement(const string& inString){
  			      newXMLTextElement);
 
   bool lDone=false;
+
+  /* I just got a 
+     sligthly misterious bug in a realloc in expat.
+     I try to solve this by copying c_str() to char*
+     using a strdup() */
+
+  char* lCopy(strdup(inString.c_str()));
+
   if (!XML_Parse(lParser, 
-		 inString.c_str(), 
+		 lCopy, 
 		 inString.size(), 
 		 lDone)) {
     cerr << "CCommunicationHandler.cc: __LINE__ XML ERROR: "
@@ -95,6 +104,7 @@ CXMLElement* CXMLElementBuilder::stringToElement(const string& inString){
     delete lDocumentRoot;
     return 0;// instead of exit
   }
+  free(lCopy);
   XML_ParserFree(lParser);
   CXMLElement* lReturnValue(*lDocumentRoot);
   delete lDocumentRoot;

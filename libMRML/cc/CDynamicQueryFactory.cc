@@ -21,6 +21,7 @@
 */
 #include "libMRML/include/CDynamicQueryFactory.h"
 #include "libMRML/include/CQMultiple.h"
+//#warning hard perl switchoff this should not go to distro
 #include "libGIFTQuPerl/include/CQPerl.h"
 #include "libMRML/include/GIFTExceptions.h"
 #include "libMRML/include/my_throw.h"
@@ -32,10 +33,11 @@ CQuery* CDynamicQueryFactory::makeQuery(const string & inBaseType,
     return(new CQMultiple(inAccessorAdminCollection,
 			  inAlgorithm));
   }
+  
 #ifdef __GIFT_WITH_PERL__
   if(inBaseType=="perl"){
     return(new CQPerl(inAccessorAdminCollection,
-		      inAlgorithm));
+ 		      inAlgorithm));
   }
 #endif
 

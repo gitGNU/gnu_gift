@@ -49,8 +49,9 @@ CAccessorFactoryContainer::CAccessorFactoryContainer():
   // #ifdef __GIFT_WITH_MYSQL__
   //   (new CAFIFMySQL())->registerFactory(*this);
   // #endif
+
 #ifdef __GIFT_WITH_PERL__
-  (new CAFPerl())->registerFactory(*this);
+   (new CAFPerl())->registerFactory(*this);
 #endif
   //(new CAFURL2FTS())->registerFactory(*this);
   //(new CAFHierarchy())->registerFactory(*this);

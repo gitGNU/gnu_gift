@@ -194,7 +194,8 @@ sub translateToH( $ ){
   $lFH->open("> $lClassname.h") or die "could not generate $lClassname.h $!\n";
 
   print $lFH "
-
+#ifndef _MRML_CONST
+#define _MRML_CONST
 //Automatically generated from the dtd by gift-dtd-to-keywords
 #include <string>
 using namespace std;
@@ -207,7 +208,7 @@ class $lClassname \{ public: \n";
 
     print $lFH "    static const string $_;\n "
   }
-  print $lFH "\}; \n";
+  print $lFH "\}; \n#endif\n";
 }
 
 sub translateToCC( $ ){

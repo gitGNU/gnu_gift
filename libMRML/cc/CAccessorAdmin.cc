@@ -24,6 +24,7 @@
 #include "libMRML/include/CXMLHelper.h"
 #include "libMRML/include/CMutex.h"
 extern CMutex* gMutex;
+#include <cstdio>
 #include <unistd.h> // printing process ID for debugging
 #include "libMRML/include/CAccessorAdmin.h"
 
@@ -145,6 +146,15 @@ const CXMLElement* CAccessorAdmin::getQueryParadigmList()const{
   return 0;
 };
 
+/** destructor */
+CAccessorAdmin::~CAccessorAdmin(){
+  for(CContent::const_iterator i=mContent.begin();
+      i!=mContent.end();
+      i++){
+    printf("%s:%d:%s,%p\n",__FILE__,__LINE__,"DELETING",i->second.mAccessor);
+    delete i->second.mAccessor;
+  }
+}
 
 /** */
 list<string>* CAccessorAdmin::getAvailableIndices()const{
