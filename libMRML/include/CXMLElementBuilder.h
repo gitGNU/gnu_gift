@@ -27,8 +27,12 @@
 #include "xmlparse.h"
 #include "CXMLElement.h"
 #include "CSelfDestroyPointer.h"
+
+// #define XEB_PRINTOUT // uncomment this to get debugging printouts
+
 /**
    This class builds an XML element from a string
+
  */
 class CXMLElementBuilder{
  public:

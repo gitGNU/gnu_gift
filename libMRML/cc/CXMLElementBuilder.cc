@@ -5,7 +5,9 @@ void newStartXMLElement(void *inUserData,
 			 const char *inElementName, 
 			 const char **inAttributes){
 
+#ifdef XEB_PRINTOUT
   cout << "STARTING:" << inElementName << endl;
+#endif
 
   CXMLElement** lDocumentTree=(CXMLElement**)inUserData;
   if(!(*lDocumentTree)){
@@ -27,7 +29,9 @@ void newXMLTextElement(void *inUserData,
 
   string lText(lBuffer);
 
+#ifdef XEB_PRINTOUT
   cout << inSize << ":--------------------TEXT_" << lText << "_" << endl;
+#endif
   
 
 //   bool lWhitespaceOnly(true);
@@ -56,7 +60,9 @@ void newXMLTextElement(void *inUserData,
 }
 void newEndXMLElement(void *inUserData, 
 		       const char *inElementName){
+#ifdef XEB_PRINTOUT
   cout << "ENDING:" << inElementName << endl;
+#endif
   CXMLElement** lDocumentTree=(CXMLElement**)inUserData;
 
   (*lDocumentTree)->moveUp();

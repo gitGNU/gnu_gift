@@ -28,8 +28,26 @@ CAttributeList::CAttributeList(const char * const * const inAttributeList){
     const char*const*  lAttributes(inAttributeList);
     while(lAttributes[0] && strlen(lAttributes[0])){
 #ifndef _IS_SEQUENCE_AL
-      insert(make_pair(string(lAttributes[0]),
-		       string((lAttributes[1] && strlen(lAttributes[1]))?lAttributes[1]:"")));
+      if(lAttributes[1]){
+	//	cout << "[L" << strlen(lAttributes[1]) << "L]" << flush;
+	if(strlen(lAttributes[1])){
+	  
+	  int lLen(strlen(lAttributes[1])+1);
+	  char* lBuffer(new char[lLen]);
+	  strcpy(lBuffer,lAttributes[1]);
+
+	  insert(pair<string,char*>(lAttributes[0],
+				    lBuffer));
+	  
+	  //cout << "[" << lBuffer << "]" << flush;
+	  assert(strlen(operator[](lAttributes[0]))==lLen-1);
+	}else{
+	  char* lBuffer(new char[1]);
+	  lBuffer[0]=char(0);
+	  insert(make_pair(string(lAttributes[0]),
+			   lBuffer));
+	}
+      }
 #else
       push_back(make_pair(string(lAttributes[0]),
 			  string((lAttributes[1] && strlen(lAttributes[1]))?lAttributes[1]:"")));
@@ -38,13 +56,26 @@ CAttributeList::CAttributeList(const char * const * const inAttributeList){
     }
   }
 }
+CAttributeList::~CAttributeList(){
+  for(iterator i=begin();
+      i!=end();
+      i++){
+    delete[] i->second;
+  }
+}
+
 CAttributeList::CAttributeList(const list<pair <string,string> >& inAttributes){
   clear();
   for(list<pair <string,string> >::const_iterator i=inAttributes.begin();
       i!=inAttributes.end();
       i++){
 #ifndef _IS_SEQUENCE_AL
-    insert(*i);
+    int lLen(i->second.size()+1);
+    char* lBuffer(new char[lLen]);
+    strcpy(lBuffer,i->second.c_str());
+    insert(make_pair(i->first,lBuffer));
+    
+    //    insert(*i); if the representation is map<string,string>
 #else
     push_back(*i);
 #endif
@@ -56,7 +87,10 @@ CAttributeList::CAttributeList(const CAttributeList& inAttributes){
       i!=inAttributes.end();
       i++){
 #ifndef _IS_SEQUENCE_AL
-    insert(*i);
+    int lLen(strlen(i->second)+1);
+    char* lBuffer(new char[lLen]);
+    strcpy(lBuffer,i->second);
+    insert(make_pair(i->first,lBuffer));
 #else
     push_back(*i);
 #endif
@@ -76,7 +110,7 @@ CAttributeList::const_iterator CAttributeList::find(string inString)const{
 #endif  
 
 #ifndef _CAL_FIND_WORKAROUND
-  return map<string,string>::find(inString);
+  return map<string,char*>::find(inString);
 #else
   for(const_iterator i=begin();
       i!=end();
@@ -118,8 +152,10 @@ void CAttributeList::add(const string& inFirst,
 #endif
 
 #ifndef _IS_SEQUENCE_AL
-
-  operator[](inFirst)=inSecond;
+  char* lBuffer=new char[inSecond.size()+1];
+  lBuffer[inSecond.size()]=char(0);
+  strncpy(lBuffer,inSecond.c_str(),inSecond.size());
+  operator[](inFirst)=lBuffer;
   //  (*this).insert(make_pair(inFirst,inSecond));
 #else
   (*this).push_back(make_pair(inFirst,inSecond));
@@ -227,24 +263,34 @@ pair<bool,double> CAttributeList::doubleReadAttribute(const string& inAttribute)
 pair<bool,string> CAttributeList::stringReadAttribute(const string& inAttribute)const{
   
   //check, if the magic number is correct at this time
+
 #ifdef _PRINTOUTS_AL
   checkNPrint();
   cout << inAttribute 
        << endl 
        << flush;
 #endif
-  find(inAttribute);
+
 #ifdef _PRINTOUTS_AL
+  find(inAttribute);
   cout << "came back from find()" << flush;
 #endif
+
   CAttributeList::const_iterator lFoundPosition(find(inAttribute));
+
 #ifdef _PRINTOUTS_AL
   cout << "came back 2nd time from mAttributes.find()" << flush;
 #endif
 
   if(lFoundPosition != end()){
-    return make_pair(bool(1),
-		     lFoundPosition->second);
+    //cout << "[A;" << lFoundPosition->first << ";A]" << flush;
+    //cout << "[A;" << lFoundPosition->first.size() << ";A]" << flush;
+    string lFoundString(lFoundPosition->second);
+    //cout << "[S" << strlen(lFoundPosition->second) << "S]" << flush;
+    pair<bool,string> lReturnValue=make_pair(bool(1),
+					     lFoundString);
+    //cout << "[s" << lReturnValue.second.size() << "s]" << flush;
+    return lReturnValue;
   }
   return make_pair(bool(0),
 		   string(""));

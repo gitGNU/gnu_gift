@@ -30,7 +30,7 @@
 
 /** a simple class destined to contain attribute-value pairs in an 
     easily accessible fashion */
-class CAttributeList:public map<string,string>,public CMagic{
+class CAttributeList:public map<string,char*>,public CMagic{
 public:
   /** from expat */
   CAttributeList(const char* const * const inAttributeList);
@@ -71,5 +71,9 @@ public:
   /** Outputting a string to XML 
    */
   void CAttributeList::toXML(string& outString)const;
+  /** the destructor 
+      in the case of char* as content it deletes the arrays of char.
+   */
+  ~CAttributeList();
 };
 #endif

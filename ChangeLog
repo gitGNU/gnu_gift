@@ -1,3 +1,22 @@
+2001-04-02  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libMRML/cc/CAttributeList.cc: 
+	For verifying if there some bugs which seem
+	to reside in the string classes kill the GIFT, 
+	I am changing the type etc. of the attribute
+	list to char wherever possible
+
+	I am starting out with changing map<string,string>
+	to map<string,char*> which is the easiest for
+	going to map<char*,char*> I have to write a comparison
+	operator
+
+2001-03-14  Wolfgang Müller  <muellerw@cui.unige.ch>
+
+	* libMRML/include/CXMLElementBuilder.h: 
+	* libMRML/cc/CXMLElementBuilder.cc: added #ifdefs
+	around debugging printouts
+	
 2001-03-27  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* libMRML/cc/CCommunicationHandler.cc(readAndParse): 
@@ -80,7 +99,6 @@
 	<ackn-session-op ...> element. This resolves some ambiguities 
 	in parsing log files. This is OPTIONAL MRML.
 	
-
 2001-03-02  Wolfgang Müller  <muellerw@cui.unige.ch>
 
 	* libMRML/include/CXMLElementBuilder.h: 
