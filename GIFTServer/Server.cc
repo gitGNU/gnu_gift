@@ -24,6 +24,8 @@
 //use stuff by Wolfgang which has not yet been "released" to the group
 #define WOLFGANG_DEVELOPER
 
+using namespace std;
+
 #ifdef __GIFT_NEW_OPERATOR_NEW
 //  this is a self-made memory manager
 #include "libMRML/include/CDebuggingMemoryManager.h"
@@ -239,9 +241,9 @@ void generateDistanceMatrix(const string& inBaseDir,
   lSessionManager.setAlgorithm(lSessionID,
 			       lConfig);
 
-
+  // fstream::in+fstream::out would cast to int IMPLICITLY
   fstream lMatrix(lOutputName.c_str(),
-		  fstream::in+fstream::out);
+		  fstream::in|fstream::out);
 
   cout << "----------------------------------------"
        << endl
@@ -410,7 +412,7 @@ void generateDistanceMatrix(const string& inBaseDir,
 	      }
       }
       
-      lMatrix.write(lOutVector,sizeof(float)*lSize);
+      lMatrix.write((char*)lOutVector,sizeof(float)*lSize);
       lMatrix << flush;
       delete lResult;
       
@@ -528,7 +530,7 @@ void* processMessage(void* inProcessMessageParameters){
   Socket opening code snipped from J.Raki
 
   ***********************************************************************/	       
-void main(int argc, char **argv){
+int main(int argc, char **argv){
   gMutex=0;
   gMutex=new CMutex();
 
@@ -733,6 +735,7 @@ void main(int argc, char **argv){
   }
   //return 0;
   delete gMutex;
+  return 0;
 } 
 
 

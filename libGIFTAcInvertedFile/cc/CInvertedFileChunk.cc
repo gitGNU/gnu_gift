@@ -99,7 +99,7 @@ bool CInvertedFileChunk::writeBinary(ostream& outStream,
 
   {
     TID lFeatureID(inFeatureID);
-    lRetVal = lRetVal && outStream.write(&lFeatureID,
+    lRetVal = lRetVal && outStream.write((char*)&lFeatureID,
 					 sizeof(lFeatureID));
   }
   
@@ -114,7 +114,7 @@ bool CInvertedFileChunk::writeBinary(ostream& outStream,
 	   << endl;
       assert(!"collection frequency out of range");
     }
-    lRetVal = lRetVal && outStream.write(&lCollectionFrequency,
+    lRetVal = lRetVal && outStream.write((char*)&lCollectionFrequency,
 				sizeof(lCollectionFrequency));
   }
   
@@ -122,11 +122,11 @@ bool CInvertedFileChunk::writeBinary(ostream& outStream,
   {
     // writing this twice means: there is
     // no space left in this list
-    lRetVal = lRetVal && outStream.write(&lSize,
+    lRetVal = lRetVal && outStream.write((char*)&lSize,
 					 sizeof(lSize));
     // writing this twice means: there is
     // no space left in this list
-    lRetVal = lRetVal && outStream.write(&lSize,
+    lRetVal = lRetVal && outStream.write((char*)&lSize,
 					 sizeof(lSize));
     cout << "writing chunk of size " << lSize <<endl;
   }

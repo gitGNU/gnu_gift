@@ -119,7 +119,7 @@ bool CDocumentFrequencyElement::writeBinary(ostream& outStream)const{
        << getDocumentFrequency()
        << "]";
 #endif
-  outStream.write(this,
+  outStream.write((char*)this,
 		  sizeof(*this));
 #endif
   return outStream;

@@ -1,5 +1,5 @@
 #include <iostream>
-
+using namespace std;
 main(){
 
   cerr << "This programm reads from stdin binary floats"

@@ -53,7 +53,7 @@
 ****************************************/
 ///
 CIFListStart::CIFListStart(istream& inStream){
-    inStream.read(this,
+    inStream.read((char*)this,
 		  sizeof(*this));
     
     assert(mCollectionFrequency && mNumberOfElements);

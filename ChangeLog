@@ -1,3 +1,19 @@
+2002-01-23  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+
+	* GIFTServer/oneMinus.cc: 
+	* GIFTServer/modifyDistanceMatrix.cc: using namespace std
+
+	* GIFTServer/modifyDistanceMatrix.cc: include iostream
+
+	* GIFTServer/Server.cc (main): return int
+	change fstream::in+fstream::out to fstream::in|fstream::out
+	
+	
+	* libGIFTAcInvertedFile/cc/CInvertedFileChunk.cc: 
+	(writeBinary): 
+	* libGIFTAcInvertedFile/cc/CIFListStart.cc: 
+	read and write need typecast to char* when using g++ v3
+
 2002-01-22  MUELLER Wolfgang  <Wolfgang.Mueller@cui.unige.ch>
 
 	* GIFTServer/Server.cc (main): adding seeding by pid

@@ -9,10 +9,14 @@
 
 #include <iterator>
 #include <fstream>
+#include <iostream>
 #include <cmath>
 #include <string>
 #include <map>
 #include <functional>
+
+using namespace std;
+
 int gCount=0;
 double gSum=0;
 double gSumOfSquares=0;
