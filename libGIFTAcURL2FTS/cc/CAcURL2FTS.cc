@@ -173,7 +173,7 @@ CAcURL2FTS::CAcURL2FTS(const CXMLElement& inCollectionElement):
     
     bool lDone=false;
     for(int i=0;
-	i<lFileSize/10000;
+	i<=lFileSize/10000;
 	i++){
       if (!XML_Parse(lParser,
 		     lBuffer+i*10000,

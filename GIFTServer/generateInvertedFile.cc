@@ -35,6 +35,9 @@
 * 
 *
 ****************************************/
+
+CMutex* gMutex(new CMutex());
+
 main(int argc,
      char** argv){
 
