@@ -61,6 +61,7 @@ class mrml_const { public:
      static const string cui_sql_host;
      static const string cui_sql_password;
      static const string cui_sql_username;
+     static const string cui_text_query;
      static const string cui_time_stamp;
      static const string cui_weight;
      static const string cui_weighting_function;
@@ -91,6 +92,7 @@ class mrml_const { public:
      static const string query_result_element_list;
      static const string query_step;
      static const string query_step_id;
+     static const string query_string;
      static const string query_type;
      static const string rename_session;
      static const string result_cutoff;

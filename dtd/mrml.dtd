@@ -447,7 +447,7 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 
      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
 
-<!ELEMENT query-step   (user-relevance-element-list?|cui-hierarchy-up)
+<!ELEMENT query-step   ((cui-text-query|user-relevance-element-list|cui-hierarchy-up)*)
 >
 <!ATTLIST query-step   query-step-id        CDATA #REQUIRED
 
@@ -457,9 +457,13 @@ is supposed to hold a description about anything which is nonstandard \MRML.
                            query-type     (query|at-random) "query"
 
                            algorithm-id   CDATA #IMPLIED
+
 >
 <!ELEMENT cui-hierarchy-up EMPTY
 >
+
+
+
 
 
 
@@ -541,10 +545,19 @@ is supposed to hold a description about anything which is nonstandard \MRML.
 <!ATTLIST cui-time-stamp
           calendar-time        CDATA #REQUIRED>
 
+<!-- \tagtitle{cui-text-query}
+        query using a number of keywords in a string
+     -->
+<!ELEMENT cui-text-query EMPTY>
+
+<!ATTLIST cui-text-query 
+          query-string CDATA #IMPLIED>
+
 <!-- ==HIDE just for compatibility -->
 <!ELEMENT cui-ihandshake              EMPTY>
 <!ELEMENT cui-shandshake              EMPTY>
 <!ELEMENT cui-random-images           EMPTY>
+
 
 
 ]>

@@ -1,3 +1,10 @@
+2001-11-01  Wolfgang Mueller  <Wolfgang.Mueller@cui.unige.ch>
+
+	* dtd/mrml.dtd: added cui-text-query tag to dtd,
+	enabled multiple user-relevance-lists in one query-step
+	added cui-query-string.
+	
+
 2001-10-25  MUELLER Wolfgang  <muellerw@cui.unige.ch>
 
 	* libMRML/cc/CCommunicationHandler.cc(endMultiRequest): 

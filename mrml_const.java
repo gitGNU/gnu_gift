@@ -64,6 +64,7 @@ public class mrml_const {
      public final static String cui_sql_host = new String("cui-sql-host");
      public final static String cui_sql_password = new String("cui-sql-password");
      public final static String cui_sql_username = new String("cui-sql-username");
+     public final static String cui_text_query = new String("cui-text-query");
      public final static String cui_time_stamp = new String("cui-time-stamp");
      public final static String cui_weight = new String("cui-weight");
      public final static String cui_weighting_function = new String("cui-weighting-function");
@@ -94,6 +95,7 @@ public class mrml_const {
      public final static String query_result_element_list = new String("query-result-element-list");
      public final static String query_step = new String("query-step");
      public final static String query_step_id = new String("query-step-id");
+     public final static String query_string = new String("query-string");
      public final static String query_type = new String("query-type");
      public final static String rename_session = new String("rename-session");
      public final static String result_cutoff = new String("result-cutoff");
