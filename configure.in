@@ -58,6 +58,25 @@ AC_PATH_PROG(MAGICK,convert)
 #check if there is perl on this system
 AC_PATH_PROG(PERL,perl)
 
+AC_ARG_WITH(mysql,
+	[
+	--with-mysql=directory
+
+	DEFAULT: ${HOME}/gift-mysql
+
+	++ note, this feature is not yet used ++
+
+	gift will install a mysql database using the command mysql_install_db.
+	The database will reside in the directory given in the option.
+	The database will be used for purposes like user authentification. 
+	NOTE: in contrast to normal mysql databases, this database will be 
+	readable only by the user who compiled the gift.
+	],[
+	GIFT_MYSQL_DIR=[${HOME}/gift-mysql]
+	],[
+	GIFT_MYSQL_DIR=[${with_MYSQL:-${HOME}/gift-mysql}]
+	])
+	AC_SUBST(GIFT_MYSQL_DIR)
 
 AC_ARG_ENABLE(interactive,
 	[  --enable-interactive:

@@ -37,11 +37,12 @@ int main (int argc, char **argv) {
       {"ldflags", 0, 0, 0},
       {"libs", 0, 0, 0},
       {"includes", 0, 0, 0},
+      {"gift-mysql-dir", 0, 0, 0},
       {"help", 0, 0, 0},
       {0, 0, 0, 0}
     };
 
-    char lC = getopt_long (argc, argv, "cLlih",
+    char lC = getopt_long (argc, argv, "cLlimh",
 		     long_options, &option_index);
     if (lC == -1)
       break;
@@ -71,11 +72,16 @@ int main (int argc, char **argv) {
     case 'i':
       printf(" %INCLUDES%  ");
       break;
+    case 'm':
+      printf(" %GIFT_MYSQL_DIR%  ");
+      break;
     default:
       puts("gift-config [-c] [--cxxflags] [-l] [--ldflags]");
       puts("Gives back the flags you need to give to your ");
       puts("C++ compiler (--cxxflags or -c, for short) and/or");
-      puts("Linker       (--ldflags, or -l for short) for successfully");
+      puts("Linker       (--ldflags, or -l for short) ");
+      puts("MySQL directory");
+      puts("             (--gift-mysql-dir, or -m for short) for successfully");
       puts("compiling extensions to the GNU Image Finding Tool");
     }
   }

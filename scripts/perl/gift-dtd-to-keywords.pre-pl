@@ -215,6 +215,7 @@ sub translateToCC( $ ){
 
   my$self=shift;
   my $lClassname=shift;
+  my $lIncludePrefix="libMRML/include/";
 
   my $lFH=new IO::File;
   $lFH->open("> $lClassname.cc") or die "could not generate $lClassname.cc $!\n";
@@ -224,7 +225,7 @@ sub translateToCC( $ ){
 //Automatically generated from the dtd by gift-dtd-to-keywords
 #include <string>
 
-#include \"$lClassname.h\"
+#include \"$lIncludePrefix$lClassname.h\"
 
 ";
   foreach $i (sort keys(%{$self->{used}})){

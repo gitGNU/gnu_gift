@@ -110,6 +110,7 @@ libMRML-config.cc: libMRML-config.pre-cc
 	        s§%INCLUDES%§ -I$(includedir) §g;\
                 s§%LDFLAGS%§ $(LDFLAGS) §g;\
                 s§%LIBS%§ $(LIBS) § g;\
+                s§%GIFT_MYSQL_DIR%§@GIFT_MYSQL_DIR@§g;\
 	        s§%libdir%§ -L$(libdir) §g;"  < libMRML-config.pre-cc  > libMRML-config.cc
 
 bin_PROGRAMS= libMRML-config

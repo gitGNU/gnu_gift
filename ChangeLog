@@ -1,4 +1,16 @@
-2002-03-03  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+2002-03-30  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
+
+	* scripts/perl/gift-dtd-to-keywords.pre-pl (translateToCC): 
+	giving location where mrml_const.h will be installed.
+
+2002-03-30  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+
+	* libMRML/cc/Makefile.am (libMRML-config.cc): 
+	* configure.in:
+	* libMRML/cc/libMRML-config.pre-cc: 
+	with-mysql-dir configure option and its usage
+	
+2002-03-03  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
 
 	* libMRML/cc/CQueryParadigmMatcher.cc: 
 	bugfix in operator(). one branch did not always
@@ -19,18 +31,18 @@
 	an CQuery element (not yet used)
 
 
-2002-03-02  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+2002-03-02  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
 
 	Release gift-0.1.8.
 
-2002-03-02  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+2002-03-02  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
 
 	* libMRML/include/Makefile.am (dist-hook): 
 	* libMRML/cc/Makefile.am (dist-hook): remove
 	files that contain configuration data
 	
 
-2002-02-28  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+2002-02-28  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
 
 	* libGIFTAcDistanceMatrix/include/CPersistentVector.h: 
 	* libGIFTAcDistanceMatrix/include/CPersistentMatrix.h: make
