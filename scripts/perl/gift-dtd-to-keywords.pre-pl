@@ -197,6 +197,7 @@ sub translateToH( $ ){
 
 //Automatically generated from the dtd by gift-dtd-to-keywords
 #include <string>
+using namespace std;
 class $lClassname \{ public: \n";
   foreach $i (sort keys(%{$self->{used}})){
     $_=$i;

@@ -3,15 +3,15 @@
 /** creating clean output */
 ostream& operator<<(ostream& outStream,
 		    const CAccessorElement& inElement){
-  outStream << "CAccessorElement("
-	    << inElement.getID()
-	    << " "
+  outStream << string("CAccessorElement(")
+	    << static_cast<long>(inElement.getID())
+	    << string(" ")
 	    << inElement.getURL()
-	    << " "
+	    << string(" ")
 	    << inElement.getThumbnailURL()
-	    << " "
+	    << string(" ")
 	    << inElement.getFeatureFileName()
-	    << ")--"
+	    << string(")--")
 	    << endl;
   return outStream;
 };

@@ -1,3 +1,13 @@
+2002-01-09  Wolfgang M&uuml;ller  <muellerw@linux.unige.ch>
+
+	* libMRML/cc/CAccessorElement.cc: cast TID to long
+
+	* scripts/perl/gift-dtd-to-keywords.pre-pl (translateToH(): 
+	adding using namespaces directive to c++ output
+
+	* libMRML/cc/CAccessorElement.cc: 
+	convert "char" to strings
+
 2002-01-09  Wolfgang M&uuml;ller  <muellerw@cui.unige.ch>
 
 	* libGIFTAcInvertedFile/include/uses-declarations.h:
