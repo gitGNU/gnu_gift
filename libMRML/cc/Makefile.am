@@ -116,7 +116,7 @@ libMRML-config.cc: libMRML-config.pre-cc
 
 bin_PROGRAMS= libMRML-config
 
-libMRML_config_SOURCES= libMRML-config.cc
+libMRML_config_SOURCES= libMRML-config.cc 
 
 EXTRA_DIST=libMRML-config.pre-cc
 

@@ -31,6 +31,7 @@ int main (int argc, char **argv) {
   bool lFirst=true;
   while (1) {
     int this_option_optind = optind ? optind : 1;
+#ifdef HAVE_GETOPT_LONG
     int option_index = 0;
     static struct option long_options[] = {
       {"cxxflags", 0, 0, 0},
@@ -42,9 +43,17 @@ int main (int argc, char **argv) {
       {"help", 0, 0, 0},
       {0, 0, 0, 0}
     };
-
     char lC = getopt_long (argc, argv, "cLlimph",
 		     long_options, &option_index);
+    #warning GNU getopt long used
+#else
+    #warning no getopt long present
+
+    int lI = getopt (argc, argv, "cLlimph");
+    char lC=char(lI);
+#endif
+
+
     if (lC == -1)
       break;
 
@@ -52,6 +61,7 @@ int main (int argc, char **argv) {
       printf(" ");
     }
 
+#ifdef HAVE_GETOPT_LONG
     switch (lC) {
     case 0: 
       switch(option_index) {
@@ -64,6 +74,7 @@ int main (int argc, char **argv) {
       }
       break;
     }
+#endif
 
     switch (lC) {
     case 'c':
@@ -85,6 +96,7 @@ int main (int argc, char **argv) {
       printf("%libdir%");
       lFirst=false; break;
     default:
+#ifdef HAVE_GETOPT_LONG
       puts("gift-config [-c] [--cxxflags] [-l] [--ldflags] [--plugin-dir]");
       puts("Gives back the flags you need to give to your ");
       puts("C++ compiler (--cxxflags or -c, for short) and/or");
@@ -94,6 +106,17 @@ int main (int argc, char **argv) {
       puts("MySQL directory");
       puts("             (--gift-mysql-dir, or -m for short) for successfully");
       puts("compiling extensions to the GNU Image Finding Tool");
+#else
+      puts("gift-config [-c] [-l]");
+      puts("Gives back the flags you need to give to your ");
+      puts("C++ compiler (-c, for short) and/or");
+      puts("Linker       (-l for short) ");
+      puts("Where gift expects its plugins \n"\
+	   "             (-p for short) ");
+      puts("MySQL directory");
+      puts("             (-m for short) for successfully");
+      puts("compiling extensions to the GNU Image Finding Tool");
+#endif
     }
   }
 

@@ -1,3 +1,17 @@
+2002-09-09  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
+
+	* libMRML/cc/libMRML-config.pre-cc: should compile now
+	with systems that don't have getopt_long
+
+	* bootstrap-cvs.sh: aclocal -I 
+
+	* aclocal-add.m4: new file. for pthreads and getopt_long
+	
+	* FeatureExtraction/extract_block_features.c(extract_gabor_features): 
+	* FeatureExtraction/extract_block_features.c(extract_mode_features): 
+	Patch by Tim TimeWaster <tim@cuba.calyx.nl> 
+	
+	
 2002-09-04  Wolfgang Müller  <Wolfgang.Mueller2@uni-bayreuth.de>
 
 	* gift-install-prerequisites.pl:

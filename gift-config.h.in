@@ -9,6 +9,9 @@
 /* Define if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
+/* Define if you have the `getopt_long' function. */
+#undef HAVE_GETOPT_LONG
+
 /* Define if you have the `expat' library (-lexpat). */
 #undef HAVE_LIBEXPAT
 
@@ -26,6 +29,9 @@
 
 /* Define if you have the <netinet/tcp.h> header file. */
 #undef HAVE_NETINET_TCP_H
+
+/* Define if you have POSIX threads libraries and header files. */
+#undef HAVE_PTHREAD
 
 /* Define if you have the <stdlib.h> header file. */
 #undef HAVE_STDLIB_H
@@ -50,6 +56,10 @@
 
 /* Name of package */
 #undef PACKAGE
+
+/* Define to the necessary symbol if this constant uses a non-standard name on
+   your system. */
+#undef PTHREAD_CREATE_JOINABLE
 
 /* Define if you have the ANSI C header files. */
 #undef STDC_HEADERS

@@ -141,8 +141,8 @@ void extract_gabor_features(PPM *im_hsv) {
 			for (y = 0; y < im_hsv->height; y += gabor_block_size) {
 			for (x = 0; x < im_hsv->width; x += gabor_block_size) {
 				gabor_mean = 0;
-				for (i = 0; i < gabor_block_size; i++) {
-				for (j = 0; j < gabor_block_size; j++) {
+				for (i = 0; (i < gabor_block_size) &&  (y+i < im_hsv->height); i++) {
+				for (j = 0; (j < gabor_block_size) &&  (x+j < im_hsv->height); j++) {
 					gabor_mean += square((filtered_image[(y + i)*im_hsv->width + (x + j)]));
 				}
 				}
@@ -204,11 +204,11 @@ void extract_mode_features(PPM *im, int *colmap, int colmap_size) {
 		for (n = 0; n < colmap_size; n++) {
 			col_counts[k][n] = 0;	
 		}
-		for (i = 0; i < block_size; i++) {
-		for (j = 0; j < block_size; j++) {
-			colour = im->pixel[(y + j)*im->width + (x + i)];
-			col_counts[k][colour]++;
-		}
+		for (i = 0; (i < block_size) && (y+i < im->height); i++) {
+		  for (j = 0; (j < block_size) && (x+j < im->width); j++) {
+		    colour = im->pixel[(y + j)*im->width + (x + i)];
+		    col_counts[k][colour]++;
+		  }
 		}
 
 		/* find the mode */

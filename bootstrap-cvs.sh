@@ -30,13 +30,13 @@ echo `autoconf --version`
 echo `libtool --version`
 echo "---------------------------------------"
 
-echo "running aclocal"
-aclocal || (echo "bootstrap failed, because aclocal failed. exiting. " , exit 100; )
+echo "running aclocal" 
+aclocal -I . || { echo "bootstrap failed, because aclocal failed. exiting. " , exit 100; }
 echo "...done"
 echo "running automake -a"
-automake -a || (echo "bootstrap failed, because automake failed. exiting." , exit 101; )
+automake -a ||  { echo "bootstrap failed, because automake failed. exiting." , exit 101; }
 echo "...done"
 echo "running autoconf"
-autoconf || (echo "bootstrap failed, because autoconf failed. exiting." , exit 102; )
+autoconf ||    { echo "bootstrap failed, because autoconf failed. exiting." , exit 102; }
 echo "...done"
 echo "Now you should be able to run ./configure"
