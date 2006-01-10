@@ -11,10 +11,10 @@ libSquirePPM_a_SOURCES= ppm_comment.c\
 		ppm_subimage.c\
 		normaliseContrast.c
 
-noinst_PROGRAMS= ppm-new-executable
+#noinst_PROGRAMS= ppm-new-executable
 
-ppm_new_executable_LDADD= -L. -lSquirePPM -lm
+#ppm_new_executable_LDADD= -L. -lSquirePPM -lm
 
-ppm_new_executable_SOURCES= new_executable.c 
+#ppm_new_executable_SOURCES= new_executable.c 
 
 

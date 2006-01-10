@@ -1,3 +1,4 @@
+#include <malloc.h>
 #include <math.h>
 #include <ppm.h>
 
@@ -26,7 +27,7 @@ enum ppm_error hsv_quantize_ppm(PPM *im_hsv, PPM **im_quant, int **colmap, int n
 	rows[HUE] = numH;
 	rows[SATURATION] = numS;
 	rows[VALUE] = numV;
-	*colmap = (int *)malloc(3*num_bins*sizeof(int));	
+	*colmap = (int*) (malloc(3*num_bins*sizeof(int)));	
 
 	for (iV = 0, V = Vstep/2; iV < numV; iV++, V += Vstep) {
 		coords[VALUE] = iV;
@@ -57,7 +58,7 @@ enum ppm_error hsv_quantize_ppm(PPM *im_hsv, PPM **im_quant, int **colmap, int n
 	(*im_quant)->height = im_hsv->height;
 	(*im_quant)->max_col_comp = 255;
 	(*im_quant)->bytes_per_pixel = 1;
-	(*im_quant)->pixel = (byte *)malloc((*im_quant)->width*(*im_quant)->height*sizeof(byte));
+	(*im_quant)->pixel = (byte*)(malloc((*im_quant)->width*(*im_quant)->height*sizeof(byte)));
 
 	/* now go over each pixel in the input image, and put it in the
 	appropriate bin */

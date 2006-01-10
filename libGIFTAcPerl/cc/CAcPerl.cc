@@ -4,6 +4,8 @@
     GIFT, a flexible content based image retrieval system.
     Copyright (C) 1998, 1999, 2000, 2001, 2002, CUI University of Geneva
 
+     Copyright (C) 2003, 2004 Bayreuth University
+      2005 Bamberg University
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -55,26 +57,26 @@ CAcPerl::operator bool()const{
 /**
  *
  */
-string CAcPerl::IDToURL(long int) const{
+string CAcPerl::IDToURL(TID) const{
   assert(0);
   return "this function should never be called";
 };
 /**
  *
  */
-struct pair<bool,CAccessorElement> CAcPerl::IDToAccessorElement(long int) const{
+struct pair<bool,CAccessorElement> CAcPerl::IDToAccessorElement(TID) const{
   return(make_pair(bool(0),CAccessorElement(0,"null","null","null")));
 };
 /**
  *
  */
-struct pair<bool,long int> CAcPerl::URLToID(const string &) const{
+struct pair<bool,TID> CAcPerl::URLToID(const string &) const{
   return(make_pair(bool(0),0));
 };
 /**
  *
  */
-void CAcPerl::getAllIDs(list<long int > &) const{
+void CAcPerl::getAllIDs(list<TID> &) const{
     assert(0);
 };
 /**
@@ -86,7 +88,7 @@ void CAcPerl::getAllAccessorElements(list<CAccessorElement > &) const{
 /**
  *
  */
-void CAcPerl::getRandomIDs(list<long int > &, unsigned int) const{
+void CAcPerl::getRandomIDs(list<TID > &, unsigned int) const{
   assert(0);
 };
 /**

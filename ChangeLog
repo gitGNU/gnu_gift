@@ -1,3 +1,51 @@
+2005-03-30    <wolfgang.mueller@wiai.uni-bamberg.de>
+
+	* libGIFTAcPerl/cc/CAcPerl.cc: 
+	* libGIFTAcPerl/include/CAcPerl.h: 
+	long int -> TID
+
+	
+2005-03-24    <wolfgang.mueller@wiai.uni-bamberg.de>
+
+	* libMRML/cc/CAccessorAdminCollection.cc: 
+	* libMRML/cc/CAccessorAdminCollection.pre-cc: 
+	Proper error message for mIDToProxy. 
+
+	NOTE LIBMRML/CC/CACCESSORADMINCOLLECTION.PRE-CC IS 
+	NOT USED ANY MORE.
+
+	
+	
+2005-03-21    <wolfgang.mueller@wiai.uni-bamberg.de>
+
+	* libMRML/include/TID.h: int -> long. makes it work
+	on AMD 64
+
+2005-01-25    <wolfgang.mueller@wiai.uni-bamberg.de>
+
+	* FeatureExtraction/Makefile.am (AM_CPPFLAGS): FIXED: should
+	not override CPPFLAGS.
+
+2005-01-11    <wolfgang.mueller@wiai.uni-bamberg.de>
+
+	* scripts/perl/gift-add-collection.pre-pl (removeCollection): 
+	return lReturnValue;
+
+2005-01-10    <wolfgang.mueller@wiai.uni-bamberg.de>
+
+	* libMRML/include/CCommunicationHandler.h: 
+	* libMRML/cc/CCommunicationHandler.cc(getCurrentSessionID): 
+	new method. Gets the session ID of the currently built response
+
+	* libMRML/cc/CXEVCommunication.cc(startVisit): use getCurrentSessionID.
+
+	* libMRML/cc/Makefile.am (libMRML_la_LDFLAGS): new version for libMRML
+
+2004-12-15    <wolfgang.mueller@wiai.uni-bamberg.de>
+
+	* configure.in:
+	Changed version number to 0.1.14
+
 2004-12-03    <wolfgang.mueller@wiai.uni-bamberg.de>
 
 	* configure.in:

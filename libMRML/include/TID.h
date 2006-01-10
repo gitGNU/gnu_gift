@@ -5,6 +5,8 @@
     GIFT, a flexible content based image retrieval system.
     Copyright (C) 1998, 1999, 2000, 2001, 2002, CUI University of Geneva
 
+     Copyright (C) 2003, 2004 Bayreuth University
+      2005 Bamberg University
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -22,6 +24,6 @@
 */
 #ifndef _TID
 #define _TID
-typedef long TID;
+typedef int TID;// changed, makes the difference between working and not working on 64 bit
 extern TID gID;
 #endif

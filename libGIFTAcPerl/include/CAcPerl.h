@@ -5,6 +5,8 @@
     GIFT, a flexible content based image retrieval system.
     Copyright (C) 1998, 1999, 2000, 2001, 2002, CUI University of Geneva
 
+     Copyright (C) 2003, 2004 Bayreuth University
+      2005 Bamberg University
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -112,15 +114,15 @@ public:
   /**
    *
    */
-  string IDToURL(long int) const;
+  string IDToURL(TID) const;
   /**
    *
    */
-  struct pair<bool,CAccessorElement> IDToAccessorElement(long int) const;
+  struct pair<bool,CAccessorElement> IDToAccessorElement(TID) const;
   /**
    *
    */
-  struct pair<bool,long int> URLToID(const string &) const;
+  struct pair<bool,TID> URLToID(const string &) const;
   /**
    *
    */
@@ -132,7 +134,7 @@ public:
   /**
    *
    */
-  void getRandomIDs(list<long int > &, unsigned int) const;
+  void getRandomIDs(list<TID > &, unsigned int) const;
   /**
    *
    */

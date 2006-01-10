@@ -1,3 +1,4 @@
+#include <malloc.h>
 #include <stdio.h>
 #include <math.h>
 #include "ppm.h"

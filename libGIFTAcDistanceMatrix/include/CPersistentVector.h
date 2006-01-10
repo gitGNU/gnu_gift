@@ -5,6 +5,8 @@
     GIFT, a flexible content based image retrieval system.
     Copyright (C) 1998, 1999, 2000, 2001, 2002, CUI University of Geneva
 
+     Copyright (C) 2003, 2004 Bayreuth University
+      2005 Bamberg University
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -116,8 +118,8 @@ bool CPersistentVector<T>::read(istream& inStream,
 
 template<class T>
 bool CPersistentVector<T>::write(ostream& outStream)const{
-  for(typename CPersistentVector<T>::const_iterator i=begin();
-      i!=end();
+  for(typename CPersistentVector<T>::const_iterator i=this->begin();
+      i!=this->end();
       i++){
     binary_writer(outStream,
 		  *i);

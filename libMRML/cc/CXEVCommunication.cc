@@ -52,13 +52,16 @@ bool CXEVCommunication::startVisit(const CXMLElement& inElement){
 	 (inElement.getName()==mrml_const::algorithm)){
 
 	CXMLElement* lAcknowledgement=new CXMLElement(mrml_const::acknowledge_session_op,0);
-	lAcknowledgement->addAttribute(mrml_const::session_id,lFather->stringReadAttribute(mrml_const::session_id).second);
+	lAcknowledgement->addAttribute(mrml_const::session_id,mHandler->getCurrentSessionID()// was:lFather->stringReadAttribute(mrml_const::session_id).second
+				       );
 
 	cout << "CONFIGURESESSIONçççççççççççççççççççç"
-	     <<	    lFather->stringReadAttribute(mrml_const::session_id).second
+	     << mHandler->getCurrentSessionID()
+	     << "(would have been in old version:"
+	     <<	    lFather->stringReadAttribute(mrml_const::session_id).second << ")"
 	     << endl;
 
-	lSessionManager.setAlgorithm(lFather->stringReadAttribute(mrml_const::session_id).second,
+	lSessionManager.setAlgorithm(mHandler->getCurrentSessionID(),//was: lFather->stringReadAttribute(mrml_const::session_id).second,
 				     ((CAlgorithm&)inElement).clone()); 
 	mHandler->addToMultiResponse(lAcknowledgement);
 	

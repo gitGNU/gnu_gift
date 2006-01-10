@@ -253,6 +253,7 @@ bool asyncReadChar(int inSocket,char* outChar){
     return false;
 }
 bool readChar(int inSocket,char* outChar){
+	*outChar=(char)0;
   if(read(inSocket, outChar, 1)>=0)
     return true;
   else{
@@ -957,4 +958,8 @@ void CCommunicationHandler::setPeerAddressString(string inString){
 /** get the Peer adress string */
 const string& CCommunicationHandler::getPeerAddressString()const{
   return mPeerAddressString;
+}
+
+const string CCommunicationHandler::getCurrentSessionID(){
+  return mMultiResponse->stringReadAttribute(mrml_const::session_id).second;
 }

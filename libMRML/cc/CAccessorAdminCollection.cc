@@ -5,6 +5,8 @@
     GIFT, a flexible content based image retrieval system.
     Copyright (C) 1998, 1999, 2000, 2001, 2002, CUI University of Geneva
 
+     Copyright (C) 2003, 2004 Bayreuth University
+      2005 Bamberg University
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -244,7 +246,9 @@ CAccessorAdmin& CAccessorAdminCollection::getProxy(const string& inID){
 	 << inID
 	 << ", and I did not find it"
 	 << endl;
-    my_throw(VENotFound(string("mIDToProxy _"+inID+"_").c_str()));
+    my_throw(VENotFound(string("I was looking for a proxy with the ID: mIDToProxy _"+inID+"_ . This probably means that the collection with the ID " + inID + " is not described in your config file.").c_str()));
+
+    // my_throw(VENotFound(string("mIDToProxy _"+inID+"_").c_str()));
 
     //
     // quick fix by WM against people nuking our server... :-(

@@ -230,7 +230,7 @@ CAccessorProxy& CAccessorCollection::getProxy(const string& inID){
 	 << inID
 	 << ", and I did not find it"
 	 << endl;
-    my_throw(VENotFound(string("mIDToProxy _"+inID+"_").c_str()));
+    my_throw(VENotFound(string("I was looking for a proxy with the ID: mIDToProxy _"+inID+"_ . This probably means that the collection with the ID " + inID + " is not described in your config file.").c_str()));
   }
 };
 

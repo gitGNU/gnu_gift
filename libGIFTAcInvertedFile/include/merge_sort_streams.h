@@ -5,6 +5,8 @@
     GIFT, a flexible content based image retrieval system.
     Copyright (C) 1998, 1999, 2000, 2001, 2002, CUI University of Geneva, University of Bayreuth
 
+     Copyright (C) 2003, 2004 Bayreuth University
+      2005 Bamberg University
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -54,7 +56,7 @@ public:
   operator T()const{
     return mContent;
   }
-  operator long int()const{
+  operator long long int()const{
     return mContent;
   }
 
@@ -85,11 +87,13 @@ public:
   }
 };
 
-#if __GNUC__==2
-#define STREAMPOS_T long long int
-#else
-#define STREAMPOS_T CStreamPos<fstream::pos_type>
-#endif
+typedef long long int  STREAMPOS_T;
+
+// #if __GNUC__==2
+// #define STREAMPOS_T long long int
+// #else
+// #define STREAMPOS_T CStreamPos<fstream::pos_type>
+// #endif
 // ex long long int
 
 /**
@@ -311,6 +315,7 @@ char* merge_sort_streams(const char* inFileToBeSortedName,
   ofstream lTemporary;
   ifstream lToBeSorted2;
  
+#define first_level_quick
 #ifdef first_level_quick
   first_level_quicksort<T>(inNumberOfPageElements,
 			   inFileToBeSortedName,
@@ -324,7 +329,7 @@ char* merge_sort_streams(const char* inFileToBeSortedName,
   STREAMPOS_T lCount(0);
   for(STREAMPOS_T iMergeSize(sizeof(T)*inNumberOfPageElements);
       (iMergeSize < lFileSize)
-	|| !(lCount%2)
+	|| !(lCount&1)
 	// ||(lCount%2) makes sure that we will get 
 	// the result in inFileToBeSorted
 	// the ! is, because we have have already
@@ -349,12 +354,12 @@ char* merge_sort_streams(const char* inFileToBeSortedName,
     
     for(STREAMPOS_T i(0);
 	i<lFileSize;
-	i = i + iMergeSize*2){
-      lToBeSorted1.seekg(i);
+	i = i + (iMergeSize<<1)){
+      lToBeSorted1.seekg((long long int)i);
 
       if(!lToBeSorted1){
 	cerr << __FILE__ << ":" << __LINE__ << " lToBeSorted false, after seekg("
-	     << static_cast<long int>(i)
+	     << static_cast<long long int>(i)
 	     << ")"
 	     << endl;
       }
@@ -385,7 +390,7 @@ char* merge_sort_streams(const char* inFileToBeSortedName,
 	lMergeSize2=iMergeSize;
       }
 
-#if __GNUC__==2
+
       merge_streams<T>(lToBeSorted1,
 		       lMergeSize1/sizeof(T),
 		       lToBeSorted2,
@@ -393,15 +398,24 @@ char* merge_sort_streams(const char* inFileToBeSortedName,
 		       lTemporary,
 		       inNumberOfPageElements
 		       );
-#else
-      merge_streams<T>(lToBeSorted1,
-		       lMergeSize1.operator/(sizeof(T)),
-		       lToBeSorted2,
-		       lMergeSize2.operator/(sizeof(T)),
-		       lTemporary,
-		       inNumberOfPageElements
-		       );
-#endif
+
+// #if __GNUC__==2
+//       merge_streams<T>(lToBeSorted1,
+// 		       lMergeSize1/sizeof(T),
+// 		       lToBeSorted2,
+// 		       lMergeSize2/sizeof(T),
+// 		       lTemporary,
+// 		       inNumberOfPageElements
+// 		       );
+// #else
+//       merge_streams<T>(lToBeSorted1,
+// 		       lMergeSize1.operator/(sizeof(T)),
+// 		       lToBeSorted2,
+// 		       lMergeSize2.operator/(sizeof(T)),
+// 		       lTemporary,
+// 		       inNumberOfPageElements
+// 		       );
+// #endif
     }
     
     lTemporary.close();

@@ -1,3 +1,7 @@
+0.1.15	Thing compiles under 32 and 64 bit
+0.1.14  Bug fixes, some changes in error handling. Unfortunately,
+	a last-minute bugfix for amd 64 makes things non-compilable
+	under GNU/Linux 32 bit
 0.1.11  Unfortunately I have tested uploading to savannah using 
 	a faulty 0.1.10. As removing files from savannah is not
 	possible, overwriting neither (apparently), I bump the

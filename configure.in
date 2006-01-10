@@ -37,7 +37,8 @@ AC_INIT(libMRML/cc/CAccessorFactory.cc)
 
 dnl old position of AC_ARG_ENABLE(interactive)
 
-AM_INIT_AUTOMAKE(gift,0.1.13)
+dnl this is tagged alpha
+AM_INIT_AUTOMAKE(gift,0.1.15a) 
 
 AM_CONFIG_HEADER(gift-config.h)
 AC_ISC_POSIX
@@ -275,10 +276,10 @@ dnl thanks to BRUNO JANVIER for the patch
 AC_ARG_ENABLE(multi-threading,
 	[  --enable-multi-threading enable multithreading],
 	[
-	dnl 
-	dnl we need recursive locking, and this seems to be the way to test it
-	dnl	
-	ACX_PTHREAD([
+dnl 
+dnl we need recursive locking, and this seems to be the way to test it
+dnl	
+ACX_PTHREAD([
 CXXFLAGS="$CXXFLAGS -DHAVE_LIBPTHREAD -D__GIFT_NEW_IS_MALLOC   -D__GIFT_USES_THREADS__ $PTHREAD_CFLAGS" 
 LIBS="$PTHREAD_LIBS $LIBS" 
 CFLAGS="$CFLAGS $PTHREAD_CFLAGS" 
@@ -451,7 +452,7 @@ CXXFLAGS="$CXXFLAG -ldl"
 #AC_CHECK_LIB(wdbi,dbi_version,[DBI=yes])
 CXXFLAGS=$RESCUE_CXXFLAGS
 
-adl_FUNC_GETOPT_LONG
+#adl_FUNC_GETOPT_LONG
 
 
 LDFLAGS="$LDFLAGS "

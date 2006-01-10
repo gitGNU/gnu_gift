@@ -82,6 +82,7 @@ use vars qw($self
 %lOptions=();
 
 GetOptions(\%lOptions,
+	   "fix-config",
 	   "help",
 	   "remove-collection",
 	   "gift-home=s",
@@ -161,7 +162,6 @@ if($lOptions{'remove-collection'}){
 # do we want to remove a collection
 if($lOptions{'fix-config'}){
   $gDoFixConfig=1;
-  die "Currently not supported!";
 }
 
 #
@@ -274,7 +274,10 @@ Options (options override .gift-add-collection entries):
                               'image-directory'_thumbnails)
                               Current value: $lThumbnailDirectory 
 
-
+--fix-config                  Fixes the config file by adjusting the collection used
+                              by the default query algorithm. If GIFT complains to 
+                              you about an unknown collection with ID __COLLECTION__,
+                              that's the thing to do.
 
 Change here, if you want to make a database accessible from the WWW
 
@@ -346,7 +349,7 @@ print
 
 
 
-unless($gDoRemove){
+unless($gDoRemove || $gDoFixConfig){
   $url2fts_name=">${lIndexPrefix}/url2fts.xml";
   $URL2FTS=new IO::File($url2fts_name) or die "Could not open database $url2fts_name for output!";
   
@@ -669,7 +672,7 @@ Copying $CONFIG to $OLDCONFIG
   print "\nPROGRESS: 100%\n";
 }else{
   # remove a collection
-    #rescue the old config
+  # rescue the old config
     $CONFIG="$gGiftHome/gift-config.mrml";
   $OLDCONFIG="${CONFIG}-old";
   copy($CONFIG,$OLDCONFIG);
@@ -685,12 +688,15 @@ Copying $CONFIG to $OLDCONFIG
   my $lParser = new XML::DOM::Parser;
   my $lGIFTConfig = $lParser->parsefile ("$gGiftHome/gift-config.mrml") or die $!;
   
-  
   &removeCollection("collection-name"=>$lCollectionName,
-		    document=>$lGIFTConfig);
-  
+		    document=>$lGIFTConfig)                            if $gDoRemove;
+
+  &fixit("collection-name"=>$lCollectionName,
+	 document=>$lGIFTConfig)                                       if $gDoFixConfig;
+
   $lGIFTConfig->printToFile ("$gGiftHome/gift-config.mrml") or die $!;
 }
+
 
 sub findOutEncodings{
   my %lFoundEncodings;
@@ -724,16 +730,43 @@ sub safeConvertString( $ ){
 # CONFIG SERVER CODE
 
 sub setDefaultCollectionID{
+
    my $inParameters={};
    %{$inParameters}=@_;
-
+   
    # find the attributes collection-id in <algorithm collection-id="__COLLECTION__">
-   my(@lToBeChanged)=$inParameters->{document}->xql("/mrml/cui-configuration/algorithm-list/algorithm/\@collection-id='__COLLECTION__'");
+   my(@lToBeChanged)=$inParameters->{document}->xql("/mrml/cui-configuration/algorithm-list/algorithm/\@collection-id=\'__COLLECTION__\'");
    my $i;
    # replace __COLLECTION__ by actual collection ID.
    foreach $i (@lToBeChanged){
      $i->setNodeValue($inParameters->{"collection-id"});
    }
+}
+
+sub fixit{
+
+  print "Fixing config file by adjusting the collection ID of the default algorithm";
+
+  my $inParameters={};
+  %{$inParameters}=@_;
+
+  my $lReturnValue={success=>1};
+  # get a list of collections
+  my(@lCollections)=$inParameters->{document}->xql("/mrml/cui-configuration/collection-list/collection");
+
+  #make the first collection a default collection
+  if(@lCollections){# clean out the files mentioned in the collection tag
+
+    my $lId=$lCollections[0]->getAttribute("collection-id");
+    $inParameters->{"collection-id"}=$lId;
+
+    &setDefaultCollectionID((%$inParameters));
+  }else{
+    # no collection found --> failure
+    $lReturnValue->{success}=0;
+  }
+
+  return $lReturnValue;
 }
 
 sub addCollection{
@@ -744,7 +777,7 @@ sub addCollection{
    my $lCollectionID=$inParameters->{collection}->getDocumentElement()->getAttribute("collection-id") or die;
    my $lCollectionName=$inParameters->{collection}->getDocumentElement()->getAttribute("collection-name") or die;
 
-   my(@lConflict)=$inParameters->{document}->xql("/mrml/cui-configuration/collection-list/collection[\@collection-name=\'$lCollectionName\']");
+   my(@lConflict)=$inParameters->{document}->xql("/mrml/cui-configuration/collection-list/collection/\@collection-name=\'$lCollectionName\'");
 
 
    if(@lConflict){
@@ -853,7 +886,10 @@ sub removeCollection{
 
      my $lURL2FTS= $lParser->parsefile($lURL2FTSLocation);
    }
+   return $lReturnValue;
 }
+
+
 
 
 

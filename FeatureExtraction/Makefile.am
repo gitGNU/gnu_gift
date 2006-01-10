@@ -21,16 +21,16 @@
 
 david_sources   = extract_block_features.c gabor.c rgb2hsv_utils.c quantize.c
 
-CPPFLAGS= -I$(top_srcdir)/libSquirePPM/ -I$(top_srcdir)/libSquireFFT/ -D NO_FLAT_FEATURES
+AM_CPPFLAGS= -I$(top_srcdir)/libSquirePPM/ -I$(top_srcdir)/libSquireFFT/ -D NO_FLAT_FEATURES
 
 
 gift_extract_features_SOURCES = $(david_sources) extract_features.c
 
 gift_write_feature_descs_SOURCES= $(david_sources) write_feature_descs.c
 
-gift_extract_features_LDADD =  -L../libSquirePPM -lSquirePPM -lm 
+gift_extract_features_LDADD =  -L$(top_srcdir)/libSquirePPM -lSquirePPM -lm 
 
-gift_write_feature_descs_LDADD= -L../libSquirePPM -lSquirePPM -lm 
+gift_write_feature_descs_LDADD= -L$(top_srcdir)/libSquirePPM -lSquirePPM -lm 
 
 
 bin_PROGRAMS = gift-extract-features gift-write-feature-descs
