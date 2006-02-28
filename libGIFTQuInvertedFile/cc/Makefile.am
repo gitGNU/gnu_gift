@@ -23,7 +23,8 @@
 
 lib_LTLIBRARIES = libGIFTQuInvertedFile.la
 
-libGIFTQuInvertedFile_la_LDFLAGS="@PRE_INSTALL_LIBDIRS@"  -lMRML -lGIFTAcInvertedFile
+libGIFTQuInvertedFile_la_LDFLAGS="@PRE_INSTALL_LIBDIRS@"  -lMRML ../../libGIFTAcInvertedFile/cc/.libs/libGIFTAcInvertedFile.a
+
 
 #
 # The trick here is: do not compile c code with the -D bool=char define.

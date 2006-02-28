@@ -468,7 +468,7 @@ unless($gDoRemove || $gDoFixConfig){
 	
 	my $lFtsModificationTime=(stat($lFts))[9];
 	if (!(-e($lFts))
-	    || ($lFtsModificationTime<$main::gModifyingDateOfThis)) {
+	    || ($lFtsModificationTime < $main::gModifyingDateOfThis)) {
 	  if ($lFtsModificationTime) {
 	    print($lFtsModificationTime," is the modifying date of $lFts file\n") 
 	  }
@@ -531,7 +531,8 @@ unless($gDoRemove || $gDoFixConfig){
 	      print "warning: Feature extraction of $lTemp to $lTempFts failed!\n";
 	    }
 	} else {
-	  die "Feature extraction failed: $! \n" 
+	  print "Features not extracted: File exists $! \n" ;
+	  #die "Feature extraction failed: $! \n" 
 	}
 
 	# 2004-03-18 add attribute line as last thing

@@ -31,12 +31,12 @@ echo `libtool --version`
 echo "---------------------------------------"
 
 echo "running libtoolize"
-libtoolize --ltdl  || { echo "Libtoolize failed. THIS MIGHT CAUSE PROBLEMS LATER, continuing " ; }
+libtoolize --force --ltdl  || { echo "Libtoolize failed. THIS MIGHT CAUSE PROBLEMS LATER, continuing " ; }
 echo "running aclocal" 
-aclocal -I . || { echo "bootstrap failed, because aclocal failed. exiting. " , exit 100; }
+aclocal --force -I . || { echo "bootstrap failed, because aclocal failed. exiting. " , exit 100; }
 echo "...done"
 echo "running automake -a"
-automake -a ||  { echo "bootstrap failed, because automake failed. exiting." , exit 101; }
+automake -a --force ||  { echo "bootstrap failed, because automake failed. exiting." , exit 101; }
 echo "...done"
 echo "running autoconf"
 autoconf ||    { echo "bootstrap failed, because autoconf failed. exiting." , exit 102; }

@@ -25,7 +25,7 @@ CCCONFIG=sed "s:__EXECBINDIR__:@DEBEXECBINDIR@:g;s:__PERL_LOCATION__:@PERL@:g;s:
 
 lib_LTLIBRARIES = libGIFTAcInvertedFile.la
 
-libGIFTAcInvertedFile_la_LDFLAGS= -module "@PRE_INSTALL_LIBDIRS@" -lMRML -lGIFTAcURL2FTS
+libGIFTAcInvertedFile_la_LDFLAGS= -module "@PRE_INSTALL_LIBDIRS@" -lMRML ../../libGIFTAcURL2FTS/cc/.libs/libGIFTAcURL2FTS.a
 
 INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTAcURL2FTS/include 
 

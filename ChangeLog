@@ -1,3 +1,20 @@
+2006-02-28    <wolfgang.mueller@wiai.uni-bamberg.de>
+
+	* scripts/perl/gift-add-collection.pre-pl: "Features not extracted
+	file exists". Fixed behavior of what happens when a collection
+	is re-added.
+
+	* libGIFTAcInvertedFile/cc/Makefile.am (libGIFTAcInvertedFile_la_LDFLAGS): 
+	* libGIFTQuInvertedFile/cc/Makefile.am (libGIFTQuInvertedFile_la_LDFLAGS): 
+	* libGIFTAcDistanceMatrix/cc/Makefile.am (libGIFTAcDistanceMatrix_la_LDFLAGS): 
+	DIRTY HACK 
+	Apparently current libtool forbids linking to not-yet-installed 
+	libraries. Now hacked into it the exact path where libraries (.a)
+	are supposed to be.
+
+	WARNING MIGHT BREAK WITH FUTURE LIBTOOL
+	WARNING MIGHT BE DIFFICULT TO USE WITH CYGWIN
+
 2005-03-30    <wolfgang.mueller@wiai.uni-bamberg.de>
 
 	* libGIFTAcPerl/cc/CAcPerl.cc: 
