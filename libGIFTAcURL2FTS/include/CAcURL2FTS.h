@@ -140,6 +140,11 @@ public:
                            string (the feature file name)
    */
   pair<bool,string> URLToFFN(const string& inURL)const;
+
+  /**
+     Add a new element to the file
+   */
+  void addImage(string inURL, string inThumbnailURL, string inFeatureFileName);
   /**
    *
    * gives the feature file name which corresponds to a given URL

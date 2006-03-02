@@ -132,10 +132,10 @@ CXXFLAGS="$CXXFLAGS -DEF_PROTECT_BELOW=1 -DEF_PROTECT_FREE -DEF_PROTECT_ALIGNMEN
 
 AC_ARG_ENABLE(foreign-urls,
 	[  --disable-foreign-urls allows user to query for images unknown to the system.],
+	[ echo "Foreign urls enabled"],
 	[ CXXFLAGS="$CXXFLAGS -D IGNORE_UNKNOWN_URLS"
 	echo "Foreign urls disabled"
-	],
-	[ echo "Foreign urls enabled"])
+	])
 
 CXXFLAGS="$CXXFLAGS"
 

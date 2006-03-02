@@ -70,20 +70,35 @@ void newStartURL2FTSElement(void *inUserData,
     string lThumbnailURL=lAccessor->mThumbnailURLPrefix+lAttributes.stringReadAttribute("thumbnail-url-postfix").second;
     string lFeatureFileName=lAttributes.stringReadAttribute("feature-file-name").second;
     
-    lAccessor->mURLToFFN.insert(make_pair(lURL,lFeatureFileName));
-    lAccessor->mIDToFFN.insert(make_pair(lAccessor->mID,lFeatureFileName));
-    lAccessor->mURLToID.insert(make_pair(lURL,lAccessor->mID));
-    lAccessor->mIDToAccessorElement.insert(make_pair(lAccessor->mID,CAccessorElement(lAccessor->mID,
-									  lURL,
-									  lThumbnailURL,
-									  lFeatureFileName)));
-    lAccessor->mID++;
+    lAccessor->addImage(lURL,lThumbnailURL,lFeatureFileName);
+    
+//     lAccessor->mURLToFFN.insert(make_pair(lURL,lFeatureFileName));
+//     lAccessor->mIDToFFN.insert(make_pair(lAccessor->mID,lFeatureFileName));
+//     lAccessor->mURLToID.insert(make_pair(lURL,lAccessor->mID));
+//     lAccessor->mIDToAccessorElement.insert(make_pair(lAccessor->mID,CAccessorElement(lAccessor->mID,
+// 									  lURL,
+// 									  lThumbnailURL,
+// 									  lFeatureFileName)));
+//     lAccessor->mID++;
 
     //cout << lURL << endl;
     //cout << lThumbnailURL << endl;
     //cout << lFeatureFileName << endl;
   }
 }
+
+
+void CAcURL2FTS::addImage(string inURL, string inThumbnailURL, string inFeatureFileName){
+  mURLToFFN.insert(make_pair(inURL,inFeatureFileName));
+  mIDToFFN.insert(make_pair(mID,inFeatureFileName));
+  mURLToID.insert(make_pair(inURL,mID));
+  mIDToAccessorElement.insert(make_pair(mID,CAccessorElement(mID,
+							     inURL,
+							     inThumbnailURL,
+							     inFeatureFileName)));
+  mID++;
+}
+
 void newEndURL2FTSElement(void *inUserData, 
 			  const char *inElementName){
 }

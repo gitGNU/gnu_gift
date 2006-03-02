@@ -1522,6 +1522,8 @@ CAcIFFileSystem::URLToFeatureList(string inURL)const
     sprintf(lFeatureFileName,"/tmp/testFTS-%d.fts",int(lPID));
 
     system(string(string(__PERL_LOCATION__)+" "+string(__EXECBINDIR__)+"/gift-url-to-fts.pl "+inURL+" "+lFeatureFileName).c_str());
+
+    addImage(inURL,"image-not-in-database.jpg",lFeatureFileName),
     
     CDocumentFrequencyList* lReturnValue(this->getFeatureFile(lFeatureFileName));
  

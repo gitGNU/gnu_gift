@@ -1,3 +1,14 @@
+2006-03-02    <wolfgang.mueller@wiai.uni-bamberg.de>
+
+	* libGIFTAcURL2FTS/include/CAcURL2FTS.h (addImage):  method added.
+	Adds one image to the URL2FTS file list during runtime.
+	Warning: the underlying URL2FTS file is not changed, so stopping 
+	the GIFT you lose all changes.
+
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc (URLToFeatureList): 
+	partial fix to the adding images problem. 
+	features of external images hould now be extracted only once.
+
 2006-02-28    <wolfgang.mueller@wiai.uni-bamberg.de>
 
 	* scripts/perl/gift-add-collection.pre-pl: "Features not extracted
