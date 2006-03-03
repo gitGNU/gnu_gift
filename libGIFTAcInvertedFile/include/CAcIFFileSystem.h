@@ -99,8 +99,11 @@ protected:
       I have to limit on single inheritance.
       I cannot use virtual base classes, because then I
       cannot downcast
+
+      FIXME mutable in order to be able to add images on the fly. very dirty!
+      
   */
-  CSelfDestroyPointer<CAcURL2FTS> mURL2FTS;
+  mutable CSelfDestroyPointer<CAcURL2FTS> mURL2FTS;
   /** the maximum feature ID arising in this file */
   TID mMaximumFeatureID;
   /** A buffer, if the inverted file is to be 

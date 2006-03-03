@@ -1513,8 +1513,8 @@ CAcIFFileSystem::URLToFeatureList(string inURL)const
 
   if(!lID.first){//i.e. the URL is not part of the collection
 
-#ifdef IGNORE_UNKNOWN_URLS
     CDocumentFrequencyList* lReturnValue(0);
+#ifdef IGNORE_UNKNOWN_URLS
 #else
     pid_t lPID= getpid();
     
@@ -1523,9 +1523,9 @@ CAcIFFileSystem::URLToFeatureList(string inURL)const
 
     system(string(string(__PERL_LOCATION__)+" "+string(__EXECBINDIR__)+"/gift-url-to-fts.pl "+inURL+" "+lFeatureFileName).c_str());
 
-    addImage(inURL,"image-not-in-database.jpg",lFeatureFileName),
+    mURL2FTS->addImage(inURL,"image-not-in-database.jpg",lFeatureFileName);
     
-    CDocumentFrequencyList* lReturnValue(this->getFeatureFile(lFeatureFileName));
+    lReturnValue=this->getFeatureFile(lFeatureFileName);
  
 #endif
     if(!lReturnValue){

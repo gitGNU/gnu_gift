@@ -1,3 +1,12 @@
+2006-03-03    <wolfgang.mueller@wiai.uni-bamberg.de>
+
+	* libGIFTAcInvertedFile/include/CAcIFFileSystem.h (mURL2FTS): 
+	made mURL2FTS mutable in order to be able to add unknown images
+	to the collection.
+
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc (URLToFeatureList): 
+	Fixed embarrassing typos.
+
 2006-03-02    <wolfgang.mueller@wiai.uni-bamberg.de>
 
 	* libGIFTAcURL2FTS/include/CAcURL2FTS.h (addImage):  method added.
