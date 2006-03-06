@@ -1,3 +1,9 @@
+2006-03-06    <wolfgang.mueller@wiai.uni-bamberg.de>
+
+	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc(DIDToFeatureList): took 
+	out assertion that checks for presence of ADI (additional document 
+	information). This is dirty and should be temporal.
+
 2006-03-03    <wolfgang.mueller@wiai.uni-bamberg.de>
 
 	* libGIFTAcInvertedFile/include/CAcIFFileSystem.h (mURL2FTS): 

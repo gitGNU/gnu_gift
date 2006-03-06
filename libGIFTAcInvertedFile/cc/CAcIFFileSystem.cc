@@ -1615,11 +1615,13 @@ CAcIFFileSystem::DIDToFeatureList(TID inDID)const{
 #ifdef PRINT_ADI
   cout <<inURL
        << "(ADI:" ;
-#endif
 
+  //FIXME this is temporal. The following two lines should be put back in
   CADIHash::const_iterator iADI=mDocumentInformation.find(inDID);
-
   assert(iADI!=mDocumentInformation.end());
+  //FIXME I am not quite clear if, when and where the ADI is generated.
+  //FIXME fix on demand.
+#endif
 
 #ifdef PRINT_ADI
   iADI->second.output(cout);
