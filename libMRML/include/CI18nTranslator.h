@@ -98,11 +98,11 @@ public:
   void translateXMLTree(string inLanguageCode,
 			CXMLElement& inoutToBeTranslated)const;
   /** for parsing the config file */
-  static void CI18nTranslator::startXMLElement(void *inUserData, 
+  static void startXMLElement(void *inUserData, 
 					       const char *inElementName, 
 					       const char **inAttributes);
   /** for parsing the config file */
-  static void CI18nTranslator::endXMLElement(void *inUserData, 
+  static void endXMLElement(void *inUserData, 
 					     const char *inElementName);
 };
 #endif

@@ -23,6 +23,7 @@
 #
 
 
+use IO::File;
 use Getopt::Long;
 use File::Find;
 use File::Path;
@@ -30,8 +31,18 @@ use File::Copy;
 use HTTP::Request;
 use LWP::UserAgent;
 use English;
+use Text::Iconv;
 
 print &convertURLToFeatureFile(@ARGV);
+
+$gStringConverter = Text::Iconv->new($lInEncoding,$lOutEncoding);
+
+# evil cut and paste from gift-add-collection.pre-pl
+sub safeConvertString( $ ){
+  my $lStringCopy=shift;
+  return $gStringConverter->convert($lStringCopy) || $lStringCopy;# is now in UTF-8 or what it was before
+}
+
 
 sub convertURLToFeatureFile( $ ){
 
@@ -39,6 +50,7 @@ sub convertURLToFeatureFile( $ ){
   my $inURL=shift;
 
   my $inFinalFeatureDestination=shift;
+  my $inFinalThumbnailDestination=shift;
 
   #
   # note that there I am shifting an optional parameter FAR BELOW
@@ -123,19 +135,40 @@ sub convertURLToFeatureFile( $ ){
       #copy this feature file at a place where viper expects it....
       system("cp $lFeatureFileName $inFinalFeatureDestination");
       #....instead of moving move($lFeatureFileName,$inFinalFeatureDestination);
-      $lFeatureFileName=$inFinalFeatureDestination;
+      #$lFeatureFileName=$inFinalFeatureDestination;
     }
     
     print("Converting $lTempFileName to $lThumbnailFileName\n");
     system("convert -geometry 256x256 $lTempFileName $lThumbnailFileName");
+
+    
+    if (defined($inFinalThumbnailDestination)){
+      system("cp $lThumbnailFileName $inFinalThumbnailDestination");
+      #....instead of moving move($lFeatureFileName,$inFinalFeatureDestination);
+      #$lFeatureFileName=$inFinalFeatureDestination;
+    }
+
     
     #
     # append the new image to the URL2FTS
     #
-    open URL2FTS,">>$lFeatureDestination/url2fts" or die "could not open >>$lFeatureDestination/url2fts";
+    my $URL2FTS=IO::File->new(">>$lFeatureDestination/url2fts.xml") or die "could not open >>$lFeatureDestination/url2fts";
     print URL2FTS "$inURL $lThumbnailFileName $lFeatureFileName\n";
 
-   
+    my $lAttributes={
+		     "url-postfix" => $inURL,
+		     "thumbnail-url-postfix" => $lThumbnailFileName,
+		     "feature-file-name" => $lFeatureFileName
+		    };
+	
+	
+	$self->{writer}->emptyTag("image",(%{$lAttributes}));  
+
+
+    $self->{writer}=new XML::Writer( OUTPUT => URL2FTS,
+				     DATA_MODE => 1,
+				     DATA_INDENT => 2 );
+
 
     return $lFeatureFileName;
   }

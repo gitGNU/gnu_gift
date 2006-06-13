@@ -73,7 +73,7 @@ public:
  * add one document of to the list for one feature 
  *
  */
-  void CInvertedFileChunk::addElement(TID inDocumentID,
+  void addElement(TID inDocumentID,
 				      double inDocumentFrequency);
 
 /**

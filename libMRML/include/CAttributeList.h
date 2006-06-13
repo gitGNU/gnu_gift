@@ -79,7 +79,7 @@ public:
   virtual pair<bool,string> stringReadAttribute(const string& inAttribute)const;
   /** Outputting a string to XML 
    */
-  void CAttributeList::toXML(string& outString)const;
+  void toXML(string& outString)const;
   /** the destructor 
       in the case of char* as content it deletes the arrays of char.
    */

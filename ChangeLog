@@ -1,3 +1,7 @@
+2006-04-11    <wolfgang.mueller@wiai.uni-bamberg.de>
+
+	* scripts/perl/gift-url-to-fts.pre-pl (convertURLToFeatureFile): 
+
 2006-03-06    <wolfgang.mueller@wiai.uni-bamberg.de>
 
 	* libGIFTAcInvertedFile/cc/CAcIFFileSystem.cc(DIDToFeatureList): took 

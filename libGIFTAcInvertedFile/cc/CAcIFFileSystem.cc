@@ -82,6 +82,7 @@
 #include "libGIFTAcInvertedFile/include/CIFListStart.h"
 #include "libMRML/include/CXMLElement.h" // constructor
 #include "libMRML/include/directory.h"   // the install locations etc. as determined by ./configure
+#include <time.h> // for adding unknown images.
 #define _NO_PRINT_OFFSET_CHECK
 #define _NO_CHECK_OFFSET_FILE
 #define _NO_CHECK_CONSISTENCY
@@ -1519,11 +1520,19 @@ CAcIFFileSystem::URLToFeatureList(string inURL)const
     pid_t lPID= getpid();
     
     char lFeatureFileName[30];
-    sprintf(lFeatureFileName,"/tmp/testFTS-%d.fts",int(lPID));
+    char lThumbnailName[30];
 
-    system(string(string(__PERL_LOCATION__)+" "+string(__EXECBINDIR__)+"/gift-url-to-fts.pl "+inURL+" "+lFeatureFileName).c_str());
+    int lTime = int(time(0));
+    int lRandomId = random();// in order to make sure that no two images have the same ID
 
-    mURL2FTS->addImage(inURL,"image-not-in-database.jpg",lFeatureFileName);
+    sprintf(lFeatureFileName,"/tmp/testFTS-%d-%d-%d.fts",int(lPID),lTime,lRandomId);
+    sprintf(lThumbnailName,"/tmp/testThumbnail-%d-%d-%d.jpg",int(lPID),lTime,lRandomId);
+
+    //FIXME this is a potential security leak.
+    system(string(string(__PERL_LOCATION__)+ " " + string(__EXECBINDIR__)+ "/gift-url-to-fts.pl "+ inURL +" "+ lFeatureFileName + " " + lThumbnailName).c_str());
+
+    // lThumbnailName exists, but is probably less accessible than the initial URL
+    mURL2FTS->addImage(inURL,inURL,lFeatureFileName);
     
     lReturnValue=this->getFeatureFile(lFeatureFileName);
  

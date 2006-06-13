@@ -111,11 +111,11 @@ public:
   /** destructor */
   ~CAccessorAdmin();
   /**  */
-  string CAccessorAdmin::getAlgorithmIDListID()const;
+  string getAlgorithmIDListID()const;
   /**  */
-  string CAccessorAdmin::getName()const;
+  string getName()const;
   /**  */
-  string CAccessorAdmin::getID()const;
+  string getID()const;
 
   /** for sorting */
   friend class CSortByName_pAP;

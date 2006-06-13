@@ -172,18 +172,18 @@ public:
   bool rename(const string& inName);
   /** the list of preferred languages of this 
       is cleared */
-  void CSession::clearLanguages();
+  void clearLanguages();
   /** one language code is added at the back of the list
       of preferred languages */
-  void CSession::addLanguage(string inLanguageCode);
+  void addLanguage(string inLanguageCode);
   /** commit the list of languages. That means, here the
       actual language that will be used throughout the 
       translation is determined */
-  void CSession::commitLanguages(const CI18nTranslator& inTranslator);
+  void commitLanguages(const CI18nTranslator& inTranslator);
   /** get the preferred languages of this session */
-  list<string> CSession::getLanguages()const;
+  list<string> getLanguages()const;
   /** get the preferred languages of this session */
-  string CSession::getPreferredLanguage()const;
+  string getPreferredLanguage()const;
 
   //--------------------------------------------------
   /**  generating XML output for configuration/shandshake */
@@ -420,7 +420,7 @@ public:
   /** i18n: get the list of preferred languages of this session */
   list<string> getSessionLanguages(const string& inSessionID)const;
   /** i18n: get the list of preferred languages of this session */
-  void CSessionManager::translate(string inSessionID,
+  void translate(string inSessionID,
 				  CXMLElement& inoutToBeTranslated)const;
 };
 
