@@ -1,6 +1,7 @@
 2006-07-10    <wolfgang.mueller@wiai.uni-bamberg.de>
 
 	* configure.in: check for values.h
+	check for expat.h
 
 2006-04-11    <wolfgang.mueller@wiai.uni-bamberg.de>
 

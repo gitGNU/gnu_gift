@@ -421,7 +421,7 @@ AC_STDC_HEADERS
 AC_HAVE_HEADERS(string algorithm) 
 AC_HAVE_HEADERS(unistd.h) 
 dnl Checks for system dependent include files
-AC_HAVE_HEADERS( stdlib.h unistd.h sys/types.h time.h sys/time.h sys/socket.h arpa/inet.h netinet/tcp.h sys/times.h values.h)
+AC_HAVE_HEADERS( stdlib.h unistd.h sys/types.h time.h sys/time.h sys/socket.h arpa/inet.h netinet/tcp.h sys/times.h values.h expat.h)
 
 dnl this is just to check that I have understood how things work
 AC_CHECK_LIB(m,sin)
