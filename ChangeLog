@@ -1,3 +1,7 @@
+2006-07-10    <wolfgang.mueller@wiai.uni-bamberg.de>
+
+	* configure.in: check for values.h
+
 2006-04-11    <wolfgang.mueller@wiai.uni-bamberg.de>
 
 	* scripts/perl/gift-url-to-fts.pre-pl (convertURLToFeatureFile): 
