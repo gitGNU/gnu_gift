@@ -1,3 +1,39 @@
+2006-07-20    <wolfgang.mueller@wiai.uni-bamberg.de>
+
+	* libSquirePPM/ppm.h:
+	Patches from Julia Longtin (risc@volumehost.com):
+	../julia/00-libSquirePPM_ppm.h_add_value_plane_double_reversed.patch
+	../julia/10-libSquirePPM_ppm.h_add_memory_errormessage.patch
+
+	* FeatureExtraction/rgb2hsv_utils.c:
+	Patches from Julia Longtin (risc@volumehost.com):
+	../julia/40-FeatureExtraction_gabor.c_change_kernel_init_call.patch
+	../julia/30-FeatureExtraction_gabor.c_use_value_plane_double_reversed.patch
+	
+	* FeatureExtraction/rgb2hsv_utils.c:
+	Patches from Julia Longtin (risc@volumehost.com):
+	../julia/30-FeatureExtraction_rgb2hsv_utils.c-create_value_plane_double_reversed.patch
+
+	* FeatureExtraction/extract_features.c:
+	Patches from Julia Longtin (risc@volumehost.com):
+
+	../julia/00-FeatureExtraction_extract_features.c-update_headers.patch  
+	../julia/20-FeatureExtraction_extract_features.c-remove_global_variables.patch
+	
+	Most notable: uint32_t gets introduced. Might be of value to AMD64 users.
+
+	* FeatureExtraction/extract_block_features.c:
+	Patches from Julia Longtin:
+	julia/00-FeatureExtraction_extract_block_features.c-cleanup_global.patch
+	julia/10-FeatureExtraction_extract_block_features.c-macroize_gabor_ranges.patch
+	julia/20-FeatureExtraction_extract_block_features.c-remove_global_variables.patch
+	julia/30-FeatureExtraction_extract_block_features.c_use_value_plane_double_reversed.patch
+	julia/40-FeatureExtraction_extract_block_features.c_change_kernel_init_call.patch
+
+	Most notable: uint32_t gets introduced. Might be of value to AMD64 users.
+
+	
+
 2006-07-10    <wolfgang.mueller@wiai.uni-bamberg.de>
 
 	* configure.in: check for values.h

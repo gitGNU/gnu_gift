@@ -20,89 +20,110 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 */
+
+/* for fprintf(), fopen(), EOF... */
 #include <stdio.h>
-#include <stdlib.h>
+
+/* for memalign() */
 #include <malloc.h>
+
+/* for M_PI */
 #include <math.h>
-#include <string.h>
-#include <unistd.h>
+
+/* for uint32_t */
+#include <stdint.h>
+
+#ifdef HAVE_CONFIG_H
+#include "gift-config.h"
+#endif
+
 #include <ppm.h>
+
+/* for type FEATURE_DATA, FREQ_MAX, and freq_type */
 #include <gift_features.h>
 
-#include "gabor.h"
+//#include "gabor.h"
 //#include "extract_features.proto"
 
 #define square(x) ((x)*(x))
 
 /* This determines the number of bands into which the gabor filter energies
  * are quantized.
-/* 
-#define num_gabor_ranges 16
-*/
+ *
+ * valid values are 10 or 16.
+ *
+ */
 #define num_gabor_ranges 10
 
-const int image_size = 256;
-const int smallest_colour_block = 16;
-const int gabor_block_size = 16;
-int num_colour_scales;
-int num_total_colour_blocks;
-int *num_blocks_at_scale;
-int **col_counts;
-int *col_histogram;
-byte *block_mode;
-int num_colours_seen = 0;
+/* define these here, so we dont have to include gabor.h */
+
+/* the number of scales to recognise features at */
+#define num_gabor_scales 3
+/* the number of directions to apply the filters. (top-bottom, left-right, bottom-top, right-left?) */
+#define num_gabors_per_scale 4
+
+/* parts surrounded in OLDFIXED are dependant on the image being a 256x256 image */
+#define OLDFIXED 1
+
+/* FIXME: broken code. relies on OLDFIXED */
+#ifdef OLDFIXED
+/* width AND height of the target image */
+#define image_size 256
+/* the number of color blocks we're going to break the image into (overlapping) */
+#define num_total_colour_blocks (256+64+16+4)
+/* the width and height of the smallest blocks of region colour averages */
+#define smallest_colour_block 16
+#endif
+
+/* FIXME: ??? */
+#define gabor_block_size 16
+
+#ifdef OLDFIXED 
+/* num_colour_scales=what_power_of_two(r). r=image_size/smallest_colour_block. EG ?r==16:ncs=4;?r==256:ncs=8 */
+/* this tells us how many levels we're going to sample this image at. first sample is 256 16x16 blocks, then 64 32x32.. then.. */
+#define num_colour_scales 4
+#define num_blocks_at_scale(i) (256>>i*2)
+#endif
 
 /* This specifies the bands into which the gabor filter energies are
  * quantized.
-/*
-double gabor_ranges[num_gabor_ranges] = {0.0625, 0.125, 0.25, 0.5, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100000};
-*/
-double gabor_ranges[num_gabor_ranges] = {2, 3, 4, 5, 6, 7, 8, 9, 10, 100000};
+ */
 
-int ***block_gabor_class;
-int ***gabor_histogram;
-
-void init_feature_variables(int colmap_size) {
-
-	int i, j, k;
-	int r, r1;
-	int sqrt_num_blocks_at_this_scale;
-
-	/* colour features */
-	r = image_size/smallest_colour_block;
-	num_colour_scales = rint(log((double)r)/log(2.0));
-	num_total_colour_blocks = rint((double)square(r)*4.0*(1 - 1/pow(4.0, (double)num_colour_scales))/3.0);
-	block_mode = (byte *)malloc(num_total_colour_blocks*sizeof(byte));
-	col_counts = (int **)malloc(num_total_colour_blocks*sizeof(int *));
-	col_histogram = (int *)malloc(colmap_size*sizeof(int));
-	num_blocks_at_scale = (int *)malloc(num_colour_scales*sizeof(int));
-	k = 0;
-	num_blocks_at_scale[0] = square(r);
-	for (i = 0; i < num_colour_scales; i++) {
-		for (j = 0; j < num_blocks_at_scale[i]; j++) {
-			col_counts[k++] = (int *)malloc(colmap_size*sizeof(int));
-		}
-		if (i != num_colour_scales - 1)
-			num_blocks_at_scale[i+1] = num_blocks_at_scale[i]/4;
-	}
-#ifdef DEBUG
-	fprintf(stderr, "num_total_colour_blocks: %d\n", num_total_colour_blocks);
+#if num_gabor_ranges==16
+#define gabor_ranges(i) gabor_ranges_var[i]
+double gabor_ranges_var[num_gabor_ranges] = {0.0625, 0.125, 0.25, 0.5, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100000};
+#else
+#if num_gabor_ranges==10
+/* this is magic, as far as i'm concerned. [2..10,10000] */
+#define gabor_ranges(i) (i+2+9989*(((i>>3)&1)&(i&1)))
+#else
+#error invalid setting for num_gabor_ranges
+#endif
 #endif
 
+/* this version just does the work. no variable width/height information is taken into account. 256x256. */
+void init_feature_variables(uint32_t colmap_size, uint32_t ** col_counts, uint32_t *** block_gabor_class, uint32_t *** gabor_histogram) {
+
+	uint32_t i, j, k=0;
+	/* colour features */
+	for (i = 0; i < num_colour_scales; i++) {
+		for (j = 0; j < num_blocks_at_scale(i); j++) {
+			col_counts[k++] = (uint32_t *)malloc(colmap_size*sizeof(uint32_t));
+		}
+	}
+
 	/* Gabor features */
-	block_gabor_class = (int ***)malloc(num_gabor_scales*sizeof(int **));
-	gabor_histogram = (int ***)malloc(num_gabor_scales*sizeof(int **));
 	for (i = 0; i < num_gabor_scales; i++) {
-		block_gabor_class[i] = (int **)malloc(num_gabors_per_scale*sizeof(int *));
-		gabor_histogram[i] = (int **)malloc(num_gabors_per_scale*sizeof(int *));
+		block_gabor_class[i] = (uint32_t **)malloc(num_gabors_per_scale*sizeof(uint32_t *));
+		gabor_histogram[i] = (uint32_t **)malloc(num_gabors_per_scale*sizeof(uint32_t *));
 		for (j = 0; j < num_gabors_per_scale; j++) {
-			block_gabor_class[i][j] = (int *)malloc(square(image_size/gabor_block_size)*sizeof(int));
-			gabor_histogram[i][j] = (int *)calloc(num_gabor_ranges, sizeof(int));
+			block_gabor_class[i][j] = (uint32_t *)malloc(square(image_size/gabor_block_size)*sizeof(uint32_t));
+			gabor_histogram[i][j] = (uint32_t *)calloc(num_gabor_ranges, sizeof(uint32_t));
 		}
 	}
 }
 
-void extract_gabor_features(PPM *im_hsv) {
+void extract_gabor_features(PPM *im_hsv, uint32_t *** block_gabor_class, uint32_t *** gabor_histogram) {
 
 	int i, j, x, y, k;
 	int scale, orientation;
@@ -117,24 +138,19 @@ void extract_gabor_features(PPM *im_hsv) {
 		- Use 16x16 blocks only.
 		- In each block find the rms energy of each filter.
 		- quantize these into num_gabor_ranges levels, as specified in the
-		  array gabor_ranges[]
+		  "array" gabor_ranges[]
 	*/
 
-	/* make a float version of the value plane of the image */
-	value_image_dbl = (double *)malloc(im_hsv->width*im_hsv->height*sizeof(double));
 	filtered_image = (double *)malloc(im_hsv->width*im_hsv->height*sizeof(double));
-	value_plane = ppm_plane(im_hsv, VALUE);
-	for (i = 0; i < im_hsv->width*im_hsv->height; i++) {
-		value_image_dbl[i] = (double)(value_plane->pixel[i]);
-	}
-	destroy_ppm(&value_plane);
+
+	create_filter_kernels();
 
 	/* apply each filter to the image */
 	for (scale = 0; scale < num_gabor_scales; scale++) {
 		for (orientation = 0; orientation < num_gabors_per_scale; orientation++) {
 
 			/* filter the image */
-			gabor_filter(value_image_dbl, im_hsv->width, im_hsv->height, scale, orientation, filtered_image);
+			gabor_filter(im_hsv->value_plane_double_reversed, im_hsv->width, im_hsv->height, scale, orientation, filtered_image);
 
 			/* extract the rms energy for each block */
 			k = 0; /* block counter */
@@ -151,7 +167,7 @@ void extract_gabor_features(PPM *im_hsv) {
 
 				/* find the energy class for this block */
 				for (energy_class = 0; energy_class < num_gabor_ranges; energy_class++) {
-					if (gabor_mean < gabor_ranges[energy_class])
+					if (gabor_mean < gabor_ranges(energy_class))
 						break;
 				}
 
@@ -168,7 +184,7 @@ void extract_gabor_features(PPM *im_hsv) {
 	}
 }
 
-void extract_mode_features(PPM *im, int *colmap, int colmap_size) {
+void extract_mode_features(PPM *im, uint32_t *colmap, uint32_t colmap_size, uint32_t ** col_counts, byte * block_mode, uint32_t * col_histogram) {
 
 	int i, j, k, last_k, k1, m, n, r, x, y;
 	byte colour;
@@ -329,7 +345,7 @@ void extract_mode_features(PPM *im, int *colmap, int colmap_size) {
 			col_counts[k + 2][n] + col_counts[k + 3][n];
 }
 
-enum ppm_error write_mode_features(char *out_fname, int colmap_size) {
+enum ppm_error write_mode_features(char *out_fname, uint32_t colmap_size, uint32_t * col_histogram, uint32_t *** block_gabor_class, uint32_t *** gabor_histogram, byte * block_mode) {
 
 	FILE *out_file = NULL;
 	int feature_index;
@@ -504,7 +520,7 @@ enum ppm_error write_mode_features(char *out_fname, int colmap_size) {
 	return(PPM_OK);
 }
 
-void fts2blocks(char *fts_fname) {
+void fts2blocks(char *fts_fname, byte * block_mode, uint32_t * col_histogram) {
 	
 	FILE *fts_file, *outfile;
 	int num_features, feature_index;
@@ -611,7 +627,7 @@ enum ppm_error write_feature_descriptions(FILE *out_file, int *colmap, int colma
 	/* block features */
 	block_size = smallest_colour_block;
 	for (i = 0; i < num_colour_scales; i++) {
-		for (j = 0; j < num_blocks_at_scale[i]; j++) {
+		for (j = 0; j < num_blocks_at_scale(i); j++) {
 			for (k = 0; k < colmap_size; k++) {
 				fprintf(out_file, "%d %d COL_POS block size = %dx%d position = %d H,S,V = %d, %d, %d\n", feature_index, COL_POS, block_size, block_size, j, colmap[3*k + HUE], colmap[3*k + SATURATION], colmap[3*k + VALUE]);
 				feature_index++;
@@ -632,7 +648,7 @@ enum ppm_error write_feature_descriptions(FILE *out_file, int *colmap, int colma
 			/* blocks */
 			for (i = 0; i < square((image_size/gabor_block_size)); i++) {
 				for (j = 0; j < num_gabor_ranges; j++) {
-					fprintf(out_file, "%d %d GABOR_POS block size = %dx%d position = %d SCALE, ORIENTATION, ENERGY = %d, %d, %f\n", feature_index, GABOR_POS, gabor_block_size, gabor_block_size, i, scale, orientation, gabor_ranges[j]);
+					fprintf(out_file, "%d %d GABOR_POS block size = %dx%d position = %d SCALE, ORIENTATION, ENERGY = %d, %d, %f\n", feature_index, GABOR_POS, gabor_block_size, gabor_block_size, i, scale, orientation, gabor_ranges(j));
 				feature_index++;
 				}
 			}

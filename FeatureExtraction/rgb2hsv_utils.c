@@ -185,6 +185,7 @@ enum ppm_error rgb2hsv_ppm(PPM *im_rgb, PPM **im_hsv) {
     (*im_hsv)->max_col_comp = im_rgb->max_col_comp;
     (*im_hsv)->bytes_per_pixel = 3;
     (*im_hsv)->pixel = (byte *)malloc(3*(*im_hsv)->width*(*im_hsv)->height*sizeof(byte));
+    if (((*im_hsv)->value_plane_double_reversed=(double *)memalign(16,(*im_hsv)->width*(*im_hsv)->height*sizeof(double)))==NULL) return MEMORY_ERROR;
 
 	max_col = (double)im_rgb->max_col_comp;
 	num_pixels = im_rgb->width*im_rgb->height;
@@ -201,6 +202,7 @@ enum ppm_error rgb2hsv_ppm(PPM *im_rgb, PPM **im_hsv) {
 		(*im_hsv)->pixel[3*i + HUE] = (byte)rint((H/360.0)*max_col);
 		(*im_hsv)->pixel[3*i + SATURATION] = (byte)rint(S*max_col);
 		(*im_hsv)->pixel[3*i + VALUE] = (byte)rint(V*max_col);
+		(*im_hsv)->value_plane_double_reversed[num_pixels-i]=(V*max_col);
 	}
 
 	add_comment((*im_hsv), "# Image converted from RGB to HSV format.\n");

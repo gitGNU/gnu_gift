@@ -105,10 +105,6 @@ void gabor_filter(double *image, int width, int height, int filter_scale, int n_
 	int x, y, t_x, t_y;
 	int i;
 
-	/* create the filter kernels, if it has not already been done */
-	if (kernel11 == NULL)
-		create_filter_kernels();
-
 	conv = (double *)calloc(width*height, sizeof(double));
 
 	/* first convolution */
@@ -118,7 +114,7 @@ void gabor_filter(double *image, int width, int height, int filter_scale, int n_
 		for (t_x = -kernal_size[filter_scale]/2; t_x <= kernal_size[filter_scale]/2; t_x++) {
 			if (((x - t_x) >= 0) && ((x - t_x) < width)) {
 				conv[y*width + x] +=
-					kernel11[filter_scale][n_theta][t_x + kernal_size[filter_scale]/2]*image[y*width+ (x - t_x)];
+					kernel11[filter_scale][n_theta][t_x + kernal_size[filter_scale]/2]*image[65536-(y*width+ (x - t_x))];
 			}
 		}
 	}
@@ -144,7 +140,7 @@ void gabor_filter(double *image, int width, int height, int filter_scale, int n_
 		for (t_x = -kernal_size[filter_scale]/2; t_x <= kernal_size[filter_scale]/2; t_x++) {
 			if (((x - t_x) >= 0) && ((x - t_x) < width)) {
 				conv[y*width + x] +=
-				kernel21[filter_scale][n_theta][t_x + kernal_size[filter_scale]/2]*image[y*width + (x - t_x)];
+				kernel21[filter_scale][n_theta][t_x + kernal_size[filter_scale]/2]*image[65536-(y*width + (x - t_x))];
 			}
 		}
 	}

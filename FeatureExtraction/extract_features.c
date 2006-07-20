@@ -4,9 +4,18 @@
 #include <math.h>
 #include <string.h>
 #include <unistd.h>
+
+#ifdef HAVE_CONFIG_H
+#include "gift-config.h"
+#endif
+
 #include <ppm.h>
 #include "gift_features.h"
 //#include "extract_features.proto"
+
+/* for c99 uint32_t */
+
+#include <stdint.h>
 
 #define numH 18
 #define numS 3

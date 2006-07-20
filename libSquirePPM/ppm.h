@@ -45,7 +45,8 @@ enum ppm_error {
 	FILE_OPEN_ERROR,
 	FILE_READ_ERROR,
 	FILE_WRITE_ERROR,
-	FILE_CLOSE_ERROR
+	FILE_CLOSE_ERROR,
+	MEMORY_ERROR
 };
 
 /* planes of a colour image */
@@ -65,6 +66,9 @@ typedef struct _PPM {
 	char *comments;
 	int comment_length;
 	byte *pixel;
+        /* a temporary cache location, so that we dont convert double->int->double for the entire image in extract_features */
+        /* a copy of the value plane, in reverse order, as doubles */
+        double * value_plane_double_reversed;
 } PPM;
 
 #ifdef __STDC__
