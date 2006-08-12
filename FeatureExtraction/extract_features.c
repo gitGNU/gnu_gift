@@ -22,15 +22,35 @@
 #define numV 3
 #define numGrey 4
 
+#define OLDFIXED
+#ifdef OLDFIXED
+/* the number of scales to recognise features at */
+#define num_gabor_scales 3
+/* the number of color blocks we're going to break the image into (overlapping) */
+#define num_total_colour_blocks (256+64+16+4)
+#endif
+
+void init_feature_variables(uint32_t, uint32_t **, uint32_t ***, uint32_t ***);
+void extract_gabor_features(PPM *, uint32_t ***, uint32_t ***);
+void extract_mode_features(PPM *, uint32_t *, uint32_t, uint32_t **, byte *, uint32_t *);
+enum ppm_error write_mode_features(char *, uint32_t, uint32_t *, uint32_t ***, uint32_t ***, byte *);
+
 int main(int argc, char *argv[]) {
 
 	char *in_fname, *out_fname;
 	char *point_pos;
 	FILE *ppm_file;
 	PPM *im_rgb, *im_hsv, *im_quant;
-	int *colmap, colmap_size;
+	uint32_t *colmap, colmap_size;
 	enum file_types ppm_type;
 	enum ppm_error the_error;
+	uint32_t ** block_gabor_class[num_gabor_scales];
+	uint32_t ** gabor_histogram[num_gabor_scales];
+	/* the "mode" of each color block. */
+	byte block_mode[num_total_colour_blocks];
+	/* the colour count of each block. for quantizing the image */
+	uint32_t * col_counts[num_total_colour_blocks];
+	uint32_t * col_histogram;
  
 	switch(argc) {
 	case 2:
@@ -94,17 +114,20 @@ int main(int argc, char *argv[]) {
 		exit(1);
 	}
 
+	/* FIXME: move this back into init_feature_variables. */
+	col_histogram = (uint32_t *)malloc(colmap_size*sizeof(uint32_t));
+
 	/* initialise the variables required for the feature extraction */
-	init_feature_variables(colmap_size);
+	init_feature_variables(colmap_size, col_counts, block_gabor_class, gabor_histogram);
 
 	/* extract the features */
 
-	extract_mode_features(im_quant, colmap, colmap_size);
+	extract_mode_features(im_quant, colmap, colmap_size, col_counts, block_mode, col_histogram);
 
-	extract_gabor_features(im_hsv);
+	extract_gabor_features(im_hsv, block_gabor_class, gabor_histogram);
 
 	/* write them to the file */
-	if ((the_error = write_mode_features(out_fname, colmap_size)) != PPM_OK) {
+	if ((the_error = write_mode_features(out_fname, colmap_size, col_histogram, block_gabor_class, gabor_histogram, block_mode)) != PPM_OK) {
 	  ppm_handle_error(the_error);
 	  exit(1);
 	}
