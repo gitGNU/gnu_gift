@@ -1,3 +1,11 @@
+2006-08-02    <risc@volumehost.com>
+	* FeatureExtraction/extract_block_features.c
+	define the kernals here, pass to gabor.c for init, use
+
+	* FeatureExtraction/gabor.c
+	turn kernels[11,12,21,22] into one variable. remove from global scope.
+
+
 2006-07-20    <wolfgang.mueller@wiai.uni-bamberg.de>
 
 	* libSquirePPM/ppm.h:

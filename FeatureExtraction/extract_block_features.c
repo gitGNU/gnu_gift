@@ -131,6 +131,7 @@ void extract_gabor_features(PPM *im_hsv, uint32_t *** block_gabor_class, uint32_
 	PPM *value_plane;
 	double *value_image_dbl, *filtered_image;
 	double gabor_mean;
+	double * kernelsxy[num_gabor_scales*num_gabors_per_scale];
 
 	/* for Gabor features, this is what I'm going to do:
 		- Apply each of the 12 filters (3 scales, 4 orientations) to each
@@ -143,14 +144,14 @@ void extract_gabor_features(PPM *im_hsv, uint32_t *** block_gabor_class, uint32_
 
 	filtered_image = (double *)malloc(im_hsv->width*im_hsv->height*sizeof(double));
 
-	create_filter_kernels();
+	create_filter_kernels(kernelsxy);
 
 	/* apply each filter to the image */
 	for (scale = 0; scale < num_gabor_scales; scale++) {
 		for (orientation = 0; orientation < num_gabors_per_scale; orientation++) {
 
 			/* filter the image */
-			gabor_filter(im_hsv->value_plane_double_reversed, im_hsv->width, im_hsv->height, scale, orientation, filtered_image);
+			gabor_filter(im_hsv->value_plane_double_reversed, im_hsv->width, im_hsv->height, scale, orientation, kernelsxy, filtered_image);
 
 			/* extract the rms energy for each block */
 			k = 0; /* block counter */
