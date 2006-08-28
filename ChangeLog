@@ -1,3 +1,10 @@
+2006-08-28    <risc@volumehost.com>
+
+	* FeatureExtraction/extract_block_features.c
+	handle gabor_ranges() better, fix gabor_ranges to 100000 instead of 10000
+	* FeatureExtraction/write_feature_descs.c
+	update initialization function call, provide variables to be 'initialized'.
+
 2006-08-02    <risc@volumehost.com>
 	* FeatureExtraction/extract_block_features.c
 	define the kernals here, pass to gabor.c for init, use

@@ -8,6 +8,17 @@
 
 //#include "extract_features.proto"
 
+/* for c99 uint32_t */
+
+#include <stdint.h>
+
+/* this is common between extract_features and this file. -ENEEDHEADER? */
+
+/* the number of scales to recognise features at */
+#define num_gabor_scales 3
+/* the number of color blocks we're going to break the image into (overlapping) */
+#define num_total_colour_blocks (256+64+16+4)
+
 int main(int argc, char *argv[]) {
 
 	FILE *ppm_file;
@@ -16,6 +27,12 @@ int main(int argc, char *argv[]) {
 	enum file_types ppm_type;
 	enum ppm_error the_error;
 	int numH, numS, numV, numGrey;
+	/* the following variables are here just to be initialized. */
+	/* the colour count of each block. for quantizing the image */
+	uint32_t * col_counts[num_total_colour_blocks];
+	uint32_t ** gabor_histogram[num_gabor_scales];
+	uint32_t ** block_gabor_class[num_gabor_scales];
+
  
 	switch(argc) {
 	case 5:
@@ -60,7 +77,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	/* initialise the variables required for the feature extraction */
-	init_feature_variables(colmap_size);
+        init_feature_variables(colmap_size, col_counts, block_gabor_class, gabor_histogram);
 
 	/* write them to the file */
 	if ((the_error = write_feature_descriptions(stdout, colmap, colmap_size)) != PPM_OK) {

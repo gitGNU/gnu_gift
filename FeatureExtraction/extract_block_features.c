@@ -94,8 +94,8 @@
 double gabor_ranges_var[num_gabor_ranges] = {0.0625, 0.125, 0.25, 0.5, 1, 1.5, 2, 3, 4, 5, 6, 7, 8, 9, 10, 100000};
 #else
 #if num_gabor_ranges==10
-/* this is magic, as far as i'm concerned. [2..10,10000] */
-#define gabor_ranges(i) (i+2+9989*(((i>>3)&1)&(i&1)))
+/* this is magic, as far as i'm concerned. [2..10,100000] */
+#define gabor_ranges(i) (i+2+99989*(((i>>3)&1)&(i&1)))
 #else
 #error invalid setting for num_gabor_ranges
 #endif
@@ -649,7 +649,13 @@ enum ppm_error write_feature_descriptions(FILE *out_file, int *colmap, int colma
 			/* blocks */
 			for (i = 0; i < square((image_size/gabor_block_size)); i++) {
 				for (j = 0; j < num_gabor_ranges; j++) {
+#if num_gabor_ranges==16 /* technically, we should be checking the type.. */
 					fprintf(out_file, "%d %d GABOR_POS block size = %dx%d position = %d SCALE, ORIENTATION, ENERGY = %d, %d, %f\n", feature_index, GABOR_POS, gabor_block_size, gabor_block_size, i, scale, orientation, gabor_ranges(j));
+#else
+#if num_gabor_ranges==10
+					fprintf(out_file, "%d %d GABOR_POS block size = %dx%d position = %d SCALE, ORIENTATION, ENERGY = %d, %d, %d.000000\n", feature_index, GABOR_POS, gabor_block_size, gabor_block_size, i, scale, orientation, gabor_ranges(j));
+#endif
+#endif
 				feature_index++;
 				}
 			}
