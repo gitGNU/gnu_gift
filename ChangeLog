@@ -1,3 +1,9 @@
+2006-09-14    <David.Squire@infotech.monash.edu.au>
+    * scripts/perl/gift-add-collection.pl
+	Fixed a buglet in the last part of the help message, and added a
+	'--hostname' option to make it easier to get the URLs right (no need
+	to specify two prefixes if all you want is to avoid 'localhost').
+
 2006-08-28    <risc@volumehost.com>
 
 	* FeatureExtraction/extract_block_features.c
