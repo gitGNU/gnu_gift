@@ -1,8 +1,792 @@
-GIFT user's guide
+  ____________________________________________________________
 
-   The GIFT is a content based image retrieval system.
-     _________________________________________________________________
+  Table of Contents
 
-   0.1.9+5epsilon, 2004-04-16
 
-   The GIFT is a content based image retrieval system.
+  1. Introduction
+
+  2. MRML - Why we publish GIFT this way
+
+  4. Prepare and run the server
+
+     4.1 $GIFT_HOME: where the configuration data goes
+     4.2 Indexing a collection
+        4.2.1 Indexing in multiple runs
+        4.2.2 Handling files in public_html
+     4.3 Starting the server
+
+  5. Getting started with the Charmer interface
+
+  6. Troubleshooting
+
+     6.1 No connection
+     6.2 Instead of images, I see empty frames
+        6.2.1 Wrong image file format
+        6.2.2 JAVA security gets in our way
+        6.2.3 JAVA 1.4-1.5 security
+     6.3 Digging in the indexing files
+        6.3.1 url2fts.xml
+           6.3.1.1 Where is the url2fts.xml for a given collection?
+           6.3.1.2 Modifying url2fts.xml for moving a collection
+           6.3.1.3 JAVA: file:/... URLs vs. http://.. URLs
+
+  7. How to analyze GIFT
+
+  8. ToDo List
+
+     8.1 Code and documentation quality
+
+
+  ______________________________________________________________________
+
+
+  11..  IInnttrroodduuccttiioonn
+
+
+
+  Caveat: THIS PROGRAM NEEDS MORE PREREQUISITES THAN OTHER GNU PACKAGES
+  (see below). At present, it installs neither info files nor man pages.
+  However, otherwise the install procedure tries to be GNU conformant.
+
+
+  GIFT is a content based image retrieval system (CBIRS). It gives the
+  user the possibility to index and search images without having to
+  annotate them first. Indexing is done using image properties such as
+  color and texture.
+
+
+  The query is one or multiple image _e_x_a_m_p_l_e_s.
+
+
+  Content based image retrieval (CBIRS) is presently an area of vivid
+  research interest, yielding many different systems.
+
+
+  Our system is different from other systems with respect to the
+  indexing method. We use very many very simple features which are
+  translated into some kind of "pseudo text" for each image. On this
+  representation we use inverted files as indexing technique. In our
+  opinion this representation has two great advantages:
+
+
+  +o  The representation is very flexible, in that it allows good
+     incorporation of relevance feedback.
+
+
+  +o  The representation is very flexible, in that it will allow
+     completely integrated treatment of text (ASCII, HTML etc.) and
+     images.
+
+
+
+     both at a reasonable speed, which we hope to increase further. The
+     current implementation still leaves room for optimization.
+
+
+  This document will be the user's guide to the GIFT content based image
+  retrieval system. It is aimed at the user of such a system.  Its
+  companion document will be a programmer's manual elaborating details
+  of interfacing etc. and a document describing the communication
+  protocol, MRML, which we use for the communication between the user
+  interface and the image retrieval system.
+
+
+
+
+
+
+
+  22..  MMRRMMLL -- WWhhyy wwee ppuubblliisshh GGIIFFTT tthhiiss wwaayy
+
+
+
+  One big problem of CBIRS research is the non-existence of a common
+  benchmark, measuring the quality of retrieval results. In our project
+  we have both worked on reasonable measures for benchmarks, and on
+  software for performing this.  A precondition for a common benchmark
+  is a common interface (in the programming sense of the word),
+  permitting the connection of the benchmarking program to the
+  benchmarked program.  MRML is an XML based language providing such an
+  interface.
+
+
+  The other great effect of such an interface language is the
+  possibility to create GUIs for CBIRS which can be used by all MRML
+  compliant servers.  Charmer provided by our partners at EPFL (contact
+  details in the Author field) is a very beautiful interface which will
+  equally become free software.
+
+
+  We (EPFLausanne and CUI, Geneva) provide this software with the goal
+  of promoting the use of MRML. Wide-spread use of MRML could both help
+  scientists (less work and easier exchange) and normal users (easy
+  combination of software packages from different sources. Think, for
+  example, of a GIMP plug-in which would help the user organize his
+  images).
+
+
+  In fact, the idea of having interested real-world users test a system
+  like ours is very attractive, as data about real users are hard to
+  get. We hope to motivate users to share anonymized, preprocessed log
+  files in order to help us improve our systems.
+
+  33..  IInnssttaallllaattiioonn
+
+
+  Caveat: THIS PROGRAM NEEDS MORE PREREQUISITES THAN OTHER GNU PACKAGES.
+  However, otherwise the install procedure is GNU conformant.
+
+  Please tell us about any bugs in the installation procedure.
+
+
+  The current distribution typically runs GNU/Linux machines of diverse
+  flavours.
+
+
+  Get installed: you have received the package gift-0.1.x.tgz. Now:
+
+
+  +o  NNeeww:: we have added a Perl script which tries to fetch the perl
+     prerequisites, as well as SnakeCharmer. It uses the CPAN
+     (comprensive Perl archive network) module for installing. This
+     module might ask you plenty of questions.
+
+
+  +o  For successful installing and running we need
+
+
+  +o  a recent g++ (we suggest 3.3, we need definitely younger than gcc
+     2.8)
+
+
+  +o  Image Magick (the feature extraction uses it to convert image
+     formats to PPM files.)
+
+
+  +o  Perl younger than 5.003 (you get that at www.cpan.org)
+
+
+  +o  Currently we use the Perl modules
+
+
+  +o  Parse-Yapp-1.05
+
+
+  +o  XML-Parser-2.34
+
+
+  +o  libxml-perl-0.07
+
+
+  +o  XML-RegExp-0.03
+
+
+  +o  XML-SAX-0.12
+
+
+  +o  XML-Writer-0.4
+
+
+  +o  XML-Handler-EasyTree-Traversal
+
+
+  +o  XML-Handler-Trees-0.02
+
+
+  +o  XML-DOM-1.43
+
+
+  +o  XML-XQL-0.68
+
+
+  +o  Text-Iconv-1.2
+
+
+  +o  libnet (if not already provided by your GNU/Linux distribution)
+
+
+  +o  libwww (if not already provided by your GNU/Linux distribution)
+
+
+
+
+     _I_f _t_h_i_s _i_s _t_o_o _m_u_c_h _f_o_r _y_o_u _t_o _h_a_n_d_l_e_, _p_l_e_a_s_e _a_s_k _f_o_r _t_h_e _g_i_f_t
+     _p_r_e_r_e_q_u_i_s_i_t_e_s _p_a_c_k_a_g_e _a_n_d _h_e_l_p _u_s _d_e_v_e_l_o_p _a_n_d _t_e_s_t _i_t_.
+     _<mailto:help-gift@gnu.org> is a good place to discuss this
+
+
+  +o  doxygen (optional, for system documentation)
+
+
+
+  +o  Unpack it by doing
+
+     ___________________________________________________________________
+     tar -xzvf gift-VERSION.tgz
+     ___________________________________________________________________
+
+
+
+
+  +o  Follow the install instructions in the file
+
+     ___________________________________________________________________
+     INSTALL
+     ___________________________________________________________________
+
+
+  The configuration script provides the following options:
+
+
+  +o  --enable-interactive this enables an interactive script that
+     installs the prerequisites at some default locations. It makes use
+     of the Perl CPAN module. You should have a man page about that on
+     your system.
+
+
+  +o  --enable-multi-threading enables multithreading. If this option is
+     enabled, the configurescript checks automatically, if it _c_a_n use
+     multithreading. If this is the case, the script will enable
+     multithreading support. Currently this is less stable than I would
+     like it to be. However, on multiprocessor machines a very
+     interesting option, as query processing will be distributed over
+     the processors.
+
+
+
+
+
+
+  +o  If you have installed doxygen, You can now look at the system
+     documentation by typing
+
+
+
+     ___________________________________________________________________
+     lynx Doc/autoDoc/HTML/hier.html
+     ___________________________________________________________________
+
+
+
+
+  +o  Unpack now the charmer archive:
+
+     ___________________________________________________________________
+     tar -xvf
+     Charmer-0.2.tar
+     ___________________________________________________________________
+
+
+
+
+  +o  Run the configuration script
+
+     ___________________________________________________________________
+     cd Charmer-0.2;perl write-applet-frame.pl
+     ___________________________________________________________________
+
+
+
+
+
+
+
+  44..  PPrreeppaarree aanndd rruunn tthhee sseerrvveerr
+
+
+
+  We assume that you have successfully installed GIFT. Now you want to
+  start the server, I suppose. But first you have to give to GIFT an
+  image collection.
+
+
+  44..11..  $$GGIIFFTT__HHOOMMEE:: wwhheerree tthhee ccoonnffiigguurraattiioonn ddaattaa ggooeess
+
+
+
+  By default, the indexing data of the collections, as well as the
+  configuration files reside in your home directory.
+
+  To change this default, set the environment variable GIFT_HOME the to
+  absolute path of the directory where you want your gift-indexing-data
+  etc. to reside and put the line:
+
+
+  ______________________________________________________________________
+  export
+   GIFT_HOME=/absolute/path/to/my_gift_home
+  ______________________________________________________________________
+
+
+
+
+  into your .bashrc
+
+
+  Now you are ready to index a collection.
+
+
+
+
+  44..22..  IInnddeexxiinngg aa ccoolllleeccttiioonn
+
+
+
+  The vanilla way of indexing a collection is by typing
+
+  ______________________________________________________________________
+  gift-add-collection.pl /absolute/name/of/a/directory/tree/containing/images/
+  ______________________________________________________________________
+
+
+  This script will then create the appropriate configuration files and
+  index directories in your home directory (or in $GIFT_HOME). Please
+  note that it should be possible to index all images within your home
+  directory tree by typing
+
+
+  ______________________________________________________________________
+  gift-add-collection.pl ~
+  ______________________________________________________________________
+
+
+
+
+
+  The script, as it is now takes 20-30 seconds per image to create the
+  base indexing data for inverted file creation. The inverted file
+  creation itself will take about 5 minutes to about an hour, depending
+  on the size of the collection. The biggest collections we have indexed
+  so far are 13000 images. This took our fast server two days. 500
+  images get indexed on my portable AMD-K6-2-based computer in less than
+  3 hours.
+
+
+  44..22..11..  IInnddeexxiinngg iinn mmuullttiippllee rruunnss
+
+
+
+  If you have to index a large collection or if you are indexing your
+  collection on a portable computer, indexing a collection in one run
+  becomes inacceptable. If you stop the
+
+  ______________________________________________________________________
+  gift-add-collection.pl
+  ______________________________________________________________________
+
+
+  during feature generation and indexing, you can resume by simply
+  restarting the program. On restart, it will check each file if it was
+  correctly generated and resume operation at the first file which was
+  not correctly generated.
+
+
+
+  44..22..22..  HHaannddlliinngg ffiilleess iinn ppuubblliicc__hhttmmll
+
+
+
+  Most web server configurations have for each user a directory which is
+  published on the web (if the file permissions are set accordingly). On
+  most systems this directory is ~/public_html, and the associated URL
+  is http://localhost/~your_username/ . gift-add-collection.pl takes
+  these settings into account. If an image file
+
+  ~/public_html/a_file
+
+  gift-add-collection.pl will generate a
+
+  http://localhost/~your_username/a_file
+
+  which are elsewhere, urls of the kind
+
+  file:/a/path/another_file
+
+
+  will be generated. If you are not happy with the settings, we suggest
+  you to run
+
+  ______________________________________________________________________
+  gift-add-collection.pl --help
+  ______________________________________________________________________
+
+
+  and to read the "Digging in the indexing files" section of this docu-
+  ment.
+
+
+
+
+  44..33..  SSttaarrttiinngg tthhee sseerrvveerr
+
+
+
+  When the indexing is done, you can start the GIFT server:
+
+
+  ______________________________________________________________________
+  gift
+  ______________________________________________________________________
+
+
+  At the time of writing, gift will output tons of debugging output on
+  the screen. Most of the time it also will tell you why it dies, if it
+  dies. In the cases known to me, reasons for dying are usually inappro-
+  priate config file locations, as well as the untrapped possibilty to
+  nuke the server using faulty XML or a non-exsistent session ID.
+
+
+  It will start up, and it will listen on the socket 12789 for
+  connecting clients.
+
+
+  While 12789 is the port number by default, you can override this
+  default port number by giving it as the first parameter. In addition
+  to that you can override GIFT_HOME by giving it as parameter to the
+  GIFT, for example:
+
+  ______________________________________________________________________
+  gift 12888 /usr/local/share/shared-gift-collections/
+  ______________________________________________________________________
+
+
+
+
+
+  55..  GGeettttiinngg ssttaarrtteedd wwiitthh tthhee CChhaarrmmeerr iinntteerrffaaccee
+
+
+
+
+
+
+  +o  The installation is not yet GNU-ish: Simply unpack the archive and
+     do:
+
+     ___________________________________________________________________
+     cd Charmer-0.2;perl write-applet-frame.pl
+     ___________________________________________________________________
+
+
+
+
+  +o  Start the Charmer interface by typing
+
+     ___________________________________________________________________
+     cd Charmer-0.2;appletviewer Charmer.html
+     ___________________________________________________________________
+
+
+
+  Note that you _h_a_v_e to cd into the directory where Charmer resides.
+  Otherwise you would have to play with CLASSPATHs.
+
+
+
+  +o  Click on the button which symbolizes a handshake.
+
+
+  +o  Fill in the request: In the first line you give the host and the
+     port, separated by a colon (e.g. localhost:12789). In the second
+     line you give a username. This serves for opening a session under
+     your name. We plan to add persistent user management to gift, to
+     make it possible for the user to choose between different sessions.
+
+
+  +o  As a reaction to pressing OK in the request, the interface changes:
+     It now gives you a choice between different algorithms and
+     collections. In this case all the algorithms are weighting
+     functions for ranked queries on inverted files. However, in
+     principle, you can put anything there.
+
+
+  +o  Click the dice symbol. You will get a random selection of images
+     from the collection you chose.
+
+
+  +o  You now have the possibility to click on one or multiple of these
+     images (they will get a green frame when clicked), and send a query
+     for them by clicking on the _b_i_n_o_c_u_l_a_r_s button.
+
+
+
+  +o  Getting back your query result, you are able to improve it. You can
+     either click on some of the query results (thus adding "positive"
+     images to your query) or click the right mouse button on an image
+     and use the menu that pops up to indicate that you want to exclude
+     them from further consideration.
+
+
+  +o  To clear your query, press the button with the curved arrow, this
+     deletes yur query, but does not clear the display of the result
+     set.
+
+
+
+
+
+
+  66..  TTrroouubblleesshhoooottiinngg
+
+
+
+  66..11..  NNoo ccoonnnneeccttiioonn
+
+
+
+  On connecting to a remote server, you do not get the choice between
+  different algorithms (and at least one collection).
+
+
+  Be aware, that an applet can only connect to the server it came from.
+  So you have to see to it that your appletviewer fetches the
+  SnakeCharmer applet from the remote server.
+
+
+
+
+  66..22..  IInnsstteeaadd ooff iimmaaggeess,, II sseeee eemmppttyy ffrraammeess
+
+
+
+  There are several possible reasons for this
+
+
+  66..22..11..  WWrroonngg iimmaaggee ffiillee ffoorrmmaatt
+
+
+
+  For generality, we allow quite a number of image formats: files with
+  the extension png, gif, jpg, jpeg, eps, and ppm.  unfortunately JAVA
+  is only able to digest GIF and JPEG.
+
+
+
+  Problems have been reported with recent JREs and SnakeCharmer.  These
+  were due to security problems (below).
+
+
+
+  66..22..22..  JJAAVVAA sseeccuurriittyy ggeettss iinn oouurr wwaayy
+
+
+
+  JAVA 1.1.x and JAVA 1.2 have different security concepts. While in
+  JAVA 1.1.x the appletviewer does not load any remote IDs (at least I
+  had once trouble with that), JAVA 1.2's appletviewer is extremely
+  restrictive, as restrictive as a browser would be. As a consequence,
+  you have to put your images and thumbnails into a web-published area,
+  if you want to see anything.
+
+
+  See the "digging in the indexing files" section for more information
+
+
+
+
+  66..22..33..  JJAAVVAA 11..44--11..55 sseeccuurriittyy
+
+
+
+  Problems have been reported on  <mailto:help-gift@gnu.org> which were
+  due to bad installations of JAVA. Please make sure that the security
+  policies of the JRE are accessible to the appletviewer. Ample
+  documentation about security policy files can be found at SUN's site.
+  66..33..  DDiiggggiinngg iinn tthhee iinnddeexxiinngg ffiilleess
+
+
+
+  66..33..11..  uurrll22ffttss..xxmmll
+
+
+
+  MRML is based on URLs. Based on the url, it will see if it knows
+  already the image, if the image is in the indexed collection etc. . If
+  the image is unknown, it will create new features for finding a
+  corresponding image etc. . As a consequence, if you move images that
+  have been indexed from one directory to another, you will have to
+  change the translation table from url to feature file. This resides in
+  the "url2fts.xml" files.
+
+
+  66..33..11..11..  WWhheerree iiss tthhee uurrll22ffttss..xxmmll ffoorr aa ggiivveenn ccoolllleeccttiioonn??
+
+
+
+  Assuming you have a collection containing images from
+
+  ______________________________________________________________________
+  /this/is/a/path/to/my_collection/
+  ______________________________________________________________________
+
+
+  You will find the indexing data in the directory
+
+  ______________________________________________________________________
+  ${VIPER_HOME:-$HOME}/gift-indexing-data/my_collection/
+  ______________________________________________________________________
+
+
+  The translation table from URL to feature file resides in
+
+  ______________________________________________________________________
+  ${VIPER_HOME:-$HOME}/gift-indexing-data/my_collection/url2fts.xml
+  ______________________________________________________________________
+
+
+
+
+  66..33..11..22..  MMooddiiffyyiinngg uurrll22ffttss..xxmmll ffoorr mmoovviinngg aa ccoolllleeccttiioonn
+
+
+
+  Do
+
+  ______________________________________________________________________
+  emacs \
+  ${VIPER_HOME:-$HOME}/gift-indexing-data/my_collection/url2fts.xml
+  ______________________________________________________________________
+
+
+  What you get to see is a long table of the structure
+
+
+    image url-postfix="IMAGEURL" thumbnail-url-postfix="THUMBNAILURL" feature-file-name="NAME_OF_THE_FEATURE_FILE" /
+
+
+
+  Clearly, if you move the images from one location to another, you have
+  to adjust image_location and thumbnail_location. Usually this amounts
+  to a simple query-replace operation.
+  For example: at my place I have the collection TSR500, and the first
+  line looks like this:
+
+  image url-postfix="http://localhost/~muellerw/images/TSR500/b_1002_scaled_small.jpg" thumbnail-url-postfix="http://localhost/~muellerw/images/TSR500_thumbnails/b_1002_scaled_small_thumbnail_jpg.jpg" feature-file-name="/home/muellerw/gift-indexing-data/TSR500/b_1002_scaled_small_jpg.fts" /
+
+
+  If I want to move this collection from
+
+  ~muellerw/public_html/TSR500/
+
+
+  to
+
+  ~muellerw/public_html/TSR501/
+
+
+  all I have to do is to replace each string
+
+  images/TSR500
+
+
+  by
+
+  images/TSR501
+
+
+  in urls2fts (and to restart the GIFT, of course).
+
+
+
+  66..33..11..33..  JJAAVVAA:: ffiillee:://...... UURRLLss vvss.. hhttttpp::////.... UURRLLss
+
+
+
+  In my humble experience, old (1.1.x) appletviewers had problems with
+  http:// URLs. "Problems" means, that they simply were neither
+  downloaded nor displayed. "Uncool", in a word. The opposite now
+  happens with a recent (1.2) appletviewer. The images are shown, if
+  they come by http from a location on the local host, they will not be
+  shown, if they are specified by a file:/... URL. This renders giving
+  defaults which work for everybody impossible. We give possibilites to
+  specify all this in gift-add-collection.pl (try --help for viewing the
+  options). However, if you are experiencing trouble you can simply do
+  replacement of URLs in the url2fts.xml file, as described in the
+  section above.
+
+
+
+
+
+
+
+  77..  HHooww ttoo aannaallyyzzee GGIIFFTT
+
+
+
+  In any case, if you are interested in adding anything to the GIFT, we
+  would be happy to hear from you. Please mail the maintainer, Wolfgang
+  Mller: Wolfgang.Mueller@cui.unige.ch . He will be happy to help.
+
+
+  We use doxygen as a system documentation tool. This means we put
+  JAVADoc like comments into the headers.  If you want to find out, what
+  the different classes are doing we suggest you to run doxygen on
+  libInvertedFile/include/*.h and just browse. Comments in the *.cc
+  files are usually shorter and only geared towards implementation.
+  Later we plan to include a script which synchronizes comments between
+  the headers and the prototypes in the *.cc files.
+
+
+  For the developer there are several alternatives:
+
+
+  1. use as much code as possible Then inherit something from CAccessor
+     (access to a given indexation method and database) and/or CQuery
+     (using this method to actually process queries).  It would be
+     useful then to understand how CSessionManager works.  If you have
+     suggestions to change what we have, please notify us and help us
+     release. We are currently improving the factory design for
+     accessors. This should make enhancing GIFT much easier.
+
+
+  2. Intermediate: use the parsing code, but not much more. The
+     knowledge about MRML is in the ...handler functions in
+     CSessionManager and CCommunicationHandler/Server. This might serve
+     as an inspiration.
+
+
+  3. As little code as possible: Simply take the DTD. If you make a
+     server, try, if
+
+     ___________________________________________________________________
+     gift-mrml-client.pl
+     ___________________________________________________________________
+
+
+  works with your system. Try to make it work seamlessly with an unmodi-
+  fied version of the charmer interface.
+
+
+  Always: patches are welcome. If you are missing MRML functionality, we
+  would be also very interested in providing this functionality or help-
+  ing you in providing it yourself. Please contact the maintainer of
+  GIFT/Charmer as named in the AUTHORS file.
+
+  We are currently putting together some documentation which will
+  include a "gift extension howto". This is going hand in hand with some
+  redesign of the session manager, in order to make cooperation easier.
+
+
+
+
+  88..  TTooDDoo LLiisstt
+
+
+
+  As you see, the version number of GIFT is quite low. It implies, that
+  we see many areas which need more work.
+
+
+  88..11..  CCooddee aanndd ddooccuummeennttaattiioonn qquuaalliittyy
+
+
+
+
+
+
+
+
+
+
+

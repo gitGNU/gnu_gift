@@ -57,6 +57,7 @@ use vars qw($self
 	    $lThumbnailDirectory
 	    $lURLPrefix
 	    $lThumbnailURLPrefix
+	    $lHostname
 	    $gGiftHome
 	    $OLDCONFIG
 	    $CONFIG
@@ -94,6 +95,7 @@ GetOptions(\%lOptions,
 	   "url-prefix:s",
 	   "thumbnail-dir:s",
 	   "thumbnail-url-prefix:s",
+	   "hostname:s",
 	   "no-png",
 	   "no-gif",
 	   "no-jpg",
@@ -121,6 +123,7 @@ local $lIndexPrefix="";
 local $lThumbnailDirectory="";
 local $lURLPrefix="";
 local $lThumbnailURLPrefix="";
+local $lHostname="";
 local $gGiftHome= $lOptions{'gift-home'} || $gGiftHome || $ENV{GIFT_HOME} || $ENV{HOME};
 local $gDoRemove="";
 local $lOptionList={
@@ -133,7 +136,8 @@ local $lOptionList={
 		    "index-prefix"         => \$lIndexPrefix,
 		    "thumbnail-dir"        => \$lThumbnailDirectory,
 		    "url-prefix"           => \$lURLPrefix,
-		    "thumbnail-url-prefix" => \$lThumbnailURLPrefix
+		    "thumbnail-url-prefix" => \$lThumbnailURLPrefix,
+		    "hostname"             => \$lHostname,
 		   };
 
 unless(open DOT_FILE,"$ENV{HOME}/.gift-add-collection"){
@@ -163,6 +167,9 @@ if($lOptions{'remove-collection'}){
 if($lOptions{'fix-config'}){
   $gDoFixConfig=1;
 }
+
+# set hostname of one has been specified
+$lHostname = $lOptions{'hostname'} || 'localhost';
 
 #
 #
@@ -235,7 +242,14 @@ foreach $i (values %$lOptionList) {
 }
 
 
+if ($lHostname) {
+	s|^http://localhost/|http://$lHostname/| for ($lURLPrefix, $lThumbnailURLPrefix);
+}
+
+
 if ($lOptions{help}) {
+  my $lUsername = $ENV{HOME};
+  $lUsername =~ s|.*[\/]||; # remove leading path
   print "
 gift-add-collection [options] [image-directory]: Add an image collection to your gift database.
 
@@ -281,6 +295,10 @@ Options (options override .gift-add-collection entries):
 
 Change here, if you want to make a database accessible from the WWW
 
+--hostname                    This value will replace 'localhost' in both
+                              image and thumbnail URLs
+                              Current value: $lHostname
+
 --url-prefix                  This URL-trunc will be prepended
                               to the file names generated. Default:
                               file:-URL to images
@@ -291,12 +309,10 @@ Change here, if you want to make a database accessible from the WWW
                               file:-URL to thumbnails
                               Current value: $lThumbnailURLPrefix
 
+If this script recognizes that you are indexing files in public_html, it will
+automatically generate http://$lHostname/~$lUsername URLs.
 
-If this script recognizes that you are indexing files in public_html,
-it will automatically generate http://localhost/~$ENV{HOME} URLs.
-
-Options override the contents of 
-$ENV{HOME}/.gift-add-collection
+Options override the contents of $ENV{HOME}/.gift-add-collection
 ";
   exit 0;
 }
