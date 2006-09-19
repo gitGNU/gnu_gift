@@ -1,3 +1,8 @@
+2006-09-19    <risc@volumehost.com>
+
+	* FeatureExtraction/gabor.c
+	remove int32_t t_x, replace with uint32_t k. uint32_t is slightly faster, and simplifies the inner loops.
+
 2006-09-15    <risc@volumehost.com>
 
 	* FeatureExtraction/gabor.c

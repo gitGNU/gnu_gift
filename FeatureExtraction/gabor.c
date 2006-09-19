@@ -86,30 +86,33 @@ void create_filter_kernels(double ** kernelsxy) {
 void gabor_filter(double *image, int width, int height, int filter_scale, int orientation, double **kernelsxy, double *output) {
 
 	uint32_t x, y;
-	int32_t t_x, t_y;
+	int32_t t_y;
 	uint32_t i;
+	uint32_t k;
 	double * target_kernal;
 	double conv[MAX_WIDTH*MAX_HEIGHT]; /* take advantage of our fixed image size. */
+	double * target_conv;
+	double * target_image;
 
 	memset(&conv, 0, MAX_WIDTH*MAX_HEIGHT*sizeof(double)); 
-
-	target_kernal=kernelsxy[filter_scale*num_gabors_per_scale+orientation];
+	memset(output, 0, MAX_WIDTH*MAX_HEIGHT*sizeof(double)); 
 
 	/* first convolution */
+	target_kernal=kernelsxy[filter_scale*num_gabors_per_scale+orientation];
 	for (x = 0; x < width; x++) {
 	for (y = 0; y < height; y++) {
-		output[y*width + x] = 0; /* might as well be here */
-		for (t_x = -kernal_size[filter_scale]/2; t_x <= kernal_size[filter_scale]/2; t_x++) {
-			if (((x - t_x) >= 0) && ((x - t_x) < width)) {
+		target_image=&image[(width*height)-(y*width+x+kernal_size[filter_scale]/2)];
+		for (k=0; k < kernal_size[filter_scale]; k++) {
+			if ((x+kernal_size[filter_scale]/2 >= k) && (x+kernal_size[filter_scale]/2 < width+k)) {
 				conv[y*width + x] +=
-					target_kernal[t_x + kernal_size[filter_scale]/2]*image[65536-(y*width+ (x - t_x))];
+					target_kernal[k]*target_image[k];
 			}
 		}
 	}
 	}
 
-	target_kernal=&target_kernal[kernal_size[filter_scale]];
 	/* second convolution */
+	target_kernal=&target_kernal[kernal_size[filter_scale]];
 	for (x = 0; x < width; x++) {
 	for (y = 0; y < height; y++) {
 		for (t_y = -kernal_size[filter_scale]/2; t_y <= kernal_size[filter_scale]/2; t_y++) {
@@ -123,21 +126,22 @@ void gabor_filter(double *image, int width, int height, int filter_scale, int or
 	for (i = 0; i < width*height; i++)
 		conv[i] = 0;
 
-	target_kernal=&target_kernal[kernal_size[filter_scale]];
 	/* third convolution */
+	target_kernal=&target_kernal[kernal_size[filter_scale]];
 	for (x = 0; x < width; x++) {
 	for (y = 0; y < height; y++) {
-		for (t_x = -kernal_size[filter_scale]/2; t_x <= kernal_size[filter_scale]/2; t_x++) {
-			if (((x - t_x) >= 0) && ((x - t_x) < width)) {
+		target_image=&image[(width*height)-(y*width+x+kernal_size[filter_scale]/2)];
+		for (k=0; k < kernal_size[filter_scale]; k++) {
+			if ((x+kernal_size[filter_scale]/2 >= k) && (x+kernal_size[filter_scale]/2 < width+k)) {
 				conv[y*width + x] +=
-				        target_kernal[t_x + kernal_size[filter_scale]/2]*image[65536-(y*width + (x - t_x))];
+					target_kernal[k]*target_image[k];
 			}
 		}
 	}
 	}
 
-	target_kernal=&target_kernal[kernal_size[filter_scale]];
 	/* fourth convolution */
+	target_kernal=&target_kernal[kernal_size[filter_scale]];
 	for (x = 0; x < width; x++) {
 	for (y = 0; y < height; y++) {
 		for (t_y = -kernal_size[filter_scale]/2; t_y <= kernal_size[filter_scale]/2; t_y++) {
