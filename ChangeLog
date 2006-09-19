@@ -1,3 +1,9 @@
+2006-09-15    <risc@volumehost.com>
+
+	* FeatureExtraction/gabor.c
+	dont use calloc for conv, instead declare, and clear with memset.
+	change to C99 datatypes in gabor_filter().
+
 2006-09-14    <David.Squire@infotech.monash.edu.au>
     * scripts/perl/gift-add-collection.pl
 	Fixed a buglet in the last part of the help message, and added a

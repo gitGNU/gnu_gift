@@ -2,11 +2,15 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <math.h>
+/* for memset(), others */
 #include <string.h>
 #include <unistd.h>
 #include <ppm.h>
 
 #include "gabor.h"
+
+/* for MAX_WIDTH and MAX_HEIGHT */
+#include "gift_features.h"
 
 /* for uint32_t */
 #include <stdint.h>
@@ -79,15 +83,15 @@ void create_filter_kernels(double ** kernelsxy) {
 	}
 }
 
-void gabor_filter(double *image, int width, int height, int filter_scale, int orientation, double ** kernelsxy, double *output) {
+void gabor_filter(double *image, int width, int height, int filter_scale, int orientation, double **kernelsxy, double *output) {
 
-	double *conv;
-	int x, y, t_x, t_y;
-	int i;
+	uint32_t x, y;
+	int32_t t_x, t_y;
+	uint32_t i;
 	double * target_kernal;
+	double conv[MAX_WIDTH*MAX_HEIGHT]; /* take advantage of our fixed image size. */
 
-
-	conv = (double *)calloc(width*height, sizeof(double));
+	memset(&conv, 0, MAX_WIDTH*MAX_HEIGHT*sizeof(double)); 
 
 	target_kernal=kernelsxy[filter_scale*num_gabors_per_scale+orientation];
 
@@ -144,5 +148,4 @@ void gabor_filter(double *image, int width, int height, int filter_scale, int or
 	}
 	}
 
-	free(conv);
 }

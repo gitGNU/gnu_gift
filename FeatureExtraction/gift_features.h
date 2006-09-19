@@ -24,4 +24,8 @@ typedef struct _FEATURE_DATA {
    adapting to Wolfgang's code */
 #define WOLFGANG_HACK 
 
+/* fixed size buffer values, so that we dont code these into the .c files */
+#define MAX_WIDTH  256
+#define MAX_HEIGHT 256
+
 #endif
