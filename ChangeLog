@@ -1,6 +1,11 @@
 2006-09-20    <risc@volumehost.com>
 
 	* FeatureExtraction/gabor.c
+	replace t_y with k. remove t_y and i, no longer in use.
+
+2006-09-20    <risc@volumehost.com>
+
+	* FeatureExtraction/gabor.c
 	use one more memset.
 	reverse order of conv[] in memory.
 	swap conv[]'s x and y axis, to use in-order memory accesses.
