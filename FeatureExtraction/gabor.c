@@ -125,11 +125,22 @@ void gabor_filter(double *image, int width, int height, int filter_scale, int or
 	for (x = 0; x < width; x++) {
 	for (y = 0; y < height; y++) {
 		target_conv=&conv[((width*height)-1)-(x*height+y+(kernal_size[filter_scale]/2))];
+		if (((y>=kernal_size[filter_scale]/2)) && ((y+kernal_size[filter_scale]/2)<height))
+		  {
+		    /* first do the matrix multiply, then do the summation, so the matrix multiply can be vectored. */
+		    for (k = 0; k < kernal_size[filter_scale]; k++)
+		      temparray[k] = target_kernal[k]*target_conv[k];
+		    for (k = 0; k < kernal_size[filter_scale]; k++)
+		      output[y*width+x] += temparray[k];
+		  }
+		else
+		  {
 		for (k = 0; k < kernal_size[filter_scale]; k++) {
 			if (((y+(kernal_size[filter_scale]/2))>=k) && (y+(kernal_size[filter_scale]/2)<height+k))
 				output[y*width + x] +=
 					target_kernal[k]*target_conv[k];
 		}
+		  }
 	}
 	}
 
@@ -164,10 +175,21 @@ void gabor_filter(double *image, int width, int height, int filter_scale, int or
 	for (x = 0; x < width; x++) {
 	for (y = 0; y < height; y++) {
 		target_conv=&conv[((width*height)-1)-(x*height+y+(kernal_size[filter_scale]/2))];
+		if (((y>=kernal_size[filter_scale]/2)) && ((y+kernal_size[filter_scale]/2)<height))
+		  {
+		    /* first do the matrix multiply, then do the summation, so the matrix multiply can be vectored. */
+		    for (k = 0; k < kernal_size[filter_scale]; k++)
+		      temparray[k] = target_kernal[k]*target_conv[k];
+		    for (k = 0; k < kernal_size[filter_scale]; k++)
+		      output[y*width+x] -= temparray[k];
+		  }
+		else
+		  {
 		for (k = 0; k < kernal_size[filter_scale]; k++) {
 			if (((y+(kernal_size[filter_scale]/2))>=k) && (y+(kernal_size[filter_scale]/2)<height+k))
 				output[y*width + x] -=
 					target_kernal[k]*target_conv[k];
+		}
 		}
 	}
 	}
