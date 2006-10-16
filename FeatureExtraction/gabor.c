@@ -93,10 +93,10 @@ void gabor_filter(double *image, int width, int height, int filter_scale, int or
 	double conv[MAX_WIDTH*MAX_HEIGHT]; /* take advantage of our fixed image size. */
 	double * target_conv;
 	double * target_image;
-        double temparray[kernal_size[2]];
+	double temparray[kernal_size[2]];
 
-	memset(&conv, 0, MAX_WIDTH*MAX_HEIGHT*sizeof(double)); 
-	memset(output, 0, MAX_WIDTH*MAX_HEIGHT*sizeof(double)); 
+	memset(&conv, 0, MAX_WIDTH*MAX_HEIGHT*sizeof(double));
+	memset(output, 0, MAX_WIDTH*MAX_HEIGHT*sizeof(double));
 
 	/* first convolution */
 	target_kernal=kernelsxy[filter_scale*num_gabors_per_scale+orientation];
@@ -108,13 +108,13 @@ void gabor_filter(double *image, int width, int height, int filter_scale, int or
 		    for (k = 0; k < kernal_size[filter_scale]; k++)
 		      temparray[k]= target_kernal[k]*target_image[k];
 		    for (k = 0; k < kernal_size[filter_scale]; k++)
-		      conv[y*width+x] += temparray[k];
+		      conv[((width*height)-1)-(x*height+y)] += temparray[k];
 		  }
 		else
 		  {
 		for (k=0; k < kernal_size[filter_scale]; k++) {
 			if ((x+kernal_size[filter_scale]/2 >= k) && (x+kernal_size[filter_scale]/2 < width+k)) {
-				conv[y*width + x] +=
+				conv[((width*height)-1)-(x*height+y)] +=
 					target_kernal[k]*target_image[k];
 			}
 		}
@@ -129,13 +129,12 @@ void gabor_filter(double *image, int width, int height, int filter_scale, int or
 		for (t_y = -kernal_size[filter_scale]/2; t_y <= kernal_size[filter_scale]/2; t_y++) {
 			if (((y - t_y) >= 0) && ((y - t_y) < height))
 				output[y*width + x] +=
-					target_kernal[t_y + kernal_size[filter_scale]/2]*conv[(y - t_y)*width + x];
+					target_kernal[t_y + kernal_size[filter_scale]/2]*conv[((width*height)-1)-(x*height+(y - t_y))];
 		}
 	}
 	}
 
-	for (i = 0; i < width*height; i++)
-		conv[i] = 0;
+	memset(&conv, 0, MAX_WIDTH*MAX_HEIGHT*sizeof(double));
 
 	/* third convolution */
 	target_kernal=&target_kernal[kernal_size[filter_scale]];
@@ -147,13 +146,13 @@ void gabor_filter(double *image, int width, int height, int filter_scale, int or
 		    for (k = 0; k < kernal_size[filter_scale]; k++)
 		      temparray[k]= target_kernal[k]*target_image[k];
 		    for (k = 0; k < kernal_size[filter_scale]; k++)
-		      conv[y*width+x] += temparray[k];
+		      conv[((width*height)-1)-(x*height+y)] += temparray[k];
 		  }
 		else
 		  {
 		for (k=0; k < kernal_size[filter_scale]; k++) {
 			if ((x+kernal_size[filter_scale]/2 >= k) && (x+kernal_size[filter_scale]/2 < width+k)) {
-				conv[y*width + x] +=
+				conv[((width*height)-1)-(x*height+y)] +=
 					target_kernal[k]*target_image[k];
 			}
 		}
@@ -168,7 +167,7 @@ void gabor_filter(double *image, int width, int height, int filter_scale, int or
 		for (t_y = -kernal_size[filter_scale]/2; t_y <= kernal_size[filter_scale]/2; t_y++) {
 			if (((y - t_y) >= 0) && ((y - t_y) < height))
 				output[y*width + x] -=
-					target_kernal[t_y + kernal_size[filter_scale]/2]*conv[(y - t_y)*width + x];
+					target_kernal[t_y + kernal_size[filter_scale]/2]*conv[((width*height)-1)-(x*height+(y - t_y))];
 		}
 	}
 	}
