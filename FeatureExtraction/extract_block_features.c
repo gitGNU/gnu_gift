@@ -130,6 +130,8 @@ void extract_gabor_features(PPM *im_hsv, uint32_t *** block_gabor_class, uint32_
 	int energy_class;
 	PPM *value_plane;
 	double *value_image_dbl, *filtered_image;
+	double *conv;
+	double *conv2;
 	double gabor_mean;
 	double * kernelsxy[num_gabor_scales*num_gabors_per_scale];
 
@@ -142,7 +144,10 @@ void extract_gabor_features(PPM *im_hsv, uint32_t *** block_gabor_class, uint32_
 		  "array" gabor_ranges[]
 	*/
 
-	filtered_image = (double *)malloc(im_hsv->width*im_hsv->height*sizeof(double));
+	/* this is all created with one malloc, so that it can be cleared in one memset() call */
+	filtered_image = (double *)malloc(im_hsv->width*im_hsv->height*sizeof(double)*3);
+	conv=&filtered_image[im_hsv->width*im_hsv->height];
+	conv2=&conv[im_hsv->width*im_hsv->height];
 
 	create_filter_kernels(kernelsxy);
 
@@ -150,8 +155,11 @@ void extract_gabor_features(PPM *im_hsv, uint32_t *** block_gabor_class, uint32_
 	for (scale = 0; scale < num_gabor_scales; scale++) {
 		for (orientation = 0; orientation < num_gabors_per_scale; orientation++) {
 
+			/* this clears conv, conv2, and filtered_image in one call. */
+			memset(filtered_image, 0, MAX_WIDTH*MAX_HEIGHT*sizeof(double)*3);
+
 			/* filter the image */
-			gabor_filter(im_hsv->value_plane_double_reversed, im_hsv->width, im_hsv->height, scale, orientation, kernelsxy, filtered_image);
+			gabor_filter(im_hsv->value_plane_double_reversed, im_hsv->width, im_hsv->height, scale, orientation, kernelsxy, conv, conv2, filtered_image);
 
 			/* extract the rms energy for each block */
 			k = 0; /* block counter */

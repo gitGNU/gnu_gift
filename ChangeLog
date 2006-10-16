@@ -1,3 +1,13 @@
+2006-10-10    <risc@volumehost.com>
+
+	* FeatureExtraction/gabor.c
+	comment cleanups.
+	stop handling memory zeroing.
+	* FeatureExtraction/extract_block_features.c
+	comment cleanups.
+	handle zeroing memory for gabor_filter.
+	allocate conv, conv2, and filtered_image in one sweep. also memset them at the same time.
+
 2006-10-05    <risc@volumehost.com>
 
 	* FeatureExtraction/gabor.c
