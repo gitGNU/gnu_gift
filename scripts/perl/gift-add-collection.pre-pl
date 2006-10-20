@@ -37,44 +37,46 @@ use Text::Iconv;
 use POSIX qw(tmpnam);
 use strict;
 use vars qw($self
-	
-	    $llTemp
-	    $llFullName
+  
+      $llTemp
+      $llFullName
     
-	    $lFullName
-	    $lName
-	    $lExtension
+      $lFullName
+      $lName
+      $lExtension
 
-	    *FH
+      *FH
 
-	    $lCountPotentialImages
-	    $lCountVisitedImages
-	    $lImageDirectory
-	    $lImageDirectory
-	    $lCollectionName
-	    $lFeaturePrefix
-	    $lIndexPrefix
-	    $lThumbnailDirectory
-	    $lURLPrefix
-	    $lThumbnailURLPrefix
-	    $lHostname
-	    $gGiftHome
-	    $OLDCONFIG
-	    $CONFIG
-	    $lOptionList
-	    %lOptions
-	    $i
-	    $lIndexPrefix
-	    $url2fts_name
-	    $URL2FTS
-	    $lURL
-	    $lFts
-	    $lThumbnailURL
-	    $lThumbnailFile
-	    $gStringConverter
-	    $gDoRemove
-	    $gDoFixConfig
-	   );
+      $lCountPotentialImages
+      $lCountVisitedImages
+      $lImageDirectory
+      $lImageDirectory
+      $lCollectionName
+      $lFeaturePrefix
+      $lIndexPrefix
+      $lThumbnailDirectory
+      $lURLPrefix
+      $lThumbnailURLPrefix
+      $lHostname
+      $lNoThumbnails
+      $lFakeThumbnails
+      $gGiftHome
+      $OLDCONFIG
+      $CONFIG
+      $lOptionList
+      %lOptions
+      $i
+      $lIndexPrefix
+      $url2fts_name
+      $URL2FTS
+      $lURL
+      $lFts
+      $lThumbnailURL
+      $lThumbnailFile
+      $gStringConverter
+      $gDoRemove
+      $gDoFixConfig
+     );
 
 
 #
@@ -83,24 +85,26 @@ use vars qw($self
 %lOptions=();
 
 GetOptions(\%lOptions,
-	   "fix-config",
-	   "help",
-	   "remove-collection",
-	   "gift-home=s",
-	   "local-encoding=s",
-	   "image-directory=s",
-	   "collection-name:s",
-	   "feature-prefix:s",
-	   "index-prefix:s",
-	   "url-prefix:s",
-	   "thumbnail-dir:s",
-	   "thumbnail-url-prefix:s",
-	   "hostname:s",
-	   "no-png",
-	   "no-gif",
-	   "no-jpg",
-	   "no-nps",
-	   "no-ps");
+     "fix-config",
+     "help",
+     "remove-collection",
+     "gift-home=s",
+     "local-encoding=s",
+     "image-directory=s",
+     "collection-name:s",
+     "feature-prefix:s",
+     "index-prefix:s",
+     "url-prefix:s",
+     "thumbnail-dir:s",
+     "thumbnail-url-prefix:s",
+     "hostname:s",
+     "no-thumbnails",
+     "fake-thumbnails",
+     "no-png",
+     "no-gif",
+     "no-jpg",
+     "no-nps",
+     "no-ps");
 
 
 my($lInEncoding,$lOutEncoding)=((!(defined($lOptions{"local-encoding"})))
@@ -124,21 +128,24 @@ local $lThumbnailDirectory="";
 local $lURLPrefix="";
 local $lThumbnailURLPrefix="";
 local $lHostname="";
+local $lNoThumbnails="";
 local $gGiftHome= $lOptions{'gift-home'} || $gGiftHome || $ENV{GIFT_HOME} || $ENV{HOME};
 local $gDoRemove="";
 local $lOptionList={
-		    "fix-config"           => \$gDoFixConfig,
-		    "remove"               => \$gDoRemove,
-		    "gift-home"            => \$gGiftHome,
-		    "image-directory"      => \$lImageDirectory,
-		    "collection-name"      => \$lCollectionName,
-		    "feature-prefix"       => \$lFeaturePrefix,
-		    "index-prefix"         => \$lIndexPrefix,
-		    "thumbnail-dir"        => \$lThumbnailDirectory,
-		    "url-prefix"           => \$lURLPrefix,
-		    "thumbnail-url-prefix" => \$lThumbnailURLPrefix,
-		    "hostname"             => \$lHostname,
-		   };
+      "fix-config"           => \$gDoFixConfig,
+      "remove"               => \$gDoRemove,
+      "gift-home"            => \$gGiftHome,
+      "image-directory"      => \$lImageDirectory,
+      "collection-name"      => \$lCollectionName,
+      "feature-prefix"       => \$lFeaturePrefix,
+      "index-prefix"         => \$lIndexPrefix,
+      "thumbnail-dir"        => \$lThumbnailDirectory,
+      "url-prefix"           => \$lURLPrefix,
+      "thumbnail-url-prefix" => \$lThumbnailURLPrefix,
+      "hostname"             => \$lHostname,
+      "no-thumbnails"        => \$lNoThumbnails,
+      "fake-thumbnails"      => \$lNoThumbnails,
+ };
 
 unless(open DOT_FILE,"$ENV{HOME}/.gift-add-collection"){
   print STDERR "File $ENV{HOME}/.gift-add-collection could not be opened ($!), so I won't use it\n";
@@ -147,9 +154,9 @@ unless(open DOT_FILE,"$ENV{HOME}/.gift-add-collection"){
     while (<DOT_FILE>) {
       chomp;
       foreach $i (keys %$lOptionList) {
-	next if m/^\#/;		#skip comments
-	eval("if(m/^$i=\\\"(.*)\\\"/){\${\$lOptionList->{\$i}}=\$1;}");
-	
+  next if m/^\#/;		#skip comments
+  eval("if(m/^$i=\\\"(.*)\\\"/){\${\$lOptionList->{\$i}}=\$1;}");
+  
       }
     }
     foreach $i (keys %$lOptionList) {
@@ -168,8 +175,9 @@ if($lOptions{'fix-config'}){
   $gDoFixConfig=1;
 }
 
-# set hostname of one has been specified
-$lHostname = $lOptions{'hostname'} || 'localhost';
+# set hostname if one has been specified
+$lHostname = $lOptions{'hostname'}
+  || $lHostname;
 
 #
 #
@@ -241,11 +249,18 @@ foreach $i (values %$lOptionList) {
   $$i=~s/\@collection-name\@/$lCollectionName/g;
 }
 
-
 if ($lHostname) {
-	s|^http://localhost/|http://$lHostname/| for ($lURLPrefix, $lThumbnailURLPrefix);
+  s|^http://localhost/|http://$lHostname/|
+  for ($lURLPrefix, $lThumbnailURLPrefix);
 }
 
+
+$lFakeThumbnails = $lOptions{'fake-thumbnails'}
+  || $lFakeThumbnails;
+
+$lNoThumbnails = $lOptions{'no-thumbnails'}
+  || $lNoThumbnails
+  || $lFakeThumbnails; # note that fake-thumbnails implies no-thumbnails
 
 if ($lOptions{help}) {
   my $lUsername = $ENV{HOME};
@@ -288,10 +303,19 @@ Options (options override .gift-add-collection entries):
                               'image-directory'_thumbnails)
                               Current value: $lThumbnailDirectory 
 
---fix-config                  Fixes the config file by adjusting the collection used
-                              by the default query algorithm. If GIFT complains to 
-                              you about an unknown collection with ID __COLLECTION__,
+--fix-config                  Fixes the config file by adjusting the
+                            collection used by the default query
+                              algorithm. If GIFT complains to you about an
+                              unknown collection with ID __COLLECTION__,
                               that's the thing to do.
+
+--no-thumbnails               No thumbnails will be created
+                              Current value: @{[$lNoThumbnails ? 'true' : 'false']}
+
+--fake-thumbnails             No thumbnails will be created, but the
+                              thumbnail URL will be set to the same as the
+                              image URL.
+                              Current value: @{[$lFakeThumbnails ? 'true' : 'false']}
 
 Change here, if you want to make a database accessible from the WWW
 
@@ -343,7 +367,7 @@ use CGIFTLink;
 ";
 }
 
-mkpath([$lThumbnailDirectory],1,0755);
+mkpath([$lThumbnailDirectory],1,0755) unless $lNoThumbnails;
 mkpath([$lIndexPrefix,$lFeaturePrefix],1,0711);
 
 print 
@@ -372,8 +396,8 @@ unless($gDoRemove || $gDoFixConfig){
   local $self={};
   
   $self->{writer}=new XML::Writer( OUTPUT => $URL2FTS,
-				   DATA_MODE => 1,
-				   DATA_INDENT => 2 );
+     DATA_MODE => 1,
+     DATA_INDENT => 2 );
   $self->{writer}->xmlDecl("UTF-8","yes");
   
   $self->{writer}->startTag("image-list");  
@@ -389,7 +413,7 @@ unless($gDoRemove || $gDoFixConfig){
   print "$lCountPotentialImages\n";
   $lCountVisitedImages=0;
   find(\&wanted,$lImageDirectory);
-  
+
   $self->{writer}->endTag("image-list");  
   $URL2FTS=0; #close the file
   
@@ -420,150 +444,159 @@ unless($gDoRemove || $gDoFixConfig){
     
     if ($lExtension && $lExtension=~m/^((tif)|(tiff)|(ppm)|(gif)|(jpg)|(jpeg)|(eps)|(png)|(ras))$/i) {
       eval{
-	
-	my $lNameBase=$lName;
-	$lNameBase=~s§\.$lExtension$§§;
-	
-	
-	$lURL="$lURLPrefix/$lName";
-	$lFts="$lFeaturePrefix/${lNameBase}_$lExtension.fts";
-	#the actual location of the thumbnail
-	$lThumbnailFile="$lThumbnailDirectory/${lNameBase}_thumbnail_$lExtension.jpg";
-	$lThumbnailURL ="$lThumbnailURLPrefix/${lNameBase}_thumbnail_$lExtension.jpg";
-	
-	print         "$lURL $lFts\n";
-	
-	my $lURL2FTSLine="$lURL $lThumbnailURL $lFts\n";
-	$lURL2FTSLine=~s§/+§/§g;
-	$lURL2FTSLine=~s§http:/§http://§g;
-	
-	my $i;
-	foreach $i  ($lURL,
-		     $lThumbnailURL) {
-	  #escaping the URL
-	  $i=~s[//][/]g;
-	  $i=~s[^http:/][http://];
-	  $i=~s[ ][%20]g;
-	  
-	  $i=safeConvertString($i);
-	}
-	
-	
-	
-	
-	print "lURLPrefix: $lURLPrefix lNameBase: $lNameBase lExtension: $lExtension\n";
-	
-	# uniqueness of names given by process id 
-	# the variable containing the process id of this script 
-	# is $$
-	my $lTemp="/tmp/gift_tmp$$.ppm";
-	my $lTempFts="/tmp/gift_tmp$$.fts";
-	
-	print "This script was last modified on $main::gModifyingDateOfThis\n";
-	
-	my $lThumbnailModificationTime=(stat($lThumbnailFile))[9];
-	
-	if (!-e($lThumbnailFile)
-	    || $lThumbnailModificationTime<$main::gModifyingDateOfThis) {
-	  $lThumbnailFile=~m§^(.*/)([^/]*)$§;
-	  print($lThumbnailModificationTime," is the modifying date of $lThumbnailFile\n") 
-	    if $lThumbnailModificationTime;
-	  print("We will make a new thumbnail file\n");
-	  print("making the path $1\n");
-	  mkpath([$1],1,0711);
-	  print("Converting $lFullName to $lThumbnailFile\n");
-	  print STDERR "Warning: Thumbnail generation failed for $lThumbnailFile $!\n" 
-	    if system("convert",
-		      "-geometry",
-		      "128x128",
-		      $lFullName,
-		      $lThumbnailFile);
-	} else {
-	  print "Warning: more recent version of thumbnail file $lThumbnailFile  found!\n";
-	}
-	
-	my $lFtsModificationTime=(stat($lFts))[9];
-	if (!(-e($lFts))
-	    || ($lFtsModificationTime < $main::gModifyingDateOfThis)) {
-	  if ($lFtsModificationTime) {
-	    print($lFtsModificationTime," is the modifying date of $lFts file\n") 
-	  }
-	  print("We will make a new feature file\n");
-	  print("Converting $lFullName to $lTemp\n");
+  
+  my $lNameBase=$lName;
+  $lNameBase=~s§\.$lExtension$§§;
+  
+  
+  $lURL="$lURLPrefix/$lName";
+  $lFts="$lFeaturePrefix/${lNameBase}_$lExtension.fts";
+  #the actual location of the thumbnail
+  $lThumbnailFile="$lThumbnailDirectory/${lNameBase}_thumbnail_$lExtension.jpg";
+  $lThumbnailURL ="$lThumbnailURLPrefix/${lNameBase}_thumbnail_$lExtension.jpg";
+  
+  print         "$lURL $lFts\n";
+  
+  my $lURL2FTSLine="$lURL $lThumbnailURL $lFts\n";
+  $lURL2FTSLine=~s§/+§/§g;
+  $lURL2FTSLine=~s§http:/§http://§g;
+  
+  my $i;
+  foreach $i  ($lURL,
+       $lThumbnailURL) {
+    #escaping the URL
+    $i=~s[//][/]g;
+    $i=~s[^http:/][http://];
+    $i=~s[ ][%20]g;
+    
+    $i=safeConvertString($i);
+  }
+  
+  
+  
+  
+  print "lURLPrefix: $lURLPrefix lNameBase: $lNameBase lExtension: $lExtension\n";
+  
+  # uniqueness of names given by process id 
+  # the variable containing the process id of this script 
+  # is $$
+  my $lTemp="/tmp/gift_tmp$$.ppm";
+  my $lTempFts="/tmp/gift_tmp$$.fts";
+  
+  print "This script was last modified on $main::gModifyingDateOfThis\n";
+  
+  if (!$lNoThumbnails) { # normally we want thumbnails
+  my $lThumbnailModificationTime=(stat($lThumbnailFile))[9];
+  
+  if (!-e($lThumbnailFile)
+  || $lThumbnailModificationTime<$main::gModifyingDateOfThis) {
+    $lThumbnailFile=~m§^(.*/)([^/]*)$§;
+    print($lThumbnailModificationTime," is the modifying date of $lThumbnailFile\n") 
+  if $lThumbnailModificationTime;
+    print("We will make a new thumbnail file\n");
+    print("making the path $1\n");
+    mkpath([$1],1,0711);
+    print("Converting $lFullName to $lThumbnailFile\n");
+    my @lCreateThumbnailCommand = (
+      'convert',
+  '-geometry',
+  '128x128',
+  $lFullName,
+  $lThumbnailFile,
+  );
+  if (system(@lCreateThumbnailCommand)) {
+  print STDERR "Warning: Thumbnail generation failed for $lThumbnailFile $!\n", join ' ', @lCreateThumbnailCommand, "\n";
+  }
+  }
+  else {
+    print "Warning: more recent version of thumbnail file $lThumbnailFile  found!\n";
+  }
+  }
+  elsif ($lFakeThumbnails) {
+  $lThumbnailURL = $lURL; # just use the same location as the image
+  }
+  
+  my $lFtsModificationTime=(stat($lFts))[9];
+  if (!(-e($lFts))
+      || ($lFtsModificationTime < $main::gModifyingDateOfThis)) {
+    if ($lFtsModificationTime) {
+      print($lFtsModificationTime," is the modifying date of $lFts file\n") 
+    }
+    print("We will make a new feature file\n");
+    print("Converting $lFullName to $lTemp\n");
 
-	  unlink $lTemp;
+    unlink $lTemp;
 
-	  local $llTemp=$lTemp;
-	  local $llFullName=$lFullName;
-	  eval{
-	      if (system("convert" ,
-			 "-geometry",
-			 "256x256!",
-			 $llFullName,
-			 $llTemp)) {
-		  print "Pre feature extraction convert call returned nonzero: $! \n",join(" ",("convert" ,
-												"-geometry",
-												"256x256!",
-												$llFullName,
-												$llTemp,"\n"));
-	      }
-	  };
-	  
-	  unless(-e($lTemp)){
-	      die "Pre feature extraction convert call failed ",join(" ",("convert" ,
-									  "-geometry",
-									  "256x256!",
-									  $llFullName,
-									  $llTemp,"\n")) ;
-	  }
-	  
-	  print("Extracting features from $lTemp\n");
-	  
-	  unlink($lTempFts);
+    local $llTemp=$lTemp;
+    local $llFullName=$lFullName;
+    my @lResizeImageCommand = (
+   'convert',
+   '-geometry',
+   '256x256!',
+    $llFullName,
+    $llTemp,
+    );
+  my $lStringResizeImageCommand = join ' ', @lResizeImageCommand;
+    eval{
+        if (system(@lResizeImageCommand)) {
+          print "Pre feature extraction convert call returned nonzero: $! \n$lStringResizeImageCommand\n";
+        }
+    };
+    
+    unless(-e($lTemp)){
+        die "Pre feature extraction convert call failed: $lStringResizeImageCommand\n";
+    }
+    
+    print("Extracting features from $lTemp\n");
+    
+    unlink($lTempFts);
 
-	  eval{
-	      system("__EXECBINDIR__/gift-extract-features $lTemp");
-	  };
-	  if(-e $lTempFts){
-	      $lFts=~m§^(.*/)([^/]*)$§;
-	      print("making the path $1\n");
-	      mkpath([$1],1,0711);
-	      print("...copying from $lTempFts to $lFts\n\n");
-	      copy($lTempFts,$lFts) or print STDOUT "\nCopy $lTempFts -> $lFts failed: $!\n";
-	  
-	      if (!$main::lImageCount) {
-		system qq(__EXECBINDIR__/gift-write-feature-descs < $lTemp |perl -e 'print "Writing InvertedFileFeatureDescription...\n";open OF,">$main::lIndexPrefix/InvertedFileFeatureDescription.db" or die "could not open $lIndexPrefix";while(<STDIN>){print OF join(" ",(split(" ",\$_))[0..1]),"\\n";};print "finished.\n";' );
-		unlink $lTemp;
-	      }
-	      
-	      $main::lImageCount++;
-	      #    print "Number of images: $main::lImageCount\n\n";
-	      unlink($lTemp);
-	      unlink($lTempFts);
-	      
-	      $main::lCountVisitedImages++;
-	      print "\nPROGRESS: ".$main::lCountVisitedImages." of ".$main::lCountPotentialImages." done (".POSIX::floor(90*$main::lCountVisitedImages/$main::lCountPotentialImages)."%)\n";
-	    } else {
-	      print "warning: Feature extraction of $lTemp to $lTempFts failed!\n";
-	    }
-	} else {
-	  print "Features not extracted: File exists $! \n" ;
-	  #die "Feature extraction failed: $! \n" 
-	}
+    eval{
+        system("__EXECBINDIR__/gift-extract-features $lTemp");
+    };
+    if(-e $lTempFts){
+        $lFts=~m§^(.*/)([^/]*)$§;
+        print("making the path $1\n");
+        mkpath([$1],1,0711);
+        print("...copying from $lTempFts to $lFts\n\n");
+        copy($lTempFts,$lFts) or print STDOUT "\nCopy $lTempFts -> $lFts failed: $!\n";
+    
+        if (!$main::lImageCount) {
+  system qq(__EXECBINDIR__/gift-write-feature-descs < $lTemp |perl -e 'print "Writing InvertedFileFeatureDescription...\n";open OF,">$main::lIndexPrefix/InvertedFileFeatureDescription.db" or die "could not open $lIndexPrefix";while(<STDIN>){print OF join(" ",(split(" ",\$_))[0..1]),"\\n";};print "finished.\n";' );
+  unlink $lTemp;
+        }
+        
+        $main::lImageCount++;
+        #    print "Number of images: $main::lImageCount\n\n";
+        unlink($lTemp);
+        unlink($lTempFts);
+        
+        $main::lCountVisitedImages++;
+        print "\nPROGRESS: ".$main::lCountVisitedImages." of ".$main::lCountPotentialImages." done (".POSIX::floor(90*$main::lCountVisitedImages/$main::lCountPotentialImages)."%)\n";
+      } else {
+        print "warning: Feature extraction of $lTemp to $lTempFts failed!\n";
+      }
+  } else {
+    print "Features not extracted: File exists $! \n" ;
+    #die "Feature extraction failed: $! \n" 
+  }
 
-	# 2004-03-18 add attribute line as last thing
-	my $lAttributes={
-			 "url-postfix" => $lURL,
-			 "thumbnail-url-postfix" => $lThumbnailURL,
-			 "feature-file-name" => safeConvertString($lFts)
-			};
-	
-	
-	$self->{writer}->emptyTag("image",(%{$lAttributes}));  
+  # 2004-03-18 add attribute line as last thing
+  # 2006-09-18 DMS: Changed from hashref to hash - since that is what was
+  # being passed to $self->{writer}->emptyTag anyway 
+  my %lAttributes=(
+   "url-postfix" => $lURL,
+   "feature-file-name" => safeConvertString($lFts)
+  );
+  if (!$lNoThumbnails || $lFakeThumbnails) {
+  $lAttributes{"thumbnail-url-postfix"} = $lThumbnailURL;
+  }
+  
+  $self->{writer}->emptyTag("image",(%lAttributes));  
 
       };
       if ($@) {
-	print STDERR "There was an error in extracting features from $File::Find::name\n";
+  print STDERR "There was an error in extracting features from $File::Find::name\n";
       }
     }
   }
@@ -610,77 +643,77 @@ Copying $CONFIG to $OLDCONFIG
       open CONFIG or die "COULD NOT OPEN $CONFIG";
       
       while (<OLDCONFIG>) {
-	
-	if (m/$lTheLine/) {
+  
+  if (m/$lTheLine/) {
 
-	  print CONFIG qq(<!-- automatically added by v_add_collection.pl -->
-			  <collection 
-			  collection-id="$lUniqueCollectionID" 
-			  collection-name="$lCollectionName" 
-			  
-			  cui-algorithm-id-list-id="ail-inverted-file"
-			  
-			  cui-number-of-images="$main::lImageCount" 
-			  cui-base-dir="${lIndexPrefix}"
-			  cui-inverted-file-location="InvertedFile.db" 
-			  cui-offset-file-location="InvertedFileOffset.db"
-			  cui-feature-description-location=
-			  "InvertedFileFeatureDescription.db"
-			  cui-feature-file-location="url2fts.xml"
-			  >
-			  <query-paradigm-list>
-			  <query-paradigm type="inverted-file"/>
-			  <query-paradigm type="perl-demo"/>
-			  </query-paradigm-list>
-			  </collection>
-			  \n\n);
-	}
-	
-	s/\_\_COLLECTION\_\_/$lUniqueCollectionID/g;
-	
+    print CONFIG qq(<!-- automatically added by v_add_collection.pl -->
+    <collection 
+    collection-id="$lUniqueCollectionID" 
+    collection-name="$lCollectionName" 
+    
+    cui-algorithm-id-list-id="ail-inverted-file"
+    
+    cui-number-of-images="$main::lImageCount" 
+    cui-base-dir="${lIndexPrefix}"
+    cui-inverted-file-location="InvertedFile.db" 
+    cui-offset-file-location="InvertedFileOffset.db"
+    cui-feature-description-location=
+    "InvertedFileFeatureDescription.db"
+    cui-feature-file-location="url2fts.xml"
+    >
+    <query-paradigm-list>
+    <query-paradigm type="inverted-file"/>
+    <query-paradigm type="perl-demo"/>
+    </query-paradigm-list>
+    </collection>
+    \n\n);
+  }
+  
+  s/\_\_COLLECTION\_\_/$lUniqueCollectionID/g;
+  
       }
     }else{
 
       my $lString=&safeConvertString(qq(<?xml version="1.0" standalone="no" ?>
-					 <collection 
-					 collection-id="$lUniqueCollectionID" 
-					 collection-name="$lCollectionName" 
-					 
-					 cui-algorithm-id-list-id="ail-inverted-file"
-					 
-					 cui-number-of-images="$main::lImageCount" 
-					 cui-base-dir="${lIndexPrefix}"
-					 cui-inverted-file-location="InvertedFile.db" 
-					 cui-offset-file-location="InvertedFileOffset.db"
-					 cui-feature-description-location=
-					 "InvertedFileFeatureDescription.db"
-					 cui-feature-file-location="url2fts.xml"
-					 >
-					 <query-paradigm-list>
-					 <query-paradigm type="inverted-file"/>
-					 <query-paradigm type="perl-demo"/>
-					 </query-paradigm-list>
-					 </collection>
-					\n\n));
+   <collection 
+   collection-id="$lUniqueCollectionID" 
+   collection-name="$lCollectionName" 
+   
+   cui-algorithm-id-list-id="ail-inverted-file"
+   
+   cui-number-of-images="$main::lImageCount" 
+   cui-base-dir="${lIndexPrefix}"
+   cui-inverted-file-location="InvertedFile.db" 
+   cui-offset-file-location="InvertedFileOffset.db"
+   cui-feature-description-location=
+   "InvertedFileFeatureDescription.db"
+   cui-feature-file-location="url2fts.xml"
+   >
+   <query-paradigm-list>
+   <query-paradigm type="inverted-file"/>
+   <query-paradigm type="perl-demo"/>
+   </query-paradigm-list>
+   </collection>
+  \n\n));
       #WORKAROUND: apparently under perl 5.8.0 XML::DOM::Parse has a problem
       #            when parsing from strings. Solution: 1. write to a temporary file
       #            2. parse the file. 3. delete the file.
       my $lName="";
       {
-	do { 
-	  $lName = tmpnam(); 
-	} until sysopen(FH, $lName, O_RDWR|O_CREAT|O_EXCL, 0600);
-	print FH $lString;
-	close FH;
+  do { 
+    $lName = tmpnam(); 
+  } until sysopen(FH, $lName, O_RDWR|O_CREAT|O_EXCL, 0600);
+  print FH $lString;
+  close FH;
       }
       my $lCollection=$lParser->parsefile($lName);
       unlink $lName;
       
       &addCollection(collection=>$lCollection,
-		     document=>$lGIFTConfig);
+       document=>$lGIFTConfig);
 
       &setDefaultCollectionID("collection-id"=>$lUniqueCollectionID,
-			      document=>$lGIFTConfig);
+        document=>$lGIFTConfig);
       
       $lGIFTConfig->printToFile ("$gGiftHome/gift-config.mrml") or die $!;
     }
@@ -706,10 +739,10 @@ Copying $CONFIG to $OLDCONFIG
   my $lGIFTConfig = $lParser->parsefile ("$gGiftHome/gift-config.mrml") or die $!;
   
   &removeCollection("collection-name"=>$lCollectionName,
-		    document=>$lGIFTConfig)                            if $gDoRemove;
+      document=>$lGIFTConfig)                            if $gDoRemove;
 
   &fixit("collection-name"=>$lCollectionName,
-	 document=>$lGIFTConfig)                                       if $gDoFixConfig;
+   document=>$lGIFTConfig)                                       if $gDoFixConfig;
 
   $lGIFTConfig->printToFile ("$gGiftHome/gift-config.mrml") or die $!;
 }
@@ -811,13 +844,13 @@ sub addCollection{
        print "\n----> $lName $lValue  <----";
 
        if($lConflict[0]->getAttribute("$lName")){
-	 unless (($lConflict[0]->getAttribute("$lName") eq $lValue)){
-	   $lReturnValue->{error}="attribute value conflict $lName $lValue\n";
-	   $lReturnValue->{success}=0;	
-	   last;
-	 }
+   unless (($lConflict[0]->getAttribute("$lName") eq $lValue)){
+     $lReturnValue->{error}="attribute value conflict $lName $lValue\n";
+     $lReturnValue->{success}=0;	
+     last;
+   }
        }else{
-	 $lConflict[0]->setAttribute("$lName",$lValue);
+   $lConflict[0]->setAttribute("$lName",$lValue);
        }
      }
 
@@ -829,28 +862,28 @@ sub addCollection{
        my $lHasQueryParadigm=scalar(@lQueryParadigmLocation);
        
        for $i ($inParameters->{collection}->getChildNodes()){
-	 unless(($i->getNodeName() eq "query-paradigm-list")
-		&& $lHasQueryParadigm){
-	   $i->setOwnerDocument($inParameters->{document});
-	   $lConflict[0]->insertBefore($i);
-	 }
+   unless(($i->getNodeName() eq "query-paradigm-list")
+  && $lHasQueryParadigm){
+     $i->setOwnerDocument($inParameters->{document});
+     $lConflict[0]->insertBefore($i);
+   }
        }
 
        if($lHasQueryParadigm){# merge two query paradigm lists
-	 my $lQPTag=$lQueryParadigmLocation[0];
+   my $lQPTag=$lQueryParadigmLocation[0];
 
-	 # find all query paradigms to be added
-	 my @lQueryParadigms=$inParameters->{collection}->xql("/mrml/cui-add-collection/collection/query-paradigm-list/*");
+   # find all query paradigms to be added
+   my @lQueryParadigms=$inParameters->{collection}->xql("/mrml/cui-add-collection/collection/query-paradigm-list/*");
 
-	 #add them to the list
-	 #FIXME: there is no elimination of duplicates
-	 if(scalar @lQueryParadigms){
-	   my $i;
-	   for $i (@lQueryParadigms){
-	     $i->setOwnerDocument($inParameters->{document});
-	     $lQPTag->insertBefore($i);
-	   }
-	 }
+   #add them to the list
+   #FIXME: there is no elimination of duplicates
+   if(scalar @lQueryParadigms){
+     my $i;
+     for $i (@lQueryParadigms){
+       $i->setOwnerDocument($inParameters->{document});
+       $lQPTag->insertBefore($i);
+     }
+   }
        }
      }
    }else{
@@ -889,14 +922,14 @@ sub removeCollection{
      unlink($lBaseDirectory."/".$lToBeDeleted[0]->getAttribute("cui-inverted-file-location"));
 
      my $lParser= new XML::Parser(Handlers=>{Start => sub{
-					       my $inUserData=shift;
-					       my $inElement=shift;
-					       my $inAttributes={};
-					       %{$inAttributes}=(@_);
-					       print "Clearing out collection $lCollectionName: Deleting ", $inAttributes->{"feature-file-name"},"\n";
-					       unlink $inAttributes->{"feature-file-name"};
-					       unlink $inAttributes->{"feature-file-name"}.".ADI";
-					     }});
+         my $inUserData=shift;
+         my $inElement=shift;
+         my $inAttributes={};
+         %{$inAttributes}=(@_);
+         print "Clearing out collection $lCollectionName: Deleting ", $inAttributes->{"feature-file-name"},"\n";
+         unlink $inAttributes->{"feature-file-name"};
+         unlink $inAttributes->{"feature-file-name"}.".ADI";
+       }});
      unlink $lURL2FTSLocation;
      # now remove the collection element
      $lToBeDeleted[0]->getParentNode()->removeChild($lToBeDeleted[0]);
