@@ -40,7 +40,7 @@ void add_comment(PPM *the_ppm, char *the_comment) {
 		free(the_ppm->comments);
 
 	the_ppm->comment_length = i + strlen(new_comment);
-	the_ppm->comments = malloc(the_ppm->comment_length*sizeof(char));
+	the_ppm->comments = malloc((the_ppm->comment_length+1)*sizeof(char));
 	i = 0;
 	if (original_comments != NULL) {
 		c = original_comments;

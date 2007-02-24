@@ -202,7 +202,7 @@ enum ppm_error rgb2hsv_ppm(PPM *im_rgb, PPM **im_hsv) {
 		(*im_hsv)->pixel[3*i + HUE] = (byte)rint((H/360.0)*max_col);
 		(*im_hsv)->pixel[3*i + SATURATION] = (byte)rint(S*max_col);
 		(*im_hsv)->pixel[3*i + VALUE] = (byte)rint(V*max_col);
-		(*im_hsv)->value_plane_double_reversed[num_pixels-i]=(V*max_col);
+		(*im_hsv)->value_plane_double_reversed[num_pixels-i-1]=(V*max_col);
 	}
 
 	add_comment((*im_hsv), "# Image converted from RGB to HSV format.\n");

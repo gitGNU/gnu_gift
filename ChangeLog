@@ -41,6 +41,14 @@
 	link against .la file, instead of .a file. more portable this way.
 	* libGIFTQuInvertedFile/cc/Makefile.am
 	link against .la file, instead of .a file. more portable this way.
+	* FeatureExtraction/gabor.c
+	fix an off-by-one error in the addressing of value_plane_double_reversed. my fault.
+	* FeatureExtraction/rgb2hsv_utils.c
+	fix an off-by-one error in the addressing of value_plane_double_reversed. my fault.
+	* FeatureExtraction/gabor.c
+	move from using an array to initialize the size of another array to using a define'd value. one less GCC warning, and slightly faster.
+	* libSquirePPM/ppm_comment.c
+	fix an off-by-one error in the allocation of ppm->comments. NOT my fault. finally! :)
 
 2006-10-10    <risc@volumehost.com>
 

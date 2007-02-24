@@ -17,6 +17,8 @@
 
 static int kernal_size[num_gabor_scales] = {gabor_kernel_size_0, gabor_kernel_size_1, gabor_kernel_size_2};
 
+#define MAX_KERNAL_SIZE gabor_kernel_size_2
+
 void save_norm_double_pgm(double *double_im, int w, int h, char *fname) {
 
 	PPM *im;
@@ -89,13 +91,13 @@ void gabor_filter(double *image, int width, int height, int filter_scale, int or
 	double * target_kernal;
 	double * target_conv;
 	double * target_image;
-	double temparray[kernal_size[2]];
+	double temparray[MAX_KERNAL_SIZE];
 
 	/* first convolution */
 	target_kernal=kernelsxy[filter_scale*num_gabors_per_scale+orientation];
 	for (x = 0; x < width; x++) {
 	for (y = 0; y < height; y++) {
-		target_image=&image[(width*height)-(y*width+x+kernal_size[filter_scale]/2)];
+		target_image=&image[(width*height-1)-(y*width+x+kernal_size[filter_scale]/2)];
 		if ((x>=kernal_size[filter_scale]/2) && ((x+kernal_size[filter_scale]/2)<width))
 		  {
 		    for (k = 0; k < kernal_size[filter_scale]; k++)
@@ -143,7 +145,7 @@ void gabor_filter(double *image, int width, int height, int filter_scale, int or
 	target_kernal=&target_kernal[kernal_size[filter_scale]];
 	for (x = 0; x < width; x++) {
 	for (y = 0; y < height; y++) {
-		target_image=&image[(width*height)-(y*width+x+kernal_size[filter_scale]/2)];
+		target_image=&image[(width*height-1)-(y*width+x+kernal_size[filter_scale]/2)];
 		if ((x>=kernal_size[filter_scale]/2) && ((x+kernal_size[filter_scale]/2)<width))
 		  {
 		    for (k = 0; k < kernal_size[filter_scale]; k++)
