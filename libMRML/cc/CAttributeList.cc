@@ -27,6 +27,8 @@
 #include "libMRML/include/CMutex.h"
 #include <iostream>
 #include <algorithm>
+/* for __WORDSIZE */
+#include <bits/wordsize.h>
 extern CMutex* gMutex;
 
 CAttributeList::CAttributeList(const char * const * const inAttributeList){
@@ -94,7 +96,11 @@ CAttributeList::~CAttributeList(){
       
     if(strcmp(i->second.first,
 		   i->second.second)){
-      cout << "DELETING FAILED" << flush << int(i->second.second) << flush << i->second.first << i->second.second << endl;
+#if __WORDSIZE==64 /* this should tell us what size a float* is, so that we can dump it properly.. */
+      cout << "DELETING FAILED" << flush << int64_t(i->second.second) << flush << i->second.first << i->second.second << endl;
+#else
+      cout << "DELETING FAILED" << flush << int32_t(i->second.second) << flush << i->second.first << i->second.second << endl;
+#endif
       assert(0);
     }
     delete[] i->second.first;

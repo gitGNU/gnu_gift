@@ -8,6 +8,9 @@
 	* dtd/Makefile.am
 	make mv invocations use ${top_builddir}, so that we can build gift in a directory other than ${srcdir}
 	replace "../" with appropriate autoconf variables.
+	* libMRML/cc/CAttributeList.cc
+	include wordsize.h, so we can tell if we're a 64 or 32bit binary during build.
+	when dumping pointer as int, check the size of the pointer before casting.
 
 2006-10-10    <risc@volumehost.com>
 
