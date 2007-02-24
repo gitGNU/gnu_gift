@@ -1,3 +1,9 @@
+2006-11-18    <risc@volumehost.com>
+
+	* bootstrap-cvs.sh
+	error out when a step fails.
+	remove --force from autoconf and aclocal invocations.
+
 2006-10-10    <risc@volumehost.com>
 
 	* FeatureExtraction/gabor.c
