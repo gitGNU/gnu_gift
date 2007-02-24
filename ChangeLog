@@ -3,6 +3,11 @@
 	* bootstrap-cvs.sh
 	error out when a step fails.
 	remove --force from autoconf and aclocal invocations.
+	* configure.in
+	call perl test program with a path, so that we can build gift in a directory other than ${srcdir}
+	* dtd/Makefile.am
+	make mv invocations use ${top_builddir}, so that we can build gift in a directory other than ${srcdir}
+	replace "../" with appropriate autoconf variables.
 
 2006-10-10    <risc@volumehost.com>
 

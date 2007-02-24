@@ -66,7 +66,7 @@ AC_PATH_PROG(MAGICK,convert)
 AC_PATH_PROG(PERL,perl)
 
 
-if perl gift-check-perl-config.pl "XML::DOM" "XML::XQL" "XML::XQL::DOM" "Text::Iconv" "HTTP::Request" "XML::Parser"; 
+if perl ${srcdir}/gift-check-perl-config.pl "XML::DOM" "XML::XQL" "XML::XQL::DOM" "Text::Iconv" "HTTP::Request" "XML::Parser"; 
 	then echo "Your perl setup seems to be OK for running the GIFT" ; else 
 	 AC_MSG_ERROR([There are some modules missing from your perl configuration. Please see the output above.])
 fi
