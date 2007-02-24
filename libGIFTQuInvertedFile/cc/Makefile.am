@@ -23,7 +23,7 @@
 
 lib_LTLIBRARIES = libGIFTQuInvertedFile.la
 
-libGIFTQuInvertedFile_la_LDFLAGS="@PRE_INSTALL_LIBDIRS@"  -lMRML ../../libGIFTAcInvertedFile/cc/.libs/libGIFTAcInvertedFile.a
+libGIFTQuInvertedFile_la_LDFLAGS="@PRE_INSTALL_LIBDIRS@"  -lMRML ../../libGIFTAcInvertedFile/cc/.libs/libGIFTAcInvertedFile.la
 
 
 #

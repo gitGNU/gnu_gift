@@ -23,7 +23,7 @@
 
 lib_LTLIBRARIES = libGIFTAcDistanceMatrix.la
 
-libGIFTAcDistanceMatrix_la_LDFLAGS="@PRE_INSTALL_LIBDIRS@" -lMRML ../../libGIFTAcInvertedFile/cc/.libs/libGIFTAcInvertedFile.a 
+libGIFTAcDistanceMatrix_la_LDFLAGS="@PRE_INSTALL_LIBDIRS@" -lMRML ../../libGIFTAcInvertedFile/cc/.libs/libGIFTAcInvertedFile.la 
 
 INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTAcDistanceMatrix/include -I$(top_srcdir)/libGIFTAcURL2FTS/include -I$(top_srcdir)/libGIFTQuBayesian/include -I$(top_srcdir) -I$(HOME)/browsing/libGIFTQuBayesian/include
 

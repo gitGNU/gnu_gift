@@ -35,6 +35,12 @@
 	HACK: add $(top_srcdir) to the path, to fix #includes of the form "directory/include/target.h", so that we can build gift in a directory other than ${srcdir}
 	* libMRML/cc/Makefile.am
 	use $(srcdir)/ to find libMRML-config.pre-cc.
+	* libGIFTAcDistanceMatrix/cc/Makefile.am
+	link against .la file, instead of .a file. more portable this way.
+	* libGIFTAcInvertedFile/cc/Makefile.am
+	link against .la file, instead of .a file. more portable this way.
+	* libGIFTQuInvertedFile/cc/Makefile.am
+	link against .la file, instead of .a file. more portable this way.
 
 2006-10-10    <risc@volumehost.com>
 
