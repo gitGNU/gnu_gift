@@ -16,7 +16,7 @@ bin_PROGRAMS = gift gift-endianize gift-generate-inverted-file gift-modify-dista
 
 # include directories for all programs in this dir
 
-INCLUDES = -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTAcURL2FTS/include -I$(srcdir)   -I.
+INCLUDES = -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTAcURL2FTS/include -I$(top_srcdir) -I.
 
 #-------------------------------------------------
 

@@ -30,7 +30,7 @@ lib_LTLIBRARIES = libGIFTAcHierarchy.la
 
 libGIFTAcHierarchy_la_LDFLAGS="@PRE_INSTALL_LIBDIRS@" -lMRML 
 
-INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcHierarchy/include -I$(top_srcdir)/expat/xmlparse -I$(top_srcdir)/expat/xmltok 
+INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcHierarchy/include -I$(top_srcdir)/expat/xmlparse -I$(top_srcdir)/expat/xmltok -I$(top_srcdir)/
 
 
 libGIFTAcHierarchy_la_SOURCES= \

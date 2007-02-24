@@ -28,6 +28,6 @@ lib_LTLIBRARIES = libGIFTQuHierarchy.la
 
 libGIFTQuHierarchy_la_LDFLAGS=@PRE_INSTALL_LIBDIRS@ -lMRML -lGIFTAcHierarchy
 
-INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcHierarchy/include -I$(top_srcdir)/libGIFTQuHierarchy/include
+INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcHierarchy/include -I$(top_srcdir)/libGIFTQuHierarchy/include -I$(top_srcdir)/
 
 libGIFTQuHierarchy_la_SOURCES= CQHierarchy.cc plug_in_fo.cc

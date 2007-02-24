@@ -25,7 +25,7 @@ lib_LTLIBRARIES = libGIFTAcURL2FTS.la
 
 libGIFTAcURL2FTS_la_LDFLAGS="@PRE_INSTALL_LIBDIRS@" -lMRML 
 INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcURL2FTS/include \
-	-I$(top_srcdir)/expat/xmlparse -I$(top_srcdir)/expat/xmltok 
+	-I$(top_srcdir)/expat/xmlparse -I$(top_srcdir)/expat/xmltok -I$(top_srcdir)/
 
 libGIFTAcURL2FTS_la_SOURCES= \
 	CAcURL2FTS.cc\

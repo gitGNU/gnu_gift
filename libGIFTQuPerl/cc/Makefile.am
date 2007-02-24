@@ -27,7 +27,7 @@ libGIFTQuPerl_la_LDFLAGS=@PRE_INSTALL_LIBDIRS@ --rpath../../libMRML/cc/.libs/ -l
 #
 # The trick here is: do not compile c code with the -D bool=char define.
 #-rdynamic
-INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcPerl/include -I$(top_srcdir)/libGIFTQuPerl/include 
+INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcPerl/include -I$(top_srcdir)/libGIFTQuPerl/include -I$(top_srcdir)/
 
 
 libGIFTQuPerl_la_SOURCES= \

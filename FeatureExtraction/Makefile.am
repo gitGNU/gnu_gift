@@ -28,9 +28,9 @@ gift_extract_features_SOURCES = $(david_sources) extract_features.c
 
 gift_write_feature_descs_SOURCES= $(david_sources) write_feature_descs.c
 
-gift_extract_features_LDADD =  -L$(top_srcdir)/libSquirePPM -lSquirePPM -lm 
+gift_extract_features_LDADD =  -L$(top_builddir)/libSquirePPM -lSquirePPM -lm 
 
-gift_write_feature_descs_LDADD= -L$(top_srcdir)/libSquirePPM -lSquirePPM -lm 
+gift_write_feature_descs_LDADD= -L$(top_builddir)/libSquirePPM -lSquirePPM -lm 
 
 
 bin_PROGRAMS = gift-extract-features gift-write-feature-descs

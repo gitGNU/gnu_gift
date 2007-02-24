@@ -27,7 +27,7 @@ lib_LTLIBRARIES = libGIFTAcInvertedFile.la
 
 libGIFTAcInvertedFile_la_LDFLAGS= -module "@PRE_INSTALL_LIBDIRS@" -lMRML ../../libGIFTAcURL2FTS/cc/.libs/libGIFTAcURL2FTS.a
 
-INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTAcURL2FTS/include 
+INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/libGIFTAcURL2FTS/include -I$(top_srcdir)
 
 
 #CAcIFFileSystem.cc: CAcIFFileSystem.pre-cc

@@ -11,6 +11,30 @@
 	* libMRML/cc/CAttributeList.cc
 	include wordsize.h, so we can tell if we're a 64 or 32bit binary during build.
 	when dumping pointer as int, check the size of the pointer before casting.
+	* FeatureExtraction/Makefile.am
+	change $(top_srcdir) to $(top_builddir), so that we can build gift in a directory other than ${srcdir}
+	* GIFTServer/Makefile.am
+	remove $(srcdir), not being used.
+	HACK: add $(top_srcdir) to the path, to fix #includes of the form "directory/include/target.h", so that we can build gift in a directory other than ${srcdir}
+	NOTE: in reality, before the "libraries" can be moved into being seperately installable packages, these paths need changed to <directory/target.h>
+	* libGIFTAcDistanceMatrix/cc/Makefile.am
+	HACK: add $(top_srcdir) to the path, to fix #includes of the form "directory/include/target.h", so that we can build gift in a directory other than ${srcdir}
+	* libGIFTAcHierarchy/cc/Makefile.am
+	HACK: add $(top_srcdir) to the path, to fix #includes of the form "directory/include/target.h", so that we can build gift in a directory other than ${srcdir}
+	* libGIFTAcInvertedFile/cc/Makefile.am
+	HACK: add $(top_srcdir) to the path, to fix #includes of the form "directory/include/target.h", so that we can build gift in a directory other than ${srcdir}
+	* libGIFTAcPerl/cc/Makefile.am
+	HACK: add $(top_srcdir) to the path, to fix #includes of the form "directory/include/target.h", so that we can build gift in a directory other than ${srcdir}
+	* libGIFTAcURL2FTS/cc/Makefile.am
+	HACK: add $(top_srcdir) to the path, to fix #includes of the form "directory/include/target.h", so that we can build gift in a directory other than ${srcdir}
+	* libGIFTQuHierarchy/cc/Makefile.am
+	HACK: add $(top_srcdir) to the path, to fix #includes of the form "directory/include/target.h", so that we can build gift in a directory other than ${srcdir}
+	* libGIFTQuInvertedFile/cc/Makefile.am
+	HACK: add $(top_srcdir) to the path, to fix #includes of the form "directory/include/target.h", so that we can build gift in a directory other than ${srcdir}
+	* libGIFTQuPerl/cc/Makefile.am
+	HACK: add $(top_srcdir) to the path, to fix #includes of the form "directory/include/target.h", so that we can build gift in a directory other than ${srcdir}
+	* libMRML/cc/Makefile.am
+	use $(srcdir)/ to find libMRML-config.pre-cc.
 
 2006-10-10    <risc@volumehost.com>
 

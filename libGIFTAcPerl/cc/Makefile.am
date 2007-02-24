@@ -25,7 +25,7 @@ lib_LTLIBRARIES = libGIFTAcPerl.la
 
 libGIFTAcPerl_la_LDFLAGS=@PRE_INSTALL_LIBDIRS@ --rpath../../libMRML/cc/.libs/ -lMRML 
 
-INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcPerl/include 
+INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcPerl/include -I$(top_srcdir)
 
 # libGIFTAcPerl_a_SOURCES= 
 libGIFTAcPerl_la_SOURCES= \

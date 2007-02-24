@@ -29,7 +29,7 @@ libGIFTQuInvertedFile_la_LDFLAGS="@PRE_INSTALL_LIBDIRS@"  -lMRML ../../libGIFTAc
 #
 # The trick here is: do not compile c code with the -D bool=char define.
 #-rdynamic
-INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTQuInvertedFile/include -I$(top_srcdir)/libGIFTAcInvertedFile/include 
+INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTQuInvertedFile/include -I$(top_srcdir)/libGIFTAcInvertedFile/include -I$(top_srcdir)/
 
 libGIFTQuInvertedFile_la_SOURCES= \
 	CWeightingFunction.cc \
