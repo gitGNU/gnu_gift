@@ -1,3 +1,7 @@
+2007-07-02    <wolfgang@portos>
+
+	* configure.in (AC_ARG_ENABLE): adding the possibility to enable/disable perl plugins in GIFT.
+
 2006-11-18    <risc@volumehost.com>
 
 	* bootstrap-cvs.sh

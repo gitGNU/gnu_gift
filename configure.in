@@ -250,6 +250,10 @@ dnl int main()
 dnl this yields us a conflict
 dnl solution: we compile a test program in an external file
 dnl
+AC_ARG_ENABLE(perl-plugin,
+	[  --enable-perl-plugin checks if PERL *plugins* can be added to GIFT. Few people are using this. Not mandatory.],
+	[
+	AC_MSG_WARN([Perl plugins enabled. If you get compilation problems on 64bit machines this might be one reason for it.])
 AC_CHECK_FILE($PERL,[
   AC_MSG_CHECKING([if we can embed a Perl interpreter into GIFT])
   #RESCUE_LDFLAGS=$LDFLAGS
@@ -270,7 +274,12 @@ dnl -ldl was added on pruets request
 	AC_MSG_RESULT([no])
   fi
 ])
+	],[
+	AC_MSG_WARN([Perl plugins disabled. Probably OK.])
+	LDFLAGS="$LDFLAGS -ldl"
 
+	]
+)
 dnl note that there are space added to each line of the argument
 dnl thanks to BRUNO JANVIER for the patch
 AC_ARG_ENABLE(multi-threading,
@@ -420,6 +429,8 @@ dnl Checks for header files.
 AC_STDC_HEADERS
 AC_HAVE_HEADERS(string algorithm) 
 AC_HAVE_HEADERS(unistd.h) 
+AC_HAVE_HEADERS(malloc.h) 
+
 dnl Checks for system dependent include files
 AC_HAVE_HEADERS( stdlib.h unistd.h sys/types.h time.h sys/time.h sys/socket.h arpa/inet.h netinet/tcp.h sys/times.h values.h expat.h)
 
