@@ -36,6 +36,7 @@ INCLUDES= -DHAS_BOOL -I$(top_srcdir)/libMRML/include -I$(top_srcdir)/libGIFTAcIn
 # libGIFTInvertedFile_a_SOURCES= 
 libGIFTAcInvertedFile_la_SOURCES= \
 	CAcIFFileSystem.cc\
+	CAcIFMeta.cc\
         CAcIFMySQL.cc\
 	\
         CAFIFMySQL.cc\

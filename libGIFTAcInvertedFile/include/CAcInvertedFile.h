@@ -79,6 +79,13 @@ typedef TID TFeatureID ;
    "by hand" at present this not really efficient, however
    we plan to move to memory mapped files. 
 
+   The above content is pretty old. As a note of 20070703, 
+   memory mapped files become interesting again when many
+   people are using 64-bit systems. On 32-bit systems,  
+   memory-mapped files place a severe limit on the size of
+   inverted files. As an aside, probably there is more time 
+   to save if we use inverted file size.
+
  */
 class CAcInvertedFile:public CAccessor{  
 
@@ -99,11 +106,7 @@ public:
   /** Give the List of documents containing the feature inFID 
 
 
-      CORNELIA:
-      CDocumentFrequencyList ist nichts anderes als eine liste von
-      
-      int,float paaren:
-
+  @return list of ID/frequency pairs
       struct{
       int mID,
       float mFrequency;
@@ -118,17 +121,7 @@ public:
   /** List of features contained by a document with ID inDID */
   virtual CDocumentFrequencyList* DIDToFeatureList(TID inDID)const =0;
 
-  /** </HIER-WIRDS-INTERESSANT-> */
 
-  /**  For drawing random sets mainly a translation of  
-       getRandomURLs
-
-       CORNELIA:
-       IM MOMENT KOENNEN WIR DIESE FUNKTION VERGESSEN
-
-  virtual void getRandomRLLs(list<string>&,
-			     list<string>::size_type)const;
-  */
   //@}
 
 

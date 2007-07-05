@@ -1,3 +1,37 @@
+2007-07-05    <wolfgang@portos>
+
+	* scripts/perl/gift-add-collection.pre-pl: 
+	fix file:/// URLs and related annoyances.
+	
+
+2007-07-04    <wolfgang@portos>
+
+	* GIFTServer/gift-config/Makefile.am (gift-config-long.mrml): 
+	* GIFTServer/gift-config/gift-config.pre-mrml: 
+	Slimmed down this file. There is now only one
+	algorithm configured: adefault. The motivation for this 
+	is that I have often seen clients using a-cidf
+	which works worse than adefault.
+
+	* GIFTServer/gift-config/gift-config-long.pre-mrml: 
+	* GIFTServer/gift-config/Makefile.am (EXTRA_DIST): 
+	* GIFTServer/gift-config/Makefile.am (data_DATA): 
+	added file gift-config-long.pre-mrml. Making it install, too. The idea is
+	to slim down normal gift-config.mrml.
+
+2007-07-03    <wolfgang@portos>
+
+	* libGIFTAcInvertedFile/include/Makefile.am: 
+	* libGIFTAcInvertedFile/cc/Makefile.am: added new files to relevant targets
+	
+
+	* libGIFTAcInvertedFile/include/CAcIFMeta.h: 
+	* libGIFTAcInvertedFile/include/CAcIFMeta.cc: 
+	created files. Going to contain meta inverted file accessors that enable 
+	adding images.
+
+	* libGIFTAcInvertedFile/include/CAcInvertedFile.h: removing old comments
+
 2007-07-02    <wolfgang@portos>
 
 	* configure.in (AC_ARG_ENABLE): adding the possibility to enable/disable perl plugins in GIFT.

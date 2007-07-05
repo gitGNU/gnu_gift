@@ -92,6 +92,13 @@
 #define	_NO_PRINT_ID
 #define	_NO_PRINT_INIT
 
+// needed for stat-ing
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <unistd.h>
+
+
+
 extern class CMutex* gMutex;
 
 /** used for reading the offset file */

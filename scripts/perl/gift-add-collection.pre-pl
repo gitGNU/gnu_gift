@@ -203,8 +203,12 @@ $lCollectionName= $lOptions{'collection-name'} || $lCollectionName || (split("/"
 $lFeaturePrefix=      $lOptions{'feature-prefix'} || $lFeaturePrefix || "$gGiftHome/gift-indexing-data/$lCollectionName/";
 $lURLPrefix=          $lOptions{'url-prefix'}     || $lURLPrefix     || "file:$lImageDirectory";
 
+
+
 # is the urlprefix in ~/public_html? create a http-url!
 $lURLPrefix=~s[^file:__WEB_PUBLISHING_DIRECTORY__][__WEB_PUBLISHING_LOCATION__/];
+# fix file:/// URLs
+$lURLPrefix=~s[^file:/+][file:///];
 
 if ($lOptions{'thumbnail-dir'}) {
   $lThumbnailDirectory= $lOptions{'thumbnail-dir'} || $lThumbnailDirectory;
@@ -235,6 +239,10 @@ if(($lThumbnailDirectory=~m/_thumbnails$ /x)
 
 # is the thumbnail-urlprefix in ~/public_html? create a http-url!
 $lThumbnailURLPrefix=~s[^file:__WEB_PUBLISHING_DIRECTORY__][__WEB_PUBLISHING_LOCATION__/];
+
+# fix file:/// URLs
+$lThumbnailURLPrefix=~s[^file:/+][file:///];
+
 
 $lIndexPrefix= $lOptions{'index-prefix'} || $lIndexPrefix || $lFeaturePrefix;
 
@@ -466,7 +474,8 @@ unless($gDoRemove || $gDoFixConfig){
        $lThumbnailURL) {
     #escaping the URL
     $i=~s[//][/]g;
-    $i=~s[^http:/][http://];
+    $i=~s[^http:/+][http://];
+    $i=~s[^file:/+][file:///];
     $i=~s[ ][%20]g;
     
     $i=safeConvertString($i);

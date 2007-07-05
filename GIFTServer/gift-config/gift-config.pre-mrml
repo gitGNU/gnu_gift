@@ -11,11 +11,12 @@ This is a configuration file for the server. It contains
 information about collections, algorithms and
 property sheets.
 
+THIS IS A SLIM VERSION OF THE GIFT-CONFIG.MRML. TO GET
+AN IDEA ABOUT A MORE VERBOSE VERSION USING MORE ALGORITHMS
+PLEASE TRY GIFT-CONFIG-LONG.MRML
 
-THIS FILE NEEDS CLEANING. ABOUT HALF OF THE LINES HERE ARE
-LEGACY CODE. HOWEVER, IT IS NOT YET TESTED HOW THINGS BEHAVE
-WHEN YOU REMOVE THE LEGACY CODE. SO, FOR A WHILE YOU HAVE
-TO LIVE WITH QUITE A NUMBER OF OBSOLETE TAGS.
+You find this file in the share/ directory of your GIFT 
+installation.
 
 -->
 
@@ -37,60 +38,6 @@ TO LIVE WITH QUITE A NUMBER OF OBSOLETE TAGS.
                 Each one of them is pruned in adifferent way.
                 (this is the goal of the operation)
       -->
-      <algorithm 
-	algorithm-id="a-perl" 
-        algorithm-type="a-perl" 
-	algorithm-name="Perl link"
-	collection-id="__COLLECTION__"
-
-	cui-base-type="perl"
-
-        cui-perl-script-file="__HOME__/gift-embed-perl-modules.pl"
-	cui-perl-package="CGIFTLink"
-        cui-perl-query-function="processGIFTQueryCall"
-        cui-perl-random-function="processGIFTRandomQueryCall"
- 
-	cui-weighting-function="ClassicalIDF"
-	>
-        <query-paradigm-list>
-           <query-paradigm type="inverted-file"/>
-           <query-paradigm type="perl-demo"/>
-        </query-paradigm-list>
-        <property-sheet property-sheet-id="cui-p-1"  property-sheet-type="subset" send-type="none" minsubsetsize="0" maxsubsetsize="1">
-          <property-sheet property-sheet-id="cui-p0" caption="Modify default configuration" property-sheet-type="set-element" send-type="none"/>
-        </property-sheet>
-      </algorithm>
-      <algorithm 
-	algorithm-id="a-cidf" 
-        algorithm-type="a-cidf" 
-	algorithm-name="Classical IDF" 
-	collection-id="__COLLECTION__"
-
-	cui-block-color-histogram="no"
-	cui-block-color-blocks="no"
-	cui-block-texture-histogram="no"
-	cui-block-texture-blocks="no"
-
-	cui-pr-percentage-of-features="70"
-
-	cui-base-type="inverted_file" 
-	cui-weighting-function="ClassicalIDF"
-	>
-        <query-paradigm-list>
-           <query-paradigm/><!-- match anything -->
-        </query-paradigm-list>
-        <property-sheet property-sheet-id="cui-p-1"  property-sheet-type="subset" send-type="none" minsubsetsize="0" maxsubsetsize="1">
-          <property-sheet property-sheet-id="cui-p0" caption="Modify default configuration" property-sheet-type="set-element" send-type="none">
-  	  <property-sheet property-sheet-id="cui-p15" caption="Prune at % of features" property-sheet-type="numeric" send-type="attribute" send-name="cui-pr-percentage-of-features" from="20" to="100" step="5" send-value="70"/>
-  	  <property-sheet property-sheet-id="cui-p1"  property-sheet-type="subset" send-type="none" minsubsetsize="1" maxsubsetsize="4">
-   	    <property-sheet property-sheet-id="cui-p12" send-boolean-inverted="yes" caption="Colour blocks" property-sheet-type="set-element" send-type="attribute" send-name="cui-block-color-blocks" send-value="yes"/>
-  	    <property-sheet property-sheet-id="cui-p14" send-boolean-inverted="yes" caption="Gabor blocks" property-sheet-type="set-element" send-type="attribute" send-name="cui-block-texture-blocks" send-value="yes"/>
-  	    <property-sheet property-sheet-id="cui-p13" send-boolean-inverted="yes" caption="Gabor histogram" property-sheet-type="set-element" send-type="attribute" send-name="cui-block-texture-histogram" send-value="yes"/>
-  	    <property-sheet property-sheet-id="cui-p11" send-boolean-inverted="yes" caption="Colour histogram" property-sheet-type="set-element" send-type="attribute" send-name="cui-block-color-histogram" send-value="yes"/>
-            </property-sheet>
-          </property-sheet>
-        </property-sheet>
-     </algorithm><!-- a-cidf -->
       <algorithm 
 	algorithm-id="adefault" 
         algorithm-type="adefault" 
@@ -169,7 +116,7 @@ TO LIVE WITH QUITE A NUMBER OF OBSOLETE TAGS.
             </property-sheet>
           </property-sheet>
         </property-sheet>
-     </algorithm><!-- a-cidf  -->
+     </algorithm><!-- adefault  -->
     </algorithm-list>
     <cui-algorithm-id-list-list>	
       <cui-algorithm-id-list cui-algorithm-id-list-id="ail-inverted-file">
