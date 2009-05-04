@@ -1,6 +1,7 @@
 //configuration files for sessions and algorithms/collections
 
 //Sockets
+#include <cstring>
 #include <ctime>
 #include <unistd.h>
 #include <fcntl.h>

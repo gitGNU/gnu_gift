@@ -54,6 +54,7 @@
 #include <iostream>
 #include <cassert>
 #include <cmath>
+#include <cstdlib>
 
 #define _NO_PRINT_OFFSET_CHECK
 #define _NO_CHECK_OFFSET_FILE

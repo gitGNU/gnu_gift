@@ -1,3 +1,23 @@
+2009-05-04  Wolfgang Müller  <muellewg@localhost>
+
+	libGIFTAcDistanceMatrix/include/CPersistentTranslatedIndexMatrix.h
+	(CPersistentTranslatedIndexMatrix): double template parameter
+	inX fixed.
+
+	* libGIFTQuInvertedFile/cc/CWeightingFunction.cc: changed
+	include "iostream.h" to <iostream>
+	
+	* libMRML/cc/CI18nTranslator.cc: 
+	* libMRML/cc/CCommunicationHandler.cc: 
+	* libMRML/cc/CXMLElementBuilder.cc: 
+	* libMRML/cc/CQueryTreeBuilder.cc: added include <cstring>
+
+2009-05-04  Wolfgang Mueller  <muellewg@localhost>
+
+	* GIFTServer/modifyDistanceMatrix.cc: 
+	* libMRML/cc/CDynamicQueryFactory.cc: 
+	* libMRML/cc/CAccessorImplementation.cc: added include <cstdlib>
+
 2007-07-05    <wolfgang@portos>
 
 	* scripts/perl/gift-add-collection.pre-pl: 

@@ -25,6 +25,7 @@
 #include "libMRML/include/CXEVI18nTranslator.h"
 #include <iostream>
 #include <fstream>
+#include <cstring>
 /**
    This class offers runtime translation of strings. In contrast
    to GNU gettext we can chose during runtime the language without 

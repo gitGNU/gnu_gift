@@ -31,6 +31,7 @@
 // for file name treatment
 #include "libMRML/include/getLibNameFromFileName.h"
 #include <set>
+#include <cstdlib>
 
 CQuery* CDynamicQueryFactory::makeQuery(const string & inBaseType, 
 					   CAccessorAdminCollection & inAccessorAdminCollection,

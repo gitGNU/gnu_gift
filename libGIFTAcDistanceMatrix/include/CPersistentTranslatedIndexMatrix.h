@@ -76,7 +76,7 @@ public:
 		     CIDContentPairList& outList)const;
   ///
   bool setValue(const TTID& inX,
-		const TTID& inX,
+		const TTID& inY,
 		const TTContent& inValue)const;
   ///
   operator bool()const;

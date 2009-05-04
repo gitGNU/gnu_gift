@@ -3,6 +3,7 @@
 #include "libMRML/include/CQueryTreeBuilder.h"
 #include "libMRML/include/CAlgorithm.h"
 #include "libMRML/include/mrml_const.h"
+#include <cstring>
 //----------------------------------------
 
 CQueryTreeBuilder::CQueryTreeBuilder(){};

@@ -17,7 +17,7 @@
 ***************************************************/
 #include <cmath>
 #include "libGIFTQuInvertedFile/include/CWeightingFunction.h"
-#include "iostream.h"
+#include <iostream>
 #include "FeatureExtraction/gift_features.h"
 
 #include <algorithm>
