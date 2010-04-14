@@ -146,7 +146,7 @@ gift-start.pl: gift-start.pre-pl
 	$(PERLCONFIG)
 
 
-bin_SCRIPTS= @GIFT_INTERNAL_PERLS@ gift-url-to-fts.pl gift-diagnose-print-all-ADI.pl gift-mrml-client.pl CFeedbackClient.pm CFCMovingTarget.pm gift-perl-example-server.pl gift-add-collection.pl gift-remove-collection.pl gift-dtd-to-tex.pl gift-dtd-to-keywords.pl CQueryParadigmMatcher.pm CTripleTransfer.pl CGLDAudreyMTam.pl CGLStructuredAnnotation.pm CGIFTLink.pm CGLDistanceMatrix.pm CGIFTLinkDemo.pl CXMLTreeBuilder.pm CXMLTreeWriter.pm CXMLTreeVisitor.pm CXTVTripletList.pm CXTVWriter.pm CGraphCollection.pm gift-old-to-new-url2fts.pl gift-start.pl gift-diagnose-print-all-ADI.pl
+bin_SCRIPTS= @GIFT_INTERNAL_PERLS@ gift-url-to-fts.pl gift-diagnose-print-all-ADI.pl gift-mrml-client.pl CFeedbackClient.pm CFCMovingTarget.pm gift-perl-example-server.pl gift-add-collection.pl gift-remove-collection.pl gift-dtd-to-tex.pl gift-dtd-to-keywords.pl CQueryParadigmMatcher.pm CTripleTransfer.pl CGLDAudreyMTam.pl CGLStructuredAnnotation.pm CGIFTLink.pm CGLDistanceMatrix.pm CGIFTLinkDemo.pl CXMLTreeBuilder.pm CXMLTreeWriter.pm CXMLTreeVisitor.pm CXTVTripletList.pm CXTVWriter.pm CGraphCollection.pm gift-old-to-new-url2fts.pl gift-start.pl
 
 EXTRA_SCRIPTS=gift-browser-benchmark.pl gift-extract-text-features.pl gift-annotation-to-html.pl gift-ranking-comparison.pl CFCRankingComparison.pm CGraphCollection.pm
 

@@ -31,7 +31,7 @@ libMRML_HEADERS= directory.h \
 	CAccessorFactoryContainer.h  CQParallel.h	      CXMLHelper.h \
 	CAccessorImplementation.h    CQuery.h		      GIFTExceptions.h \
 	CAlgorithm.h		     CQueryParadigmMatcher.h  TID.h \
-	CAlgorithmCollection.h	     CQueryPlugin.h	      directory.h \
+	CAlgorithmCollection.h	     CQueryPlugin.h \
 	CArraySelfDestroyPointer.h   CQueryTreeBuilder.h      mrml_const.h \
 	CAttributeList.h	     CQueryTreeNode.h	      myNew.h \
 	CCommunicationHandler.h      CRelevanceLevel.h	      my_assert.h \
