@@ -1,15 +1,17 @@
 #!/bin/bash
-# first argument: path of images to thumbnail
+# first argument: path of directory containing images to thumbnail
 
 target=`dirname $1`/`basename $1`
-echo $target
-cd $target
-for each in `ls -1`; do {
-convname=`echo $each | sed "s/[.]/_thumbnail_/"`;
-if [ ! -f "${target}_thumbnails/${convname}.jpg" ]; then
+thumbnail_dir=`dirname $1`/`basename $1`_thumbnails
+
+echo "converting images in $target, placing them in $thumbnail_dir."
+
+for each in `find $target -maxdepth 1 -type f|sed "s=\(.*\)/=="`; do {
+convname=`echo $each | sed "s/\(.*\)[.]/\1_thumbnail_/"`
+if [ ! -f "$thumbnail_dir/${convname}.jpg" ]; then
     {   
-        echo converting $each;
-        convert -geometry 128x128 ${each} ../${target}_thumbnails/${convname}.jpg;
+        echo converting $each
+        convert -geometry 128x128 -quality 100 ${each} $thumbnail_dir/${convname}.jpg
     }
 fi
 }
