@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/bin/sh
+
 # first argument: path of directory containing images to thumbnail
 
 target=`dirname $1`/`basename $1`
@@ -11,7 +12,7 @@ convname=`echo $each | sed "s/\(.*\)[.]/\1_thumbnail_/"`
 if [ ! -f "$thumbnail_dir/${convname}.jpg" ]; then
     {   
         echo converting $each
-        convert -geometry 128x128 -quality 100 ${each} $thumbnail_dir/${convname}.jpg
+        convert -geometry 128x128 -quality 100 ${target}/${each} $thumbnail_dir/${convname}.jpg
     }
 fi
 }
